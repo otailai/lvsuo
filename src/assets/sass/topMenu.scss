@@ -1,26 +1,62 @@
- .el-row {
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
+.topMenu-head{
+          height: 60px;
+  .row-bg{
+      .logo{
+            height: 60px;
+            background: url('../assets/img/logo.png') no-repeat center center;
+            background-size: cover;
+          }
+      .userInfo{
+          .row-bg{
+           
+                  .username{
+                            flex-direction: row;
+                            justify-content: flex-start;
+                            align-items: center;
+                            .username-hello{
+                              width:30px;
+                              height:30px;
+                              border-radius:50%; 
+                             
+                            }
+                            .username-name{
+                              line-height: 60px;
+                            }
+                            }
+                  .login-out{
+                              margin-left: 30px;
+                              i{
+                               
+                               }
+                               span{
+                                line-height: 60px;
+                               }
+                            }
+                  }
+              }
+          }
+        }
+.topMenu-nav{
+  margin-top: 50px;
+  width: 100%;
+  height: 54px;
+    ul{
+        height: 100%;
+        flex-direction: row;
+        justify-content: flex-end;
+      li{
+        height: 100%;
+        width: 80px;
+        flex-direction: column;
+        text-align: center; 
+        justify-content: center;
+        &:hover {
+          color:#7E2C2E;
+          a{
+            color:#7E2C2E;
+          }
+        }
+      }
     }
-  }
-  .el-col {
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
+}
+

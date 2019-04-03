@@ -1,0 +1,209 @@
+.case{
+    padding-top: 20px;  
+    width: 90%;
+    margin: 10px auto;
+}
+.el-tabs__header{
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+.el-tabs__active-bar {
+ 
+    background-color: #7E2C2E;
+}
+.el-tabs__nav-wrap::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    z-index: 1;
+}
+.el-tabs__item{
+    color:#333333;
+}
+.el-tabs__item:hover{
+    color: #7E2C2E;
+    }
+.el-tabs__item.is-active{
+    color: #7E2C2E;
+    }
+.case-child{
+    flex-direction: row;
+    justify-content: space-between;
+}
+.case-child .case-child-first{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.case-child .case-child-first p{
+    font-family:MicrosoftYaHei-Bold;
+    font-size: 14px;
+    color:#333333;
+    cursor: pointer;
+    font-weight:400;
+    margin-right: 20px;
+}
+.isactive{
+    color:#7E2C2E !important;
+    font-size: 16px !important;
+    font-weight:bold !important;
+}
+.case-child .case-child-end{
+    flex-direction: row;
+    justify-content: flex-start
+}
+.case-child .case-child-end .input{
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 250px;
+    margin-right: 20px;
+    border-radius: 45px;
+    border: 1px solid #DDDDDD;
+}
+.case-child .case-child-end .input .case-input{
+    width:  200px;
+    height: 36px;
+    /* border: 1px solid #DDDDDD; */
+    border-top-left-radius: 45px;
+    border-bottom-left-radius: 45px;
+
+    padding-left: 21px;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    color: #4a4a4a;
+    background-color: transparent;
+}
+.case-child .case-child-end .input:hover{
+    border: 1px solid #7E2C2E;
+}
+.case-child .case-child-end .input .case-input:hover .case-button{
+    background: #7E2C2E;
+}
+.case-child .case-child-end .input .case-button{
+    /* width: 50px;
+    height: 36px;
+    border: none;
+    border-radius: 0 45px 45px 0;
+  
+    background-color: transparent;
+    cursor: pointer; */
+    width: 48px;
+    height: 28px;
+    border: none;
+    border-radius: 36px 36px 36px 36px;
+    background-color: #fefeff;
+    margin-right: 4px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+.case-child .case-child-end .input .case-button:hover{
+    background: #7E2C2E;
+}
+.showTab{
+    margin-top: 20px;
+    width: 100%;
+ 
+}
+.showTab .showTab-ul{
+    width: 100%;
+  
+}
+.showTab .showTab-ul .showTab-li{
+    width: 100%;
+    min-height: 900px;
+    position: relative;
+}
+.block{
+    flex-direction: row;
+    justify-content: center;
+    position: absolute;
+    bottom:100px;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+    background-color: #7E2C2E;
+    color: #FFF;
+}
+.selectMenu{
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+}
+.el-select{
+    width: 80px;
+}
+.el-date-picker{
+    width: 120px;
+
+}
+.el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{
+    width: 200px;
+}
+.case-type{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+.case-state{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+}
+.case-time{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+.dingzhi{
+    width:90px;
+    height:30px;
+    background:rgba(255,255,255,1);
+    border:1px solid rgba(126,44,46,1);
+    cursor: pointer;
+}
+.dingzhi i{
+    font-size: 16px;
+    cursor: pointer;
+    color: #7E2C2E;
+}
+.el-input__inner {
+    height: 31px;
+    line-height: 31px;
+    outline: 0;
+    /* padding: 0 15px; */
+    font-size: 1px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 100%;
+}
+.el-input__icon {
+  
+    line-height: 31px;
+}
+.el-input--suffix .el-input__inner {
+    padding-right: 0px;
+}
+.el-date-editor .el-range-separator {
+    padding: 0 5px;
+    line-height: 24px;
+    width: 5%;
+    color: #303133;
+}
+.el-date-editor .el-range__icon {
+    font-size: 14px;
+    margin-left: -5px;
+    color: #C0C4CC;
+    float: left;
+    line-height: 25px;
+}

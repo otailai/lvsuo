@@ -1,0 +1,33 @@
+
+
+
+    .login{
+        width: 70%;
+        min-width: 1000px;
+        min-height: 680px;
+        flex-direction: row;
+        margin:100px auto;
+        // background: red;
+        .login-left{
+            width: 60%;
+            height: 680px;
+            background: url('../assets/img/login.png') no-repeat center center;
+            background-size: cover;
+        }
+        .login-right{
+            width: 40%;
+            height: 680px;
+            flex-direction: column;
+            // justify-content: center;
+            // align-items: center;
+                .title{
+                    background: url('../assets/img/login_title.png') no-repeat center center;
+                    background-size: cover;
+                    width: 250px;
+                    height: 65px;
+                }
+        }
+    }
+    .el-input__inner{
+        border-radius: 0px;
+    }
