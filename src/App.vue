@@ -5,12 +5,15 @@
 </template>
 
 <script>
+
 export default {
   name: 'App'
 }
 </script>
 
 <style>
+
+ @import "assets/icon/iconfont.css";
 #app {
   width: 100%;
   height: 100%;

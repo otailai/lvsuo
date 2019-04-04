@@ -15,12 +15,12 @@
                 <el-row type="flex" class="row-bg" justify="end">
                     <div class="username flex">
                      
-                            <img src="../assets/img/首页.png" alt="" class="username-hello">
+                            <img src="../assets/img/wujunxi.jpg" alt="" class="username-hello">
                       
                         <span class="username-name">陈晓梅</span>
                     </div>
                     <div class="login-out">
-                        <i class="el-icon-menu"></i>
+                        <i class=" iconfont icon-dingbudaohang-zhangh"></i>
                         <span>退出</span>
                     </div>
                 </el-row>   
@@ -32,10 +32,9 @@
 <div class="topMenu-nav">
     <ul class="flex">
             <router-link :to='v.url' class="flex"  tag="li"  v-for="(v,i) in arr"    @click="changeLi(i)"  :key="i">
-                <div class="nav-icon el-icon-menu"></div>
+                <div :class="'nav-icon iconfont '+' '+v.icon "></div>
                 <a href="#">{{v.title}}</a>
             </router-link>
-    
     </ul>
 
 </div>
@@ -48,7 +47,12 @@
 export default {
     data(){
         return{
-            arr:[{title:'案件',url:'/index/caseIndex'},{title:'案件1',url:'/index/caseIndex'},{title:'案件2',url:'/index/caseIndex'},{title:'案件3',url:'/index/caseIndex'}],
+            arr:[{title:'案件',url:'/index/caseIndex',icon:'icon-anjian'},
+            {title:'客户',url:'/index/customerIndex',icon:'icon-kehu'},
+            {title:'文书',url:'/index/documentIndex',icon:'icon-weimingming'},
+            {title:'审核',url:'/index/auditingIndex',icon:'icon-bumenzhinenggongzuoshenhe'},
+            {title:'统计',url:'/index/documentIndex',icon:'icon-tongji'},
+            {title:'设置',url:'/index/auditingIndex',icon:'icon-icon_set_up'}],
             cur:0,
         }
     },

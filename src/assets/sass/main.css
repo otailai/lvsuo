@@ -1,7 +1,7 @@
 .case{
     padding-top: 20px;  
     width: 90%;
-    margin: 10px auto;
+    margin:  auto;
 }
 .el-tabs__header{
             display: flex;
@@ -113,12 +113,13 @@
 }
 .showTab .showTab-ul{
     width: 100%;
-  
+    margin-top: 20px;
 }
 .showTab .showTab-ul .showTab-li{
     width: 100%;
     min-height: 900px;
     position: relative;
+    margin-top: 20px;
 }
 .block{
     flex-direction: row;
@@ -136,7 +137,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 30px;
+    margin-bottom: 20px;
 }
 .el-select{
     width: 80px;
@@ -166,7 +167,7 @@
     align-items: center;
 }
 .dingzhi{
-    width:90px;
+    width:70px;
     height:30px;
     background:rgba(255,255,255,1);
     border:1px solid rgba(126,44,46,1);
@@ -206,4 +207,20 @@
     color: #C0C4CC;
     float: left;
     line-height: 25px;
+}
+el-date-editor .el-range__close-icon {
+    font-size: 14px;
+    color: #C0C4CC;
+    width: 25px;
+    display: inline-block;
+    float: right;
+    line-height: 25px;
+}
+.el-button--danger{
+    background: #7E2C2E;
+    border: #7E2C2E;
+}
+.el-button--danger:hover{
+    background: #7E2C2E;
+    opacity: 1;
 }

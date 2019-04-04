@@ -72,13 +72,18 @@ table{
     display: flex;
     display: -webkit-flex;
 }
-.active{
+.common-active{
     color: #7E2C2E;
+ 
 }
+.common-active a{
+    color: #7E2C2E;
+} 
+
  .common-input{
            background-color: #FFF;
            background-image: none;
-           border-radius: 4px;
+           /* border-radius: 4px; */
            border: 1px solid #DCDFE6;
            -webkit-box-sizing: border-box;
            box-sizing: border-box;
@@ -93,3 +98,18 @@ table{
            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
            width: 200px;
          }
+.f-row{
+    flex-direction: row;      
+    justify-content: space-between;
+    align-items: center;
+}
+.p-l{
+    padding-left: 30px;
+}
+.textarea{
+    border:1px solid rgba(221,221,221,1);
+}
+.f-f{
+    justify-content: flex-start !important;
+    align-items: flex-start;
+}

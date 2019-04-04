@@ -9,35 +9,32 @@
               </div>
                 <div class="case-child-end flex">
                     <div class="input flex">
-                      <input placeholder="请输入内容"  v-model="input23" class="case-input"/>
+                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                       <button class="case-button"><i class="el-icon-search"></i></button>
 
                     </div>
-                      <el-button type="danger" round><i class="el-icon-plus"></i>新建案例</el-button>
+                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
                 </div>
             </div>
 
-            <div class="selectMenu flex">
-             
+           
+            <div class="showTab">
+            <ul class="showTab-ul">
+                  
+                
+              <li class="showTab-li" v-show="cur==0">
+              <div class="selectMenu flex">
               <div class="case-type flex">
                  <p>案件类型：</p>
-                   <el-select v-model="value" placeholder="请选择">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                 </el-select>
                   <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-               </el-select>
+                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
+                  </el-select>
+                 
+                  <el-select v-model="value" placeholder="请选择">
+                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
+                 </el-select>
               </div>
+
                <div class="case-state flex">
                <p>案件状态：</p> 
                <el-select v-model="value" placeholder="请选择">
@@ -63,9 +60,6 @@
                 </div>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
             </div>
-            <div class="showTab">
-                <ul class="showTab-ul">
-                  <li class="showTab-li" v-show="cur==0">
                     <el-table :data="tableData" border style="width: 100%">
                     <el-table-column prop="date" label="日期" width="180"></el-table-column>
                   <el-table-column
@@ -197,6 +191,9 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+      },
+      toAdd(){
+        this.$router.push({path:'/index/caseAdd'})
       }
     }
   };

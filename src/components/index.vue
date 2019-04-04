@@ -7,13 +7,18 @@
            </div>
         </div>
        <div class="footer">
-            <footer></footer>
+           <div class="container">
+            Copyright 2006 广州金鹏律师事务所 版权所有 粤ICP备14003815号
+
+           </div>
+            
+            
        </div>
     </div> 
 </template>
 <script>
 import topMenu from './topMenu'
-import footer from './footer'
+
 export default {
     data(){
         return{
@@ -23,7 +28,7 @@ export default {
     },
     methods:{},
     components:{
-        topMenu,footer
+        topMenu
     }
 
     
