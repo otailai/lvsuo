@@ -1,5 +1,6 @@
 $width:90%;
 $padding-top:30px;
+$laywer:47%;
 .caseAdd{
     height: 100%;;
    
@@ -55,7 +56,7 @@ $padding-top:30px;
             .flex{
                 margin-top: 10px;
                 .title{
-                font-size:16px;
+                font-size:14px;
                 font-family:MicrosoftYaHei-Bold;
                 font-weight:bold;
                 color:rgba(51,51,51,1);
@@ -65,6 +66,7 @@ $padding-top:30px;
                 display: flex;
                 display: -webkit-flex;
                 flex-direction: column;
+                
                 }
             }
         }
@@ -72,25 +74,205 @@ $padding-top:30px;
     }
     .add-caseinfo{
         margin-top: 30px;
-       
-      
     }
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    .add-lawyer-parent{
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+   
+    .add-lawyer{
+        margin-top: 30px;
+        width: $laywer;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: $padding-top;
+        padding-bottom: $padding-top;
+        webkit-box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+        .add-lawyer-title{
+            flex-direction: row;
+            justify-content: space-between;
+            width: 77%;
+            margin: auto;
+           p{
+            color: #7E2C2E;
+            font-weight: 600;
+            font-size: 18px;
+           }
+           span{
+            color: #7E2C2E;
+            font-size: 12px;
+            cursor: pointer;
+           }
+        }
+        .add-lawyer-index{
+            flex-direction: column;
+            width: 80%;
+            margin: auto;
+                .info{
+                    margin-top: 10px;
+                }
+                .flex{
+                    flex-direction: row;
+                    justify-content: space-around;
+                    width: 300px;
+                    
+                    .title{
+                      
+                        margin-top: 10px;
+                        font-size:14px;
+                        font-family:MicrosoftYaHei-Bold;
+                        font-weight:bold;
+                        color:rgba(51,51,51,1);
+                        width: 100px;
+                    }
+                    .lawyer-input{
+                        width: 100px;
+                        height: 30px;
+                        margin-top: 10px;
+                    }
+                    i{
+                        margin-left: 10px;
+                        color: #999999;
+                        font-size: 12px;
+                        cursor: pointer;
+                    }
+                    .input-icon{
+                        width: 50px;
+                        line-height: 50px;
+                        i{
+                            color: #999999;
+                            cursor: pointer;
+                            font-size: 12px;
+                        }
+                    }
+                    .p{
+                        width: 100px;
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
     
+    }
+    .add-method{
+          margin-top: 30px;
+          padding-top: $padding-top;
+          padding-bottom: $padding-top;
+          webkit-box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+          box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+          .add-method-index{
+            flex-direction: row;
+            justify-content: flex-start;
+            width: $width;
+            margin: auto;
+            align-items: center;
+            p{
+                width: 120px;
+                color: #7E2C2E;
+                font-weight: 600;
+                font-size: 18px;
+            }
+          }
+        
+    }
+    .add-Pay{
+         margin-top: 30px;
+         padding-top: $padding-top;
+         padding-bottom: $padding-top;
+         webkit-box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+         box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+        .add-Pay-index{
+            width: $width;
+            margin: auto;
+            flex-direction: row;
+            justify-content: space-between;
+            .add-Pay-index-child{
+                 width: 90%;
+                flex-direction: column;
+            .flex{
+                flex-direction: row;
+                justify-content: space-between;
+                .title{
+                    font-size:14px;
+                    font-family:MicrosoftYaHei-Bold;
+                    font-weight:bold;
+                    color:rgba(51,51,51,1);
+                    width: 200px;
+                }
+                .input-icon{
+                    width: 50px;
+                    line-height: 50px;
+                    margin-right: 50px;
+                    i{
+                        color: #999999;
+                        cursor: pointer;
+                        font-size: 12px;
+                    }
+                }
+               
+                input{
+                    margin-top: 10px;
+                }
+                
+                .add-method-input{
+                    width: 380px;
+                }
+            }
+          
+             }
+             .add-icon{
+                //  width: 30%;
+                flex-direction: row;
+                p{
+                    color: #7E2C2E;
+                    font-size: 12px;
+                    cursor: pointer;
+                }
+                i{
+                    color: #7E2C2E;
+                    font-size: 12px;
+                    cursor: pointer;
+                }
+            }
+      }
+    }
+    .end-btn{
+        width: 23%;
+        margin: 50px auto;
+        flex-direction: row;
+        justify-content: space-between;
+        .btn{
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            background: #FFF;
+            border: 1px solid #DCDFE6;
+            color: #606266;
+            -webkit-appearance: none;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            outline: 0;
+            margin: 0;
+            -webkit-transition: .1s;
+            transition: .1s;
+            font-weight: 500;
+            padding: 12px 20px;
+            font-size: 14px;
+            color: #FFF;
+        }
+        .btn1{
+            background-color: #A92A2E;
+            border-color: #A92A2E;
+        }
+        .btn2{
+            background-color: #7E2C2E;
+            border-color: #7E2C2E;
+            
+        }
+    }
+  }
 }
+

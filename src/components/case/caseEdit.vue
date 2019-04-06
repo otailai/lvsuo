@@ -7,25 +7,28 @@
                 <p>案件详情</p>
             </div>
              <div class="add-content flex">
-                <div class="add-p flex"><p class="add-p-p">收起</p><i class="el-icon-d-arrow-right"></i></div>
+                <!-- <div class="add-p flex"><p class="add-p-p">收起</p><i class="el-icon-d-arrow-right"></i></div> -->
                 <div class="add-userinfo flex">
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div>
+                    <div class="flex"><p class="title">客户名称(中)</p><p>陈小明</p></div>
+                    <div class="flex"><p class="title">客户名称(英)</p><p>chenxiaoming</p></div>
+                    <div class="flex"><p class="title">省/市地区</p><p>广州省广州市</p></div>
+                    <div class="flex"><p class="title">详细地址</p><p>海珠区客村江贝大道1号1栋4楼</p></div>
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title">客户类型</p> 
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+                        <p>【诉讼】劳动仲裁</p>
                         </div>
                         <div class="flex"><p class="title">所属行业</p>
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                        <p>矿产</p>
                         </div>
                         <div class="flex"><p class="title">职务</p>
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                        <p>助理</p>
+                         </div>
+                           <div class="flex"><p class="title">联系方式</p>
+                        <p>13800138000</p>
                          </div>
                        
                     </div>
@@ -35,14 +38,17 @@
                         <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex"><p class="title">选择案件类型</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">案由</p> <input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div>
+                    <div class="flex"><p class="title">案件类型</p><p>诉讼——民事</p></div>
+                    <div class="flex"><p class="title">案件名称</p><p>民事诉讼</p></div>
+                    <div class="flex"><p class="title">案由</p><p>金钱纠纷</p></div>
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
-                        <textarea name="" id="" cols="40" rows="8" class="textarea"></textarea>
+                        <p>
+                            本协议书签约双方就协议书中所描述项目的研究开发、投资
+                            融资、成果权益、收益分配、风险责任以及与之相关的技术
+                            和法律等问题经平
+                        </p>
                         </div>
                     </div>
                     </div>
@@ -61,20 +67,15 @@
                          <p class="title">职务</p>
                            <p class="input-icon"></p>
                     </div>
-                    <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
-                        <div class="input-icon"><i class="el-icon-remove"></i></div>
+                    <div class="flex info">
+                     <p class="p">赵日天</p>
+                       <p class="p">主办律师</p>
+                        <p class="input-icon"></p>
                     </div>
-                      <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
-                        <div class="input-icon"><i class="el-icon-remove"></i></div>
-                    </div>
-                      <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
-                        <div class="input-icon"><i class="el-icon-remove"></i></div>
+                       <div class="flex info">
+                     <p class="p">赵日天</p>
+                       <p class="p">主办律师</p>
+                        <p class="input-icon"></p>
                     </div>
                     </div>
                     </div>
@@ -92,10 +93,10 @@
                          <p class="title">职务</p>
                            <p class="input-icon"></p>
                     </div>
-                    <div class="flex" v-for="(v,i) in arr" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
-                        <div class="input-icon" @click="deleteLine(i)"><i class="el-icon-remove"></i></div>
+                    <div class="flex info">
+                     <p class="p">赵日天</p>
+                       <p class="p">主办律师</p>
+                        <p class="input-icon"></p>
                     </div>
                     </div>
                     </div>
@@ -125,7 +126,7 @@
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                       <div class="input-icon"><i class="el-icon-remove"></i></div>
+                       <div class="input-icon"></div>
                     </div>
                     <div class="flex">
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
@@ -153,7 +154,7 @@
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                     <div class="input-icon"><i class="el-icon-remove"></i></div>
+                     <div class="input-icon"></div>
                     </div>
                     <div class="flex">
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
@@ -178,9 +179,8 @@
                     <div class="flex">
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                     <div class="input-icon"><i class="el-icon-remove"></i></div>
-                      
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                      <div class="input-icon"></div>
                     </div>
                     <div class="flex">
                     <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
