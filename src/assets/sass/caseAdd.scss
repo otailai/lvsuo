@@ -173,6 +173,9 @@ $laywer:47%;
                 font-weight: 600;
                 font-size: 18px;
             }
+            .el-select{
+                width: 130px;
+            }
           }
         
     }
@@ -193,6 +196,9 @@ $laywer:47%;
             .flex{
                 flex-direction: row;
                 justify-content: space-between;
+                p{
+                    width: 200px;
+                }
                 .title{
                     font-size:14px;
                     font-family:MicrosoftYaHei-Bold;

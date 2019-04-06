@@ -30,14 +30,14 @@
                   <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
                   </el-select>
                  
-                  <el-select v-model="value" placeholder="请选择">
+                  <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
                   <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
                  </el-select>
               </div>
 
                <div class="case-state flex">
                <p>案件状态：</p> 
-               <el-select v-model="value" placeholder="请选择">
+               <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -60,31 +60,16 @@
                 </div>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
             </div>
-                    <el-table :data="tableData" border style="width: 100%">
+                    <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                  <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="180">
-                  </el-table-column>
+                    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
+                    <el-table-column prop="address" label="地址"> </el-table-column>
 
-                  <el-table-column
-                    prop="address"
-                    label="地址">
-                  </el-table-column>
                 </el-table>
                  <div class="block flex">
-                  <el-pagination
-                  background
-                  @size-change="handleSizeChange"
-                  @current-change="handleCurrentChange"
-                  :current-page="currentPage4"
-                  :page-sizes="[100, 200, 300, 400]"
-                  :page-size="100"
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :total="400">
-                </el-pagination>
-                
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                   </el-pagination>
                 </div>
                   </li>
 
@@ -113,18 +98,22 @@
           arr:[{title:'所有案件'},{title:'授权案件'}],
          input23: '',
           tableData: [{
+          id:1,
           date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         }, {
+           id:2,
           date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄'
         }, {
+           id:3,
           date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄'
         }, {
+           id:4,
           date: '2016-05-03',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1516 弄'
@@ -194,6 +183,9 @@
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
+      },
+      lineCilck(row, event, column){
+console.log(row, event, column)
       }
     }
   };

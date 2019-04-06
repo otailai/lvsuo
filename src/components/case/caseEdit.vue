@@ -58,7 +58,7 @@
                 <div class="add-lawyer  flex">
                 <div class="add-lawyer-title flex"> 
                      <p class="add-userinfo-p">客户基本信息</p>
-                     <span><i class="el-icon-circle-plus"></i> 添加案件成员</span>
+                  
                  </div>  
                 <div class="flex  add-lawyer-index">
                     
@@ -84,7 +84,6 @@
                 <div class="add-lawyer  lex">
                 <div class="add-lawyer-title flex"> 
                      <p class="add-userinfo-p">当事人信息</p>
-                     <span @click="pushLine()"><i class="el-icon-circle-plus"></i> 其他当事人</span>
                  </div>  
                 <div class="flex  add-lawyer-index">
              
@@ -123,19 +122,14 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                       <div class="input-icon"></div>
+                   <p>2019-04-40</p>
+                    <p>2019-04-40</p>
+                     <p>2019-04-40</p>
+                    <div class="input-icon"></div>
                     </div>
-                    <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                       <div class="input-icon"><i class="el-icon-remove"></i></div>
-                    </div>
+                  
                    </div>  
-                    <div class="add-icon flex"><i class="el-icon-circle-plus"></i><p>添加</p></div>
+                
                  </div>
                 </div>
                  
@@ -145,25 +139,20 @@
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
                     <div class="flex">
-                        <p class="title">付款日期</p>
-                        <p class="title">付款日期</p>
-                        <p class="title">付款日期</p>
+                        <p class="title">风险金额</p>
+                        <p class="title">基本金额</p>
+                        <p class="title">风险达成条件</p>
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <p>40000</p>
+                    <p>40000</p>
+                    <p>本费用与2019年3月31前支付</p>   
                      <div class="input-icon"></div>
                     </div>
-                    <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                     <div class="input-icon"><i class="el-icon-remove"></i></div>
-                    </div>
+                    
                    </div>  
-                    <div class="add-icon flex"><i class="el-icon-circle-plus"></i><p>添加</p></div>
+                    
                  </div>
               </div>
                 
@@ -171,30 +160,25 @@
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
                     <div class="flex">
-                        <p class="title">付款日期</p>
-                        <p class="title">付款日期</p>
-                        <p class="title">付款日期</p>
+                        <p class="title">姓名</p>
+                        <p class="title">职务</p>
+                        <p class="title">费率</p>
                         <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                  <p>赵日天</p>
+                  <p>主办律师</p>
+                  <p>1000RMB/小时</p>
                       <div class="input-icon"></div>
                     </div>
-                    <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <div class="input-icon"><i class="el-icon-remove"></i></div>
-                    </div>
+                 
                    </div>  
-                    <div class="add-icon flex"><i class="el-icon-circle-plus"></i><p>添加</p></div>
+              
                  </div>
               </div>
                 
                 <div class="end-btn flex">
-                    <button class="btn btn1">主要按钮</button> <button class="btn btn2">主要按钮</button>
+                 
                 </div>
              </div>
     </div>
