@@ -9,10 +9,9 @@ import routes from './router.config'
 import VueRouter from 'vue-router'
 import axios from 'axios'
 import JsEncrypt from 'jsencrypt/bin/jsencrypt'
-import Vuex from 'vuex'
+import store from './vuex/store'
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$http = axios
-Vue.use(Vuex)
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
@@ -24,6 +23,7 @@ const router = new VueRouter({
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

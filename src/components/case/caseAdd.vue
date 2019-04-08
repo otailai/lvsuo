@@ -16,10 +16,10 @@
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div>
+                    <div class="flex"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameC"/></div>
+                    <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div>
+                    <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
+                    <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title">客户类型</p> 
@@ -66,8 +66,8 @@
                            <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="laywerName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="laywerJob"/>  
                         <div class="input-icon"></div>
                     </div>
                       <div class="flex" v-for="(v,i) in userInfo" :key="i">
@@ -210,6 +210,19 @@
 export default {
     data(){
         return{
+            i:0,
+            userNameC:'',
+            userNameE:'',
+            province:'',
+            address:'',
+            laywerName:'',
+            laywerJob:'',
+            // laywerName1:[
+            //  laywerName,laywerName1laywerName2
+            // ],
+            // laywerJob1:[
+            //     laywerJob,laywerJob1,laywerJob2
+            // ],
             text:'收起',
             showNum:0,
             arr:[],
@@ -234,7 +247,7 @@ export default {
               value: '选项5',
               label: '北京烤鸭'
             }],
-            value: ''
+            value: '选项1'
              
             
         }
@@ -272,6 +285,9 @@ export default {
              this.text="收起"
             }
         }
+    },
+    mounted(){
+       
     }
 }
 </script>

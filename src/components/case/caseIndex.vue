@@ -1,5 +1,10 @@
 <template>
     <div id="case" class="case">
+       {{$store.state.count}}
+            <button @click="$store.commit('increment')">加一</button>
+            <button  @click="$store.dispatch('addPlus')">加一</button>
+
+           
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
@@ -83,6 +88,7 @@
     </div>
 </template>
 <script>
+import store from '../../vuex/store'
   export default {
     data() {
       return {
