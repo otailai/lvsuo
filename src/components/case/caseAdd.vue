@@ -71,8 +71,8 @@
                         <div class="input-icon"></div>
                     </div>
                       <div class="flex" v-for="(v,i) in userInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" :v-model="inputArr[i].nameModel"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" :v-model="inputArr[i].jobModel"/>  
                         <div class="input-icon" @click="deleteLine(i,userInfo)"><i class="el-icon-remove"></i></div>
                     </div>
                      
@@ -99,7 +99,7 @@
                     </div>
                       <div class="flex" v-for="(v,i) in PartyInfo" :key="i">
                         <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" />  
                         <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
                     </div>
                     </div>
@@ -210,6 +210,7 @@
 export default {
     data(){
         return{
+
             i:0,
             userNameC:'',
             userNameE:'',
@@ -217,16 +218,18 @@ export default {
             address:'',
             laywerName:'',
             laywerJob:'',
-            // laywerName1:[
-            //  laywerName,laywerName1laywerName2
-            // ],
+            laywerName1:[
+           
+            ],
             // laywerJob1:[
             //     laywerJob,laywerJob1,laywerJob2
             // ],
             text:'收起',
             showNum:0,
             arr:[],
-            userInfo:[],
+            userInfo:[
+               
+            ],
             PartyInfo:[],
             payDate:[],
             riskAcount:[],
@@ -247,8 +250,11 @@ export default {
               value: '选项5',
               label: '北京烤鸭'
             }],
-            value: '选项1'
+            value: '选项1',
+            inputArr:[
              
+            ],
+            i:0,
             
         }
     },
@@ -260,7 +266,10 @@ export default {
             arr.splice(i,1)
         },
         pushUserInfo(){
+            let ii = this.i+1
             this.userInfo.push(1)
+            this.inputArr.push({nameModel:['name'+ii],jobModel:['job'+ii]})  
+            console.log(this.inputArr)//使用action或计算属性来增加减少
         },
         pushPartyInfo(){
               this.PartyInfo.push(1)
