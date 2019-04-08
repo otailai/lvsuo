@@ -1,6 +1,7 @@
 $width:90%;
 $padding-top:30px;
 $laywer:47%;
+$font:17px;
 .caseAdd{
     height: 100%;;
    
@@ -14,20 +15,29 @@ $laywer:47%;
     .add-p{
         width: $width;
         margin: auto;
-        flex-direction: row;
         justify-content: flex-end;
-        cursor: pointer;
-        p{
-            font-size:12px;
-            font-family:MicrosoftYaHei;
-            font-weight:400;
-            color:rgba(126,44,46,1);
+        flex-direction: row; 
+        border-bottom: 1px solid rgba(110, 109, 109, 0.1);
+        span{
+            width: 50px;
+            flex-direction: row; 
+           
+            justify-content: flex-end;
+            p{
+                font-size:12px;
+                font-family:MicrosoftYaHei;
+                font-weight:400;
+                color:rgba(126,44,46,1);
+                cursor: pointer;
+            }
+            i{
+                font-size:14px;
+                color:rgba(126,44,46,1);
+                transform: rotate(-90deg);
+                cursor: pointer;
+            }
         }
-        i{
-            font-size:14px;
-            color:rgba(126,44,46,1);
-            transform: rotate(-90deg);
-        }
+      
     }
     .add-userinfo{
         // border: 1px solid #000;
@@ -43,7 +53,7 @@ $laywer:47%;
             margin: auto;
             color: #7E2C2E;
             font-weight: 600;
-            font-size: 18px;
+            font-size: $font;
         }
        .add-userinfo-index{
         width: $width;
@@ -54,6 +64,12 @@ $laywer:47%;
             width: 50%;
             flex-direction: column;
             .flex{
+                .el-select {
+                    width: 170px;
+                    .el-input__inner{
+                        border-radius: 0px;
+                    }
+                }
                 margin-top: 10px;
                 .title{
                 font-size:14px;
@@ -84,7 +100,7 @@ $laywer:47%;
         margin-top: 30px;
         width: $laywer;
         flex-direction: column;
-        justify-content: center;
+        // justify-content: center;
         padding-top: $padding-top;
         padding-bottom: $padding-top;
         webkit-box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
@@ -93,11 +109,11 @@ $laywer:47%;
             flex-direction: row;
             justify-content: space-between;
             width: 77%;
-            margin: auto;
+            margin: 0 auto;
            p{
             color: #7E2C2E;
             font-weight: 600;
-            font-size: 18px;
+            font-size: $font;
            }
            span{
             color: #7E2C2E;
@@ -108,7 +124,7 @@ $laywer:47%;
         .add-lawyer-index{
             flex-direction: column;
             width: 80%;
-            margin: auto;
+            margin: 0 auto;
                 .info{
                     margin-top: 10px;
                 }
@@ -116,7 +132,7 @@ $laywer:47%;
                     flex-direction: row;
                     justify-content: space-around;
                     width: 300px;
-                    
+                    height: 50px;
                     .title{
                       
                         margin-top: 10px;
@@ -167,11 +183,20 @@ $laywer:47%;
             width: $width;
             margin: auto;
             align-items: center;
+            .select-input{
+                .el-select {
+                    width: 170px;
+                    .el-input__inner{
+                        border-radius: 0px;
+                    }
+                }
+            }
+           
             p{
                 width: 120px;
                 color: #7E2C2E;
                 font-weight: 600;
-                font-size: 18px;
+                font-size: $font;
             }
             .el-select{
                 width: 130px;
@@ -230,6 +255,7 @@ $laywer:47%;
              .add-icon{
                 //  width: 30%;
                 flex-direction: row;
+                height: 20px;
                 p{
                     color: #7E2C2E;
                     font-size: 12px;
@@ -239,6 +265,7 @@ $laywer:47%;
                     color: #7E2C2E;
                     font-size: 12px;
                     cursor: pointer;
+                    line-height: 18px;
                 }
             }
       }

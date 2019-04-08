@@ -12,7 +12,7 @@ import auditingIndex from './components/auditing/auditingIndex'
 
 
 export default[
-    {path:'/',component:index,name:index},
+    {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
     {path:'/index',component:index,name:index,children:[
 {path:'/index/caseIndex',component:caseIndex,name:caseIndex},

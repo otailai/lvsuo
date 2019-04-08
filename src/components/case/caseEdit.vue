@@ -2,7 +2,7 @@
     <div class="caseAdd">
             <div class="add-top flex p-l">
                 <p>所在位置：</p>
-                <p>案件管理</p>
+                <router-link to='/index/caseIndex' tag="a">案件管理</router-link>
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p>案件详情</p>
             </div>
@@ -203,6 +203,29 @@ export default {
 </script>
 
 <style lang="scss">
-@import '../../assets/sass/caseAdd.scss'
+@import '../../assets/sass/caseAdd.scss';
+.caseAdd .add-content .add-lawyer-parent .add-lawyer .add-lawyer-index .flex {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    width: 300px;
+    height: 30px;
+}
+.caseAdd .add-content .add-Pay .add-Pay-index .add-Pay-index-child .flex:first-child{
+       margin-top: 0px !important;
+}
+.caseAdd .add-content .add-Pay .add-Pay-index .add-Pay-index-child .flex {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+     margin-top: 10px;
+}
 </style>
 

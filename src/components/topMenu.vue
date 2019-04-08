@@ -19,7 +19,7 @@
                       
                         <span class="username-name">陈晓梅</span>
                     </div>
-                    <div class="login-out">
+                    <div class="login-out" @click="loginOut()">
                         <i class=" iconfont icon-dingbudaohang-zhangh"></i>
                         <span>退出</span>
                     </div>
@@ -47,12 +47,13 @@
 export default {
     data(){
         return{
-            arr:[{title:'案件',url:'/index/caseIndex',icon:'icon-anjian'},
-            {title:'客户',url:'/index/customerIndex',icon:'icon-kehu'},
-            {title:'文书',url:'/index/documentIndex',icon:'icon-weimingming'},
-            {title:'审核',url:'/index/auditingIndex',icon:'icon-bumenzhinenggongzuoshenhe'},
-            {title:'统计',url:'/index/documentIndex',icon:'icon-tongji'},
-            {title:'设置',url:'/index/auditingIndex',icon:'icon-icon_set_up'}],
+            // arr:[{title:'案件',url:'/index/caseIndex',icon:'icon-anjian'},
+            // {title:'客户',url:'/index/customerIndex',icon:'icon-kehu'},
+            // {title:'文书',url:'/index/documentIndex',icon:'icon-weimingming'},
+            // {title:'审核',url:'/index/auditingIndex',icon:'icon-bumenzhinenggongzuoshenhe'},
+            // {title:'统计',url:'/index/documentIndex',icon:'icon-tongji'},
+            // {title:'设置',url:'/index/auditingIndex',icon:'icon-icon_set_up'}],
+            arr:[],
             cur:0,
         }
     },
@@ -60,7 +61,21 @@ export default {
         changeLi(i){
             this.cur=i;
             console.log(i)
+        },
+        loginOut(){
+            // localStorage.removeItem()
+            this.$router.push('/')
+        },
+        getTopMenu(){
+            this.$http.get('/api/data').then((res)=>{
+                // console.log(res)
+                this.arr = res.data
+            })
         }
+
+    },
+    mounted(){
+        this.getTopMenu()
     }
 }
 </script>

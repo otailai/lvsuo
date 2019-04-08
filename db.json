@@ -1,1 +1,14 @@
-{}
+{
+    "data":[
+            {"id":"1","title":"案件","url":"/index/caseIndex","icon":"icon-anjian","children":[
+                {"id":"7","title":"案例"}, {"id":"8","title":"利益检索"}
+            ]},
+            {"id":"2","title":"客户","url":"/index/customerIndex","icon":"icon-kehu"},
+            {"id":"3","title":"文书","url":"/index/documentIndex","icon":"icon-weimingming"},
+            {"id":"4","title":"审核","url":"/index/auditingIndex","icon":"icon-bumenzhinenggongzuoshenhe"},
+            {"id":"5","title":"统计","url":"/index/documentIndex","icon":"icon-tongji"},
+            {"id":"6","title":"设置","url":"/index/auditingIndex","icon":"icon-icon_set_up"}
+    ]
+    
+
+}

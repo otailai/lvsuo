@@ -140,7 +140,11 @@
     margin-bottom: 20px;
 }
 .el-select{
-    width: 80px;
+    width: 100px;
+
+}
+.el-input__inner {
+    border-radius: 0px;
 }
 .el-date-picker{
     width: 120px;
@@ -190,7 +194,7 @@
 }
 .el-input__icon {
   
-    line-height: 31px;
+    line-height: 25px !important;
 }
 .el-input--suffix .el-input__inner {
     padding-right: 0px;

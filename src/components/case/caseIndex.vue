@@ -1,27 +1,28 @@
 <template>
     <div id="case" class="case">
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-          <el-tab-pane label="案例" name="first">
-            <div class="flex case-child">  
+        
+           <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+         
+            <div v-show="child_cur==0">
+          
+            <div class="flex case-child" >  
+           
               <div class="case-child-first flex">
-                <p  v-for="(v,i) in arr" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
-               
+                <p  v-for="(v,i) in arr1" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
               </div>
+                
                 <div class="case-child-end flex">
                     <div class="input flex">
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                       <button class="case-button"><i class="el-icon-search"></i></button>
-
                     </div>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
                 </div>
-            </div>
 
-           
+            </div>
             <div class="showTab">
             <ul class="showTab-ul">
-                  
-                
               <li class="showTab-li" v-show="cur==0">
               <div class="selectMenu flex">
               <div class="case-type flex">
@@ -29,7 +30,6 @@
                   <el-select v-model="value" placeholder="请选择">
                   <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
                   </el-select>
-                 
                   <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
                   <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
                  </el-select>
@@ -38,15 +38,10 @@
                <div class="case-state flex">
                <p>案件状态：</p> 
                <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                 </el-select>
-               </div>
-                <div class="case-time flex">
+               <el-option v-for="item in options"  :key="item.value"  :label="item.label" :value="item.value"></el-option>
+               </el-select>
+               </div>          
+              <div class="case-time flex">
                <p>起止时间：</p>
                 <el-date-picker
                 v-model="value5"
@@ -64,7 +59,6 @@
                     <el-table-column prop="date" label="日期" width="180"></el-table-column>
                     <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
                     <el-table-column prop="address" label="地址"> </el-table-column>
-
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
@@ -78,20 +72,24 @@
                   </li>
                 </ul>
             </div>
-
-          
-     
+            </div>
+            
+         <div v-show="cur==0">123123</div>
         </el-tab-pane>
-        <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>
+      
+        <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
                 
-        </el-tabs>
+        </el-tabs> 
     </div>
 </template>
 <script>
   export default {
     data() {
       return {
-        activeName: 'first',
+        child_cur:0,
+        arr:[],
+        arr1:[{title:'所有案件'},{title:'授权案件'}],
+        activeName: 'name0',
        currentPage4: 4,
         index:0,
           cur:0,
@@ -169,7 +167,10 @@
     },
     methods: {
       handleClick(tab, event) {
-        console.log(tab, event);
+        this.child_cur = tab.index
+        // console.log(tab.index)
+        // console.log(this.child_cur)
+        // console.log(tab,event);
       },
       changeLi(i){
           this.cur = i
@@ -186,7 +187,18 @@
       },
       lineCilck(row, event, column){
 console.log(row, event, column)
+      },
+      getChildMenu(){
+        this.$http.get('/api/data').then((res)=>{
+        this.arr = res.data[0].children
+        })
       }
+    },
+    mounted(){
+      this.getChildMenu()
+    },
+    components:{
+      
     }
   };
 </script>
