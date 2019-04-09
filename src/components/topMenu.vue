@@ -31,9 +31,9 @@
 
 <div class="topMenu-nav">
     <ul class="flex">
-            <router-link :to='v.url' class="flex"  tag="li"  v-for="(v,i) in arr"    @click="changeLi(i)"  :key="i">
-                <div :class="'nav-icon iconfont '+' '+v.icon "></div>
-                <a href="#">{{v.title}}</a>
+            <router-link :to='v.url' class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
+            <div :class="'nav-icon iconfont '+' '+v.icon "></div>
+            <p>{{v.title}}</p>
             </router-link>
     </ul>
 

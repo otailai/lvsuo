@@ -8,8 +8,8 @@
             </div>
              <div class="add-content flex">
                 <div class="add-p flex">
-                    <span @click="showHide()" class="flex">
-                    <p class="add-p-p">{{text}}</p><i class="el-icon-d-arrow-right" ref="icon_right"></i>
+                    <span @click="closeBox()" class="flex">
+                   <i class="el-icon-close" ref="icon_right"></i>
                     </span>
                     </div>
                 <div class="add-userinfo flex" v-show="this.showNum==0">
@@ -21,15 +21,15 @@
                     <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
                     <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
                 </div>
-                  <div class="add-userinfo-left flex">
+                  <div class="add-userinfo-left selectInput flex">
                         <div class="flex"><p class="title">客户类型</p> 
                   <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
                         </div>
                         <div class="flex"><p class="title">所属行业</p>
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                  <el-select v-model="value1" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
                         </div>
                         <div class="flex"><p class="title">职务</p>
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                  <el-select v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
                          </div>
                        
                     </div>
@@ -39,14 +39,19 @@
                         <p class="add-userinfo-p">案件基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex"><p class="title">选择案件类型</p><input type="text" class="common-input" placeholder="请输入"/></div>
+                    <div class="flex selectInput1">
+                        <p class="title">选择案件类型</p>
+                    <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+                    <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+
+                    </div>
                     <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="请输入"/></div>
                     <div class="flex"><p class="title">案由</p> <input type="text" class="common-input" placeholder="请输入"/></div>
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div> -->
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
-                        <textarea name="" id="" cols="40" rows="8" class="textarea"></textarea>
+                        <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea"></textarea>
                         </div>
                     </div>
                     </div>
@@ -66,13 +71,13 @@
                            <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="laywerName"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="laywerJob"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[0].laywerName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[0].laywerJob"/>  
                         <div class="input-icon"></div>
                     </div>
                       <div class="flex" v-for="(v,i) in userInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" :v-model="inputArr[i].nameModel"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" :v-model="inputArr[i].jobModel"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[i+1].laywerName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[i+1].laywerJob"/>  
                         <div class="input-icon" @click="deleteLine(i,userInfo)"><i class="el-icon-remove"></i></div>
                     </div>
                      
@@ -93,13 +98,13 @@
                            <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyJob"/>  
                         <div class="input-icon"></div>
                     </div>
                       <div class="flex" v-for="(v,i) in PartyInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" />  
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].partyName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].partyJob"/>  
                         <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
                     </div>
                     </div>
@@ -129,15 +134,15 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].dateName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].describe"/>
                        <div class="input-icon"></div>
                     </div>
                     <div class="flex" v-for="(v,i) in payDate" :key="i">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].dateName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].describe"/>
                        <div class="input-icon" @click="deleteLine(i,payDate)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -157,15 +162,15 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskCondition"/>
                      <div class="input-icon"></div>
                     </div>
                     <div class="flex" v-for="(v,i) in riskAcount" :key="i">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCondition"/>
                      <div class="input-icon" @click="deleteLine(i,riskAcount)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -183,16 +188,16 @@
                         <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].nameJobName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].nameJobJob"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].nameJobRate"/>
                      <div class="input-icon"></div>
                       
                     </div>
                     <div class="flex" v-for="(v,i) in nameJob" :key="i">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobName"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobJob"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobRate"/>
                     <div class="input-icon" @click="deleteLine(i,nameJob)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -201,39 +206,51 @@
               </div>
                 
                 <div class="end-btn flex">
-                    <button class="btn btn1">预览合同</button> <button class="btn btn2">提交审核</button>
+                    <button class="btn btn1">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
              </div>
     </div>
 </template>
 <script>
+import qs from 'qs';
 export default {
     data(){
         return{
-
-            i:0,
+            textarea:'',
+           
             userNameC:'',
             userNameE:'',
             province:'',
             address:'',
+           
             laywerName:'',
             laywerJob:'',
-            laywerName1:[
-           
-            ],
-            // laywerJob1:[
-            //     laywerJob,laywerJob1,laywerJob2
-            // ],
+            partyName:'',
+            partyJob:'',
+
+            dateName:'',
+            payCount:'',
+            describe:'',
+
+
+            riskName:'',
+            riskCount:'',
+            riskCondition:'',
+
+            nameJobName:'',
+            nameJobJob:'',
+            nameJobRate:'',
+
+
             text:'收起',
             showNum:0,
             arr:[],
-            userInfo:[
-               
-            ],
+            userInfo:[],
             PartyInfo:[],
             payDate:[],
             riskAcount:[],
             nameJob:[],
+
             options: [{
              value: '选项1',
               label: '黄金糕'
@@ -251,10 +268,28 @@ export default {
               label: '北京烤鸭'
             }],
             value: '选项1',
+            value1: '选项2',
+            value2: '选项3',
+            // 案件律师信息input-model
             inputArr:[
-             
+            {laywerName:'',laywerJob:''}
             ],
-            i:0,
+            // 当事人信息input-model
+            input1Arr:[
+                {partyName:'',partyJob:''}
+            ],
+            // 付款方式之时间input-model
+            timeArr:[
+            {dateName:'',payCount:'',describe:''}
+            ],
+            // 付款方式之风险input-model
+            riskArr:[
+            {riskName:'',riskCount:'',riskCondition:''}
+            ],
+             // 付款方式之费率input-model
+            nameJobArr:[
+            {nameJobName:'',nameJobJob:'',nameJobRate:''}
+            ],
             
         }
     },
@@ -266,33 +301,54 @@ export default {
             arr.splice(i,1)
         },
         pushUserInfo(){
-            let ii = this.i+1
             this.userInfo.push(1)
-            this.inputArr.push({nameModel:['name'+ii],jobModel:['job'+ii]})  
-            console.log(this.inputArr)//使用action或计算属性来增加减少
+            this.$store.dispatch('addUser')
+            this.inputArr.push({laywerName:'',laywerJob:''})  
+            
         },
         pushPartyInfo(){
-              this.PartyInfo.push(1)
+            this.PartyInfo.push(1)
+            this.$store.dispatch('addParty')
+            this.inputArr1.push({partyName:'',partyJob:''})  
         },
         addPayDate(){
-              this.payDate.push(1)
+            this.payDate.push(1)
+            this.$store.dispatch('addDate')
+            this.timeArr.push({dateName:'',payCount:'',describe:''})  
         },
          addRiskAcount(){
-              this.riskAcount.push(1)
+            this.riskAcount.push(1)
+            this.$store.dispatch('addRisk')
+            this.riskArr.push({riskName:'',riskCount:'',riskCondition:''})  
         },
          addNameJob(){
-              this.nameJob.push(1)
+            this.nameJob.push(1)
+            this.$store.dispatch('addNameJob')
+            this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:''})  
         },
-        showHide(event){
-            if( this.showNum==0 ){
-                this.showNum=1
-            this.$refs.icon_right.style.transform = "rotate(-90deg)"
-            this.text="展开"
-            }else{
-            this.showNum=0
-            this.$refs.icon_right.style.transform = "rotate(90deg)"
-             this.text="收起"
-            }
+        closeBox(){
+           this.$router.push('/index/caseIndex')
+        },
+        addAll(){
+          var addJson = {
+              'userNameC':this.userNameC,
+              'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+              'type':this.value,
+              'suoshuhangye':this.value1,
+              'job':this.value2,
+              'laywerArr':this.inputArr,
+              'partyArr':this.inputArr,
+              'timeArr':this.timeArr,
+              'riskArr':this.riskArr,
+              'nameJobArr':this.nameJobArr,
+              'textarea':this.textarea
+          }
+          addJson = JSON.parse(JSON.stringify(addJson))
+          console.log(addJson)
+            // this.$http.post('',param).then(()=>{
+            // })
         }
     },
     mounted(){

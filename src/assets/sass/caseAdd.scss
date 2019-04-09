@@ -31,9 +31,8 @@ $font:17px;
                 cursor: pointer;
             }
             i{
-                font-size:14px;
-                color:rgba(126,44,46,1);
-                transform: rotate(-90deg);
+                font-size:20px;
+                color:#cdc9c5;
                 cursor: pointer;
             }
         }
@@ -63,13 +62,24 @@ $font:17px;
         .add-userinfo-left{
             width: 50%;
             flex-direction: column;
-            .flex{
+            .selectInput{
                 .el-select {
                     width: 170px;
                     .el-input__inner{
                         border-radius: 0px;
                     }
                 }
+            }
+            .selectInput1{
+                .el-select {
+                    width: 100px;
+                    .el-input__inner{
+                        border-radius: 0px;
+                    }
+                }
+            }
+            .flex{
+              
                 margin-top: 10px;
                 .title{
                 font-size:14px;
@@ -308,4 +318,3 @@ $font:17px;
     }
   }
 }
-

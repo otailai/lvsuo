@@ -76,7 +76,7 @@ table{
     color: #7E2C2E;
  
 }
-.common-active a{
+.common-active p{
     color: #7E2C2E;
 } 
 
@@ -90,8 +90,8 @@ table{
            color: #606266;
            display: inline-block;
            font-size: inherit;
-           height: 40px;
-           line-height: 40px;
+           height: 35px;
+           line-height: 35px;
            outline: 0;
            padding: 0 15px;
            -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
@@ -112,4 +112,10 @@ table{
 .f-f{
     justify-content: flex-start !important;
     align-items: flex-start;
+}
+.el-input__inner{
+    outline: none;
+}
+.el-select .el-input__inner:focus{
+    border-color: #ccc;
 }

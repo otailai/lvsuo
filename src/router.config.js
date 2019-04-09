@@ -8,8 +8,8 @@ import caseEdit from './components/case/caseEdit'
 import customerIndex from './components/customer/customerIndex'
 import documentIndex from './components/document/documentIndex'
 import auditingIndex from './components/auditing/auditingIndex'
-
-
+import countIndex from './components/count/countIndex'
+import setIndex from './components/setting/setIndex'
 
 export default[
     {path:'/',component:login,name:login},
@@ -21,7 +21,8 @@ export default[
 {path:'/index/customerIndex',component:customerIndex,name:customerIndex},
 {path:'/index/documentIndex',component:documentIndex,name:documentIndex},
 {path:'/index/auditingIndex',component:auditingIndex,name:auditingIndex},
-
+{path:'/index/countIndex',component:countIndex,name:countIndex},
+{path:'/index/setIndex',component:setIndex,name:setIndex},
     ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
    

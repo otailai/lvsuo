@@ -55,12 +55,14 @@
         flex-direction: column;
         text-align: center; 
         justify-content: center;
+        cursor: pointer;
         &:hover {
           color:#7E2C2E;
           border-bottom: 3px solid #7E2C2E;
           z-index: 99;
-          a{
+          p{
             color:#7E2C2E;
+            cursor: pointer;
           }
         }
       }

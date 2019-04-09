@@ -10,6 +10,8 @@ import VueRouter from 'vue-router'
 import axios from 'axios'
 import JsEncrypt from 'jsencrypt/bin/jsencrypt'
 import store from './vuex/store'
+import VueParticles from 'vue-particles'  
+Vue.use(VueParticles)  
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$http = axios
 Vue.use(VueRouter)

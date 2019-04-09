@@ -5,9 +5,12 @@
             ]},
             {"id":"2","title":"客户","url":"/index/customerIndex","icon":"icon-kehu"},
             {"id":"3","title":"文书","url":"/index/documentIndex","icon":"icon-weimingming"},
-            {"id":"4","title":"审核","url":"/index/auditingIndex","icon":"icon-bumenzhinenggongzuoshenhe"},
-            {"id":"5","title":"统计","url":"/index/documentIndex","icon":"icon-tongji"},
-            {"id":"6","title":"设置","url":"/index/auditingIndex","icon":"icon-icon_set_up"}
+            {"id":"4","title":"审核","url":"/index/auditingIndex","icon":"icon-bumenzhinenggongzuoshenhe",
+                "children":[
+                    {"id":"9","title":"案件审核"}, {"id":"10","title":"风控审核"}, {"id":"11","title":"财务审核"}, {"id":"12","title":"结案审核"}
+                ]},
+            {"id":"5","title":"统计","url":"/index/countIndex","icon":"icon-tongji"},
+            {"id":"6","title":"设置","url":"/index/setIndex","icon":"icon-icon_set_up"}
     ]
     
 
