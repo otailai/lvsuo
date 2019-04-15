@@ -31,9 +31,9 @@
 
 <div class="topMenu-nav">
     <ul class="flex">
-            <router-link :to='v.url' class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
-            <div :class="'nav-icon iconfont '+' '+v.icon "></div>
-            <p>{{v.title}}</p>
+            <router-link :to="v.Item_Path" class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
+            <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
+            <p>{{v.Item_Name}}</p>
             </router-link>
     </ul>
 
@@ -47,13 +47,13 @@
 export default {
     data(){
         return{
-            // arr:[{title:'案件',url:'/index/caseIndex',icon:'icon-anjian'},
-            // {title:'客户',url:'/index/customerIndex',icon:'icon-kehu'},
-            // {title:'文书',url:'/index/documentIndex',icon:'icon-weimingming'},
-            // {title:'审核',url:'/index/auditingIndex',icon:'icon-bumenzhinenggongzuoshenhe'},
-            // {title:'统计',url:'/index/documentIndex',icon:'icon-tongji'},
-            // {title:'设置',url:'/index/auditingIndex',icon:'icon-icon_set_up'}],
-            arr:[],
+            arr:[{Item_Name:'案件',Item_Path:'/index/caseIndex',Icon:'icon-anjian'},
+            {Item_Name:'客户',Item_Path:'/index/customerIndex',Icon:'icon-kehu'},
+            {Item_Name:'文书',Item_Path:'/index/documentIndex',Icon:'icon-weimingming'},
+            {Item_Name:'审核',Item_Path:'/index/auditingIndex',Icon:'icon-bumenzhinenggongzuoshenhe'},
+            {Item_Name:'统计',Item_Path:'/index/documentIndex',Icon:'icon-tongji'},
+            {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}],
+           
             cur:0,
         }
     },
@@ -63,19 +63,22 @@ export default {
             console.log(i)
         },
         loginOut(){
+            localStorage.removeItem('userId')
             // localStorage.removeItem()
             this.$router.push('/')
         },
         getTopMenu(){
-            this.$http.get('/api/data').then((res)=>{
-                // console.log(res)
-                this.arr = res.data
+            this.$http.get('/myTest/getMenu').then((res)=>{
+                console.log(res)
+                 this.arr = res.data.message
             })
+              
+
         }
 
     },
     mounted(){
-        this.getTopMenu()
+        // this.getTopMenu()
     }
 }
 </script>

@@ -345,8 +345,11 @@ export default {
               'nameJobArr':this.nameJobArr,
               'textarea':this.textarea
           }
-          addJson = JSON.parse(JSON.stringify(addJson))
-          console.log(addJson)
+          addJson = JSON.stringify(addJson)
+        var data = qs.stringify({
+                str:addJson
+                },{ indices: false });
+          console.log(JSON.parse(addJson))
             // this.$http.post('',param).then(()=>{
             // })
         }

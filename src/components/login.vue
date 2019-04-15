@@ -47,6 +47,7 @@
 </template>
 <script>
 import qs from 'qs';
+import { fail } from 'assert';
 export default {
     data(){
         return{
@@ -112,8 +113,6 @@ export default {
                 });
                 return false
             }
-         
-        
             var encrypt = new JSEncrypt()
             encrypt.setPublicKey(this.pub)
             var str = this.username+'&&'+this.password
@@ -124,24 +123,18 @@ export default {
                 str:encrypted
                 });
              console.log(data)
+           
             //   this.$router.push('./index/caseIndex')
-            this.$http.post('http://192.168.0.106:8080/Login/decrypt',data).then((res)=>{
-               
+            this.$http.post('/yongxu/Login/decrypt',data).then((res)=>{
+                console.log(res)
                     var str = res.data; 
-                    str = str.replace(/^{+|}+$/g, "");
-                    console.log(str)
-                    var keep = str.split(":")[0];
-                    var option = str.split(":")[1];
-                    
-                    if(keep == 1){
+                    if(res.data[0].option == 1){
+                        localStorage.setItem('userId',res.data[0].userId)
+                          this.$router.push('./index/caseIndex')
                          if(this.checkedState){ 
                                 setCookie('user',this.username,7); //保存帐号到cookie，有效期7天
                                 setCookie('pswd',this.password,7); //保存密码到cookie，有效期7天
-                        }
-
-                        console.log(keep)
-                        console.log(option)
-                        this.$router.push('./index/caseIndex')
+                            }
                     }else{
                          this.$message({
                             message:'账号或密码错误',
@@ -163,6 +156,7 @@ export default {
                 var reg = RegExp(name+'=([^;]+)');
                 var arr = document.cookie.match(reg);
                 if(arr){
+                    console.log(arr)
                 return arr[1];
                 }else{
                 return '';
@@ -177,12 +171,11 @@ export default {
             if(!this.checkedState){
                 this.delCookie('user');
                 this.delCookie('pswd');
-  
                 };
             }
     },
     mounted(){
-        this.$http.post('http://192.168.0.106:8080/Login/PublicKey').then((res)=>{
+        this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
             console.log(res.data.PublicKey)
             this.pub = res.data.PublicKey
         })

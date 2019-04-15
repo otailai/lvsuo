@@ -10,6 +10,7 @@ import documentIndex from './components/document/documentIndex'
 import auditingIndex from './components/auditing/auditingIndex'
 import countIndex from './components/count/countIndex'
 import setIndex from './components/setting/setIndex'
+import interest from './components/auditing/interest'
 
 export default[
     {path:'/',component:login,name:login},
@@ -23,6 +24,7 @@ export default[
 {path:'/index/auditingIndex',component:auditingIndex,name:auditingIndex},
 {path:'/index/countIndex',component:countIndex,name:countIndex},
 {path:'/index/setIndex',component:setIndex,name:setIndex},
+{path:'/index/interest',component:interest,name:interest}
     ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
    

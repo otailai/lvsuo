@@ -4,14 +4,14 @@
     
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
-           <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+           <!-- <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i"> -->
          
             <div v-show="child_cur==0">
           
             <div class="flex case-child" >  
            
               <div class="case-child-first flex">
-                <p  v-for="(v,i) in arr1" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
+                <p class="isactive">资料库</p>
               </div>
                 
                 <div class="case-child-end flex">
@@ -19,7 +19,7 @@
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                       <button class="case-button"><i class="el-icon-search"></i></button>
                     </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <el-button type="danger" round @click="openNew()"><i class="el-icon-plus"></i>新建案例</el-button>
                 </div>
 
             </div>
@@ -27,67 +27,24 @@
             <ul class="showTab-ul">
           
               <li class="showTab-li" v-show="cur==0">
-            
-              <!-- <div class="selectMenu flex">
-              <div class="case-type flex">
-                 <p>案件类型：</p>
-                  <el-select v-model="value" placeholder="请选择">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
-                  </el-select>
-                  <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
-                 </el-select>
-              </div>
 
-               <div class="case-state flex">
-               <p>案件状态：</p> 
-               <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
-               <el-option v-for="item in options"  :key="item.value"  :label="item.label" :value="item.value"></el-option>
-               </el-select>
-               </div>          
-              <div class="case-time flex">
-               <p>起止时间：</p>
-                <el-date-picker
-                v-model="value5"
-                type="datetimerange"
-                :picker-options="pickerOptions2"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right">
-                </el-date-picker>
-                </div>
-                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
-              </div> -->
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同起止日期" width=""> </el-table-column>
-                             <el-table-column prop="date" label="立案日期" width=""> </el-table-column>
-                        <el-table-column prop="address" label="立案状态"> </el-table-column>
+                    <el-table-column prop="name" label="序号" width=""></el-table-column>
+                    <el-table-column prop="name" label="文档名称" width=""> </el-table-column>
+                     <el-table-column prop="name" label="文档类型" width=""> </el-table-column>
+                      <el-table-column prop="name" label="更新人员" width=""> </el-table-column>
+                       <el-table-column prop="name" label="创建日期" width=""> </el-table-column>
+                          <el-table-column prop="date" label="更新日期" width=""> </el-table-column>
+                             <el-table-column prop="date" label="文件大小" width=""> </el-table-column>
+                        <el-table-column label="操作"> 
+                              <template slot-scope="scope">   
+                              <span  style="color: red;cursor:pointer" @click.stop="downLine(scope.row.id)">下载</span>
+                              </template>
+                        </el-table-column>
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                  </li>
-
-                  <li class="showTab-li" v-show="cur==1">
-              <div class="selectMenu flex">
-                    <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                    <el-table-column prop="address" label="地址"> </el-table-column>
-                    </el-table>
-              </div>
-
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                  :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
                    </el-pagination>
                 </div>
                   </li>
@@ -96,48 +53,51 @@
             </div>
             
        
-          <div v-show="child_cur==1">
-            <div class="flex case-child2" v-show="child==0">
-          
-                    <div class="input-search flex">
-                      <i class="el-icon-search"></i>
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                    </div>
-          
-              <div class="btn"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
-            </div>
-
-            <div class="flex case-child3" v-show="child==1">
-                  <div class="search-div flex">
-                    <div class="input-search flex">
-                      <i class="el-icon-search ii"></i>
-                     <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
-                    </div>  
-                  </div>               
-                      <div class="search-table">
-                         <div class="showNum">共检测到：3条结果</div>
-                      <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                      <el-table-column prop="address" label="地址"> </el-table-column>
-                      </el-table>
-                    </div>
-            </div>
-          </div>
+      
         
-        </el-tab-pane>
+        <!-- </el-tab-pane> -->
       
         <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
                 
         </el-tabs> 
+        <!-- 弹出对话框 -->
+    <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+      <div class="dialogFormVisible flex">
+          <div class="dialogFormVisivleInput flex">
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input"></div>
+          </div>
+           <div class="dialogFormVisivleFile flex">
+                  <el-upload
+                  class="upload-demo"
+                  drag
+                  action="https://jsonplaceholder.typicode.com/posts/"
+                  multiple>
+                  <i class="el-icon-upload"></i>
+                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  <div class="el-upload__tip flex" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                </el-upload>
+          </div>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件文书</p>/<p>我的文档</p>/<p>新建文档</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+    </div>
+  </div>
+</el-dialog>
     </div>
 </template>
 <script>
 import store from '../../vuex/store'
+import { constants } from 'fs';
   export default {
     data() {
       return {
+          dialogFormVisible: false,
         child:0,
         child_cur:0,
         arr:[],
@@ -215,7 +175,6 @@ import store from '../../vuex/store'
         },
         value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         value5: ''
-      
       };
     },
     methods: {
@@ -248,7 +207,14 @@ console.log(row, event, column)
       },
       searchData(){
         this.child = 1
-      }
+      },
+      openNew(){
+        this.dialogFormVisible = true
+      },
+      downLine(id){
+
+        console.log(id)
+      },
     },
     mounted(){
       this.getChildMenu()
@@ -259,7 +225,60 @@ console.log(row, event, column)
   };
 </script>
 <style>
-@import '../../assets/sass/main.css'
+@import '../../assets/sass/main.css';
+.dialogFormVisible{
+  flex-direction: column;
+}
+.dialogFormVisibleHeader{
+  flex-direction: row;
+  justify-content: space-between;
+}
+.dialogFormVisivleHeader_left{
+  flex-direction: row;
+  align-items: center;
+}
+.dialogFormVisivleHeader_left p{
+  font-size: 12px;
+}
+.dialogFormVisivleFooter{
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 25px;
+}
+.dialogFormVisivleInput{
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.dialogFormVisivleInput_right input{
+  width: 300px;
+  height: 30px;
+  margin-left: 30px;
+}
+.dialogFormVisivleFile{
+  justify-content: center;
+  margin-top: 25px;
+}
+.upload-demo{
+  width: 100%;
+}
+.el-upload{
+  width: 100%;
+}
+.el-upload-dragger{
+  width: 100%;
+}
+.el-upload__tip{
+  justify-content: center;
+}
+.el-dialog{
+  box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+}
+.el-dialog__body {
+    padding: 10px 20px;
+    color: #606266;
+    font-size: 14px;
+}
 </style>
 
 

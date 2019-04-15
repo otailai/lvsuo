@@ -4,7 +4,7 @@
     
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
-           <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+           <!-- <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i"> -->
          
             <div v-show="child_cur==0">
           
@@ -19,7 +19,7 @@
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                       <button class="case-button"><i class="el-icon-search"></i></button>
                     </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <!-- <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button> -->
                 </div>
 
             </div>
@@ -59,15 +59,13 @@
                 </div>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div> -->
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同起止日期" width=""> </el-table-column>
-                             <el-table-column prop="date" label="立案日期" width=""> </el-table-column>
-                        <el-table-column prop="address" label="立案状态"> </el-table-column>
+               <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="name" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="name" label="客户编号" width=""> </el-table-column>
+                     <el-table-column prop="name" label="行业类型" width=""> </el-table-column>
+                      <el-table-column prop="name" label="行业" width=""> </el-table-column>
+                       <el-table-column prop="name" label="是否常年客户" width=""> </el-table-column>
+                         
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
@@ -78,11 +76,14 @@
 
                   <li class="showTab-li" v-show="cur==1">
               <div class="selectMenu flex">
-                    <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                    <el-table-column prop="address" label="地址"> </el-table-column>
-                    </el-table>
+                      <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="name" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="name" label="客户编号" width=""> </el-table-column>
+                     <el-table-column prop="name" label="行业类型" width=""> </el-table-column>
+                      <el-table-column prop="name" label="行业" width=""> </el-table-column>
+                       <el-table-column prop="name" label="是否常年客户" width=""> </el-table-column>
+                         
+                </el-table>
               </div>
 
                  <div class="block flex">
@@ -116,7 +117,7 @@
                     </div>  
                   </div>               
                       <div class="search-table">
-                         <div class="showNum">共检测到：3条结果</div>
+                      <div class="showNum">共检测到：3条结果</div>
                       <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                       <el-table-column prop="date" label="日期" width="180"></el-table-column>
                       <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
@@ -126,7 +127,7 @@
             </div>
           </div>
         
-        </el-tab-pane>
+        <!-- </el-tab-pane> -->
       
         <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
                 
@@ -239,11 +240,11 @@ import store from '../../vuex/store'
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
-console.log(row, event, column)
+          console.log(row, event, column)
       },
       getChildMenu(){
         this.$http.get('/api/data').then((res)=>{
-        this.arr = res.data[0].children
+        // this.arr = res.data[0].children
         })
       },
       searchData(){

@@ -1,131 +1,193 @@
 <template>
     <div id="case" class="case">
-     
-    
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
          
             <div v-show="child_cur==0">
           
-            <div class="flex case-child" >  
-           
-              <!-- <div class="case-child-first flex">
-                <p  v-for="(v,i) in arr1" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
-              </div> -->
-                
-                <!-- <div class="case-child-end flex">
-                    <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
-                    </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
-                </div> -->
-
-            </div>
+            <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
-          
               <li class="showTab-li" v-show="cur==0">
-            
-              <!-- <div class="selectMenu flex">
-              <div class="case-type flex">
-                 <p>案件类型：</p>
-                  <el-select v-model="value" placeholder="请选择">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
-                  </el-select>
-                  <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
-                  <el-option v-for="item in options" :key="item.value" :label="item.label"  :value="item.value"> </el-option>
-                 </el-select>
-              </div>
-
-               <div class="case-state flex">
-               <p>案件状态：</p> 
-               <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;">
-               <el-option v-for="item in options"  :key="item.value"  :label="item.label" :value="item.value"></el-option>
-               </el-select>
-               </div>          
-              <div class="case-time flex">
-               <p>起止时间：</p>
-                <el-date-picker
-                v-model="value5"
-                type="datetimerange"
-                :picker-options="pickerOptions2"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right">
-                </el-date-picker>
-                </div>
-                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
-              </div> -->
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="name" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
+                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
                      <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
                       <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同起止日期" width=""> </el-table-column>
-                             <el-table-column prop="date" label="立案日期" width=""> </el-table-column>
-                        <el-table-column prop="address" label="立案状态"> </el-table-column>
-                </el-table>
+                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
+                          <el-table-column prop="date" label="合同" width=""> 
+                                <template slot-scope="scope"> 
+                               <span style="color:red">
+                                 {{scope.row.name}}
+                               </span>
+                              </template>
+                          </el-table-column>
+                             <el-table-column prop="address" label="状态" width=""> 
+                                    <template slot-scope="scope"> 
+                                    <span v-if="scope.row.address == '立案'" style="color:red">
+                                    {{scope.row.address}}
+                                  </span>
+                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
+                                  </template>
+                             </el-table-column>
+                        <el-table-column  label="操作"> 
+                          <template  slot-scope="scope">
+                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                          </template>
+                        </el-table-column>
+                  </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
                  :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
                    </el-pagination>
                 </div>
-                  </li>
-
-                  <li class="showTab-li" v-show="cur==1">
-              <div class="selectMenu flex">
-                    <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                    <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                    <el-table-column prop="address" label="地址"> </el-table-column>
-                    </el-table>
-              </div>
-
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                  </li>
+                </li>
                 </ul>
             </div>
             </div>
             
        
           <div v-show="child_cur==1">
-            <div class="flex case-child2" v-show="child==0">
-          
-                    <div class="input-search flex">
-                      <i class="el-icon-search"></i>
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                    </div>
-          
-              <div class="btn"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
-            </div>
-
-            <div class="flex case-child3" v-show="child==1">
-                  <div class="search-div flex">
-                    <div class="input-search flex">
-                      <i class="el-icon-search ii"></i>
-                     <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
-                    </div>  
-                  </div>               
-                      <div class="search-table">
-                         <div class="showNum">共检测到：3条结果</div>
-                      <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                      <el-table-column prop="address" label="地址"> </el-table-column>
-                      </el-table>
-                    </div>
+                      <div class="flex case-child" ></div>
+            <div class="showTab">
+            <ul class="showTab-ul">
+              <li class="showTab-li" v-show="cur==0">
+                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="name" label="案件编号1" width=""></el-table-column>
+                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
+                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
+                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
+                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
+                          <el-table-column prop="date" label="合同" width=""> 
+                                <template slot-scope="scope"> 
+                               <span style="color:red">
+                                 {{scope.row.name}}
+                               </span>
+                              </template>
+                          </el-table-column>
+                             <el-table-column prop="address" label="状态" width=""> 
+                                    <template slot-scope="scope"> 
+                                    <span v-if="scope.row.address == '立案'" style="color:red">
+                                    {{scope.row.address}}
+                                  </span>
+                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
+                                  </template>
+                             </el-table-column>
+                        <el-table-column  label="操作"> 
+                          <template  slot-scope="scope">
+                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                          </template>
+                        </el-table-column>
+                  </el-table>
+                 <div class="block flex">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                   </el-pagination>
+                </div>
+                </li>
+                </ul>
             </div>
           </div>
         
+          <div v-show="child_cur==2">
+                      <div class="flex case-child" ></div>
+            <div class="showTab">
+            <ul class="showTab-ul">
+              <li class="showTab-li" v-show="cur==0">
+                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
+                    <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
+                     <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
+                      <el-table-column prop="name" label="合同起止日期" width=""> </el-table-column>
+                       <el-table-column prop="name" label="立案日期" width=""> </el-table-column>
+                          <el-table-column prop="name" label="案件状态" width=""> </el-table-column>
+                             <el-table-column prop="name" label="合同金额" width=""> </el-table-column>
+                                <el-table-column prop="name" label="已收金额" width=""> </el-table-column>
+                         
+                        <el-table-column  label="操作"> 
+                          <template  slot-scope="scope">
+                              <span @click="open2(scope.row.id)" style="cursor:pointer">预览</span>
+                            <span @click="openDialog(scope.row.id)" style="cursor:pointer">收款</span>
+                          </template>
+                        </el-table-column>
+                  </el-table>
+                 <div class="block flex">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                   </el-pagination>
+                </div>
+                </li>
+                </ul>
+            </div>
+
+            <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+      <div class="dialogFormVisible flex">
+         
+           <div class="dialogFormVisivleFile flex">
+                <el-table :data="gridData">
+                <el-table-column property="date" label="日期" width="150"></el-table-column>
+                <el-table-column property="name" label="姓名" width="200"></el-table-column>
+                <el-table-column property="address" label="地址"></el-table-column>
+              </el-table>
+          </div>
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定额收费</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+    </div>
+  </div>
+</el-dialog>
+          </div>
+
+            <div v-show="child_cur==3">
+                      <div class="flex case-child" ></div>
+            <div class="showTab">
+            <ul class="showTab-ul">
+              <li class="showTab-li" v-show="cur==0">
+                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="name" label="案件编号1" width=""></el-table-column>
+                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
+                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
+                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
+                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
+                          <el-table-column prop="date" label="合同" width=""> 
+                                <template slot-scope="scope"> 
+                               <span style="color:red">
+                                 {{scope.row.name}}
+                               </span>
+                              </template>
+                          </el-table-column>
+                             <el-table-column prop="address" label="状态" width=""> 
+                                    <template slot-scope="scope"> 
+                                    <span v-if="scope.row.address == '立案'" style="color:red">
+                                    {{scope.row.address}}
+                                  </span>
+                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
+                                  </template>
+                             </el-table-column>
+                        <el-table-column  label="操作"> 
+                          <template  slot-scope="scope">
+                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                          </template>
+                        </el-table-column>
+                  </el-table>
+                 <div class="block flex">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                   </el-pagination>
+                </div>
+                </li>
+                </ul>
+            </div>
+          </div>
         </el-tab-pane>
       
         <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
@@ -138,6 +200,7 @@ import store from '../../vuex/store'
   export default {
     data() {
       return {
+        dialogFormVisible:false,
         child:0,
         child_cur:0,
         arr:[],
@@ -146,7 +209,7 @@ import store from '../../vuex/store'
        currentPage4: 4,
         index:0,
           cur:0,
-          arr:[{title:'我的客户'},{title:'事务所客户'}],
+        
          input23: '',
           tableData: [{
           id:1,
@@ -167,7 +230,7 @@ import store from '../../vuex/store'
            id:4,
           date: '2016-05-03',
           name: '王小虎',
-          address: '立案'
+          address: '不立案'
         }],
          options: [{
           value: '选项1',
@@ -184,6 +247,23 @@ import store from '../../vuex/store'
         }, {
           value: '选项5',
           label: '北京烤鸭'
+        }],
+        gridData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-04',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-01',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, {
+          date: '2016-05-03',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
         }],
         value: '',
         pickerOptions2: {
@@ -241,13 +321,33 @@ import store from '../../vuex/store'
       lineCilck(row, event, column){
 console.log(row, event, column)
       },
-      getChildMenu(){
+    getChildMenu(){
         this.$http.get('/api/data').then((res)=>{
         this.arr = res.data[3].children
         })
       },
       searchData(){
         this.child = 1
+      },
+       open2() {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+      },
+      openDialog(){
+        this.dialogFormVisible = true
       }
     },
     mounted(){
@@ -259,7 +359,62 @@ console.log(row, event, column)
   };
 </script>
 <style>
-@import '../../assets/sass/main.css'
+@import '../../assets/sass/main.css';
+.dialogFormVisible{
+  flex-direction: column;
+}
+.dialogFormVisibleHeader{
+  flex-direction: row;
+  justify-content: space-between;
+}
+.dialogFormVisivleHeader_left p{
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dialogFormVisivleHeader_left{
+  flex-direction: row;
+  align-items: center;
+}
+.dialogFormVisivleFooter{
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 25px;
+}
+.dialogFormVisivleInput{
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+.dialogFormVisivleInput_right input{
+  width: 300px;
+  height: 30px;
+  margin-left: 30px;
+}
+.dialogFormVisivleFile{
+  justify-content: center;
+  margin-top: 25px;
+}
+.upload-demo{
+  width: 100%;
+}
+.el-upload{
+  width: 100%;
+}
+.el-upload-dragger{
+  width: 100%;
+}
+.el-upload__tip{
+  justify-content: center;
+}
+.el-dialog{
+  box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+}
+.el-dialog__body {
+    padding: 10px 20px;
+    color: #606266;
+    font-size: 14px;
+}
 </style>
 
 
