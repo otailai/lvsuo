@@ -10,7 +10,7 @@
                     {"id":"9","title":"案件审核"}, {"id":"10","title":"风控审核"}, {"id":"11","title":"财务审核"}, {"id":"12","title":"结案审核"}
                 ]},
             {"id":"5","title":"统计","url":"/index/countIndex","icon":"icon-tongji"},
-            {"id":"6","title":"设置","url":"/index/setIndex","icon":"icon-icon_set_up"}
+            // {"id":"6","title":"设置","url":"/index/setIndex","icon":"icon-icon_set_up"}
     ]
     
 

@@ -127,11 +127,25 @@
       <div class="dialogFormVisible flex">
          
            <div class="dialogFormVisivleFile flex">
-                <el-table :data="gridData">
-                <el-table-column property="date" label="日期" width="150"></el-table-column>
-                <el-table-column property="name" label="姓名" width="200"></el-table-column>
-                <el-table-column property="address" label="地址"></el-table-column>
-              </el-table>
+               <table>
+                 <thead>
+                   <th class="width-th">付款日期</th>
+                   <th class="width-th">收费金额</th>
+                   <th class="width-th">描述</th>
+                    <th class="width-th">状态</th>
+                 </thead>
+                 <tbody>
+                   <tr v-for="(v,i) in tableData" :key="i">
+                      <td>{{v.date}}</td>
+                      <td>{{v.name}}</td>
+                      <td>{{v.address}}</td>
+                      <td class="flex" style="justify-content:space-around;width:150px;border:none">
+                        <span>未收款</span>
+                        <button class="btn">确认收款</button>
+                      </td>
+                   </tr>
+                 </tbody>
+               </table>
           </div>
       </div>
   
@@ -140,7 +154,6 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
-    <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
     </div>
   </div>
 </el-dialog>
@@ -367,6 +380,12 @@ console.log(row, event, column)
   flex-direction: row;
   justify-content: space-between;
 }
+.dialogFormVisivleFile table td{
+  border:1px solid #ccc; 
+}
+.dialogFormVisivleFile table th,td{
+  text-align:center;
+}
 .dialogFormVisivleHeader_left p{
   font-size: 18px;
   font-weight: 600;
@@ -392,8 +411,11 @@ console.log(row, event, column)
   margin-left: 30px;
 }
 .dialogFormVisivleFile{
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 25px;
+}
+.width-th{
+  width: 150px;
 }
 .upload-demo{
   width: 100%;
@@ -414,6 +436,14 @@ console.log(row, event, column)
     padding: 10px 20px;
     color: #606266;
     font-size: 14px;
+}
+.btn{
+  cursor: pointer;
+  /* border:  #7E2C2E; */
+  background: #7E2C2E;
+  color: #fff;
+  font-size: 8px;
+  outline: none;
 }
 </style>
 

@@ -35,8 +35,24 @@
             <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
             <p>{{v.Item_Name}}</p>
             </router-link>
+         
+              <el-tooltip class="item" effect="light"  placement="bottom-end">
+                <li @click="changeLi(i)"  class="flex">
+                     <div class='nav-icon iconfont icon-icon_set_up'></div>
+                     <p>设置</p>
+                </li>
+                 <div slot="content">
+                      <ul class="flex">
+                          <li v-for="(v,i) in arr1"  @click="goTONew(v.Item_Path)"  :key="i" style="margin-left:20px;" class="setting flex" >
+                              <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
+                              <p>{{v.Item_Name}}</p>
+                         </li>
+                      </ul>
+                 </div>
+                
+                </el-tooltip>         
     </ul>
-
+            
 </div>
 </div>
 
@@ -52,8 +68,13 @@ export default {
             {Item_Name:'文书',Item_Path:'/index/documentIndex',Icon:'icon-weimingming'},
             {Item_Name:'审核',Item_Path:'/index/auditingIndex',Icon:'icon-bumenzhinenggongzuoshenhe'},
             {Item_Name:'统计',Item_Path:'/index/documentIndex',Icon:'icon-tongji'},
-            {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}],
-           
+            // {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}
+            ],
+            arr1:[{Item_Name:'合同模板',Item_Path:'/index/setContract',Icon:'icon-anjian'},
+            {Item_Name:'组织架构',Item_Path:'/index/setIndex',Icon:'icon-kehu'},
+            {Item_Name:'权限管理',Item_Path:'/index/setPower',Icon:'icon-weimingming'},
+            {Item_Name:'基础数据',Item_Path:'/index/setBase',Icon:'icon-bumenzhinenggongzuoshenhe'},
+            ],
             cur:0,
         }
     },
@@ -72,10 +93,11 @@ export default {
                 console.log(res)
                  this.arr = res.data.message
             })
-              
-
-        }
-
+        },
+         goTONew(menu){
+             console.log(menu)
+            this.$router.push(menu)
+        },
     },
     mounted(){
         // this.getTopMenu()
@@ -86,6 +108,7 @@ export default {
 <style lang="sass" scoped>
  @import '../assets/sass/element.scss'
  @import '../assets/sass/topMenu.scss'
+
 </style>
 
 

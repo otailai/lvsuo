@@ -11,7 +11,10 @@ import auditingIndex from './components/auditing/auditingIndex'
 import countIndex from './components/count/countIndex'
 import setIndex from './components/setting/setIndex'
 import interest from './components/auditing/interest'
-
+import setContract from './components/setting/setContract'
+import setPower from './components/setting/setPower'
+import setBase from './components/setting/setBase'
+import mineIndex from './components/mine/mineIndex'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
@@ -24,7 +27,11 @@ export default[
 {path:'/index/auditingIndex',component:auditingIndex,name:auditingIndex},
 {path:'/index/countIndex',component:countIndex,name:countIndex},
 {path:'/index/setIndex',component:setIndex,name:setIndex},
-{path:'/index/interest',component:interest,name:interest}
+{path:'/index/interest',component:interest,name:interest},
+{path:'/index/setContract',component:setContract,name:setContract},
+{path:'/index/setPower',component:setPower,name:setPower},
+{path:'/index/setBase',component:setBase,name:setBase},
+{path:'/index/mineIndex',component:mineIndex,name:mineIndex},
     ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
    

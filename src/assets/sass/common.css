@@ -119,3 +119,33 @@ table{
 .el-select .el-input__inner:focus{
     border-color: #ccc;
 }
+.setting{
+    flex-direction: column;
+    align-items: center;
+    width: 70px;
+    height: 40px;
+    justify-content: center;
+}
+.setting .nav-icon{
+    font-size: 18px;
+}
+.setting:hover{
+    color:#7E2C2E;
+    cursor: pointer;
+}
+.setting p:hover{
+    color:#7E2C2E;
+            cursor: pointer;
+}
+.setting .nav-icon:hover{
+    color:#7E2C2E;
+    cursor: pointer;
+}
+.el-tooltip__popper.is-light{
+    border: none;
+    box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+    min-height: 50px;
+    flex-direction: row;
+    align-items: center;
+    display: flex;
+}
