@@ -16,12 +16,36 @@
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameC"/></div>
+   
+
+                      <el-popover placement="bottom" width="200" trigger="click" v-model="visible">
+                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search"/></div>
+                            <div>
+                                <table style="width:100%">
+                                    <thead>
+                                        <th >客户名称</th>
+                                        <th class="td-width">内容</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.name)" class="tr">
+                                             <td>{{item.name}}</td>
+                                             <td>{{item.msg}}</td>
+                                        </tr>
+                                       
+                                    </tbody>
+                                </table>
+                           </div>
+                        </el-popover>
+                   
+                     
+                     
+
+
                     <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div>
                     <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
                     <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
                 </div>
-                  <div class="add-userinfo-left selectInput flex">
+                  <div class="add-userinfo-left selectInput flex userInfo-first">
                         <div class="flex"><p class="title">客户类型</p> 
                   <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
                         </div>
@@ -31,6 +55,7 @@
                         <div class="flex"><p class="title">职务</p>
                   <el-select v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
                          </div>
+                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
                        
                     </div>
                     </div>
@@ -216,6 +241,7 @@ import qs from 'qs';
 export default {
     data(){
         return{
+             visible: false,
             textarea:'',
            
             userNameC:'',
@@ -276,7 +302,7 @@ export default {
             ],
             // 当事人信息input-model
             input1Arr:[
-                {partyName:'',partyJob:''}
+            {partyName:'',partyJob:''}
             ],
             // 付款方式之时间input-model
             timeArr:[
@@ -290,7 +316,17 @@ export default {
             nameJobArr:[
             {nameJobName:'',nameJobJob:'',nameJobRate:''}
             ],
-            
+
+            //数据检索
+            search:'',
+            list:[
+                {name:'风老大',msg:'15696518682'},
+                {name:'陈老二',msg:'1569515845'},
+                {name:'刘骜三',msg:'1536852565'},
+                {name:'马云',msg:'1569653256'},
+                {name:'敖牛恩',msg:'1458541236'},
+            ] ,
+           
         }
     },
     methods:{
@@ -302,14 +338,13 @@ export default {
         },
         pushUserInfo(){
             this.userInfo.push(1)
-            this.$store.dispatch('addUser')
             this.inputArr.push({laywerName:'',laywerJob:''})  
-            
+            console.log(this.inputArr)
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
             this.$store.dispatch('addParty')
-            this.inputArr1.push({partyName:'',partyJob:''})  
+            this.input1Arr.push({partyName:'',partyJob:''})  
         },
         addPayDate(){
             this.payDate.push(1)
@@ -352,15 +387,54 @@ export default {
           console.log(JSON.parse(addJson))
             // this.$http.post('',param).then(()=>{
             // })
+        },
+        getAlreadyName(name){
+            this.search = name
+            this.visible = false
         }
     },
     mounted(){
        
-    }
+    },
+    computed:{
+        //数据检索
+         items: function() {
+            var _search = this.search;
+            if (_search) {
+                //不区分大小写处理
+                var reg = new RegExp(_search, 'ig')
+                //es6 filter过滤匹配，有则返回当前，无则返回所有
+                return this.list.filter(function(e) {
+                    //匹配所有字段
+                    return Object.keys(e).some(function(key) {
+                        return e[key].match(reg);
+                    })
+                    //匹配某个字段
+                    //  return e.name.match(reg);
+                })
+            };
+            return this.list;
+        }
+    },
 }
 </script>
 
 <style lang="scss">
-@import '../../assets/sass/caseAdd.scss'
+@import '../../assets/sass/caseAdd.scss';
+.td-width{
+    text-align: center;
+    width:100px
+}
+.tr{
+    cursor: pointer;
+    height: 30px;
+}
+.tr:hover{
+    background: #ccc;
+}
+.userInfo-first .el-input__inner{
+    width: 200px;
+    border-radius: 0px;
+}
 </style>
 

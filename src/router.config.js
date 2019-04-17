@@ -15,6 +15,7 @@ import setContract from './components/setting/setContract'
 import setPower from './components/setting/setPower'
 import setBase from './components/setting/setBase'
 import mineIndex from './components/mine/mineIndex'
+import setDemo from './components/setting/setDemo'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
@@ -32,6 +33,7 @@ export default[
 {path:'/index/setPower',component:setPower,name:setPower},
 {path:'/index/setBase',component:setBase,name:setBase},
 {path:'/index/mineIndex',component:mineIndex,name:mineIndex},
+{path:'/index/setDemo',component:setDemo,name:setDemo},
     ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
    

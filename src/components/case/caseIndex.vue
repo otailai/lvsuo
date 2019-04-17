@@ -59,7 +59,7 @@
                 align="right">
                 </el-date-picker>
                 </div>
-                <button class="dingzhi"><i class="el-icon-download"></i>导出</button>
+                <button class="dingzhi" @click="exportData()"><i class="el-icon-download"></i>导出</button>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div>
                  <!-- <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
@@ -164,8 +164,8 @@
                          <div class="showNum">共检测到：{{total}}条结果</div>
                       <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                       <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                      <!-- <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                      <el-table-column prop="address" label="地址"> </el-table-column> -->
+                      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
+                      <el-table-column prop="address" label="地址"> </el-table-column>
                       </el-table>
                     </div>
             </div>
@@ -238,6 +238,7 @@ import store from '../../vuex/store'
         options:[
          {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
         ],
+        tableData1:[],
       };
     },
     methods: {
@@ -303,8 +304,9 @@ import store from '../../vuex/store'
            PageNumber:this.currentPage4,
          }}).then((res)=>{
            this.tableData = res.data.GetCase
+           this.tableData1 = res.data
            this.total = res.data.PageCount
-           console.log(res)
+            console.log(res.data)
         })
         // this.$http.get('/myTest/getCaseList',{params:{page:this.currentPage4,numPage:this.numPage}}).then((res)=>{
         //   console.log(res)
@@ -322,7 +324,7 @@ import store from '../../vuex/store'
          console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-           console.log(this.optionChildMenu)
+          
            this.optionChildMenu = res.data  
         })
       },
@@ -338,6 +340,16 @@ import store from '../../vuex/store'
       },
       searchContent(){
        this.getCaseList()
+      },
+      exportData(){
+        console.log(JSON.stringify(this.tableData))
+         var qs = require('qs');
+
+        this.$http.post('/yongxu/Index/bbb',qs.stringify({
+          table:this.tableData
+        })).then((res)=>{
+            console.log(res)
+        })
       }
     },
     mounted(){

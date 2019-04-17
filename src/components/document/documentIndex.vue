@@ -226,59 +226,6 @@ console.log(row, event, column)
 </script>
 <style>
 @import '../../assets/sass/main.css';
-.dialogFormVisible{
-  flex-direction: column;
-}
-.dialogFormVisibleHeader{
-  flex-direction: row;
-  justify-content: space-between;
-}
-.dialogFormVisivleHeader_left{
-  flex-direction: row;
-  align-items: center;
-}
-.dialogFormVisivleHeader_left p{
-  font-size: 12px;
-}
-.dialogFormVisivleFooter{
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 25px;
-}
-.dialogFormVisivleInput{
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-}
-.dialogFormVisivleInput_right input{
-  width: 300px;
-  height: 30px;
-  margin-left: 30px;
-}
-.dialogFormVisivleFile{
-  justify-content: center;
-  margin-top: 25px;
-}
-.upload-demo{
-  width: 100%;
-}
-.el-upload{
-  width: 100%;
-}
-.el-upload-dragger{
-  width: 100%;
-}
-.el-upload__tip{
-  justify-content: center;
-}
-.el-dialog{
-  box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
-}
-.el-dialog__body {
-    padding: 10px 20px;
-    color: #606266;
-    font-size: 14px;
-}
 </style>
 
 

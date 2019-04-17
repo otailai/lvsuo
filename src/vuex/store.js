@@ -13,7 +13,7 @@ const store = new Vuex.Store({
         nameJobCount:0
     },
     getters:{
-
+        
     },
     mutations:{
             userIncrement (state) {
