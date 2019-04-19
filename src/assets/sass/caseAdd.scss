@@ -72,7 +72,7 @@ $font:17px;
             }
             .selectInput1{
                 .el-select {
-                    width: 100px;
+                    width: 100px !important;
                     .el-input__inner{
                         border-radius: 0px;
                     }
@@ -92,7 +92,10 @@ $font:17px;
                 display: flex;
                 display: -webkit-flex;
                 flex-direction: column;
-                
+              
+                }
+                .el-select{
+                    width: 200px;
                 }
             }
         }

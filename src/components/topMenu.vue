@@ -37,7 +37,7 @@
             </router-link>
          
               <el-tooltip class="item" effect="light"  placement="bottom-end">
-                <li @click="changeLi(i)"  class="flex">
+                <li  class="flex">
                      <div class='nav-icon iconfont icon-icon_set_up'></div>
                      <p>设置</p>
                 </li>
@@ -97,7 +97,8 @@ export default {
          goTONew(menu){
              console.log(menu)
             this.$router.push(menu)
-        },
+        }
+       
     },
     mounted(){
         // this.getTopMenu()

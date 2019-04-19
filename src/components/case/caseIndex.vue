@@ -59,34 +59,10 @@
                 align="right">
                 </el-date-picker>
                 </div>
-                <button class="dingzhi" @click="exportData()"><i class="el-icon-download"></i>导出</button>
+              
+                <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div>
-                 <!-- <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="Case_Lawyer_Name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column  label="合同起止日期" width="">
-                            
-                                <template slot-scope="scope">
-                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
-                                </template>
-                            
-                             </el-table-column>
-                             <el-table-column  label="立案日期" width="">
-                                <template slot-scope="scope">
-                                    <p>{{scope.row.Creattime | getTime}}</p>
-                                </template>
-                               
-                                </el-table-column>
-                       
-                        <el-table-column  label="立案状态" prop="Status">
-                          
-                           </el-table-column>
-
-                </el-table> -->
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width=""> </el-table-column>
@@ -96,7 +72,7 @@
                           <el-table-column  label="合同起止日期" width="">
                             
                                 <template slot-scope="scope">
-                                    <p>{{scope.row.Contract_Date_From | getTime}}{{scope.row.Contract_Date_From | getTime}}</p>
+                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
                                 </template>
                             
                              </el-table-column>
@@ -239,6 +215,22 @@ import store from '../../vuex/store'
          {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
         ],
         tableData1:[],
+         excelData: [
+        {
+          name: '张三',
+          birthday: new Date('1990-01-01'),
+          sex: '男',
+          age: 28
+        },
+        {
+          name: '李四',
+          birthday: new Date('1991-01-01'),
+          sex: '女',
+          age: 27
+        }
+      ]
+
+
       };
     },
     methods: {
@@ -344,20 +336,29 @@ import store from '../../vuex/store'
       exportData(){
         console.log(JSON.stringify(this.tableData))
          var qs = require('qs');
-
-        this.$http.post('/yongxu/Index/bbb',qs.stringify({
-          table:this.tableData
-        })).then((res)=>{
+      
+        var param = new URLSearchParams()
+        param.append('table',JSON.stringify(this.tableData))
+       
+       this.$http.post('/yongxu/Index/export').then((res)=>{
             console.log(res)
         })
+      },
+      downExcel() {
+      const th = ['案件编号', '案件名称', '客户名称', '案件类别','承办律师','合同起止日期','立案日期','立案状态']
+      const filterVal = ['Case_No', 'Case_Name', 'Customer_Name_Zh','Value','Case_Lawyer_Name','Contract_Date_From','Creattime','Status']
+      const data = this.tableData.map(v => filterVal.map(k => v[k]))
+      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
+      this.$toExcel({th, data, fileName, fileType, sheetName})
       }
+
     },
     mounted(){
       this.getCaseList()
       this.getSelectMenu()
     },
     components:{
-      
+      JsonExcel:'downloadExcel'
     },
    　filters:{
       getStatus:function(Status){

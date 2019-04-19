@@ -11,6 +11,10 @@ import axios from 'axios'
 import JsEncrypt from 'jsencrypt/bin/jsencrypt'
 import store from './vuex/store'
 import VueParticles from 'vue-particles'  
+import toExcel from '@/excel/json2excel'
+import htmlToPdf from './utils/ToPdf'
+Vue.use(htmlToPdf)
+Vue.prototype.$toExcel = toExcel
 Vue.use(VueParticles)  
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$http = axios

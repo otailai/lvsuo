@@ -16,6 +16,7 @@ import setPower from './components/setting/setPower'
 import setBase from './components/setting/setBase'
 import mineIndex from './components/mine/mineIndex'
 import setDemo from './components/setting/setDemo'
+import caseWord from './components/case/caseWord'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
@@ -34,7 +35,9 @@ export default[
 {path:'/index/setBase',component:setBase,name:setBase},
 {path:'/index/mineIndex',component:mineIndex,name:mineIndex},
 {path:'/index/setDemo',component:setDemo,name:setDemo},
+{path:'/index/caseWord',component:caseWord,name:caseWord},
     ]},
+
     {path:'/topMenu',component:topMenu,name:topMenu},
    
   

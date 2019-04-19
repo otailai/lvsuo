@@ -19,17 +19,15 @@
    
 
                       <el-popover placement="bottom" width="200" trigger="click" v-model="visible">
-                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search"/></div>
+                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search" @change="changeId()"/></div>
                             <div>
                                 <table style="width:100%">
                                     <thead>
-                                        <th >客户名称</th>
-                                        <th class="td-width">内容</th>
+                                        <th >客户名称</th>  
                                     </thead>
                                     <tbody>
-                                        <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.name)" class="tr">
-                                             <td>{{item.name}}</td>
-                                             <td>{{item.msg}}</td>
+                                        <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
+                                             <td>{{item.Customer_Name_Zh}}</td> 
                                         </tr>
                                        
                                     </tbody>
@@ -64,8 +62,8 @@
                         <p class="add-userinfo-p">案件基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-                    <div class="flex selectInput1">
-                        <p class="title">选择案件类型</p>
+                    <div class="flex selectInput1" id="selectInput1">
+                    <p class="title">选择案件类型</p>
                     <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
                     <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
 
@@ -241,7 +239,8 @@ import qs from 'qs';
 export default {
     data(){
         return{
-             visible: false,
+            customId:'',
+            visible: false,
             textarea:'',
            
             userNameC:'',
@@ -277,25 +276,12 @@ export default {
             riskAcount:[],
             nameJob:[],
 
-            options: [{
-             value: '选项1',
-              label: '黄金糕'
-            }, {
-              value: '选项2',
-              label: '双皮奶'
-            }, {
-              value: '选项3',
-              label: '蚵仔煎'
-            }, {
-              value: '选项4',
-              label: '龙须面'
-            }, {
-              value: '选项5',
-              label: '北京烤鸭'
-            }],
-            value: '选项1',
-            value1: '选项2',
-            value2: '选项3',
+            options: [
+                 {value: '1',label: '黄金糕'}
+            ],
+            value: '1',
+            value1: '1',
+            value2: '1',
             // 案件律师信息input-model
             inputArr:[
             {laywerName:'',laywerJob:''}
@@ -320,19 +306,16 @@ export default {
             //数据检索
             search:'',
             list:[
-                {name:'风老大',msg:'15696518682'},
-                {name:'陈老二',msg:'1569515845'},
-                {name:'刘骜三',msg:'1536852565'},
-                {name:'马云',msg:'1569653256'},
-                {name:'敖牛恩',msg:'1458541236'},
+                {Customer_Name_Zh:'风老大',msg:'15696518682',Id:'1'},
+                {Customer_Name_Zh:'陈老二',msg:'1569515845',Id:'1'},
+                {Customer_Name_Zh:'刘骜三',msg:'1536852565',Id:'1'},
+                {Customer_Name_Zh:'马云',msg:'1569653256',Id:'1'},
+                {Customer_Name_Zh:'敖牛恩',msg:'1458541236',Id:'1'},
             ] ,
            
         }
     },
     methods:{
-        // deleteLine(i){
-        //     this.arr.splice(i,1)
-        // },
         deleteLine(i,arr){
             arr.splice(i,1)
         },
@@ -381,6 +364,7 @@ export default {
               'textarea':this.textarea
           }
           addJson = JSON.stringify(addJson)
+            console.log(this.customId)
         var data = qs.stringify({
                 str:addJson
                 },{ indices: false });
@@ -388,13 +372,27 @@ export default {
             // this.$http.post('',param).then(()=>{
             // })
         },
-        getAlreadyName(name){
+        getAlreadyName(id,name){
             this.search = name
+            if(id == '' || id== null){
+                id =0
+            }
+            this.customId = id
+          
             this.visible = false
+        },
+        getCustomSelect(){
+            // this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
+            //     console.log(res)
+            //     this.list = res.data.Name
+            // })
+        },
+        changeId(){
+            this.customId = ''
         }
     },
     mounted(){
-       
+       this.getCustomSelect()
     },
     computed:{
         //数据检索
