@@ -1,6 +1,6 @@
 <template>
     <div id="case" class="case">
-              <div class="flex title-case"><i class="el-icon-service"></i><p>组织架构</p></div>  
+              <div class="flex title-case"><i class="el-icon-service"></i><p>合同模板</p></div>  
               <div class="contract">
                   <ul class="contract-ul flex">
                       <li class="contract-li">

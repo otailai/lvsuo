@@ -16,8 +16,6 @@
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
-   
-
                       <el-popover placement="bottom" width="200" trigger="click" v-model="visible">
                         <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search" @change="changeId()"/></div>
                             <div>
@@ -29,31 +27,25 @@
                                         <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
                                              <td>{{item.Customer_Name_Zh}}</td> 
                                         </tr>
-                                       
                                     </tbody>
                                 </table>
                            </div>
                         </el-popover>
-                   
-                     
-                     
-
-
                     <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div>
                     <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
                     <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first">
                         <div class="flex"><p class="title">客户类型</p> 
-                  <el-select v-model="value" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
+                  <el-select v-model="customValue" placeholder="请选择"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
                         </div>
                         <div class="flex"><p class="title">所属行业</p>
-                  <el-select v-model="value1" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                  <el-select v-model="suoshuValue" placeholder="请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                         <div class="flex"><p class="title">职务</p>
-                  <el-select v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>                        
+                  <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                          </div>
-                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div>
+                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="tel"/></div>
                        
                     </div>
                     </div>
@@ -64,12 +56,17 @@
                 <div class="add-userinfo-left flex">
                     <div class="flex selectInput1" id="selectInput1">
                     <p class="title">选择案件类型</p>
-                    <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
-                    <el-select  v-model="value2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select>
-
+                    <!-- <el-select  v-model="caseValue" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select> -->
+                    <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)">
+                    <el-option v-for="item in optionMenu" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
+                   </el-select>
+                    <!-- <el-select  v-model="caseValue2" placeholder="请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select> -->
+                    <el-select v-model="Casevalue1" placeholder="请选择" style="margin-left: 10px;">
+                  <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
+                 </el-select>
                     </div>
-                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="请输入"/></div>
-                    <div class="flex"><p class="title">案由</p> <input type="text" class="common-input" placeholder="请输入"/></div>
+                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="请输入" v-model="caseName"/></div>
+                    <div class="flex"><p class="title">案由</p> <input type="text" class="common-input" placeholder="请输入" v-model="caseWhy"/></div>
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div> -->
                 </div>
                   <div class="add-userinfo-left flex">
@@ -139,15 +136,14 @@
                      <div class="add-method-index flex">
                     <p>收费方式</p>
                      <div class="select-input">
-                     <el-select v-model="value" placeholder="请选择">
-                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                         </el-select>                           
+                     <el-select v-model="costValue" placeholder="请选择" @change="changeCostWay(costValue)">
+                         <el-option v-for="item in costWay" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
+                    </el-select>                           
                      </div>
                      </div>
                      </div> 
 
-                     <div class="add-Pay add-job">
-
+                    <div class="add-Pay add-job" v-show="costId == 9">
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
                     <div class="flex">
@@ -175,7 +171,7 @@
                  
 
                     
-                 <div class="add-Pay add-job">
+                 <div class="add-Pay add-job" v-show="costId == 10">
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
                     <div class="flex">
@@ -201,7 +197,7 @@
                  </div>
               </div>
                 
-                          <div class="add-Pay add-job">
+                 <div class="add-Pay add-job" v-show="costId == 8">
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
                     <div class="flex">
@@ -229,17 +225,36 @@
               </div>
                 
                 <div class="end-btn flex">
-                    <button class="btn btn1">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
+                    <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
+                 <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWord></caseWord>
+                </el-dialog>
              </div>
     </div>
 </template>
 <script>
 import qs from 'qs';
+import caseWord from './caseWord'
 export default {
     data(){
         return{
-            customId:'',
+            /**一二级菜单案件类型 */
+            optionMenu:[],
+            optionChildMenu:[],
+            Casevalue1:'',
+            Casevalue:'',
+            selectOneId:'',
+            
+            JobListValue:'',
+            JobListArr:[],
+            suoshuValue:'',
+            suoshuhangyeArr:[],
+            customValue:'',
+            customTypeArr:[],
+            costValue:'',
+            costId:8,
+            customId:0,
             visible: false,
             textarea:'',
            
@@ -247,7 +262,14 @@ export default {
             userNameE:'',
             province:'',
             address:'',
-           
+            tel:'',
+
+            caseValue:'',
+            caseValue2:'',
+            caseName:'',
+            caseWhy:'',
+            textarea:'',
+
             laywerName:'',
             laywerJob:'',
             partyName:'',
@@ -306,13 +328,15 @@ export default {
             //数据检索
             search:'',
             list:[
-                {Customer_Name_Zh:'风老大',msg:'15696518682',Id:'1'},
-                {Customer_Name_Zh:'陈老二',msg:'1569515845',Id:'1'},
-                {Customer_Name_Zh:'刘骜三',msg:'1536852565',Id:'1'},
-                {Customer_Name_Zh:'马云',msg:'1569653256',Id:'1'},
-                {Customer_Name_Zh:'敖牛恩',msg:'1458541236',Id:'1'},
+                // {Customer_Name_Zh:'风老大',Contact_Party:'15696518682',Id:'1'},
+                // {Customer_Name_Zh:'陈老二',Contact_Party:'1569515845',Id:'2'},
+                // {Customer_Name_Zh:'刘骜三',Contact_Party:'1536852565',Id:'3'},
+                // {Customer_Name_Zh:'马云',Contact_Party:'1569653256',Id:'4'},
+                // {Customer_Name_Zh:'敖牛恩',Contact_Party:'1458541236',Id:'5'},
             ] ,
-           
+           dialogFormVisible:false,
+           costWay:[],
+
         }
     },
     methods:{
@@ -348,29 +372,92 @@ export default {
            this.$router.push('/index/caseIndex')
         },
         addAll(){
-          var addJson = {
-              'userNameC':this.userNameC,
+            var addJson={}
+    
+            if(this.costValue == 8){
+            addJson = {
+              'customId':this.customId,
+              'userNameC':this.search,
               'userNameE':this.userNameE,
               'province':this.province,
               'address':this.address,
+              'tel':this.tel,
               'type':this.value,
               'suoshuhangye':this.value1,
               'job':this.value2,
+
+               'caseValue':this.caseValue,
+                'caseValue2':this.caseValue2,
+                'caseName':this.caseName,
+                'caseWay':this.caseWay,
+                'textarea':this.textarea,
+
+
               'laywerArr':this.inputArr,
-              'partyArr':this.inputArr,
-              'timeArr':this.timeArr,
-              'riskArr':this.riskArr,
-              'nameJobArr':this.nameJobArr,
-              'textarea':this.textarea
+              'partyArr':this.input1Arr,
+              'nameJobArr':this.nameJobArr
+              
+                }
           }
-          addJson = JSON.stringify(addJson)
-            console.log(this.customId)
-        var data = qs.stringify({
-                str:addJson
-                },{ indices: false });
-          console.log(JSON.parse(addJson))
-            // this.$http.post('',param).then(()=>{
-            // })
+            
+            if(this.costValue == 9){
+  addJson = {
+                'customId':this.customId,
+              'userNameC':this.search,
+              'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+              'tel':this.tel,
+              'type':this.value,
+              'suoshuhangye':this.value1,
+              'job':this.value2,
+
+               'caseValue':this.caseValue,
+                'caseValue2':this.caseValue2,
+                'caseName':this.caseName,
+                'caseWay':this.caseWay,
+                'textarea':this.textarea,
+
+
+              'laywerArr':this.inputArr,
+              'partyArr':this.input1Arr,
+           
+               'timeArr':this.timeArr,
+            }
+            }
+            if(this.costValue == 10){
+    addJson = {
+              'customId':this.customId,
+              
+              'userNameC':this.search,
+              'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+              'tel':this.tel,
+              'type':this.value,
+              'suoshuhangye':this.value1,
+              'job':this.value2,
+
+               'caseValue':this.caseValue,
+                'caseValue2':this.caseValue2,
+                'caseName':this.caseName,
+                'caseWay':this.caseWay,
+                'textarea':this.textarea,
+
+
+              'laywerArr':this.inputArr,
+              'partyArr':this.input1Arr,
+              'riskArr':this.riskArr,
+            }
+            }
+        addJson = JSON.stringify(addJson)
+        console.log(this.customId)
+        console.log(JSON.stringify(addJson))
+        this.$http.post('/yongxu/Index/AddCases',{
+                map:addJson
+            }).then((res)=>{
+                console.log(res)
+            })
         },
         getAlreadyName(id,name){
             this.search = name
@@ -378,21 +465,75 @@ export default {
                 id =0
             }
             this.customId = id
-          
             this.visible = false
         },
+        /*获取已存在客户列表*/ 
         getCustomSelect(){
-            // this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
-            //     console.log(res)
-            //     this.list = res.data.Name
-            // })
+            this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
+              
+                this.list = JSON.parse(JSON.stringify(res.data.Name))
+                console.log(this.list)
+            })
+        },
+        /**获取收费方式下拉 */
+        getDroplist(){
+              this.$http.get('/yongxu/Index/Get_Droplist').then((res) => {
+                 console.log(res)
+                 this.costWay = res.data.AllCharging
+             })
+           
+        },
+        /**获取客户类型下拉 */
+        getCustomType(){
+              this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
+                
+                 this.customTypeArr = res.data.Types
+             })
+        },
+          /**获取所属行业下拉 */
+        getSuoShuHangYeType(){
+              this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
+                
+                 this.suoshuhangyeArr = res.data.Industry
+             })
+        },
+        /**获取职务下拉列表 */
+        getJobList(){
+             this.$http.get('/yongxu/Index/Get_Droplist').then((res) => {
+                
+                 this.JobListArr = res.data.Post
+             })
+        },
+        /**h获取案件类型 */
+         getSelectMenu(){
+         this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
+           this.optionMenu = res.data
+        })
+      },
+       getSelectChildeMenu(id){
+         this.optionChildMenu = ''
+         this.Casevalue1 =''
+         console.log(id)
+         this.selectOneId = id
+         this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
+          
+           this.optionChildMenu = res.data  
+        })
+      },
+        changeCostWay(id){
+            this.costId = id
         },
         changeId(){
-            this.customId = ''
+            this.customId = 0
         }
     },
     mounted(){
        this.getCustomSelect()
+       this.getDroplist()
+       this.getCustomType()
+       this.getSuoShuHangYeType()
+       this.getJobList()
+       this.getSelectMenu()
     },
     computed:{
         //数据检索
@@ -401,19 +542,24 @@ export default {
             if (_search) {
                 //不区分大小写处理
                 var reg = new RegExp(_search, 'ig')
+                console.log(reg)
+                console.log(this.list)
                 //es6 filter过滤匹配，有则返回当前，无则返回所有
                 return this.list.filter(function(e) {
                     //匹配所有字段
-                    return Object.keys(e).some(function(key) {
-                        return e[key].match(reg);
-                    })
+                    // return Object.keys(e).some(function(key) {
+                    //     return e[key].match(reg);
+                    // })
                     //匹配某个字段
-                    //  return e.name.match(reg);
+                      return e.Customer_Name_Zh.match(reg);
                 })
             };
             return this.list;
         }
     },
+    components:{
+        'caseWord':caseWord
+    }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div id="case" class="case">
-            <div class="flex title-case"><i class="el-icon-service"></i><p>组织架构</p></div>
+            <div class="flex title-case"><i class="el-icon-service"></i><p>基础数据</p></div>
                         <div>
                              <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
                               <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">

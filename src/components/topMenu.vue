@@ -36,21 +36,20 @@
             <p>{{v.Item_Name}}</p>
             </router-link>
          
-              <el-tooltip class="item" effect="light"  placement="bottom-end">
-                <li  class="flex">
+            <li class="flex" v-popover:popover2>
                      <div class='nav-icon iconfont icon-icon_set_up'></div>
                      <p>设置</p>
-                </li>
-                 <div slot="content">
+           </li>
+                <el-popover ref="popover2" placement="bottom-end" trigger="click">
+                    <div>
                       <ul class="flex">
-                          <li v-for="(v,i) in arr1"  @click="goTONew(v.Item_Path)"  :key="i" style="margin-left:20px;" class="setting flex" >
+                          <router-link v-for="(v,i) in arr1"    :to="v.Item_Path" tag="li" :key="i" style="margin-left:20px;" class="setting flex" >
                               <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
                               <p>{{v.Item_Name}}</p>
-                         </li>
+                         </router-link>
                       </ul>
                  </div>
-                
-                </el-tooltip>         
+                </el-popover>
     </ul>
             
 </div>
@@ -67,7 +66,7 @@ export default {
             {Item_Name:'客户',Item_Path:'/index/customerIndex',Icon:'icon-kehu'},
             {Item_Name:'文书',Item_Path:'/index/documentIndex',Icon:'icon-weimingming'},
             {Item_Name:'审核',Item_Path:'/index/auditingIndex',Icon:'icon-bumenzhinenggongzuoshenhe'},
-            {Item_Name:'统计',Item_Path:'/index/documentIndex',Icon:'icon-tongji'},
+            {Item_Name:'统计',Item_Path:'/index/countIndex',Icon:'icon-tongji'},
             // {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}
             ],
             arr1:[{Item_Name:'合同模板',Item_Path:'/index/setContract',Icon:'icon-anjian'},
