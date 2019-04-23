@@ -1,7 +1,15 @@
 <template>
     <div id="case" class="case">
+      <div class="add-top flex">
+                <p>所在位置：</p>
+                <router-link to='/index/auditingIndex' tag="a">审核</router-link>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p v-if="child_cur==0">案件审核</p>
+                 <p v-if="child_cur==1">风控审核</p>
+                 <p v-else-if="child_cur==2">财务审核</p>
+                  <p v-if="child_cur==3">风结案审核</p>
+            </div>
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-        
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
          
             <div v-show="child_cur==0">
@@ -11,7 +19,7 @@
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
+                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
                     <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
                      <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
                       <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
@@ -55,11 +63,10 @@
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号1" width=""></el-table-column>
+                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
                     <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
+                     <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
+                      <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
                           <el-table-column prop="date" label="合同" width=""> 
                                 <template slot-scope="scope"> 
                                <span style="color:red">
@@ -67,18 +74,11 @@
                                </span>
                               </template>
                           </el-table-column>
-                             <el-table-column prop="address" label="状态" width=""> 
-                                    <template slot-scope="scope"> 
-                                    <span v-if="scope.row.address == '立案'" style="color:red">
-                                    {{scope.row.address}}
-                                  </span>
-                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
-                                  </template>
-                             </el-table-column>
+                            
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                              <span @click="open2(scope.row.id)" style="cursor:pointer">错误</span>
+                            <span @click="open2(scope.row.id)" style="cursor:pointer">正确</span>
                           </template>
                         </el-table-column>
                   </el-table>
@@ -101,7 +101,7 @@
                     <el-table-column prop="name" label="案件名称" width=""></el-table-column>
                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                      <el-table-column prop="name" label="合同起止日期" width=""> </el-table-column>
+                      <el-table-column prop="name" label="合同起止日期" width="120"> </el-table-column>
                        <el-table-column prop="name" label="立案日期" width=""> </el-table-column>
                           <el-table-column prop="name" label="案件状态" width=""> </el-table-column>
                              <el-table-column prop="name" label="合同金额" width=""> </el-table-column>
@@ -109,8 +109,11 @@
                          
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span @click="open2(scope.row.id)" style="cursor:pointer">预览</span>
-                            <span @click="openDialog(scope.row.id)" style="cursor:pointer">收款</span>
+                            <span class="btn-div">
+                            <button @click="open2(scope.row.id)" style="cursor:pointer" class="btn-caozuo">预览</button>
+                            <button @click="openDialog(scope.row.id)" style="cursor:pointer" class="btn-caozuo">收款</button>
+
+                            </span>
                           </template>
                         </el-table-column>
                   </el-table>
@@ -123,29 +126,26 @@
                 </ul>
             </div>
 
-            <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+      <el-dialog  :visible.sync="dialogFormVisible"  :append-to-body='true'  top="300px" width="800px">
       <div class="dialogFormVisible flex">
          
            <div class="dialogFormVisivleFile flex">
-               <table>
-                 <thead>
-                   <th class="width-th">付款日期</th>
-                   <th class="width-th">收费金额</th>
-                   <th class="width-th">描述</th>
-                    <th class="width-th">状态</th>
-                 </thead>
-                 <tbody>
-                   <tr v-for="(v,i) in tableData" :key="i">
-                      <td>{{v.date}}</td>
-                      <td>{{v.name}}</td>
-                      <td>{{v.address}}</td>
-                      <td class="flex" style="justify-content:space-around;width:150px;border:none">
-                        <span>未收款</span>
-                        <button class="btn">确认收款</button>
-                      </td>
-                   </tr>
-                 </tbody>
-               </table>
+             <el-table :data="tableData">
+                <el-table-column property="date" label="付款日期" width="150"></el-table-column>
+                <el-table-column property="name" label="收费金额" width="150"></el-table-column>
+                <el-table-column property="name" label="描述" width="150"></el-table-column>
+                <el-table-column   width="50"></el-table-column>
+                
+                <el-table-column property="name" label="状态" width="200">
+                  <template slot-scope="scope">
+                        <span >未收款</span>
+                        <button class="btn"  @click="getMonney(scope.row.id)">确认收款</button>
+                  </template>
+                </el-table-column>
+               
+              </el-table>
+              
+              
           </div>
       </div>
   
@@ -165,30 +165,19 @@
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号1" width=""></el-table-column>
-                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
+                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
+                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
                      <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
                       <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同" width=""> 
-                                <template slot-scope="scope"> 
-                               <span style="color:red">
-                                 {{scope.row.name}}
-                               </span>
-                              </template>
-                          </el-table-column>
-                             <el-table-column prop="address" label="状态" width=""> 
-                                    <template slot-scope="scope"> 
-                                    <span v-if="scope.row.address == '立案'" style="color:red">
-                                    {{scope.row.address}}
-                                  </span>
-                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
-                                  </template>
-                             </el-table-column>
+                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
+                        <el-table-column prop="name" label="合同起止日期" width="120"> </el-table-column>
+                         <el-table-column prop="name" label="立案日期" width=""> </el-table-column>
+                         
+                            
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                             
+                              <button @click="open2(scope.row.id)" style="cursor:pointer"  class="btn-caozuo">结案</button>
                           </template>
                         </el-table-column>
                   </el-table>
@@ -361,6 +350,9 @@ console.log(row, event, column)
       },
       openDialog(){
         this.dialogFormVisible = true
+      },
+      getMonney(id){
+
       }
     },
     mounted(){
@@ -380,12 +372,12 @@ console.log(row, event, column)
   flex-direction: row;
   justify-content: space-between;
 }
-.dialogFormVisivleFile table td{
-  border:1px solid #ccc; 
+/* .dialogFormVisivleFile table td{
+  border:none; 
 }
 .dialogFormVisivleFile table th,td{
-  text-align:center;
-}
+  min-width:180px; 
+} */
 .dialogFormVisivleHeader_left p{
   font-size: 18px;
   font-weight: 600;
@@ -416,7 +408,13 @@ console.log(row, event, column)
 }
 .width-th{
   width: 150px;
+  border: none;
 }
+.width-tr{
+  height: 50px;
+  border-bottom: 1px solid #ccc;
+}
+
 .upload-demo{
   width: 100%;
 }
@@ -439,11 +437,30 @@ console.log(row, event, column)
 }
 .btn{
   cursor: pointer;
-  /* border:  #7E2C2E; */
+  border:  #7E2C2E;
   background: #7E2C2E;
   color: #fff;
   font-size: 8px;
   outline: none;
+  height: 25px;
+  margin-left: 30px;
+}
+.btn-div{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+}
+.btn-caozuo{
+  cursor: pointer;
+  border:  #7E2C2E;
+  background: #7E2C2E;
+  color: #fff;
+  font-size: 8px;
+  outline: none;
+  height: 25px;
+  margin-left: 2px;
+
 }
 </style>
 

@@ -15,14 +15,15 @@
               <li class="showTab-li">
         
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同起止日期" width=""> </el-table-column>
-                             <el-table-column prop="date" label="立案日期" width=""> </el-table-column>
-                        <el-table-column prop="address" label="立案状态"> </el-table-column>
+                    <el-table-column prop="name" label="姓名" width=""></el-table-column>
+                    <el-table-column prop="name" label="职务" width=""> </el-table-column>
+                     <el-table-column prop="name" label="部门" width=""> </el-table-column>
+                          <el-table-column prop="date" label="入职日期" width=""> </el-table-column>
+                        <el-table-column prop="address" label="状态"> </el-table-column>
+                        <el-table-column  label="备注"> 
+                           <!--  -->
+                        </el-table-column>
+
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"

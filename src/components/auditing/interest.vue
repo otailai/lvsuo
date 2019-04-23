@@ -1,5 +1,12 @@
 <template>
     <div class="case">
+           <div class="add-top flex">
+                <p>所在位置：</p>
+                <router-link to='/index/auditingIndex' tag="a">审核</router-link>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>利益检索</p>
+
+            </div>
             <div class="flex closeX"><i class="el-icon-close" @click="closeX()"></i></div>
             <div class="flex case-child3">
                   <div class="search-div flex">
@@ -21,7 +28,7 @@
                       </el-table>
                     </div>
             </div>
-            <div class="flex footer"><el-button>返回修改</el-button><el-button>审核通过</el-button></div>
+            <div class="flex footer"><el-button class="red">返回修改</el-button><el-button class="red1">审核通过</el-button></div>
     </div>
 </template>
 <script>
@@ -54,6 +61,22 @@ export default {
 .footer{
     margin-top: 50px;
     justify-content: center;
+}
+.red{
+    background: #A92A2E;
+    color: #fff;
+    border-radius: 0px;
+
+}
+.el-button:hover {
+    color: #fff;
+    border-color: #A92A2E;
+    background-color: #A92A2E;
+}
+.red1{
+    background: #7E2C2E;
+    color: #fff;
+    border-radius: 0px;
 }
 </style>
 
