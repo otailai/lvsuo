@@ -29,6 +29,9 @@
         <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
+         <div class="height"></div>
+        <div class="height"></div>
+        <div class="height"></div>
 <div class="WordSection1" style="layout-grid: 15.6pt;"  v-html="data"></div>
     </div>
       </div>     

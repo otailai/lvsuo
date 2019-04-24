@@ -13,6 +13,9 @@ import store from './vuex/store'
 import VueParticles from 'vue-particles'  
 import toExcel from '@/excel/json2excel'
 import htmlToPdf from './utils/ToPdf'
+import ImgInputer from 'vue-img-inputer'
+import 'vue-img-inputer/dist/index.css'
+Vue.component('ImgInputer', ImgInputer)
 Vue.use(htmlToPdf)
 Vue.prototype.$toExcel = toExcel
 Vue.use(VueParticles)  
@@ -30,6 +33,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: { App }, 
   template: '<App/>'
 })

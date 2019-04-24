@@ -13,7 +13,6 @@
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
          
             <div v-show="child_cur==0">
-          
             <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
@@ -139,16 +138,13 @@
                 <el-table-column property="name" label="状态" width="200">
                   <template slot-scope="scope">
                         <span >未收款</span>
-                        <button class="btn"  @click="getMonney(scope.row.id)">确认收款</button>
+                        <button class="btn-ok"  @click="getMonney(scope.row.id)">确认收款</button>
                   </template>
                 </el-table-column>
                
               </el-table>
-              
-              
           </div>
       </div>
-  
    <div slot="title" class="dialog-title">
         <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定额收费</p></div>
   </div>
@@ -158,7 +154,7 @@
   </div>
 </el-dialog>
           </div>
-
+          
             <div v-show="child_cur==3">
                       <div class="flex case-child" ></div>
             <div class="showTab">
@@ -303,8 +299,7 @@ import store from '../../vuex/store'
     methods: {
       handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
+       
         // console.log(tab,event);
       },
       changeLi(i){
@@ -435,7 +430,7 @@ console.log(row, event, column)
     color: #606266;
     font-size: 14px;
 }
-.btn{
+.btn-ok{
   cursor: pointer;
   border:  #7E2C2E;
   background: #7E2C2E;

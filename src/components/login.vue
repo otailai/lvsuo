@@ -118,31 +118,38 @@ export default {
             var str = this.username+'&&'+this.password
             var encrypted = encrypt.encrypt(str);
           // 加密后的密文  
-            console.log('这是加密之后的' + encrypted)
+          //  console.log('这是加密之后的' + encrypted)
             var data = qs.stringify({
                 str:encrypted
                 });
-             console.log(data)
-           
-            //   this.$router.push('./index/caseIndex')
-            this.$http.post('/yongxu/Login/decrypt',data).then((res)=>{
+       //console.log(data) 
+       this.$http.post('/yongxu/Login/decrypt',data).then((res)=>{
                 console.log(res)
                     var str = res.data; 
-                    if(res.data[0].option == 1){
-                        localStorage.setItem('userId',res.data[0].userId)
-                          this.$router.push('./index/caseIndex')
-                         if(this.checkedState){ 
-                                setCookie('user',this.username,7); //保存帐号到cookie，有效期7天
-                                setCookie('pswd',this.password,7); //保存密码到cookie，有效期7天
-                            }
+                if(res.data[0].option == 1){
+                    localStorage.setItem('userId',res.data[0].userId)
+                    console.log(this.checkedState)
+                    if(this.checkedState){ 
+                    this.setCookie('user',this.username,7); //保存帐号到cookie，有效期7天
+                    this.setCookie('pswd',this.password,7); //保存密码到cookie，有效期7天
+                    }else{
+                    this.delCookie('user');
+                    this.delCookie('pswd');
+                    console.log(this.getCookie('user'))
+                    }
+                    this.$router.push('./index/caseIndex')  
                     }else{
                          this.$message({
                             message:'账号或密码错误',
                             type:'warning'
-                        });
+                        }); 
                          return false
-                    }
-               
+                    } 
+              }).catch((err)=>{
+                  this.$message({
+                            message:'服务器出错',
+                            type:'warning'
+                        }); 
               })   
         },
          //设置cookie
@@ -166,19 +173,27 @@ export default {
                 delCookie(name){
                     this.setCookie(name,null,-1);
                 },
-          
-          changeCheck(){  
-            if(!this.checkedState){
-                this.delCookie('user');
-                this.delCookie('pswd');
-                };
+            changeCheck(){  
+              this.checkedState =!this.checkedState
+              console.log(this.checkedState)
+            },
+            getUserPas(){
+                if(this.getCookie('user')|| this.getCookie('pswd')){
+                    this.username =this.getCookie('user')
+                    this.password = this.getCookie('pswd')
+                    this.checkedState = true
+                }    
             }
     },
     mounted(){
         this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-            console.log(res.data.PublicKey)
+            //console.log(res.data.PublicKey)
+            console.log('服务已开启')
             this.pub = res.data.PublicKey
+        }).catch((err)=>{
+            console.log('服务未开启')
         })
+        this.getUserPas()
     },
     watch:{
 

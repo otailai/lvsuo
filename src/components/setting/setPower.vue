@@ -1,7 +1,14 @@
 <template>
     <div id="case" class="case">
-            <div class="flex title-case"><i class="el-icon-service"></i><p>权限管理</p></div>
-                        <div>
+            <div class="flex title-case">
+               <div class="add-top flex">
+                <p>所在位置：</p>
+                <p>设置</p>  
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>权限管理</p>
+            </div>
+            </div>
+                        <div style="margin-top:30px;">
                             <!-- <ul class="case-ul">
                                 <li class="case-li">
                                     <p>角色与权限设置</p>
@@ -11,7 +18,7 @@
                               <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
                               <div v-show="child_cur==0" class="bar">
                                                 <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button></div>
+                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>添加角色</el-button></div>
                                                 </div>
                                                 <div class="showTab">
                                                 <ul class="showTab-ul">
@@ -22,8 +29,8 @@
                                                 <el-table-column prop="power" label="power" width=""> </el-table-column>
                                                 <el-table-column label="操作" width="150">
                                                 <template slot-scope="scope">
-                                                <span @click="editInfo(scope.row.id)" style="color:red;cursor:pointer">编辑</span>
-                                                <span style="color:red;cursor:pointer"> 删除</span>
+                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
+                                                <button class="btn-caozuo"> 删除</button>
                                                 </template>
                                                 </el-table-column>    
                                             </el-table>
@@ -63,7 +70,7 @@ import store from '../../vuex/store'
         {id:1,name:'管理员',power:'权限'}
         ],
         arr:[
-            {title:'角色与权限设置'}, {title:'角色与权限设置'}
+            {title:'角色与权限设置'}, {title:'角色与权限设置1'}
         ],
         value: '',
         value5: '',
@@ -137,7 +144,7 @@ import store from '../../vuex/store'
 <style>
 @import '../../assets/sass/main.css';
 .case-child-end1{
-    justify-content: flex-end;
+    justify-content: flex-start;
     margin-top: 20px;
 }
 
@@ -145,14 +152,15 @@ import store from '../../vuex/store'
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
-              border-bottom: 1px solid #ccc;
+              /* border-bottom: 1px solid #ccc; */
                   height: 40px;
                     margin-top: 20px;
         }
         .el-tabs__nav-wrap{
-              border-bottom: 1px solid #ccc;
+              /* border-bottom: 1px solid #ccc; */
 
         }
+     
      
 </style>
 

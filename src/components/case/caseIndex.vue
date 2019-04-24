@@ -68,7 +68,7 @@
                     <el-table-column prop="Case_Name" label="案件名称" width=""> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
                       <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="Case_Lawyer_Name" label="承办律师" width=""> </el-table-column>
+                       <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
                           <el-table-column  label="合同起止日期" width="">
                             
                                 <template slot-scope="scope">
@@ -125,7 +125,7 @@
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                     </div>
           
-              <div class="btn"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
+              <div class="btn-searchData"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
             </div>
 
             <div class="flex case-child3" v-show="child==1">
@@ -170,12 +170,11 @@ import store from '../../vuex/store'
         total:1,
         child:0,
         child_cur:0,
-        arr:[],
         arr1:[{title:'所有案件'},{title:'授权案件'}],
         activeName: 'name0',
         index:0,
-          cur:0,
-          arr:[{title:'所有案件'},{title:'授权案件'}],
+        cur:0,
+        arr:[{title:'案件'},{title:'利益检索'}],
          input23: '',
         
         tableData: [],

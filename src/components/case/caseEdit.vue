@@ -205,18 +205,23 @@
                 <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
-              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input"></div>
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
-                  class="upload-demo"
-                  drag
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  multiple>
-                  <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                  <div class="el-upload__tip flex" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+                    class="upload-demo"
+                    drag
+                    action="http://192.168.0.107:8080/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    
+                  </el-upload>
           </div>
           
       </div>
@@ -236,13 +241,20 @@
 export default {
     data(){
         return{
+            fileName:'',
+            nameData:{
+                 File_Name:'',
+            },
             cur:'',
             arr:[1],
             value:'',
             options:[{lable:'123',value:1}],
-            tableData:[{
-                Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1
-            }],
+            tableData:[
+                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
+                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
+                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
+
+                ],
             dialogFormVisible:false,
             //客户基本信息
             Customer_Name_Zh:'',
@@ -328,7 +340,36 @@ export default {
 
                 console.log(res)
             })
-        }
+        },
+          successFile(res){
+            console.log(res)
+            if(res.code == 200){
+                   this.$message({
+                    message:res.message,
+                    type:'success'
+                });  
+            } 
+          },
+          errorFile(){
+              this.$message({
+                    message:'上传失败',
+                    type:'warning'
+                });  
+          },
+          progressFile(){
+           
+          },
+          beforeFile(){
+            if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+            }else{
+              this.nameData.File_Name = this.fileName
+            }
+          }
     },
     mounted(){
         this.getCaseEdit()
@@ -365,6 +406,7 @@ export default {
     margin: 20px auto;
     webkit-box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
     box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.3);
+    padding-bottom:30px;
 }
 .edit-table{
     flex-direction: column;

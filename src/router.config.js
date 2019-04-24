@@ -15,12 +15,13 @@ import setContract from './components/setting/setContract'
 import setPower from './components/setting/setPower'
 import setBase from './components/setting/setBase'
 import mineIndex from './components/mine/mineIndex'
+import mineEdit from './components/mine/mineEdit'
 import setDemo from './components/setting/setDemo'
 import caseWord from './components/case/caseWord'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
-    {path:'/index',component:index,name:index,children:[
+    {path:'/index',redirect: '/index/caseIndex',component:index,name:index,children:[
 {path:'/index/caseIndex',component:caseIndex,name:caseIndex},
 {path:'/index/caseAdd',component:caseAdd,name:caseAdd},
 {path:'/index/caseEdit',component:caseEdit,name:caseEdit},
@@ -34,12 +35,13 @@ export default[
 {path:'/index/setPower',component:setPower,name:setPower},
 {path:'/index/setBase',component:setBase,name:setBase},
 {path:'/index/mineIndex',component:mineIndex,name:mineIndex},
+{path:'/index/mineEdit',component:mineEdit,name:mineEdit},
 {path:'/index/setDemo',component:setDemo,name:setDemo},
 {path:'/index/caseWord',component:caseWord,name:caseWord},
-    ]},
 
+    ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
+    {path:'*',redirect: '/index/caseIndex',component:caseIndex,name:caseIndex},
    
-  
 ]
     

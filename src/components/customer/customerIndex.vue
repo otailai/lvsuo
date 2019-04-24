@@ -1,6 +1,11 @@
 <template>
     <div id="case" class="case">
-     
+        <div class="add-top flex">
+                <p>所在位置：</p>
+                <router-link to='/index/auditingIndex' tag="a">客户</router-link>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>{{title}}</p>
+            </div>
     
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
@@ -11,7 +16,7 @@
             <div class="flex case-child" >  
            
               <div class="case-child-first flex">
-                <p  v-for="(v,i) in arr1" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
+                <p  v-for="(v,i) in arr1" @click="changeLi(i,v)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
               </div>
                 
                 <div class="case-child-end flex">
@@ -139,6 +144,7 @@ import store from '../../vuex/store'
   export default {
     data() {
       return {
+        title:'',
         child:0,
         child_cur:0,
         arr:[],
@@ -226,8 +232,10 @@ import store from '../../vuex/store'
         // console.log(this.child_cur)
         // console.log(tab,event);
       },
-      changeLi(i){
+      changeLi(i,v){
           this.cur = i
+          this.title = v.title
+          console.log(v.title)
          
       },
        handleSizeChange(val) {
@@ -252,6 +260,7 @@ import store from '../../vuex/store'
       }
     },
     mounted(){
+      this.title = this.arr1[0].title
       this.getChildMenu()
     },
     components:{

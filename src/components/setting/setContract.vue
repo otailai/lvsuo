@@ -1,9 +1,15 @@
 <template>
     <div id="case" class="case">
-              <div class="flex title-case"><i class="el-icon-service"></i><p>合同模板</p></div>  
+                <div class="add-top flex">
+                <p>所在位置：</p>
+                <p>设置</p>  
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>合同模板</p>
+            </div>
               <div class="contract">
                   <ul class="contract-ul flex">
-                      <li class="contract-li">
+
+                      <li class="contract-li" @click="gotoVue()">
                           <p>民事诉讼合同</p>
                       </li>
                       <li class="contract-li">
@@ -15,10 +21,10 @@
                       <li class="contract-li">
                            <p>民事诉讼合同</p>
                       </li>
-                      <li class="contract-li add-li">
+                      <!-- <li class="contract-li add-li">
                                      <i class="el-icon-circle-plus-outline"></i>
                                 <p>新增模板</p>
-                      </li>
+                      </li> -->
                   </ul>
               </div>
 
@@ -35,7 +41,9 @@ import store from '../../vuex/store'
       };
     },
     methods: {
- 
+        gotoVue(){
+            this.$router.push('/index/caseWord')
+        }
     },
     mounted(){
      
@@ -64,12 +72,19 @@ import store from '../../vuex/store'
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    color: #7E2C2E;
 }
 .contract-li:hover{
     cursor: pointer;
+    
 }
 .add-li i{
     font-size: 18px;
+    color: #7E2C2E;
+
+}
+.add-li p{
+    color: #7E2C2E;
 }
 </style>
 

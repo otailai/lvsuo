@@ -1,7 +1,14 @@
 <template>
     <div id="case" class="case">
+          <div class="add-top flex">
+                <p>所在位置：</p>
+                <p>设置</p>  
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>组织架构</p>
+            </div>
+
             <div>
-              <div class="flex title-case"><i class="el-icon-service"></i><p>组织架构</p></div>
+              <div class="flex title-case"></div>
             <div class="flex case-child" >  
                 <div class="case-child-end flex">
                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建部门</el-button>
@@ -20,8 +27,10 @@
                      <el-table-column prop="name" label="部门" width=""> </el-table-column>
                           <el-table-column prop="date" label="入职日期" width=""> </el-table-column>
                         <el-table-column prop="address" label="状态"> </el-table-column>
-                        <el-table-column  label="备注"> 
-                           <!--  -->
+                        <el-table-column  label="备注" width="160"> 
+                            <template slot-scope="scope">
+                              <input type="text" :placeholder="scope.row.address" class="remarks-input" readonly="readonly">
+                              </template>
                         </el-table-column>
 
                 </el-table>
@@ -39,7 +48,7 @@
           <div slot="title" class="dialog-title">
             <p>查看成员</p>
           </div>
-                        <el-form :model="form">
+                        <el-form :model="form" class="form-select">
                         <el-form-item label="姓名" :label-width="formLabelWidth">
                           <el-input v-model="form.name" autocomplete="off" class="el-select1"></el-input>
                         </el-form-item>
@@ -59,7 +68,7 @@
                         </el-form-item>
                         
                         <el-form-item label="微信" :label-width="formLabelWidth">
-                         <a href="#" style="color:red">扫码绑定</a>
+                         <a href="#" style="color:red" @click="innerVisible = true">扫码绑定</a>
                         </el-form-item>
 
                           <el-form-item label="状态" :label-width="formLabelWidth">
@@ -86,6 +95,15 @@
               <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
            </div>
           </div>
+             <el-dialog
+              width="20%"
+              top="25%"
+              :visible.sync="innerVisible"
+              append-to-body>
+              <div class="img-div">
+                <img src="../../assets/img/erweima.png" alt="">
+              </div>
+            </el-dialog>
         </el-dialog>
 
     </div>
@@ -96,6 +114,7 @@ import { fail } from 'assert';
   export default {
     data() {
       return {
+        innerVisible:false,
         activeName: 'name0',
        currentPage4: 4,
         index:0,
@@ -206,12 +225,27 @@ import { fail } from 'assert';
   margin-bottom: 20px;
 }
 .el-select1{
-  width: 80%;
+  width: 80% !important;
 }
 .dialogFormVisivleFooter{
   flex-direction: row;
   justify-content: center;
   margin-top: 25px;
+}
+.img-div{
+  width: 100%;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.img-div img{
+  width: 100%;
+ height: 100%;
+} 
+.remarks-input{
+  width: 140px;
+  height: 30px;
+  border: 1px solid #ccc;
 }
 </style>
 

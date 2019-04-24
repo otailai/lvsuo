@@ -1,6 +1,11 @@
 <template>
     <div id="case" class="case">
-     
+     <div class="add-top flex">
+                <p>所在位置：</p>
+                <router-link to='/index/auditingIndex' tag="a">文书</router-link>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>资料库</p>
+            </div>
     
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
@@ -19,7 +24,7 @@
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                       <button class="case-button"><i class="el-icon-search"></i></button>
                     </div>
-                      <el-button type="danger" round @click="openNew()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <el-button type="danger" round @click="openNew()"><i class="el-icon-plus"></i>新建文档</el-button>
                 </div>
 
             </div>
@@ -64,18 +69,26 @@
     <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
       <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
-              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input"></div>
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
           </div>
            <div class="dialogFormVisivleFile flex">
-                  <el-upload
-                  class="upload-demo"
-                  drag
-                  action="https://jsonplaceholder.typicode.com/posts/"
-                  multiple>
-                  <i class="el-icon-upload"></i>
-                  <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                  <div class="el-upload__tip flex" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-                </el-upload>
+              <!-- <div class="dialogFormVisivleFile1">
+                 <img-inputer v-model="imgFile" theme="light" size="large" :on-change="chooseImg" type="file" accept="image/png,image/gif,image/jpeg" placeholder="将文件拖到此处，或点击上传,只能上传jpg/png文件，且不超过500kb"/>  
+              </div> -->
+                <el-upload
+                    class="upload-demo"
+                    drag
+                    action="http://192.168.0.107:8080/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+                  </el-upload>
           </div>
           
       </div>
@@ -97,6 +110,12 @@ import { constants } from 'fs';
   export default {
     data() {
       return {
+        fileName:'',
+        nameData:{
+          File_Name:'',
+        },
+        placeholder_text:'',
+        imgFile:'',
           dialogFormVisible: false,
         child:0,
         child_cur:0,
@@ -212,9 +231,57 @@ console.log(row, event, column)
         this.dialogFormVisible = true
       },
       downLine(id){
-
         console.log(id)
       },
+      // 图片上传
+        chooseImg:function() {      
+            let file = this.imgFile 
+            console.log(file)
+           if(file==null||file==undefined){
+                this.$message({
+                    message:'图片未上传',
+                    type:'warning'
+                });
+                return false  
+        }
+         var data=new FormData();
+          data.append("file",file);
+          this.$http.post('/yongxu/Base/uploadRawFile',data,{
+            headers:{'Content-Type':'multipart/form-data'}  
+          }).then((res)=>{
+            console.log(res)
+          })
+	          
+          },
+          successFile(res){
+            console.log(res)
+            if(res.code == 200){
+                   this.$message({
+                    message:res.message,
+                    type:'success'
+                });  
+            } 
+          },
+          errorFile(){
+              this.$message({
+                    message:'上传失败',
+                    type:'warning'
+                });  
+          },
+          progressFile(){
+           
+          },
+          beforeFile(){
+            if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+            }else{
+              this.nameData.File_Name = this.fileName
+            }
+          }
     },
     mounted(){
       this.getChildMenu()
