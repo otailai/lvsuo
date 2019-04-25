@@ -24,7 +24,7 @@ export default[
     {path:'/index',redirect: '/index/caseIndex',component:index,name:index,children:[
 {path:'/index/caseIndex',component:caseIndex,name:caseIndex},
 {path:'/index/caseAdd',component:caseAdd,name:caseAdd},
-{path:'/index/caseEdit',component:caseEdit,name:caseEdit},
+{path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:caseEdit},
 {path:'/index/customerIndex',component:customerIndex,name:customerIndex},
 {path:'/index/documentIndex',component:documentIndex,name:documentIndex},
 {path:'/index/auditingIndex',component:auditingIndex,name:auditingIndex},

@@ -35,7 +35,7 @@
                     </div>
                  </div>
                  <div class="add-caseinfo add-userinfo flex">
-                        <p class="add-userinfo-p">客户基本信息</p>
+                        <p class="add-userinfo-p">案件基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
                     <div class="flex"><p class="title">案件类型</p><p>{{Case_type}}</p></div>
@@ -57,7 +57,7 @@
                 <div class="add-lawyer-parent flex">
                 <div class="add-lawyer  flex">
                 <div class="add-lawyer-title flex"> 
-                     <p class="add-userinfo-p">客户基本信息</p>
+                     <p class="add-userinfo-p">律师基本信息</p>
                   
                  </div>  
                 <div class="flex  add-lawyer-index">
@@ -98,20 +98,20 @@
                  </div>
                     
 
-                 <div class="add-method flex" v-show="cur==9">
+                 <div class="add-method flex">
                      <div class="add-method-index flex">
                     <p>收费方式</p>
                      <div class="select-input">
-                     <el-input v-model="way"/>                   
+                     <el-input v-model="way" readonly="readonly"/>                   
                     
                      </div>
                      </div>
                      </div> 
 
-                     <div class="add-Pay add-job">
+                     <div class="add-Pay add-job" v-show="cur==9">
 
                     <div class="add-Pay-index flex">
-                   <div class="add-Pay-index-child">
+                    <div class="add-Pay-index-child">
 
                     <div class="flex">
                         <p class="title">付款日期</p>
@@ -161,7 +161,7 @@
                     </div>
                       <div class="flex" v-for="(v,i) in ChargeInfoArr" :key="i">
                         <p>{{v.Staff_Name}}</p>
-                        <p>{{v.Rule_Name}}</p>
+                        <p>{{v.Value}}</p>
                         <p>{{v.Rate}}</p>
                     <div class="input-icon"></div>
                       </div>
@@ -171,28 +171,30 @@
               </div>
              </div>
                 
-              
+               
               <div class="edit">
                     <div class="edit-table flex">
                      <div class="edit-title-line flex"> <p class="edit-title">案件文书</p>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建文档</el-button>
                       </div>
                        <el-table :data="tableData" border style="width: 100%;margin:auto"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="序号" width=""></el-table-column>
-                    <el-table-column prop="Case_Name" label="文档名称" width=""> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="文件类型" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="创建日期" width=""> </el-table-column>
-                       <el-table-column prop="Case_Lawyer_Name" label="更新日期" width=""> </el-table-column>
+                    <el-table-column prop="Id" label="Id" width=""></el-table-column>
+                    <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
+                     <el-table-column prop="Postfix" label="文件类型" width=""> </el-table-column>
+                      <el-table-column prop="Date _Created" label="创建日期" width="180"> </el-table-column>
+                       <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
                           <el-table-column  label="状态" width="">
                             
                                 <template slot-scope="scope">
-                                    <p>{{scope.row.Contract_Date_From}}{{scope.row.Contract_Date_From}}</p>
+                                    <p>{{scope.row.state}}</p>
                                 </template>
                             
                              </el-table-column>
                              <el-table-column  label="操作" width="">
                                 <template slot-scope="scope">
-                                    <p @click="goTO(scope.row.id)">风控审核</p>
+                                    <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 1">风控审核</p>
+                                     <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 2">更新</p>
+                                      <a  v-if="scope.row.type == 3" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
 
                                 </template>
                                
@@ -211,7 +213,7 @@
                   <el-upload
                     class="upload-demo"
                     drag
-                    action="http://192.168.0.107:8080/Base/uploadRawFile"
+                    action="/yongxu/Base/uploadRawFile"
                     :data='nameData'
                     :on-success="successFile"
                     :on-progress="progressFile"
@@ -220,7 +222,6 @@
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                    
                   </el-upload>
           </div>
           
@@ -231,7 +232,7 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
-    <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+    <el-button type="primary"  @click="saveDoc()">保存</el-button>
     </div>
   </div>
 </el-dialog>
@@ -241,19 +242,22 @@
 export default {
     data(){
         return{
+            code:'',
+            Case_Id:'',
             fileName:'',
             nameData:{
                  File_Name:'',
             },
+            File_Name:'',
+            fileName1:'',
+            Suffix_Name:'',
+            size:'',
             cur:'',
             arr:[1],
             value:'',
             options:[{lable:'123',value:1}],
             tableData:[
-                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
-                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
-                {Case_No:'1',Case_Name:'文档名称',Customer_Name_Zh:'文件类型',Value:'123',Case_Lawyer_Name:'13245',Contract_Date_From:'2018-03-03',id:1},
-
+               
                 ],
             dialogFormVisible:false,
             //客户基本信息
@@ -298,15 +302,16 @@ export default {
             this.arr.push(1)
         },
         lineCilck(row){
-
+            //console.log(row.File_Path)
         },
         toAdd(){
             this.dialogFormVisible=true
         },
         getCaseEdit(){
+             console.log(this.$route.params.id)
             this.$http.get('/yongxu/Index/Case_Details',{params:{
-                Id:3,
-                Type_Id:10
+                Id:this.$route.params.id,
+                Type_Id:this.$route.params.typeId
             }}).then((res)=>{
                 // 客户信息
                 let arr=res.data.Get_Customer_Information
@@ -324,6 +329,7 @@ export default {
                 this.Cause_Action = caseInfo.Cause_Action,
                 this.Case_Name=caseInfo.Case_Name
                 this.Case_type=caseInfo.Case_type
+                this.Case_Id = caseInfo.Id
                 //案件律师信息
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
                 //当事人信息
@@ -339,11 +345,19 @@ export default {
                 this.ChargeInfoArr = res.data.Charge
 
                 console.log(res)
+            }).then((res)=>{
+                 this.getTableData()
             })
         },
           successFile(res){
             console.log(res)
             if(res.code == 200){
+                    this.code = 200
+                    this.File_Name = res.File_Name
+                    this.Suffix_Name =res.Suffix_Name
+                    this.fileName1 = res.fileName
+                    this.size = res.size
+                    console.log(this.fileName1)
                    this.$message({
                     message:res.message,
                     type:'success'
@@ -369,10 +383,81 @@ export default {
             }else{
               this.nameData.File_Name = this.fileName
             }
-          }
+          },
+          getTableData(){
+              console.log(this.Case_Id)
+              this.$http.get('/yongxu//Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
+                  console.log(res)
+                this.tableData = res.data
+              })
+          },
+            //保存上传文件
+            saveDoc(){
+            if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+                }
+                  if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+                
+                let param  = new URLSearchParams()
+                  param.append('User_Id',localStorage.getItem('userId'))
+                  param.append('Case_Id',this.Case_Id)
+                  param.append('File_Name',this.File_Name)
+                  param.append('fileName',this.fileName1)
+                  param.append('size',this.size)
+                  param.append('Suffix_Name',this.Suffix_Name)
+                this.$http.post('/yongxu/Document/Add_Document',{
+                    User_Id: localStorage.getItem('userId'),
+                    Case_Id:this.Case_Id,
+                    File_Name:this.File_Name,
+                    fileName:this.fileName1,
+                    size:this.size,
+                    Suffix_Name:this.Suffix_Name,
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data == true){
+                          this.$message({
+                        message:'保存成功',
+                        type:'success'
+                    });
+                     this.dialogFormVisible = false
+                    this.getTableData()
+                    }
+                    else{
+                           this.$message({
+                        message:'保存失败',
+                        type:'warning'
+                    });
+                    }
+                   
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+            //下载
+            downLoadWord(filename){
+                console.log(filename)
+                this.$http.post('/yongxu/Base/download',{
+                    filename:filename
+                },{emulateJSON:true}).then((res)=>{
+                    console.log(res)
+                })
+            }
+
     },
     mounted(){
+       
         this.getCaseEdit()
+       
     }
 }
 </script>
@@ -428,5 +513,30 @@ export default {
     padding-bottom: 20px;
     padding-top: 20px;
 }
+.dialogFormVisible{
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+  }
+.dialogFormVisivleInput{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .dialogFormVisivleInput_right input{
+    width: 300px;
+    height: 30px;
+    margin-left: 30px;
+  }
+  .dialogFormVisivleFile{
+    justify-content: center;
+    margin-top: 25px;
+    width: 80%;
+  }
+   .dialogFormVisivleFooter{
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 25px;
+  }
 </style>
 

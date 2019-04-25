@@ -43,7 +43,8 @@
                   <el-select v-model="suoshuValue" placeholder="请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                         <div class="flex"><p class="title">职务</p>
-                  <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
+                        <input type="text" class="common-input" placeholder="请输入" v-model="JobListValue"/>
+                  <!-- <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div>
                     <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="tel"/></div>
                        
@@ -465,6 +466,7 @@ export default {
                 id =0
             }
             this.customId = id
+            this.getCustomInfo()
             this.visible = false
         },
         /*获取已存在客户列表*/ 
@@ -525,6 +527,28 @@ export default {
         },
         changeId(){
             this.customId = 0
+              this.userNameE=''
+                  this.province=''
+                  this.address = ''
+                  this.tel=''
+                  this.suoshuValue = ''
+                  this.JobListValue = ''
+                  this.customValue = ''
+        },
+
+        getCustomInfo(){
+             this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.customId}}).then((res)=>{ 
+                 console.log(res)
+                  this.userNameE=res.data.Customer_Name_En
+                  this.province=res.data.City
+                  this.address = res.data.Detailed_Address
+                  this.tel=res.data.Contact_Party
+                  this.suoshuValue = res.data.TradeId
+                  this.JobListValue = res.data.Position
+                  this.customValue = res.data.CustomerId
+
+        })
+           
         }
     },
     mounted(){
