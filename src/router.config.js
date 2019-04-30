@@ -21,8 +21,10 @@ import caseWord from './components/case/caseWord'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
-    {path:'/index',redirect: '/index/caseIndex',component:index,name:index,children:[
-{path:'/index/caseIndex',component:caseIndex,name:caseIndex},
+    {path:'/index',redirect: '/index/caseIndex',component:index,name:index,
+    meta:{requireAuth:true},
+    children:[
+{path:'/index/caseIndex',component:caseIndex,name:caseIndex, meta:{requireAuth:true},},
 {path:'/index/caseAdd',component:caseAdd,name:caseAdd},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:caseEdit},
 {path:'/index/customerIndex',component:customerIndex,name:customerIndex},
@@ -41,7 +43,7 @@ export default[
 
     ]},
     {path:'/topMenu',component:topMenu,name:topMenu},
-    {path:'*',redirect: '/index/caseIndex',component:caseIndex,name:caseIndex},
+    {path:'*',redirect: '/index/caseIndex', meta:{requireAuth:true},component:caseIndex,name:caseIndex},
    
 ]
     

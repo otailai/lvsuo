@@ -22,9 +22,11 @@
               <li class="showTab-li">
         
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                      <el-table-column prop="name" label="员工编号" width=""> </el-table-column>
                     <el-table-column prop="name" label="姓名" width=""></el-table-column>
                     <el-table-column prop="name" label="职务" width=""> </el-table-column>
                      <el-table-column prop="name" label="部门" width=""> </el-table-column>
+                       <el-table-column prop="name" label="分所" width=""> </el-table-column>
                           <el-table-column prop="date" label="入职日期" width=""> </el-table-column>
                         <el-table-column prop="address" label="状态"> </el-table-column>
                         <el-table-column  label="备注" width="160"> 

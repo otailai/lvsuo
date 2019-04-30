@@ -24,10 +24,31 @@ Vue.prototype.$http = axios
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+
+
+
+
 const router = new VueRouter({
   routes,
   linkActiveClass:"common-active",
 })
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requireAuth){
+    if(localStorage.getItem('userId')){
+      next()
+    }else{
+      next({
+        path:'/login',
+        query:{redirect:to.fullPath}
+      })
+    }
+  }else{
+    next();
+  }
+});
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -36,3 +57,4 @@ new Vue({
   components: { App }, 
   template: '<App/>'
 })
+

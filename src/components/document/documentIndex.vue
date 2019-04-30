@@ -21,8 +21,8 @@
                 
                 <div class="case-child-end flex">
                     <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
+                      <input placeholder="请输入关键词搜索"  v-model="searchInput" class="case-input"/>
+                      <button class="case-button" @click="searchData"><i class="el-icon-search"></i></button>
                     </div>
                       <el-button type="danger" round @click="openNew()"><i class="el-icon-plus"></i>新建文档</el-button>
                 </div>
@@ -34,22 +34,22 @@
               <li class="showTab-li" v-show="cur==0">
 
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="序号" width=""></el-table-column>
-                    <el-table-column prop="name" label="文档名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="文档类型" width=""> </el-table-column>
-                      <el-table-column prop="name" label="更新人员" width=""> </el-table-column>
-                       <el-table-column prop="name" label="创建日期" width=""> </el-table-column>
-                          <el-table-column prop="date" label="更新日期" width=""> </el-table-column>
-                             <el-table-column prop="date" label="文件大小" width=""> </el-table-column>
+                    <el-table-column prop="Id" label="序号" width=""></el-table-column>
+                    <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
+                     <el-table-column prop="Postfix" label="文档类型" width=""> </el-table-column>
+                      <el-table-column prop="Staff_Name" label="更新人员" width=""> </el-table-column>
+                       <el-table-column prop="Date _Created" label="创建日期" width="180"> </el-table-column>
+                          <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
+                             <el-table-column prop="Size" label="文件大小" width=""> </el-table-column>
                         <el-table-column label="操作"> 
                               <template slot-scope="scope">   
-                              <span  style="color: red;cursor:pointer" @click.stop="downLine(scope.row.id)">下载</span>
+                             <a :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
                               </template>
                         </el-table-column>
                 </el-table>
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                  :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                  :page-sizes="[5,10,15,20]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
                   </li>
@@ -98,7 +98,7 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
-    <el-button type="primary" @click="dialogFormVisible = false">保存</el-button>
+    <el-button type="primary" @click="saveDoc()">保存</el-button>
     </div>
   </div>
 </el-dialog>
@@ -110,10 +110,23 @@ import { constants } from 'fs';
   export default {
     data() {
       return {
-        fileName:'',
-        nameData:{
-          File_Name:'',
-        },
+        //分页
+        PageCount:0,
+        currentPage:1,
+        numPage:5,
+        //搜索
+        searchInput:'',
+        //上传
+          code:'',
+            fileName:'',
+            nameData:{
+                 File_Name:'',
+            },
+            File_Name:'',
+            fileName1:'',
+            Suffix_Name:'',
+            size:'',
+      //
         placeholder_text:'',
         imgFile:'',
           dialogFormVisible: false,
@@ -125,29 +138,18 @@ import { constants } from 'fs';
        currentPage4: 4,
         index:0,
           cur:0,
-          arr:[{title:'我的客户'},{title:'事务所客户'}],
-         input23: '',
-          tableData: [{
-          id:1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '立案'
-        }],
+        //   arr:[{title:'我的客户'},{title:'事务所客户'}],
+        //  input23: '',
+        tableData:[],
+        //   tableData: [{
+        //   id:1,
+        //   name:'XX文档',
+        //   type:'XX类型',
+        //   renyuan:'刘德华',
+        //   date:'2018-04-05',
+        //   size:'50K'
+
+        // }],
          options: [{
           value: '选项1',
           label: '黄金糕'
@@ -208,10 +210,16 @@ import { constants } from 'fs';
          
       },
        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+         this.numPage = val
+         this.getTableData()
+         console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        console.log(val)
+        this.currentPage= val
+        this.getTableData()
+
+        console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
@@ -253,9 +261,15 @@ console.log(row, event, column)
           })
 	          
           },
-          successFile(res){
+             successFile(res){
             console.log(res)
             if(res.code == 200){
+                    this.code = 200
+                    this.File_Name = res.File_Name
+                    this.Suffix_Name =res.Suffix_Name
+                    this.fileName1 = res.fileName
+                    this.size = res.size
+                    console.log(this.fileName1)
                    this.$message({
                     message:res.message,
                     type:'success'
@@ -281,10 +295,79 @@ console.log(row, event, column)
             }else{
               this.nameData.File_Name = this.fileName
             }
-          }
+          },
+          getTableData(){
+            this.$http.get('/yongxu/Document/Inquiry_Document',
+            {
+              params:{
+                  Parameter:this.searchInput,
+              Display_Page_Number:this.numPage,
+              PageNumber:this.currentPage
+              }
+            }).then((res)=>{
+                 this.tableData = res.data.Document
+                 this.PageCount = res.data.PageCount
+                 console.log(res)
+            })
+          },
+          searchData(){
+             this.getTableData()
+          },
+            //保存上传文件
+            saveDoc(){
+            if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+                }
+                  if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+                
+                let param  = new URLSearchParams()
+                  param.append('User_Id',localStorage.getItem('userId'))
+                  param.append('File_Name',this.File_Name)
+                  param.append('fileName',this.fileName1)
+                  param.append('size',this.size)
+                  param.append('Suffix_Name',this.Suffix_Name)
+                this.$http.post('/yongxu/Document/Add_Instrument',{
+                    User_Id: localStorage.getItem('userId'),
+                    File_Name:this.File_Name,
+                    fileName:this.fileName1,
+                    size:this.size,
+                    Suffix_Name:this.Suffix_Name,
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data == true){
+                          this.$message({
+                        message:'保存成功',
+                        type:'success'
+                    });
+                     this.dialogFormVisible = false
+                    this.getTableData()
+                    }
+                    else{
+                           this.$message({
+                        message:'保存失败',
+                        type:'warning'
+                    });
+                    }
+                   
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+         
     },
     mounted(){
       this.getChildMenu()
+      this.getTableData()
     },
     components:{
       

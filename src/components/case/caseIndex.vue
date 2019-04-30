@@ -1,7 +1,5 @@
-<template>
-    <div id="case" class="case">
-     
-    
+ <template>
+    <div id="case" class="case"> 
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
         
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
@@ -16,8 +14,10 @@
                 
                 <div class="case-child-end flex">
                     <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input" @click="searchContent()"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
+                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"  v-show="cur==0"/>
+                      <input placeholder="请输入关键词搜索"  v-model="SearchInput1" class="case-input" v-show="cur==1"/>                    
+                      <button class="case-button" @click="searchContent()"  v-show="cur==0"><i class="el-icon-search"></i></button>
+                      <button class="case-button" @click="searchContent1()"  v-show="cur==1"><i class="el-icon-search"></i></button>
                     </div>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
                 </div>
@@ -64,10 +64,16 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width=""> </el-table-column>
+                    <el-table-column prop="Case_No" label="案件编号" width="" sortable></el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="" sortable> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
+                      <el-table-column  label="案件类别" width="160">
+                        <template slot-scope="scope">
+                            <span>
+                                {{scope.row.Category_Name}}一{{scope.row.Value}}
+                            </span>
+                        </template>
+                      </el-table-column>
                        <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
                           <el-table-column  label="合同起止日期" width="">
                             
@@ -76,8 +82,8 @@
                                 </template>
                             
                              </el-table-column>
-                             <el-table-column  label="立案日期" width="">
-                                <template slot-scope="scope">
+                             <el-table-column  label="立案日期" width="" sortable prop="Creattime">
+                                <template slot-scope="scope" >
                                     <p>{{scope.row.Creattime | getTime}}</p>
                                 </template>
                                
@@ -98,6 +104,7 @@
                   </li>
 
                   <li class="showTab-li" v-show="cur==1">
+                    <!-- <empower></empower> -->
               <div class="selectMenu flex">
                     <el-table :data="tableDataShouQuan" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
@@ -126,8 +133,8 @@
               </div>
 
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                  <el-pagination background @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :current-page="currentPage1"
+                 :page-sizes="[5, 10, 15, 20]" :page-size="numPage1"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
                    </el-pagination>
                 </div>
                   </li>
@@ -172,12 +179,21 @@
                 
         </el-tabs> 
     </div>
+
 </template>
 <script>
 import store from '../../vuex/store'
+import empower from './caseEmpower'
   export default {
     data() {
       return {
+        //授权案件搜索
+        SearchInput1:'',
+        numPage1:1,
+        currentPage1:1,
+        total1:0,       
+         //
+        total:0,
         dateValue:[],
         Casevalue:'',
         Casevalue1:'',
@@ -186,14 +202,13 @@ import store from '../../vuex/store'
         selectOneId:1,
         numPage:10,
         currentPage4: 1,
-        total:1,
         child:0,
         child_cur:0,
         arr1:[{title:'所有案件'},{title:'授权案件'}],
         activeName: 'name0',
         index:0,
         cur:0,
-        arr:[{title:'案件'},{title:'利益检索'}],
+        arr:[{title:'案件'},{title:'利益检索'}], 
          input23: '',
         
         tableData: [],
@@ -328,32 +343,43 @@ import store from '../../vuex/store'
            this.total = res.data.PageCount
             console.log(res.data)
         })
-        // this.$http.get('/myTest/getCaseList',{params:{page:this.currentPage4,numPage:this.numPage}}).then((res)=>{
-        //   console.log(res)
-        //   this.tableData = res.data.message
-        // })
       },
       getTableDataShouQuan(){
         //localStorage.getItem('userId')
-        this.$http.get('/yongxu/Index/Authorized_Case',{params:{User_Id:3}}).then((res)=>{
+        this.$http.get('/yongxu/Index/Authorized_Case',{params:{User_Id:localStorage.getItem('userId'),Name:this.SearchInput1,Display_Page_Number:this.numPage1,PageNumber:this.currentPage1}}).then((res)=>{
             console.log(res)
-              console.log('123456')
-            this.tableDataShouQuan=res.data
+           this.tableDataShouQuan=res.data.Get_Authorized
+           this.total1 = res.data.PageCount
         })
       },
+      handleSizeChange1(val) {
+         this.numPage1 = val
+         this.getTableDataShouQuan()
+         console.log(`每页 ${ this.numPage1} 条`);
+      },
+      handleCurrentChange1(val) {
+        console.log(val)
+        this.currentPage1 = val
+        this.getCaseList()
+
+        console.log(`当前页: ${this.currentPage1}`);
+      },
+
       getSelectMenu(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
         })
       },
-       getSelectChildeMenu(id){
+       getSelectChildeMenu(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
          console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          
-           this.optionChildMenu = res.data  
+          console.log(res)
+          this.optionChildMenu = res.data  
+          this.Casevalue1 =res.data[0].Id
+           //this.Casevalue1 = res.data
         })
       },
       changeTowValue(id){
@@ -367,7 +393,12 @@ import store from '../../vuex/store'
          this.getCaseList()
       },
       searchContent(){
+        console.log('123465')
        this.getCaseList()
+      },
+      //授权案件查询
+      searchContent1(){
+        this.getTableDataShouQuan()
       },
       exportData(){
         console.log(JSON.stringify(this.tableData))
@@ -395,7 +426,8 @@ import store from '../../vuex/store'
       this.getTableDataShouQuan()
     },
     components:{
-      JsonExcel:'downloadExcel'
+      JsonExcel:'downloadExcel',
+      empower
     },
    　filters:{
       getStatus:function(Status){
@@ -408,7 +440,12 @@ import store from '../../vuex/store'
       getTime(time){
           return time.substring(0,10)
       }
-　　　　}
+　　　　},
+  watch:{
+    Casevalue1:function(newV,oldV){
+        this.changeTowValue(newV)
+    }
+  }
   };
 </script>
 <style>

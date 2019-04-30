@@ -12,8 +12,10 @@
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
+                        <div class="flex"><p class="title">客户编号</p>
+                        <p>{{Customer_Number}}</p>
+                         </div>
                     <div class="flex"><p class="title">客户名称(中)</p><p>{{Customer_Name_Zh}}</p></div>
-                    <div class="flex"><p class="title">客户名称(英)</p><p>{{Customer_Name_En}}</p></div>
                     <div class="flex"><p class="title">省/市地区</p><p>{{City}}</p></div>
                     <div class="flex"><p class="title">详细地址</p><p>{{Detailed_Address}}</p></div>
                 </div>
@@ -30,7 +32,8 @@
                            <div class="flex"><p class="title">联系方式</p>
                         <p>{{Contact_Party}}</p>
                          </div>
-                       
+                      
+                      
                     </div>
                     </div>
                  </div>
@@ -41,15 +44,17 @@
                     <div class="flex"><p class="title">案件类型</p><p>{{Case_type}}</p></div>
                     <div class="flex"><p class="title">案件名称</p><p>{{Case_Name}}</p></div>
                     <div class="flex"><p class="title">案由</p><p>{{Cause_Action}}</p></div>
+
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
                         <p>
-                            本协议书签约双方就协议书中所描述项目的研究开发、投资
-                            融资、成果权益、收益分配、风险责任以及与之相关的技术
-                            和法律等问题经平
+                            {{introduce}}
                         </p>
                         </div>
+                    <div class="flex"><p class="title">对方当事人</p><p>{{Party_Name}}</p></div>
+                    <div class="flex"><p class="title">受理机关</p><p>{{Receiving_Organ}}</p></div>
+
                     </div>
                     </div>
                  </div>
@@ -71,12 +76,9 @@
                      <p class="p">{{v.Staff_Name}}</p>
                        <p class="p">{{v.Rule_Name}}</p>
                         <p class="input-icon"></p>
+                    </div>                    
                     </div>
-                      
                     </div>
-                    </div>
-
-              
                 <div class="add-lawyer  lex">
                 <div class="add-lawyer-title flex"> 
                      <p class="add-userinfo-p">当事人信息</p>
@@ -162,7 +164,7 @@
                       <div class="flex" v-for="(v,i) in ChargeInfoArr" :key="i">
                         <p>{{v.Staff_Name}}</p>
                         <p>{{v.Value}}</p>
-                        <p>{{v.Rate}}</p>
+                        <p>{{v.Rate}}  <span style="color:#999">RMB/小时</span> </p>
                     <div class="input-icon"></div>
                       </div>
                    </div>  
@@ -193,7 +195,7 @@
                              <el-table-column  label="操作" width="">
                                 <template slot-scope="scope">
                                     <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 1">风控审核</p>
-                                     <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 2">更新</p>
+                                     <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 2">更新</p>
                                       <a  v-if="scope.row.type == 3" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
 
                                 </template>
@@ -204,7 +206,7 @@
                 </div>
               </div>
               <!-- 对话框 -->
-                <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+     <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
               <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
@@ -236,18 +238,53 @@
     </div>
   </div>
 </el-dialog>
+
+      <el-dialog  :visible.sync="dialogFormVisibleUpdate" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+        <div class="dialogFormVisible flex">
+          <div class="dialogFormVisivleInput flex">
+              <p>文档名称gengxin</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
+          </div>
+           <div class="dialogFormVisivleFile flex">
+                  <el-upload
+                    class="upload-demo"
+                    drag
+                    action="/yongxu/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  </el-upload>
+          </div>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件文书</p>/<p>我的文档</p>/<p>新建文档</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <el-button type="primary"  @click="updateDoc()">保存</el-button>
+    </div>
+  </div>
+</el-dialog>
     </div>
 </template>
 <script>
 export default {
     data(){
         return{
+
             code:'',
             Case_Id:'',
             fileName:'',
             nameData:{
                  File_Name:'',
             },
+            updateId:'',
             File_Name:'',
             fileName1:'',
             Suffix_Name:'',
@@ -260,6 +297,7 @@ export default {
                
                 ],
             dialogFormVisible:false,
+            dialogFormVisibleUpdate:false,
             //客户基本信息
             Customer_Name_Zh:'',
              Customer_Type: "",
@@ -270,12 +308,14 @@ export default {
              industry: "",
              Customer_Name_Zh: "",
              City: "",
-
+            Customer_Number:'',
             // 案件基本信息
               Cause_Action: "",
               Case_Name: "",
               Case_type: "",
-
+             introduce:'',
+             Receiving_Organ:'',
+             Receiving_Organ:'',
             //律师信息
                 layWerInfoArr:[],
                 Rule_Name:'',
@@ -313,6 +353,7 @@ export default {
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
+                console.log(res)
                 // 客户信息
                 let arr=res.data.Get_Customer_Information
                 this.Customer_Name_Zh = arr.Customer_Name_Zh
@@ -324,12 +365,16 @@ export default {
                 this.industry= arr.industry,
                 this.Customer_Name_Zh=arr.Customer_Name_Zh,
                 this.City=arr.City
+                this.Customer_Number =arr.Customer_Number
                 //案件信息
                 let caseInfo = res.data.Get_Case_Information
                 this.Cause_Action = caseInfo.Cause_Action,
                 this.Case_Name=caseInfo.Case_Name
                 this.Case_type=caseInfo.Case_type
+                this.introduce = caseInfo.Case_Introduction
                 this.Case_Id = caseInfo.Id
+                this.Receiving_Organ=caseInfo.Receiving_Organ
+                this.Party_Name = caseInfo.Party_Name
                 //案件律师信息
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
                 //当事人信息
@@ -443,15 +488,60 @@ export default {
                     console.log(err)
                 })
             },
-            //下载
-            downLoadWord(filename){
-                console.log(filename)
-                this.$http.post('/yongxu/Base/download',{
-                    filename:filename
-                },{emulateJSON:true}).then((res)=>{
-                    console.log(res)
+            //更新文档
+            openNewDoc(Id){
+                this.updateId = Id
+                this.dialogFormVisibleUpdate = true
+            },
+            updateDoc(){
+                  if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+                }
+                  if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+               this.$http.post('/yongxu/Document/Update_Document',{
+                    Id:this.updateId,
+                    User_Id:localStorage.getItem('userId'),
+                    File_Name:this.File_Name,
+                    fileName:this.fileName1,
+                    size:this.size,
+                    Suffix_Name:this.Suffix_Name,
+                    }).then((res)=>{
+                        console.log(res)
+                         if(res.data == true){
+                          this.$message({
+                        message:'更新成功',
+                        type:'success'
+                    });
+                     this.dialogFormVisible = false
+                    this.getTableData()
+                    }
+                    else{
+                           this.$message({
+                        message:'更新失败',
+                        type:'warning'
+                    });
+                    this.dialogFormVisibleUpdate = false
+                    this.getTableData()
+                    }
+                }).catch((err)=>{
+                       this.$message({
+                        message:'更新失败',
+                        type:'warning'
+                    });
                 })
             }
+           
+           
 
     },
     mounted(){

@@ -20,9 +20,13 @@
               </div>
                 
                 <div class="case-child-end flex">
-                    <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
+                    <div class="input flex" v-show="cur==0">
+                      <input placeholder="请输入关键词搜索"  v-model="Customer_Name" class="case-input"/>
+                      <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
+                    </div>
+                     <div class="input flex" v-show="cur==1">
+                      <input placeholder="请输入关键词搜索1"  v-model="Customer_Name1" class="case-input"   />
+                      <button class="case-button" @click="searchContent1()"><i class="el-icon-search"></i></button>
                     </div>
                       <!-- <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button> -->
                 </div>
@@ -65,35 +69,46 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div> -->
                <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="客户名称" width=""></el-table-column>
-                    <el-table-column prop="name" label="客户编号" width=""> </el-table-column>
-                     <el-table-column prop="name" label="行业类型" width=""> </el-table-column>
-                      <el-table-column prop="name" label="行业" width=""> </el-table-column>
-                       <el-table-column prop="name" label="是否常年客户" width=""> </el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="Customer_Number" label="客户编号" width="160">
+                      <template slot-scope="scope">
+                          {{scope.row.Customer_Number|hideMiddle}} 
+                          <span></span>
+                      </template>
+                    </el-table-column>
+                     <el-table-column prop="Category_Name" label="行业类型" width="100"> </el-table-column>
+                      <el-table-column prop="Value" label="行业" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="客户类型" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="承办律师名称" width="120"> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="分所" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="地区" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="是否常年客户" width="110"> </el-table-column>
                          
                 </el-table>
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                 :page-sizes="[5, 10, 15, 20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
                   </li>
 
                   <li class="showTab-li" v-show="cur==1">
               <div class="selectMenu flex">
-                      <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="客户名称" width=""></el-table-column>
-                    <el-table-column prop="name" label="客户编号" width=""> </el-table-column>
-                     <el-table-column prop="name" label="行业类型" width=""> </el-table-column>
-                      <el-table-column prop="name" label="行业" width=""> </el-table-column>
-                       <el-table-column prop="name" label="是否常年客户" width=""> </el-table-column>
+                  <el-table :data="tableData1" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="Customer_Number" label="客户编号" width=""> </el-table-column>
+                     <el-table-column prop="Category_Name" label="行业类型" width=""> </el-table-column>
+                     
+                      <el-table-column prop="Value" label="行业" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="客户类型" width=""> </el-table-column>
+                       <!-- <el-table-column prop="is" label="是否常年客户" width=""> </el-table-column> -->
                          
                 </el-table>
               </div>
 
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange1" :current-page="currentPage1"
+                 :page-sizes="[5, 10, 15, 20]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
                    </el-pagination>
                 </div>
                   </li>
@@ -144,54 +159,30 @@ import store from '../../vuex/store'
   export default {
     data() {
       return {
-        title:'',
+        //列表查询
+        Customer_Name:'',
+        PageCount:0,
+        pageNum:5,
+        currentPage: 1,
+      //事务所客户
+      tableData1:[],
+      Customer_Name1:'',
+        PageCount1:0,
+        pageNum1:5,
+       currentPage1:1,
+
+      title:'',
         child:0,
         child_cur:0,
         arr:[],
         arr1:[{title:'我的客户'},{title:'事务所客户'}],
         activeName: 'name0',
-       currentPage4: 4,
+
         index:0,
           cur:0,
           arr:[{title:'我的客户'},{title:'事务所客户'}],
          input23: '',
-          tableData: [{
-          id:1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '立案'
-        }],
-         options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+          tableData: [],
         value: '',
         pickerOptions2: {
           shortcuts: [{
@@ -236,13 +227,30 @@ import store from '../../vuex/store'
           this.cur = i
           this.title = v.title
           console.log(v.title)
+          if(i==1){
+            this.getComponyList()
+          }
          
       },
        handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
+        this.pageNum = val
+        this.getList()
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
+        this.currentPage = val
+          this.getList()
+      },
+        handleSizeChange1(val) {
+        console.log(`每页 ${val} 条`);
+        this.pageNum1 = val
+        this.getComponyList()
+      },
+      handleCurrentChange1(val) {
+        console.log(`当前页: ${val}`);
+        this.currentPage1 = val
+          this.getComponyList()
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
@@ -257,15 +265,54 @@ import store from '../../vuex/store'
       },
       searchData(){
         this.child = 1
+      },
+      getMyList(){
+        this.$http.get('/yongxu/Customer/Show_My_Customers',{params:{
+          User_Id:localStorage.getItem('userId'),
+          Customer_Name:this.Customer_Name,
+          Display_Page_Number:this.pageNum,
+          PageNumber:this.currentPage
+
+        }}).then((res)=>{
+          console.log(res)
+            this.tableData = res.data.Customers
+            this.PageCount = res.data.PageCount
+        })
+      },
+      getComponyList(){
+    this.$http.get('/yongxu/Customer/Display_All_Customers',{params:{
+          User_Id:localStorage.getItem('userId'),
+          Customer_Name:this.Customer_Name1,
+          Display_Page_Number:this.pageNum1,
+          PageNumber:this.currentPage1
+
+        }}).then((res)=>{
+          console.log(res)
+            this.tableData1= res.data.list
+            this.PageCount1 = res.data.PageCount
+        })
+
+      },
+      searchContent(){
+        this.getMyList();
+      },
+      searchContent1(){
+        this.getComponyList();
       }
     },
     mounted(){
       this.title = this.arr1[0].title
       this.getChildMenu()
+      this.getMyList()
     },
     components:{
       
-    }
+    },
+    filters: {
+        hideMiddle(val) {
+                  return `${val.substring(0,3)}****${val.substring(val.length-3)}`
+                }
+            }
   };
 </script>
 <style>
