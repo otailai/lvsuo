@@ -344,7 +344,7 @@
                     <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWord></caseWord>
+                        <caseWord :addData='addData'></caseWord>
                 </el-dialog>
              </div>
              
@@ -353,6 +353,7 @@
 <script>
 import qs from 'qs';
 import caseWord from './caseWord'
+import { constants } from 'zlib';
 export default {
     data(){
         return{
@@ -486,8 +487,14 @@ export default {
            costWay:[],
             //律师下拉
             layerSelectArr:[],
+            addData:{
+                name:'永旭',
+                laywerName:'广州金鹏律师事务所'
+
+            }
         }
     },
+          
     methods:{
         deleteLine(i,arr){
             arr.splice(i,1)
@@ -538,14 +545,14 @@ export default {
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
-              'customId':this.customId,
+              'costId':this.customId,
               'userNameC':this.search,
             // 'userNameE':this.userNameE,
               'province':this.province,
               'address':this.address,
               'tel':this.tel,
               'type':this.customValue,
-              'suoshuhangye':this.value1,
+              'suoshuhangye':this.suoshuValue, 
               'job':this.value2,
               'is':this.isValue,
               'cardNo':this.cardNo,
@@ -553,7 +560,7 @@ export default {
               'oppositePart':this.oppositeParty,
               'caseWhy':this.caseWhy,
 
-            'caseValue':this.caseValue,
+              'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
               'caseName':this.caseName,
               'caseWay':this.caseWay,
@@ -570,13 +577,13 @@ export default {
             if(this.costValue == 9){
   addJson = {
               'userId':localStorage.getItem('userId'),
-              'customId':this.customId,
+              'costId':this.customId,
              
              'userNameC':this.search,
             //   'userNameE':this.userNameE,
               'province':this.province,
               'address':this.address,
-               'suoshuhangye':this.value1,
+               'suoshuhangye':this.suoshuValue,
                 'type':this.customValue,
                 'tel':this.tel,
                'job':this.value2,
@@ -607,14 +614,14 @@ export default {
             if(this.costValue == 10){
     addJson = {
               'userId':localStorage.getItem('userId'),
-              'customId':this.customId,
+              'costId':this.customId,
               'userNameC':this.search,
             //   'userNameE':this.userNameE,
               'province':this.province,
               'address':this.address,
               'tel':this.tel,
               'type':this.customValue,
-              'suoshuhangye':this.value1,
+              'suoshuhangye':this.suoshuValue,
               'job':this.value2,
 
               'is':this.isValue,
@@ -644,7 +651,21 @@ export default {
         this.$http.post('/yongxu/Index/AddCases',{
                 map:addJson
             }).then((res)=>{
-                console.log(res)
+                 console.log(res)
+                if(res.data == true){
+                this.$message({
+                    message:'添加成功',
+                    type:'warning'
+                });
+                return false
+                }else{
+                    this.$message({
+                    message:'添加失败',
+                    type:'warning'
+                });
+                return false
+                }
+               
             })
         },
         /**验证提交表单 */
@@ -793,6 +814,19 @@ export default {
                 });
                 return false
             }
+         
+         var arrJob1=[]
+            for(var i in this.inputArr){
+                arrJob1.push(this.inputArr[i].laywerJob)
+            }
+            //console.log(arrJob1) //false
+           if(arrJob1.indexOf(18) == -1){
+                 this.$message({
+                    message:'请至少填写一位主办律师',
+                    type:'warning'
+                });
+                return false
+            }
             
             var arrParty=[]
             for(var i in this.input1Arr){
@@ -829,7 +863,7 @@ export default {
            if(this.costValue==8){
 
             var arrJobArr8=[]
-            for(var i in this.inputArr){
+            for(var i in this.nameJobArr){
                 arrJobArr8.push(this.nameJobArr[i].nameJobName)
             }
             if (arrJobArr8.indexOf('') != -1){
@@ -841,7 +875,7 @@ export default {
             }
 
             var arrJobArrJob8=[]
-            for(var i in this.inputArr){
+            for(var i in this.nameJobArr){
                 arrJobArrJob8.push(this.nameJobArr[i].nameJobJob)
             }
             if (arrJobArrJob8.indexOf('') != -1){
@@ -854,7 +888,7 @@ export default {
         
 
              var arrJobJobRate8=[]
-            for(var i in this.inputArr){
+            for(var i in this.nameJobArr){
                 arrJobJobRate8.push(this.nameJobArr[i].nameJobRate)
             }
             if (arrJobJobRate8.indexOf('') != -1){
@@ -1036,7 +1070,8 @@ export default {
         },
       /**律师姓名下拉查询 */
       querySearch(queryString, cb) {
-            var restaurants =  this.LawyerNameArr
+          console.log(this.LawyerNameArr)
+        var restaurants =  this.LawyerNameArr
       
         // console.log(restaurants)
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
@@ -1048,12 +1083,22 @@ export default {
           return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
         };
       },
+     
      /**选择律师姓名 */
       handleSelect(item) {
-        console.log(item);
         this.inputArr[0].laywerName=item.value
         this.inputArr[0].Id=item.Id        
         this.inputArr[0].visible=false
+        //查找制定元素在数组中的索引值
+        console.log(this.LawyerNameArr)
+        var arr =[]
+        for(var i=0;i<this.LawyerNameArr.length;i++){
+            arr.push(this.LawyerNameArr[i].value)
+        }
+        
+       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
+        console.log(this.LawyerNameArr);
+        console.log(item);
         // const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
         //console.log(res)
       },
@@ -1063,6 +1108,13 @@ export default {
            this.inputArr[i+1].laywerName=item.value
            this.inputArr[i+1].Id=item.Id     
            this.inputArr[i+1].visible=false
+            var arr =[]
+        for(var i=0;i<this.LawyerNameArr.length;i++){
+            arr.push(this.LawyerNameArr[i].value)
+        }
+        
+       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
+        console.log(this.LawyerNameArr);
       },
       blurInput(){
          this.inputArr[0].laywerName1 = ''
@@ -1233,5 +1285,6 @@ export default {
 }
 
 }
+
 </style>
 

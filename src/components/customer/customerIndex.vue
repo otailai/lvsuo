@@ -70,19 +70,42 @@
               </div> -->
                <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
-                    <el-table-column prop="Customer_Number" label="客户编号" width="160">
+                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true">
                       <template slot-scope="scope">
                           {{scope.row.Customer_Number|hideMiddle}} 
                           <span></span>
                       </template>
                     </el-table-column>
-                     <el-table-column prop="Category_Name" label="行业类型" width="100"> </el-table-column>
+                      <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column prop="Value" label="行业" width=""> </el-table-column>
                        <el-table-column prop="Customer_Type" label="客户类型" width=""> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="承办律师名称" width="120"> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="分所" width=""> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="地区" width=""> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="是否常年客户" width="110"> </el-table-column>
+                   
+                
+                   <el-table-column  label="承办律师名称" width="120">
+                      <template slot-scope="scope">
+                       <el-popover trigger="hover" placement="top">
+                         <el-tag type="success" v-for="(v,i) in laywerNameArr" :key="i">{{v}}</el-tag>
+                          <div slot="reference" class="name-wrapper" @mouseover="showLaywer(scope.row.Id)">
+                         <el-tag type="success"> <span> {{ scope.row.Staff_Name }}</span></el-tag>
+                        </div>
+                      </el-popover>
+                      </template>
+                      </el-table-column>
+                
+                     
+                       <el-table-column  label="分所" width="170" :show-overflow-tooltip="true">
+                                 <template slot-scope="scope">
+                                <el-popover trigger="hover" placement="top">
+                                  <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}</p>
+                                  <div slot="reference" class="name-wrapper">
+                                     <span  @mouseover="showBranches(scope.row.Id)"> {{ scope.row.Org_Name }}</span>
+                                 </div>
+                             </el-popover> 
+                              </template>
+                        </el-table-column>
+
+                       <el-table-column prop="City" label="地区" width="" :show-overflow-tooltip="true"> </el-table-column>
+                       <el-table-column prop="Identification" label="是否常年客户" width="110"> </el-table-column>
                          
                 </el-table>
                  <div class="block flex">
@@ -90,17 +113,19 @@
                  :page-sizes="[5, 10, 15, 20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
+
+         
                   </li>
 
                   <li class="showTab-li" v-show="cur==1">
               <div class="selectMenu flex">
                   <el-table :data="tableData1" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
-                    <el-table-column prop="Customer_Number" label="客户编号" width=""> </el-table-column>
-                     <el-table-column prop="Category_Name" label="行业类型" width=""> </el-table-column>
+                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                      
                       <el-table-column prop="Value" label="行业" width=""> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="客户类型" width=""> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="客户类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                        <!-- <el-table-column prop="is" label="是否常年客户" width=""> </el-table-column> -->
                          
                 </el-table>
@@ -156,9 +181,14 @@
 </template>
 <script>
 import store from '../../vuex/store'
+var _this = this
   export default {
     data() {
       return {
+        //律师姓名
+        laywerNameArr:[],
+        //分所
+        branchNameArr:[],
         //列表查询
         Customer_Name:'',
         PageCount:0,
@@ -267,25 +297,39 @@ import store from '../../vuex/store'
         this.child = 1
       },
       getMyList(){
+        var _this =this
         this.$http.get('/yongxu/Customer/Show_My_Customers',{params:{
           User_Id:localStorage.getItem('userId'),
           Customer_Name:this.Customer_Name,
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
-
         }}).then((res)=>{
           console.log(res)
             this.tableData = res.data.Customers
             this.PageCount = res.data.PageCount
-        })
+        })   
       },
-      getComponyList(){
+    showLaywer(id){
+      var _this =this
+       this.$http.get('/yongxu/Customer/Show_All_Lawyers',{params:{
+         Id:id,
+       }}).then((res)=>{
+        this.laywerNameArr = res.data
+       })
+    },
+    showBranches(id){
+      this.$http.get('/yongxu/Customer/Show_All_Branches',{params:{
+         Id:id,
+       }}).then((res)=>{
+        this.branchNameArr = res.data
+       })
+    },
+    getComponyList(){
     this.$http.get('/yongxu/Customer/Display_All_Customers',{params:{
           User_Id:localStorage.getItem('userId'),
           Customer_Name:this.Customer_Name1,
           Display_Page_Number:this.pageNum1,
           PageNumber:this.currentPage1
-
         }}).then((res)=>{
           console.log(res)
             this.tableData1= res.data.list
@@ -302,8 +346,9 @@ import store from '../../vuex/store'
     },
     mounted(){
       this.title = this.arr1[0].title
-      this.getChildMenu()
+      // this.getChildMenu()
       this.getMyList()
+
     },
     components:{
       

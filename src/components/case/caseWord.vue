@@ -2,7 +2,7 @@
     <div>
      <button @click="getPdf()">下载pdf</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first">(2017[1])穗金鹏民字第[2]号</div>
+        <div class="flex first">({{todayTime}}[1])穗金鹏民字第[2]号</div>
         <p class="title11">民 事 委 托 代 理</p>
         <p class="height"></p>
         <p class="height">合</p>
@@ -14,7 +14,7 @@
         <div class="height"></div>
         <div class="height"></div>
         <div class="input1 flex">
-            <p class="input1-p">聘请方:</p><span class="input1-input" >{{name}}</span>
+            <p class="input1-p">聘请方:</p><span class="input1-input" >{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span>
         </div>
          <div class="height"></div>
          <div class="input1 flex">
@@ -33,6 +33,7 @@
         <div class="height"></div>
         <div class="height"></div>
 <div class="WordSection1" style="layout-grid: 15.6pt;"  v-html="data"></div>
+
     </div>
       </div>     
 
@@ -50,22 +51,22 @@ export default {
             laywerName:'广州金鹏律师事务所',
             div:'',
             //甲方
-            Aname:'隔壁老王',
-            Aleader:'法人',
-            Aaddress:'广东省广州市天河区兴民路222号之三天盈广场东塔45楼',
-            Atel:'110120114',
+            // Aname:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
+            Aleader:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
+            Aaddress:this.dataWord.Get_Customer_Information.Detailed_Address,
+            Atel:this.dataWord.Get_Customer_Information.Contact_Party,
             Afax:'1231-124',
             Acode:'404000',
             //乙方
             Bname:'广州金鹏律师事务所',
             Baddress:'广东省广州市天河区兴民路222号之三天盈广场东塔45楼',
-            Btel:'（020）38390333',
-            Bfax:'020）38390218',
+            Btel:'(020)38390333',
+            Bfax:'(020)38390218',
             Bcode:'510623',
             //
-            text:'赵四',
-            text1:'马化腾',
-            text2:'马云',
+            text:this.dataWord.Get_Case_Information.Case_Name,
+            text1:'',
+            text2:this.dataWord.Get_Case_Information.Party_Name,
             text3:'200',
             text4:'90',
             text5:'180',
@@ -88,11 +89,15 @@ export default {
             custom_name:'委托人姓名',
             data:'',
                 //逾期几日
-                
+            todayTime:'',
+            toName:'',
+            tocaseWhy:'',
+            tocaseCompony:'',
+            shejibiaode:'',
         }
     },
-
-    methods:{
+       props:['dataWord'],
+    methods:{ 
       
         
     },
@@ -101,8 +106,20 @@ export default {
     },
     mounted(){
          this.$http.get('/yongxu/Index/Contract_Template').then((res)=>{
+                      console.log(res)
                         // this.$refs.div.innerHTML=res.data.Content
-                        this.data = res.data.Content                         
+                        this.data = res.data.Content  
+                         var date=new Date;
+                        var year=date.getFullYear(); 
+                        this.todayTime=  year         
+
+                        var arr1 = []; 
+                        for(var i =0;i< this.dataWord.Get_Lawyer_Information.length;i++){
+                            arr1.push(this.dataWord.Get_Lawyer_Information[i].Rule_Name)
+                        }
+                        var index=arr1.indexOf('主办律师')
+                        this.text1 = this.dataWord.Get_Lawyer_Information[index].Staff_Name
+                        console.log(this.text1)    
         }).then(()=>{
              document.getElementById('Aname').innerText = this.Aname
                                 document.getElementById('Aleader').innerText = this.Aleader
@@ -115,6 +132,11 @@ export default {
                                 document.getElementById('Btel').innerText = this.Btel
                                 document.getElementById('Bfax').innerText = this.Bfax
                                 document.getElementById('Bcode').innerText = this.Bcode
+
+                                //  document.getElementById('toName').innerText = this.toName
+                                // document.getElementById('tocaseWhy').innerText = this.tocaseWhy
+                                // document.getElementById('tocaseCompony').innerText = this.tocaseCompony
+                                // document.getElementById('shejibiaode').innerText = this.shejibiaode
         }).then(()=>{
             document.getElementById('text').innerText = this.text
            document.getElementById('text1').innerText = this.text1
@@ -143,7 +165,8 @@ export default {
         })
     },
     components:{
-        'setTimeout':setTimeout
+        'setTimeout':setTimeout,
+        
     }
 
 }
@@ -186,6 +209,8 @@ body{
     font-family:楷体_GB2312;
     font-weight: 600;
     margin-right: 10px;
+    width: 110px;
+    text-align: left;
 }
 .input1-input{
     border:none;

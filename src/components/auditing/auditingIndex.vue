@@ -96,21 +96,31 @@
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                      <el-table-column prop="name" label="合同起止日期" width="120"> </el-table-column>
-                       <el-table-column prop="name" label="立案日期" width=""> </el-table-column>
-                          <el-table-column prop="name" label="案件状态" width=""> </el-table-column>
-                             <el-table-column prop="name" label="合同金额" width=""> </el-table-column>
-                                <el-table-column prop="name" label="已收金额" width=""> </el-table-column>
+                 <el-table :data="FinancialAuditArr" border style="width: 100%"  @row-click="lineCilck">
+                  <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
+                  <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
+                    <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
+                      <el-table-column  label="合同起止日期" width="120"> 
+                                <template slot-scope="scope" >
+                     
+                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
+                                </template>
+                      </el-table-column>
+                       <el-table-column  label="立案日期" width="">
+                          <template slot-scope="scope" >
+                                    <p  v-if="!scope.row.Filing_Date">暂无</p>
+                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p>
+                                </template>
+                          </el-table-column>
+                          <el-table-column prop="Status" label="案件状态" width=""> </el-table-column>
+                             <el-table-column prop="Amount" label="合同金额" width=""> </el-table-column>
+                                <el-table-column prop="Charge_Amount" label="已收金额" width=""> </el-table-column>
                          
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
                             <span class="btn-div">
-                            <button @click="open2(scope.row.id)" style="cursor:pointer" class="btn-caozuo">预览</button>
-                            <button @click="openDialog(scope.row.id)" style="cursor:pointer" class="btn-caozuo">收款</button>
+                            <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button>
+                            <button @click="openDialog(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">收款</button>
 
                             </span>
                           </template>
@@ -129,16 +139,16 @@
       <div class="dialogFormVisible flex">
          
            <div class="dialogFormVisivleFile flex">
-             <el-table :data="tableData">
-                <el-table-column property="date" label="付款日期" width="150"></el-table-column>
-                <el-table-column property="name" label="收费金额" width="150"></el-table-column>
-                <el-table-column property="name" label="描述" width="150"></el-table-column>
+             <el-table :data="makeCollectionsArr">
+                <el-table-column property="Payment_Time" label="付款日期" width="" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="Charge_Amount" label="收费金额" width=""></el-table-column>
+                <el-table-column property="Describe" label="描述" width="" :show-overflow-tooltip="true"></el-table-column>
                 <el-table-column   width="50"></el-table-column>
-                
-                <el-table-column property="name" label="状态" width="200">
+                <el-table-column  label="状态" width="200">
                   <template slot-scope="scope">
-                        <span >未收款</span>
-                        <button class="btn-ok"  @click="getMonney(scope.row.id)">确认收款</button>
+                        <span v-if="scope.row.State==1" style="color:red">未收款</span>
+                        <span v-if="scope.row.State==2">已收款</span>
+                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.id)">确认收款</button>
                   </template>
                 </el-table-column>
                
@@ -198,10 +208,17 @@ import store from '../../vuex/store'
   export default {
     data() {
       return {
+        // 财务审核
+        FinancialAuditArr:[],
         dialogFormVisible:false,
+        // 收款详情
+        makeCollectionsArr:[],
+        //
         child:0,
         child_cur:0,
-        arr:[],
+        arr:[
+            {"id":"9","title":"案件审核"}, {"id":"10","title":"风控审核"}, {"id":"11","title":"财务审核"}, {"id":"12","title":"结案审核"}
+        ],
         arr1:[{title:'我的客户'},{title:'事务所客户'}],
         activeName: 'name0',
        currentPage4: 4,
@@ -343,15 +360,33 @@ console.log(row, event, column)
           });          
         });
       },
-      openDialog(){
+      openDialog(id){
         this.dialogFormVisible = true
+          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id}}).then((res)=>{
+            console.log(res)
+           this.makeCollectionsArr= res.data
+        })    
       },
-      getMonney(id){
-
+      getFinancialAudit(){
+        this.$http.get('yongxu/Toexamine/Get_Financial_Audit').then((res)=>{
+          console.log(res)
+           this.FinancialAuditArr = res.data
+        })    
       }
+      
     },
     mounted(){
-      this.getChildMenu()
+      // this.getChildMenu()
+      this.getFinancialAudit()
+    },
+    filters:{
+          getTime:function(time){
+        if(time==''||time==null){
+            return time
+        }else{
+          return time.substring(0,10)
+        }
+          },
     },
     components:{
       

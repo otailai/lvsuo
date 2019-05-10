@@ -179,15 +179,16 @@
                      <div class="edit-title-line flex"> <p class="edit-title">案件文书</p>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建文档</el-button>
                       </div>
+
                        <el-table :data="tableData" border style="width: 100%;margin:auto"  @row-click="lineCilck">
-                    <el-table-column prop="Id" label="Id" width=""></el-table-column>
-                    <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
-                     <el-table-column prop="Postfix" label="文件类型" width=""> </el-table-column>
-                      <el-table-column prop="Date _Created" label="创建日期" width="180"> </el-table-column>
-                       <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
-                          <el-table-column  label="状态" width="">
+                        <el-table-column prop="Id" label="Id" width=""></el-table-column>
+                        <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
+                        <el-table-column prop="Postfix" label="文件类型" width=""> </el-table-column>
+                        <el-table-column prop="Date_Created" label="创建日期" width="180"> </el-table-column>
+                        <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
+                            <el-table-column  label="状态" width="">
                             
-                                <template slot-scope="scope">
+                                <template slot-scope="scope"> 
                                     <p>{{scope.row.state}}</p>
                                 </template>
                             
@@ -197,13 +198,16 @@
                                     <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 1">风控审核</p>
                                      <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 2">更新</p>
                                       <a  v-if="scope.row.type == 3" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
-
+                                     <p  v-if="scope.row.type == 0" @click="lookWord(`${{Type_Id }}`)">查看</p>
                                 </template>
                                
                                 </el-table-column>
                        
                 </el-table>
                 </div>
+                 <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWord :dataWord='dataWord'></caseWord>
+                </el-dialog>
               </div>
               <!-- 对话框 -->
      <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
@@ -274,6 +278,7 @@
     </div>
 </template>
 <script>
+import caseWord from './caseWord'
 export default {
     data(){
         return{
@@ -316,6 +321,7 @@ export default {
              introduce:'',
              Receiving_Organ:'',
              Receiving_Organ:'',
+             Type_Id:'',
             //律师信息
                 layWerInfoArr:[],
                 Rule_Name:'',
@@ -331,7 +337,9 @@ export default {
                 //风险收费
 
                 //费率收费
-
+            dialogFormVisibleWord:false,
+            dataWord:{},
+            zhubanlvshi:'',
         }
     },
     methods:{
@@ -375,8 +383,10 @@ export default {
                 this.Case_Id = caseInfo.Id
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.Party_Name = caseInfo.Party_Name
+                this.Type_Id = caseInfo.Type_Id
                 //案件律师信息
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
+              
                 //当事人信息
                 this.partyInfoArr = res.data.Get_Party
                 //收费方式
@@ -389,7 +399,10 @@ export default {
                     //风险收费
                 this.ChargeInfoArr = res.data.Charge
 
+                //传参
+                this.dataWord = res.data
                 console.log(res)
+              
             }).then((res)=>{
                  this.getTableData()
             })
@@ -433,7 +446,12 @@ export default {
               console.log(this.Case_Id)
               this.$http.get('/yongxu//Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
                   console.log(res)
-                this.tableData = res.data
+                  this.tableData = res.data
+              }).then(()=>{
+                    this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
+                        console.log(res)
+                             this.tableData.unshift(res.data)
+                        })
               })
           },
             //保存上传文件
@@ -539,16 +557,19 @@ export default {
                         type:'warning'
                     });
                 })
+            },
+            lookWord(id){
+                this.dialogFormVisibleWord = true
             }
-           
-           
-
     },
     mounted(){
        
         this.getCaseEdit()
        
-    }
+    },
+    components:{
+        'caseWord':caseWord,
+    },
 }
 </script>
 

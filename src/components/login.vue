@@ -57,6 +57,7 @@ export default {
                 username:'',
                 password:'',
                 pub:'',
+                dataTest:'',
         }
         
     },
@@ -118,16 +119,17 @@ export default {
             var str = this.username+'&&'+this.password
             var encrypted = encrypt.encrypt(str);
           // 加密后的密文  
-          //  console.log('这是加密之后的' + encrypted)
+           console.log('这是加密之后的' + encrypted) 
             var data = qs.stringify({
                 str:encrypted
                 });
        //console.log(data) 
        this.$http.post('/yongxu/Login/decrypt',data).then((res)=>{
                 console.log(res)
-                    var str = res.data; 
+                var str = res.data; 
                 if(res.data[0].option == 1){
                     localStorage.setItem('userId',res.data[0].userId)
+                    localStorage.setItem('sessionId',res.data[0].sessionId)
                     console.log(this.checkedState)
                     if(this.checkedState){ 
                     this.setCookie('user',this.username,7); //保存帐号到cookie，有效期7天
@@ -179,21 +181,23 @@ export default {
             },
             getUserPas(){
                 if(this.getCookie('user')|| this.getCookie('pswd')){
+                    console.log(this.getCookie('user'))
                     this.username =this.getCookie('user')
                     this.password = this.getCookie('pswd')
                     this.checkedState = true
                 }    
-            }
+            },
     },
     mounted(){
         this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-            //console.log(res.data.PublicKey)
+            console.log(res.data.PublicKey)
             console.log('服务已开启')
             this.pub = res.data.PublicKey
         }).catch((err)=>{
             console.log('服务未开启')
         })
         this.getUserPas()
+
     },
     watch:{
 

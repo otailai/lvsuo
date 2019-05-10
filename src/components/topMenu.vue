@@ -84,6 +84,7 @@ export default {
         },
         loginOut(){
             localStorage.removeItem('userId')
+            localStorage.removeItem('sessionId')
             // localStorage.removeItem()
             this.$router.push('/')
         },

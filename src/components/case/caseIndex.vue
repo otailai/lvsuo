@@ -84,14 +84,16 @@
                              </el-table-column>
                              <el-table-column  label="立案日期" width="" sortable prop="Creattime">
                                 <template slot-scope="scope" >
-                                    <p>{{scope.row.Creattime | getTime}}</p>
+                                    <p  v-if="!scope.row.Filing_Date">暂无</p>
+                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p>
                                 </template>
                                
                                 </el-table-column>
                        
                         <el-table-column  label="立案状态">
                             <template slot-scope="scope">
-                                   <p> {{scope.row.Status}}</p>
+                                <p v-if="scope.row.type == -2" @click="uploadData(scope.row.Id)" style="cursor:pointer">{{scope.row.Status}}</p>
+                                <p v-else> {{scope.row.Status}}</p>
                             </template>
                            </el-table-column>
 
@@ -321,6 +323,7 @@ import empower from './caseEmpower'
              this.getCaseList()
       },
       getCaseList(){ 
+
         var statusValue;
           if(this.value == '' || this.value == null){
                 statusValue = -2;
@@ -328,7 +331,9 @@ import empower from './caseEmpower'
              statusValue = this.value
           }
          var userId = localStorage.getItem('userId')
+        
          this.$http.get('/yongxu/Index/DisplayCase',{params:{
+           sessionId:localStorage.getItem('sessionId'),
            UserId:userId,
            Dic_Id:this.Casevalue2,
            Status:statusValue,
@@ -338,14 +343,18 @@ import empower from './caseEmpower'
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage4,
          }}).then((res)=>{
+           console.log(res)
            this.tableData = res.data.GetCase
            this.tableData1 = res.data
            this.total = res.data.PageCount
             console.log(res.data)
+        }).catch((err)=>{
+          console.log(err)
         })
       },
       getTableDataShouQuan(){
         //localStorage.getItem('userId')
+
         this.$http.get('/yongxu/Index/Authorized_Case',{params:{User_Id:localStorage.getItem('userId'),Name:this.SearchInput1,Display_Page_Number:this.numPage1,PageNumber:this.currentPage1}}).then((res)=>{
             console.log(res)
            this.tableDataShouQuan=res.data.Get_Authorized
@@ -436,9 +445,16 @@ import empower from './caseEmpower'
           }else{
                return '禁用'
           }　
-　　　　　},
-      getTime(time){
+　　　　},
+     
+     getTime:function(time){
+        if(time==''||time==null){
+            return time
+        }else{
           return time.substring(0,10)
+        }
+         
+        
       }
 　　　　},
   watch:{

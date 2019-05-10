@@ -10,7 +10,11 @@ const store = new Vuex.Store({
         partyCount:0,
         dateCount:0,
         riskCount:0,
-        nameJobCount:0
+        nameJobCount:0,
+        caseAddData:{
+            //聘请人
+            
+        },
     },
     getters:{
         
