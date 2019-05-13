@@ -17,7 +17,7 @@
                      
                             <img src="../assets/img/wujunxi.jpg" alt="" class="username-hello">
                       
-                        <span class="username-name">陈晓梅</span>
+                        <span class="username-name" @click="goTOMine()">陈晓梅</span>
                     </div>
                     <div class="login-out" @click="loginOut()">
                         <i class=" iconfont icon-dingbudaohang-zhangh"></i>
@@ -97,6 +97,10 @@ export default {
          goTONew(menu){
              console.log(menu)
             this.$router.push(menu)
+        },
+        goTOMine(){
+            console.log('123')
+            this.$router.push('/index/mineIndex')
         }
        
     },

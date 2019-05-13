@@ -13,29 +13,30 @@
            <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
          
             <div v-show="child_cur==0">
-            <div class="flex case-child" ></div>
+              <caseAditing></caseAditing>
+            <!-- <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
+                 <el-table :data="caseArr" border style="width: 100%"  @row-click="lineCilck">
+                    <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
+                    <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
+                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
+                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
+                       <el-table-column prop="Creattime" label="申请日期" width=""> </el-table-column>
                           <el-table-column prop="date" label="合同" width=""> 
                                 <template slot-scope="scope"> 
-                               <span style="color:red">
-                                 {{scope.row.name}}
+                               <span style="color:red" @click="look(scope.row.Id)">
+                                 预览
                                </span>
                               </template>
                           </el-table-column>
-                             <el-table-column prop="address" label="状态" width=""> 
+                             <el-table-column  label="状态" width=""> 
                                     <template slot-scope="scope"> 
                                     <span v-if="scope.row.address == '立案'" style="color:red">
                                     {{scope.row.address}}
                                   </span>
-                                  <span v-else style="color:blue">   {{scope.row.address}}</span>
+                                  <span v-else style="color:blue">{{scope.row.Status}}</span>
                                   </template>
                              </el-table-column>
                         <el-table-column  label="操作"> 
@@ -52,12 +53,12 @@
                 </div>
                 </li>
                 </ul>
-            </div>
+            </div> -->
             </div>
             
        
           <div v-show="child_cur==1">
-                      <div class="flex case-child" ></div>
+           <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
@@ -92,77 +93,7 @@
           </div>
         
           <div v-show="child_cur==2">
-                      <div class="flex case-child" ></div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-              <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="FinancialAuditArr" border style="width: 100%"  @row-click="lineCilck">
-                  <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
-                  <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                    <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                      <el-table-column  label="合同起止日期" width="120"> 
-                                <template slot-scope="scope" >
-                     
-                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
-                                </template>
-                      </el-table-column>
-                       <el-table-column  label="立案日期" width="">
-                          <template slot-scope="scope" >
-                                    <p  v-if="!scope.row.Filing_Date">暂无</p>
-                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p>
-                                </template>
-                          </el-table-column>
-                          <el-table-column prop="Status" label="案件状态" width=""> </el-table-column>
-                             <el-table-column prop="Amount" label="合同金额" width=""> </el-table-column>
-                                <el-table-column prop="Charge_Amount" label="已收金额" width=""> </el-table-column>
-                         
-                        <el-table-column  label="操作"> 
-                          <template  slot-scope="scope">
-                            <span class="btn-div">
-                            <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button>
-                            <button @click="openDialog(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">收款</button>
-
-                            </span>
-                          </template>
-                        </el-table-column>
-                  </el-table>
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                </li>
-                </ul>
-            </div>
-
-      <el-dialog  :visible.sync="dialogFormVisible"  :append-to-body='true'  top="300px" width="800px">
-      <div class="dialogFormVisible flex">
-         
-           <div class="dialogFormVisivleFile flex">
-             <el-table :data="makeCollectionsArr">
-                <el-table-column property="Payment_Time" label="付款日期" width="" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column property="Charge_Amount" label="收费金额" width=""></el-table-column>
-                <el-table-column property="Describe" label="描述" width="" :show-overflow-tooltip="true"></el-table-column>
-                <el-table-column   width="50"></el-table-column>
-                <el-table-column  label="状态" width="200">
-                  <template slot-scope="scope">
-                        <span v-if="scope.row.State==1" style="color:red">未收款</span>
-                        <span v-if="scope.row.State==2">已收款</span>
-                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.id)">确认收款</button>
-                  </template>
-                </el-table-column>
-               
-              </el-table>
-          </div>
-      </div>
-   <div slot="title" class="dialog-title">
-        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定额收费</p></div>
-  </div>
-  <div slot="footer" class="dialog-footer">
-    <div class="dialogFormVisivleFooter flex">
-    </div>
-  </div>
-</el-dialog>
+              <financialAuditing></financialAuditing>
           </div>
           
             <div v-show="child_cur==3">
@@ -205,14 +136,13 @@
 </template>
 <script>
 import store from '../../vuex/store'
+import caseAditing from './caseAuditing'
+import financialAuditing from './financialAuditing'
   export default {
     data() {
       return {
-        // 财务审核
-        FinancialAuditArr:[],
-        dialogFormVisible:false,
-        // 收款详情
-        makeCollectionsArr:[],
+        //案件审核
+        caseArr:[],
         //
         child:0,
         child_cur:0,
@@ -360,24 +290,12 @@ console.log(row, event, column)
           });          
         });
       },
-      openDialog(id){
-        this.dialogFormVisible = true
-          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id}}).then((res)=>{
-            console.log(res)
-           this.makeCollectionsArr= res.data
-        })    
-      },
-      getFinancialAudit(){
-        this.$http.get('yongxu/Toexamine/Get_Financial_Audit').then((res)=>{
-          console.log(res)
-           this.FinancialAuditArr = res.data
-        })    
-      }
+    
+     
       
     },
     mounted(){
-      // this.getChildMenu()
-      this.getFinancialAudit()
+
     },
     filters:{
           getTime:function(time){
@@ -389,7 +307,8 @@ console.log(row, event, column)
           },
     },
     components:{
-      
+      caseAditing,
+      financialAuditing
     }
   };
 </script>

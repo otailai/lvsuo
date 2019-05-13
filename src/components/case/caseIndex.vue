@@ -64,10 +64,10 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width="" sortable></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="" sortable> </el-table-column>
+                    <el-table-column prop="Case_No" label="案件编号" width="100" sortable></el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column  label="案件类别" width="160">
+                      <el-table-column  label="案件类别" width="">
                         <template slot-scope="scope">
                             <span>
                                 {{scope.row.Category_Name}}一{{scope.row.Value}}
@@ -75,14 +75,13 @@
                         </template>
                       </el-table-column>
                        <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column  label="合同起止日期" width="">
-                            
+                          <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p>{{scope.row.Contract_Date_From | getTime}}</p>
                                 </template>
                             
                              </el-table-column>
-                             <el-table-column  label="立案日期" width="" sortable prop="Creattime">
+                             <el-table-column  label="立案日期" width="100" sortable>
                                 <template slot-scope="scope" >
                                     <p  v-if="!scope.row.Filing_Date">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
@@ -91,6 +90,13 @@
                                 </el-table-column>
                        
                         <el-table-column  label="立案状态">
+                            <template slot-scope="scope">
+                                <p v-if="scope.row.type == -2" @click="uploadData(scope.row.Id)" style="cursor:pointer">{{scope.row.Status}}</p>
+                                <p v-else> {{scope.row.Status}}</p>
+                            </template>
+                           </el-table-column>
+
+                            <el-table-column  label="操作">
                             <template slot-scope="scope">
                                 <p v-if="scope.row.type == -2" @click="uploadData(scope.row.Id)" style="cursor:pointer">{{scope.row.Status}}</p>
                                 <p v-else> {{scope.row.Status}}</p>

@@ -1,6 +1,7 @@
 <template>
     <div>
      <button @click="getPdf()">下载pdf</button>
+      <button @click="getDoc()">导出doc</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
         <div class="flex first">({{todayTime}}[1])穗金鹏民字第[2]号</div>
         <p class="title11">民 事 委 托 代 理</p>
@@ -40,8 +41,10 @@
 </template>
 <script>
 import { setTimeout } from 'timers';
+ import saveAs from 'file-saver'
+ import '../../../static/js/jquery.wordexport';
 export default {
-    
+   
     data(){
         return{
             //聘请方
@@ -97,8 +100,10 @@ export default {
         }
     },
        props:['dataWord'],
-    methods:{ 
-      
+        methods:{ 
+            getDoc(){
+                $('#pdfDom').wordExport('生成文档')
+            }
         
     },
     created(){
@@ -121,7 +126,7 @@ export default {
                         this.text1 = this.dataWord.Get_Lawyer_Information[index].Staff_Name
                         console.log(this.text1)    
         }).then(()=>{
-             document.getElementById('Aname').innerText = this.Aname
+            //  document.getElementById('Aname').innerText = this.Aname
                                 document.getElementById('Aleader').innerText = this.Aleader
                                 document.getElementById('Aaddress').innerText = this.Aaddress
                                 document.getElementById('Atel').innerText = this.Atel
