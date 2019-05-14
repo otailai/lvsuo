@@ -18,6 +18,7 @@ import mineIndex from './components/mine/mineIndex'
 import mineEdit from './components/mine/mineEdit'
 import setDemo from './components/setting/setDemo'
 import caseWord from './components/case/caseWord'
+import caseUpdate from './components/case/caseUpdate'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
@@ -26,6 +27,7 @@ export default[
     children:[
 {path:'/index/caseIndex',component:caseIndex,name:caseIndex, meta:{requireAuth:true},},
 {path:'/index/caseAdd',component:caseAdd,name:caseAdd},
+{path:'/index/caseUpdate/:id/:typeId',component:caseUpdate,name:caseUpdate},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:caseEdit},
 {path:'/index/customerIndex',component:customerIndex,name:customerIndex},
 {path:'/index/documentIndex',component:documentIndex,name:documentIndex},

@@ -91,7 +91,7 @@
                        
                         <el-table-column  label="立案状态">
                             <template slot-scope="scope">
-                                <p v-if="scope.row.type == -2" @click="uploadData(scope.row.Id)" style="cursor:pointer">{{scope.row.Status}}</p>
+                                <p v-if="scope.row.type == -2" @click="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer">{{scope.row.Status}}</p>
                                 <p v-else> {{scope.row.Status}}</p>
                             </template>
                            </el-table-column>
@@ -357,6 +357,10 @@ import empower from './caseEmpower'
         }).catch((err)=>{
           console.log(err)
         })
+      },
+      updateData(id,type_id){
+        console.log('123456')
+        this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
       },
       getTableDataShouQuan(){
         //localStorage.getItem('userId')

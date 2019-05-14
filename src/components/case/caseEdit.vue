@@ -340,6 +340,7 @@ export default {
             dialogFormVisibleWord:false,
             dataWord:{},
             zhubanlvshi:'',
+          
         }
     },
     methods:{
