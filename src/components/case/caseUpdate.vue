@@ -146,7 +146,7 @@
                             </el-autocomplete>
                         </el-popover>
 
-                         <el-select v-model="inputArr[0].laywerJob"  placeholder="请选择">
+                         <el-select v-model="inputArr[0].Case_Rule_Id"  placeholder="请选择">
                          <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>   
                         <div class="input-icon"></div>
@@ -154,7 +154,7 @@
 
 
                       <div class="flex" v-for="(v,i) in userInfo" :key="i">
-                        <el-popover placement="bottom-start" width="200" trigger="click" v-model="userInfo[i].visible" >
+                        <el-popover placement="bottom-start" width="200" trigger="click" v-model="inputArr[i+1].visible" >
                         <input type="text" slot="reference" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[i+1].laywerName"  readonly="readonly">
                            <el-autocomplete
                             class="inline-input"
@@ -167,7 +167,7 @@
                             > 
                             </el-autocomplete>
                         </el-popover>
-                        <el-select v-model="inputArr[i].laywerJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
+                        <el-select v-model="inputArr[i+1].Case_Rule_Id"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
                         <div class="input-icon" @click="deleteLine(i,userInfo)"><i class="el-icon-remove"></i></div>
@@ -190,16 +190,16 @@
                            <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyName"/>
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].Party_Name"/>
                         <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyJob"/>   -->
-                         <el-select v-model="input1Arr[0].partyJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
+                         <el-select v-model="input1Arr[0].Party_Category"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
                         <div class="input-icon"></div>
                     </div>
                       <div class="flex" v-for="(v,i) in PartyInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].partyName"/>
-                         <el-select v-model="input1Arr[i+1].partyJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
+                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].Party_Name"/>
+                         <el-select v-model="input1Arr[i+1].Party_Category"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
                         <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
@@ -230,15 +230,29 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].dateName"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].payCount"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].describe"/>
+                         <el-date-picker
+                        v-model="timeArr[0].Payment_Time"
+                        type="datetime"
+                        placeholder="选择日期时间">
+                        </el-date-picker>
+                        
+                    <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].Payment_Time"/> -->
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].Charge_Amount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].Describe"/>
                        <div class="input-icon"></div>
                     </div>
                     <div class="flex" v-for="(v,i) in payDate" :key="i">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].dateName"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].payCount"/>
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].describe"/>
+                        
+                          <el-date-picker
+                          class="time_input"
+                          v-model="timeArr[i+1].Payment_Time"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                        </el-date-picker>
+                    <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Payment_Time"/> -->
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Charge_Amount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Describe"/>
                        <div class="input-icon" @click="deleteLine(i,payDate)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -260,13 +274,13 @@
                     <div class="flex">
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskName"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskCount"/> -->
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].riskCondition" style="width:700px"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[0].Risk_Achievement" style="width:700px"/>
                      <div class="input-icon"></div>
                     </div>
                     <div class="flex" v-for="(v,i) in riskAcount" :key="i">
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskName"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCount"/> -->
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCondition" style="width:700px"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].Risk_Achievement" style="width:700px"/>
                      <div class="input-icon" @click="deleteLine(i,riskAcount)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -300,18 +314,18 @@
                         </el-autocomplete>
                     </el-popover>
 
-                  <el-select v-model="nameJobArr[0].nameJobJob" placeholder="请选择">
+                  <el-select v-model="nameJobArr[0].Rule_Id" placeholder="请选择">
                       <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                   </el-select>                        
                     
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].nameJobJob"/> -->
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].nameJobRate"/><span class="rmb">RMB/小时</span>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[0].Rate"/><span class="rmb">RMB/小时</span>
                      <div class="input-icon"></div>
                       
                     </div>
                     <div class="flex" v-for="(v,i) in nameJob" :key="i">
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobName"/> -->
-                <el-popover placement="bottom-start" width="200" trigger="click" v-model="nameJob[i].visible" >
+                <el-popover placement="bottom-start" width="200" trigger="click" v-model="nameJobArr[i+1].visible" >
                     <input type="text" slot="reference" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobName"  readonly="readonly">                      
                        <el-autocomplete
                         class="inline-input"
@@ -326,10 +340,10 @@
                         </el-autocomplete>
                     </el-popover>
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobJob"/> -->
-                    <el-select v-model="nameJobArr[i+1].nameJobJob" placeholder="请选择">
+                    <el-select v-model="nameJobArr[i+1].Rule_Id" placeholder="请选择">
                       <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                   </el-select>    
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobRate"/><span class="rmb">RMB/小时</span>
+                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].Rate"/><span class="rmb">RMB/小时</span>
                     <div class="input-icon" @click="deleteLine(i,nameJob)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
@@ -338,7 +352,7 @@
               </div>
                 
                 <div class="end-btn flex">
-                    <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
+                    <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="updateAddAll()">提交审核</button>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
                         <caseWord :addData='addData'></caseWord>
@@ -392,7 +406,7 @@ export default {
 
             JobListValue:'',
             JobListArr:[],
-            suoshuValue:'',
+            suoshuValue:1,
             suoshuhangyeArr:[],
             customValue:3,
             costValue:'',
@@ -464,7 +478,7 @@ export default {
             ],
             // 付款方式之风险input-model
             riskArr:[
-            {riskName:'',riskCount:'',riskCondition:''}
+            
             ],
              // 付款方式之费率input-model
             nameJobArr:[
@@ -490,7 +504,10 @@ export default {
                 name:'永旭',
                 laywerName:'广州金鹏律师事务所'
             },
-            custom_Id:''
+            custom_Id:'',
+            Customer_Type:'',//客户类型
+            Case_Id:'',//案件Id
+            newInputArr:{},
         }
           
         
@@ -502,33 +519,41 @@ export default {
         },
         pushUserInfo(){
             this.userInfo.push(1)
-            this.inputArr.push({laywerName:'',laywerJob:'',visible:false,laywerName1:'',Id:''})  
+           // this.inputArr.push({laywerName:'',laywerJob:'',visible:false,laywerName1:'',Id:''})  
+            this.inputArr.push({laywerName:'',visible:false,laywerJob:'',laywerName1:'',Case_Rule_Id:'',Lawyer_Id:''})
+
             console.log(this.inputArr)
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
             this.$store.dispatch('addParty')
-            this.input1Arr.push({partyName:'',partyJob:''})  
+            //this.input1Arr.push({partyName:'',partyJob:''})  
+            //this.input1Arr.push({partyName:'',partyJob:''})  
+            this.input1Arr.push({partyName:'',Party_Name:'',visible:false,partyJob:'',Party_Category:''})
+
         },
         addPayDate(){
             this.payDate.push(1)
             this.$store.dispatch('addDate')
-            this.timeArr.push({dateName:'',payCount:'',describe:''})  
+            this.timeArr.push({describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''})  
         },
          addRiskAcount(){
             this.riskAcount.push(1)
             this.$store.dispatch('addRisk')
-            this.riskArr.push({riskName:'',riskCount:'',riskCondition:''})  
+           // this.riskArr.push({riskName:'',riskCount:'',riskCondition:''})  
+            this.riskArr.push({riskCondition:'',Risk_Achievement:''})
         },
          addNameJob(){
             this.nameJob.push(1)
             this.$store.dispatch('addNameJob')
-            this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:'',visible:false,nameJobName1:'',Id:''})  
+            //this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:'',visible:false,nameJobName1:'',Id:''})  
+            this.nameJobArr.push({nameJobRate:'',Rate:'',visible:false,nameJobName1:'',nameJobName:'',nameJobJob:'',Lawyer_Id:'',Rule_Id:''})
+
         },
         closeBox(){
            this.$router.push('/index/caseIndex')
         },
-        addAll(){
+        updateAddAll(){
 
             this.checkData()
             console.log(this.checkData())
@@ -545,111 +570,107 @@ export default {
             }
             if(this.costValue == 8){
             addJson = {
-              'userId':localStorage.getItem('userId'),
-              'costId':this.customId,
-              'userNameC':this.search,
-            // 'userNameE':this.userNameE,
-              'province':this.province,
-              'address':this.address,
-              'tel':this.tel,
-              'type':this.customValue,
-              'suoshuhangye':this.suoshuValue, 
-              'job':this.value2,
-              'is':this.isValue,
-              'cardNo':this.cardNo,
-              'compony':this.compony,
-              'oppositePart':this.oppositeParty,
-              'caseWhy':this.caseWhy,
+                   'User_Id':localStorage.getItem('userId'),//登录人Id
+              'Customer_Id':this.custom_Id,//客户Id
+              'Case_Id':this.Case_Id,//案件Id
+              'Chinese_Name':this.search,//客户名称
+            
+              'City':this.province,//省市
+              'Detailed_Address':this.address,//详细地址
+              'Contact_Party':this.tel,//联系方式
+              'Customer_Type_Id':this.customValue,//客户类别Id
+              'industry_Id':this.suoshuValue, //行业ID
+              'Position':this.value2,//职业
+              'Identification':this.isValue,//是否常年
+              'Customer_Number':this.cardNo,//客户编号
 
-              'caseValue':this.caseValue,
-              'caseValue2':this.caseValue2,
-              'caseName':this.caseName,
-              'caseWay':this.caseWay,
-              'textarea':this.textarea,
-              'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
+              'Receiving_Organ':this.compony,//案件受理机关
+              'Party_Name':this.oppositeParty,//对方当事人
+              'Cause_Id':this.caseWhy,//案由Id
 
-              "costValue":this.costValue,
-              'nameJobArr':this.nameJobArr
+            // 'caseValue':this.caseValue,
+              'Case_Type':this.caseValue2,//二级案件类别
+              'Case_Name':this.caseName,//案件名称
+            //   'caseWay':this.caseWay,
+              'Case_Introduction':this.textarea,//案件详情
+              'Laywer_Arr':this.inputArr,//律师数组
+              'Party_Arr':this.input1Arr,//当事人数组
+
+              "Charging_Method":this.costValue,//收费方式id
+              'Time_Arr':this.nameJobArr//费率数组
               
                 }
           }
             
             if(this.costValue == 9){
   addJson = {
-              'userId':localStorage.getItem('userId'),
-              'costId':this.customId,
-             
-             'userNameC':this.search,
-            //   'userNameE':this.userNameE,
-              'province':this.province,
-              'address':this.address,
-               'suoshuhangye':this.suoshuValue,
-                'type':this.customValue,
-                'tel':this.tel,
-               'job':this.value2,
-             
-             
-             
-                'is':this.isValue,
-                'cardNo':this.cardNo,
-                'compony':this.compony,
-                'oppositePart':this.oppositeParty,
-                'caseWhy':this.caseWhy,
+              'User_Id':localStorage.getItem('userId'),//登录人Id
+              'Customer_Id':this.custom_Id,//客户Id
+              'Case_Id':this.Case_Id,//案件Id
+              'Chinese_Name':this.search,//客户名称
+            
+              'City':this.province,//省市
+              'Detailed_Address':this.address,//详细地址
+              'Contact_Party':this.tel,//联系方式
+              'Customer_Type_Id':this.customValue,//客户类别Id
+              'industry_Id':this.suoshuValue, //行业ID
+              'Position':this.value2,//职业
+              'Identification':this.isValue,//是否常年
+              'Customer_Number':this.cardNo,//客户编号
 
+              'Receiving_Organ':this.compony,//案件受理机关
+              'Party_Name':this.oppositeParty,//对方当事人
+              'Cause_Id':this.caseWhy,//案由Id
 
-                'caseValue':this.caseValue,
-                'caseValue2':this.caseValue2,
-                'caseName':this.caseName,
-                'caseWay':this.caseWay,
-                'textarea':this.textarea,
+            // 'caseValue':this.caseValue,
+              'Case_Type':this.caseValue2,//二级案件类别
+              'Case_Name':this.caseName,//案件名称
+            //   'caseWay':this.caseWay,
+              'Case_Introduction':this.textarea,//案件详情
+              'Laywer_Arr':this.inputArr,//律师数组
+              'Party_Arr':this.input1Arr,//当事人数组
 
-
-              'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
-           
-                "costValue":this.costValue,
-               'timeArr':this.timeArr,
+              "Charging_Method":this.costValue,//收费方式id
+              'Fixed_Arr':this.timeArr,//定额
             }
             }
             if(this.costValue == 10){
     addJson = {
-              'userId':localStorage.getItem('userId'),
-              'costId':this.customId,
-              'userNameC':this.search,
-            //   'userNameE':this.userNameE,
-              'province':this.province,
-              'address':this.address,
-              'tel':this.tel,
-              'type':this.customValue,
-              'suoshuhangye':this.suoshuValue,
-              'job':this.value2,
+                  'User_Id':localStorage.getItem('userId'),//登录人Id
+              'Customer_Id':this.custom_Id,//客户Id
+              'Case_Id':this.Case_Id,//案件Id
+              'Chinese_Name':this.search,//客户名称
+            
+              'City':this.province,//省市
+              'Detailed_Address':this.address,//详细地址
+              'Contact_Party':this.tel,//联系方式
+              'Customer_Type_Id':this.customValue,//客户类别Id
+              'industry_Id':this.suoshuValue, //行业ID
+              'Position':this.value2,//职业
+              'Identification':this.isValue,//是否常年
+              'Customer_Number':this.cardNo,//客户编号
 
-              'is':this.isValue,
-                'cardNo':this.cardNo,
-                'compony':this.compony,
-                'oppositePart':this.oppositeParty,
-                'caseWhy':this.caseWhy,
+              'Receiving_Organ':this.compony,//案件受理机关
+              'Party_Name':this.oppositeParty,//对方当事人
+              'Cause_Id':this.caseWhy,//案由Id
 
-                'caseValue':this.caseValue,
-                'caseValue2':this.caseValue2,
-                'caseName':this.caseName,
-                'caseWay':this.caseWay,
-                'textarea':this.textarea,
+            // 'caseValue':this.caseValue,
+              'Case_Type':this.caseValue2,//二级案件类别
+              'Case_Name':this.caseName,//案件名称
+            //   'caseWay':this.caseWay,
+              'Case_Introduction':this.textarea,//案件详情
+              'Laywer_Arr':this.inputArr,//律师数组
+              'Party_Arr':this.input1Arr,//当事人数组
 
-
-              'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
-
-              "costValue":this.costValue,
-              'riskArr':this.riskArr, 
+              "Charging_Method":this.costValue,//收费方式id
+              'Risk_Arr':this.riskArr, //风险
             }
             }
         addJson = JSON.stringify(addJson)
         console.log(addJson)
         //console.log(JSON.stringify(addJson))
-
-        this.$http.post('/yongxu/Index/AddCases',{
+       //return false
+        this.$http.post('/yongxu/Index/Upd_Cases',{
                 map:addJson
             }).then((res)=>{
                  console.log(res)
@@ -720,7 +741,7 @@ export default {
                 });
                 return false
             }
-              if(this.value1==""||this.value1==null){
+              if(this.suoshuValue==""||this.suoshuValue==null){
                 this.$message({
                     message:'请选择所属行业',
                     type:'warning'
@@ -793,7 +814,7 @@ export default {
             }
             var arr=[]
             for(var i in this.inputArr){
-                arr.push(this.inputArr[i].Id)
+                arr.push(this.inputArr[i].Lawyer_Id)
             }
             console.log(arr)
             if (arr.indexOf('') != -1){
@@ -806,7 +827,7 @@ export default {
 
              var arrJob=[]
             for(var i in this.inputArr){
-                arrJob.push(this.inputArr[i].laywerJob)
+                arrJob.push(this.inputArr[i].Case_Rule_Id)
             }
             if (arrJob.indexOf('') != -1){
                  this.$message({
@@ -818,7 +839,7 @@ export default {
          
          var arrJob1=[]
             for(var i in this.inputArr){
-                arrJob1.push(this.inputArr[i].laywerJob)
+                arrJob1.push(this.inputArr[i].Case_Rule_Id)
             }
             //console.log(arrJob1) //false
            if(arrJob1.indexOf(18) == -1){
@@ -831,7 +852,7 @@ export default {
             
             var arrParty=[]
             for(var i in this.input1Arr){
-                arrParty.push(this.input1Arr[i].partyName)
+                arrParty.push(this.input1Arr[i].Party_Name)
             }
             if (arrParty.indexOf('') != -1){
                  this.$message({
@@ -843,7 +864,7 @@ export default {
 
             var arrPartyJob=[]
             for(var i in this.input1Arr){
-                arrPartyJob.push(this.input1Arr[i].partyJob)
+                arrPartyJob.push(this.input1Arr[i].Party_Category)
             }
             if (arrPartyJob.indexOf('') != -1){
                  this.$message({
@@ -865,7 +886,7 @@ export default {
 
             var arrJobArr8=[]
             for(var i in this.nameJobArr){
-                arrJobArr8.push(this.nameJobArr[i].nameJobName)
+                arrJobArr8.push(this.nameJobArr[i].Lawyer_Id)
             }
             if (arrJobArr8.indexOf('') != -1){
                  this.$message({
@@ -877,7 +898,7 @@ export default {
 
             var arrJobArrJob8=[]
             for(var i in this.nameJobArr){
-                arrJobArrJob8.push(this.nameJobArr[i].nameJobJob)
+                arrJobArrJob8.push(this.nameJobArr[i].Rule_Id)
             }
             if (arrJobArrJob8.indexOf('') != -1){
                  this.$message({
@@ -890,7 +911,7 @@ export default {
 
              var arrJobJobRate8=[]
             for(var i in this.nameJobArr){
-                arrJobJobRate8.push(this.nameJobArr[i].nameJobRate)
+                arrJobJobRate8.push(this.nameJobArr[i].Rate)
             }
             if (arrJobJobRate8.indexOf('') != -1){
                  this.$message({
@@ -902,11 +923,13 @@ export default {
         }
 
          if(this.costValue==9){
+           
             var arr9=[]
             for(var i in this.timeArr){
-                arr9.push(this.timeArr[i].dateName)
+                arr9.push(this.timeArr[i].Payment_Time)
             }
-            if (arr9.indexOf('') != -1){
+              console.log(arr9)
+            if (arr9.indexOf('') != -1 || arr9.indexOf(null) != -1 ){
                  this.$message({
                     message:'请选择付款日期',
                     type:'warning'
@@ -916,7 +939,7 @@ export default {
 
             var arrMoney=[]
             for(var i in this.timeArr){
-                arrMoney.push(this.timeArr[i].payCount)
+                arrMoney.push(this.timeArr[i].Charge_Amount)
             }
             if (arrMoney.indexOf('') != -1){
                  this.$message({
@@ -929,7 +952,7 @@ export default {
 
              var arrdescribe=[]
             for(var i in this.timeArr){
-                arrdescribe.push(this.timeArr[i].describe)
+                arrdescribe.push(this.timeArr[i].Describe)
             }
             if (arrdescribe.indexOf('') != -1){
                  this.$message({
@@ -943,7 +966,7 @@ export default {
     if(this.costValue==10){
             var arr10=[]
             for(var i in this.riskArr){
-                arr10.push(this.riskArr[i].riskCondition)
+                arr10.push(this.riskArr[i].Risk_Achievement)
             }
             if (arr10.indexOf('') != -1){
                  this.$message({
@@ -1034,6 +1057,8 @@ export default {
       },
         changeCostWay(id){
             this.costId = id
+              console.log(this.costId)
+            console.log(this.cur)
         },
         changeId(){
                   this.customId = 0
@@ -1095,35 +1120,58 @@ export default {
      
      /**选择律师姓名 */
       handleSelect(item) {
+           var arr=[]
+          
+           
+            for(var i in this.inputArr){
+                arr.push(this.inputArr[i].Lawyer_Id)
+            }
+            console.log(item.Id)
+             console.log(arr)
+           if (arr.indexOf(item.Id) != -1){
+                 this.$message({
+                    message:'律师姓名不能重复',
+                    type:'warning'
+                });
+                return false
+            }
         this.inputArr[0].laywerName=item.value
-        this.inputArr[0].Id=item.Id        
+        this.inputArr[0].Id=item.Id
+        this.inputArr[0].Lawyer_Id = item.Id              
         this.inputArr[0].visible=false
-        //查找制定元素在数组中的索引值
-        console.log(this.LawyerNameArr)
-        var arr =[]
-        for(var i=0;i<this.LawyerNameArr.length;i++){
-            arr.push(this.LawyerNameArr[i].value)
-        }
-        
-       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
-        console.log(this.LawyerNameArr);
-        console.log(item);
-        // const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
-        //console.log(res)
+       
+           
       },
       handleSelect1(item,i){
+          console.log(this.inputArr)
           console.log(i)
           console.log(item);
+          var arr=[]
+            for(var j in this.inputArr){
+                arr.push(this.inputArr[j].Lawyer_Id)
+            }
+            console.log(item.Id)
+             console.log(arr)
+           if (arr.indexOf(item.Id) != -1){
+                 this.$message({
+                    message:'律师姓名不能重复',
+                    type:'warning'
+                });
+                return false
+            }
+            console.log(i+1)
            this.inputArr[i+1].laywerName=item.value
            this.inputArr[i+1].Id=item.Id     
+           this.inputArr[i+1].Lawyer_Id = item.Id   
            this.inputArr[i+1].visible=false
-            var arr =[]
-        for(var i=0;i<this.LawyerNameArr.length;i++){
-            arr.push(this.LawyerNameArr[i].value)
-        }
+           console.log(this.inputArr)
+    //         var arr =[]
+    //     for(var i=0;i<this.inputArr.length;i++){
+    //         arr.push(this.inputArr[i].laywerName)
+    //     }
         
-       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
-        console.log(this.LawyerNameArr);
+    //    this.LawyerNameArr.splice(arr.indexOf(item.value),1)
+    //     console.log(this.LawyerNameArr);
       },
       blurInput(){
          this.inputArr[0].laywerName1 = ''
@@ -1135,6 +1183,7 @@ export default {
       handleSelectNameArr(item) {
         console.log(item);
         this.nameJobArr[0].nameJobName=item.value
+        this.nameJobArr[0].Lawyer_Id=item.Id 
         this.nameJobArr[0].Id=item.Id        
         this.nameJobArr[0].visible=false
         // const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
@@ -1144,6 +1193,8 @@ export default {
           console.log(i)
           console.log(item);
            this.nameJobArr[i+1].nameJobName=item.value
+
+           this.nameJobArr[i+1].Lawyer_Id=item.Id 
            this.nameJobArr[i+1].Id=item.Id     
            this.nameJobArr[i+1].visible=false
       },
@@ -1200,16 +1251,19 @@ export default {
                 var _self =this
                 for(var i in _self.layWerInfoArr){
                    console.log( _self.layWerInfoArr[i].Staff_Name)
-        _self.inputArr.push({laywerName:_self.layWerInfoArr[i].Staff_Name,visible:false,laywerJob:_self.layWerInfoArr[i].Case_Rule_Id,laywerName1:'',Id:'' })
+        _self.inputArr.push({laywerName:_self.layWerInfoArr[i].Staff_Name,visible:false,laywerJob:_self.layWerInfoArr[i].Case_Rule_Id,laywerName1:'',Case_Rule_Id:_self.layWerInfoArr[i].Case_Rule_Id,Lawyer_Id:_self.layWerInfoArr[i].Id})
                   
                 }    
-                _self.userInfo = _self.inputArr.slice(1)
-                 console.log()
+                console.log(this.layWerInfoArr)
+               
+                this.newInputArr = _self.inputArr 
+                 console.log(this.newInputArr)
+                _self.userInfo = this.newInputArr.slice(1)
                  console.log(_self.userInfo)
                 //当事人信息
                 this.partyInfoArr = res.data.Get_Party
                   for(var i in this.partyInfoArr){
-                    this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id})
+                    this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,Party_Name:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id,Party_Category:this.partyInfoArr[i].Party_Category_Id})
                 }
                 console.log(this.input1Arr)
                  _self.PartyInfo = _self.input1Arr.slice(1)
@@ -1219,30 +1273,55 @@ export default {
                 this.cur = res.data.Id
                 this.costValue = res.data.Id
                 this.costId  = this.costValue
-                console.log(this.costId)
-                    //小时收费
+                console.log( this.costId)
+                if(this.costId == 8){
+                //小时收费
                 this.ChargeInfoArr = res.data.Charge
                 console.log(this.ChargeInfoArr)
                   for(var i in this.ChargeInfoArr){
-                    this.nameJobArr.push({nameJobRate:this.ChargeInfoArr[i].Rate,visible:false,nameJobName1:'',nameJobName:this.ChargeInfoArr[i].Staff_Name,nameJobJob:this.ChargeInfoArr[i].Staff_Id,Id:''})
-                      // this.nameJobArr[i].nameJobName =_self.layWerInfoArr[i].Staff_Name 
-                    // this.nameJobArr[i].nameJobJob = _self.layWerInfoArr[i].Case_Rule_Id 
+                    this.nameJobArr.push({nameJobRate:this.ChargeInfoArr[i].Rate,Rate:this.ChargeInfoArr[i].Rate,visible:false,nameJobName1:'',nameJobName:this.ChargeInfoArr[i].Staff_Name,nameJobJob:this.ChargeInfoArr[i].Staff_Id,Lawyer_Id:this.ChargeInfoArr[i].Staff_Id,Rule_Id:this.ChargeInfoArr[i].Rule_Id})
                 }
                  console.log(this.nameJobArr)
+                this.timeArr=[{describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''}]
+                this.riskArr=[{riskCondition:'',Risk_Achievement:''}]
 
-                 this.nameJob = this.nameJobArr.slice(1)
-                    //定额收费
-                this.ChargeInfoArr = res.data.Charge
-                 for(var i in this.ChargeInfoArr){
-                    this.timeArr.push({describe:this.ChargeInfoArr[i].Describe,payCount:this.ChargeInfoArr[i].Charge_Amount,dateName:this.ChargeInfoArr[i].Payment_Time})
+                this.riskAcount = this.riskArr.slice(1)
+                this.nameJob = this.nameJobArr.slice(1)
+                this.payDate = this.timeArr.slice(1)
+
+                 
                 }
-                 this.payDate = this.timeArr.slice(1)
-                    //风险收费
+                if(this.costId == 9){
+                   
+                //定额收费
                 this.ChargeInfoArr = res.data.Charge
+                console.log(this.ChargeInfoArr)
+                 for(var i in this.ChargeInfoArr){
+                    this.timeArr.push({describe:this.ChargeInfoArr[i].Describe,payCount:this.ChargeInfoArr[i].Charge_Amount,dateName:this.ChargeInfoArr[i].Payment_Time,Payment_Time:this.ChargeInfoArr[i].Payment_Time,Charge_Amount:this.ChargeInfoArr[i].Charge_Amount,Describe:this.ChargeInfoArr[i].Describe})
+                }
+                this.riskArr=[{riskCondition:'',Risk_Achievement:''}]
+                this.nameJobArr=[{nameJobRate:'',Rate:'',visible:false,nameJobName1:'',nameJobName:'',nameJobJob:'',Lawyer_Id:'',Rule_Id:''}]
+                
+                 this.riskAcount = this.riskArr.slice(1)
+                this.nameJob = this.nameJobArr.slice(1)
+                this.payDate = this.timeArr.slice(1)
+                console.log(this.payDate)
+                }
+                if(this.costId == 10){
+                this.ChargeInfoArr = res.data.Charge
+                console.log(this.ChargeInfoArr)
                   for(var i in this.ChargeInfoArr){
-                    this.riskArr.push({riskCondition:this.ChargeInfoArr[i].iRisk_Achievement})
+                    this.riskArr.push({riskCondition:this.ChargeInfoArr[i].Risk_Achievement,Risk_Achievement:this.ChargeInfoArr[i].Risk_Achievement})
                  }
-                    this.riskAcount = this.riskArr.slice(1)
+                this.timeArr=[{describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''}]
+                this.nameJobArr=[{nameJobRate:'',Rate:'',visible:false,nameJobName1:'',nameJobName:'',nameJobJob:'',Lawyer_Id:'',Rule_Id:''}]
+                this.riskAcount = this.riskArr.slice(1)
+                this.nameJob = this.nameJobArr.slice(1)
+                this.payDate = this.timeArr.slice(1)
+                    
+                }
+                    //风险收费
+              
                 //传参
                 this.dataWord = res.data
                 console.log(res)
@@ -1393,6 +1472,33 @@ export default {
 }
 
 }
+.add-Pay-index-child .flex .el-input{
+ width: 200px;
+    height: 35px;
+  
+    line-height: 35px;
+    input{
+ border-radius: 0px;
+  height: 35px;
+    }
+    .el-input__suffix{
+.el-input__suffix-inner{
+            .el-input__icon{
+                line-height: 53px !important;
+            }
+        }
+    }
+    .el-input__prefix{
+        line-height: 35px;
+
+        
+        .el-icon-time{
+             line-height: 53px !important;
+        }
+    }
+}
+
+
 
 </style>
 

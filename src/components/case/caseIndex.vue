@@ -64,10 +64,10 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width="100" sortable></el-table-column>
+                    <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column  label="案件类别" width="">
+                      <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
                                 {{scope.row.Category_Name}}一{{scope.row.Value}}
@@ -77,13 +77,15 @@
                        <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
                           <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
-                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
+                                    <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
+                                    <p v-else>{{scope.row.Contract_Date_From | getTime}}</p>
+                                    
                                 </template>
                             
                              </el-table-column>
                              <el-table-column  label="立案日期" width="100" sortable>
                                 <template slot-scope="scope" >
-                                    <p  v-if="!scope.row.Filing_Date">暂无</p>
+                                    <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
                                 </template>
                                
@@ -332,7 +334,7 @@ import empower from './caseEmpower'
 
         var statusValue;
           if(this.value == '' || this.value == null){
-                statusValue = -2;
+                statusValue = -3;
           }else{
              statusValue = this.value
           }

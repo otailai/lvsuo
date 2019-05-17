@@ -58,38 +58,7 @@
             
        
           <div v-show="child_cur==1">
-           <div class="flex case-child" ></div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-              <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                      <el-table-column prop="name" label="申请日期" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同" width=""> 
-                                <template slot-scope="scope"> 
-                               <span style="color:red">
-                                 {{scope.row.name}}
-                               </span>
-                              </template>
-                          </el-table-column>
-                            
-                        <el-table-column  label="操作"> 
-                          <template  slot-scope="scope">
-                              <span @click="open2(scope.row.id)" style="cursor:pointer">错误</span>
-                            <span @click="open2(scope.row.id)" style="cursor:pointer">正确</span>
-                          </template>
-                        </el-table-column>
-                  </el-table>
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                </li>
-                </ul>
-            </div>
+            <auditingRisk></auditingRisk>
           </div>
         
           <div v-show="child_cur==2">
@@ -97,35 +66,7 @@
           </div>
           
             <div v-show="child_cur==3">
-                      <div class="flex case-child" ></div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-              <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="name" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="name" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="name" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="name" label="承办律师" width=""> </el-table-column>
-                        <el-table-column prop="name" label="合同起止日期" width="120"> </el-table-column>
-                         <el-table-column prop="name" label="立案日期" width=""> </el-table-column>
-                         
-                            
-                        <el-table-column  label="操作"> 
-                          <template  slot-scope="scope">
-                             
-                              <button @click="open2(scope.row.id)" style="cursor:pointer"  class="btn-caozuo">结案</button>
-                          </template>
-                        </el-table-column>
-                  </el-table>
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                </li>
-                </ul>
-            </div>
+              <auditingCloseCase></auditingCloseCase>
           </div>
         </el-tab-pane>
       
@@ -138,6 +79,8 @@
 import store from '../../vuex/store'
 import caseAditing from './caseAuditing'
 import financialAuditing from './financialAuditing'
+import auditingRisk from './auditingRisk'
+import auditingCloseCase from './auditingCloseCase'
   export default {
     data() {
       return {
@@ -151,95 +94,14 @@ import financialAuditing from './financialAuditing'
         ],
         arr1:[{title:'我的客户'},{title:'事务所客户'}],
         activeName: 'name0',
-       currentPage4: 4,
+        currentPage4: 1,
         index:0,
-          cur:0,
+        cur:0,
+        tableData:[{name:'123'}]
         
-         input23: '',
-          tableData: [{
-          id:1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '不立案'
-        }],
-         options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        gridData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        value: '',
-        pickerOptions2: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
-        value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value5: ''
+ 
+
+  
       
       };
     },
@@ -308,7 +170,9 @@ console.log(row, event, column)
     },
     components:{
       caseAditing,
-      financialAuditing
+      financialAuditing,
+      auditingRisk,
+      auditingCloseCase
     }
   };
 </script>

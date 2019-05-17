@@ -19,6 +19,7 @@ import mineEdit from './components/mine/mineEdit'
 import setDemo from './components/setting/setDemo'
 import caseWord from './components/case/caseWord'
 import caseUpdate from './components/case/caseUpdate'
+import auditingRisk from './components/auditing/auditingRisk'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},

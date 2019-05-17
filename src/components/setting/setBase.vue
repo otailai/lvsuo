@@ -12,31 +12,7 @@
                               <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
                              
                               <div v-show="child_cur==0" class="bar">
-                                                <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>添加类型</el-button></div>
-                                                </div>
-                                                <div class="showTab">
-                                                <ul class="showTab-ul">
-                                                <li class="showTab-li">
-                                                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="id" label="id" width="150"></el-table-column>
-                                                <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="power" label="power" width="430"> </el-table-column>
-                                                <el-table-column label="操作" width="150">
-                                                <template slot-scope="scope">
-                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo"> 删除</button>
-                                                </template>
-                                                </el-table-column>    
-                                            </el-table>
-                                            <div class="block flex">
-                                            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                            </el-pagination>
-                                            </div>
-                                            </li>
-                                            </ul>
-                                        </div>
+                                             <setBaseCaseType></setBaseCaseType>
                               </div>
                               <!-- cur = 1 -->
                                  <div v-show="child_cur==1" class="bar">
@@ -160,6 +136,7 @@
 </template>
 <script>
 import store from '../../vuex/store'
+import setBaseCaseType from './setBase/setBaseCaseType'
   export default {
     data() {
       return {
@@ -192,7 +169,7 @@ import store from '../../vuex/store'
       },
       handleCurrentChange(val) {
         console.log(val)
-        this.currentPage4 = val
+        this.currentPage = val
         this.getCaseList()
 
         console.log(`当前页: ${this.currentPage4}`);
@@ -240,7 +217,7 @@ import store from '../../vuex/store'
       
     },
     components:{
-      
+      setBaseCaseType
     },
    　filters:{
       getTime(time){

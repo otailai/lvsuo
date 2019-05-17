@@ -83,8 +83,8 @@
                 
                    <el-table-column  label="承办律师名称" width="120">
                       <template slot-scope="scope">
-                       <el-popover trigger="hover" placement="top">
-                         <el-tag type="success" v-for="(v,i) in laywerNameArr" :key="i">{{v}}</el-tag>
+                       <el-popover trigger="hover" placement="top" popper-class="back_color">
+                         <el-tag  v-for="(v,i) in laywerNameArr" :key="i">{{v}}</el-tag>
                           <div slot="reference" class="name-wrapper" @mouseover="showLaywer(scope.row.Id)">
                          <el-tag type="success"> <span> {{ scope.row.Staff_Name }}</span></el-tag>
                         </div>
@@ -95,8 +95,8 @@
                      
                        <el-table-column  label="分所" width="170" :show-overflow-tooltip="true">
                                  <template slot-scope="scope">
-                                <el-popover trigger="hover" placement="top">
-                                  <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}</p>
+                                <el-popover trigger="hover" placement="top" popper-class="back_color1">
+                                  <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}|</p>
                                   <div slot="reference" class="name-wrapper">
                                      <span  @mouseover="showBranches(scope.row.Id)"> {{ scope.row.Org_Name }}</span>
                                  </div>
@@ -361,7 +361,17 @@ var _this = this
   };
 </script>
 <style>
-@import '../../assets/sass/main.css'
+@import '../../assets/sass/main.css';
+.back_color{
+  background: #f0f0f0;
+}
+.back_color1{
+   background: #000000;
+   color:#ffffff;
+}
+.back_color1 p{
+  color:#ffffff;
+}
 </style>
 
 

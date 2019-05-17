@@ -16,26 +16,26 @@
                       </el-table-column>
                        <el-table-column  label="立案日期" width="110">
                           <template slot-scope="scope" >
-                                    <p  v-if="!scope.row.Filing_Date">暂无</p>
-                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p>
+                                    <p  v-if="!scope.row.Filing_Date" style="color:#ccc;">暂无</p>
+                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p> 
                                 </template>
                           </el-table-column>
                           <el-table-column prop="Status" label="案件状态" width=""> </el-table-column>
                              <el-table-column prop="Amount" label="合同金额" width=""> </el-table-column>
                                 <el-table-column prop="Charge_Amount" label="已收金额" width=""> </el-table-column>
                          
-                        <el-table-column  label="操作"> 
+                        <el-table-column  label="操作" width="130"> 
                           <template  slot-scope="scope">
                             <span class="btn-div">
                             <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button>
-                            <button @click="openDialog(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">收款</button>
+                            <button @click="openDialog(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer" class="btn-caozuo">收款</button>
 
                             </span>
                           </template>
                         </el-table-column>
                   </el-table>
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
                  :page-sizes="[5,10,15,20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
@@ -56,7 +56,40 @@
                   <template slot-scope="scope">
                         <span v-if="scope.row.State==1" style="color:red">未收款</span>
                         <span v-if="scope.row.State==2">已收款</span>
-                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.id)">确认收款</button>
+                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.Id,scope.row.Charging_Method)">确认收款</button>
+                  </template>
+                </el-table-column>
+               
+              </el-table>
+          </div>
+      </div>
+      <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定额收费</p></div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <div class="dialogFormVisivleFooter flex">
+        </div>
+      </div>
+      </el-dialog>
+
+  <el-dialog  :visible.sync="dialogFormVisible8"  :append-to-body='true'  top="300px" width="800px">
+      <div class="dialogFormVisible flex">
+         
+           <div class="dialogFormVisivleFile flex">
+             <el-table :data="makeCollectionsArr8">
+                <el-table-column property="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="Staff_Name" label="律师姓名" width=""></el-table-column>
+                <el-table-column property="Value" label="律师职务" width="" :show-overflow-tooltip="true"></el-table-column>
+                  <el-table-column  label="费率" width="" :show-overflow-tooltip="true">
+                    <template slot-scope="scope">
+                      {{scope.row.Rate}}RMB/h
+                    </template>
+                  </el-table-column>
+                <el-table-column  label="状态" width="200">
+                  <template slot-scope="scope">
+                        <span v-if="scope.row.State==1" style="color:red">未收款</span>
+                        <span v-if="scope.row.State==2">已收款</span>
+                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.Id,scope.row.Charging_Method)">确认收款</button>
                   </template>
                 </el-table-column>
                
@@ -64,7 +97,35 @@
           </div>
       </div>
    <div slot="title" class="dialog-title">
-        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定额收费</p></div>
+        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-定时收费</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    </div>
+  </div>
+</el-dialog>
+
+  <el-dialog  :visible.sync="dialogFormVisible10"  :append-to-body='true'  top="300px" width="800px">
+      <div class="dialogFormVisible flex">
+         
+           <div class="dialogFormVisivleFile flex">
+             <el-table :data="makeCollectionsArr10">
+                <el-table-column property="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column property="Risk_Achievement" label="风险达成条件" width=""></el-table-column>
+                  
+                <el-table-column  label="状态" width="200">
+                  <template slot-scope="scope">
+                        <span v-if="scope.row.State==1" style="color:red">未收款</span>
+                        <span v-if="scope.row.State==2">已收款</span>
+                        <button class="btn-ok"   v-if="scope.row.State==1" @click="getMonney(scope.row.Id,scope.row.Charging_Method)">确认收款</button>
+                  </template>
+                </el-table-column>
+               
+              </el-table>
+          </div>
+      </div>
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"> <p>收费方式-风险收费</p></div>
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
@@ -81,29 +142,76 @@ export default {
                 cur:0,
              
                 //当前页
-                currentPage4:1,
+                currentPage:1,
                 total:0,
                 pageNum:5,
                  // 财务审核
                 FinancialAuditArr:[],
                 dialogFormVisible:false,
+                dialogFormVisible8:false,
+                  dialogFormVisible10:false,
                 // 收款详情
-                makeCollectionsArr:[],
+                makeCollectionsArr:[],//定额
+                makeCollectionsArr8:[],//定时
+                makeCollectionsArr10:[],//风险
         }
     },
     inject:["reload"],
     methods:{
-        openDialog(id){
-        this.dialogFormVisible = true
-          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id}}).then((res)=>{
+        openDialog(id,Charging_Method){
+          if(Charging_Method  == 9){
+          this.dialogFormVisible = true
+          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
             console.log(res)
            this.makeCollectionsArr= res.data
-        })    
+          })    
+          }
+            if(Charging_Method  == 8){
+          this.dialogFormVisible8 = true
+          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
+            console.log(res)
+           this.makeCollectionsArr8= res.data
+          })    
+          }
+            if(Charging_Method  == 10){
+          this.dialogFormVisible10 = true
+          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
+            console.log(res)
+           this.makeCollectionsArr10= res.data
+          })    
+          }
+       
+      },
+      getMonney(id,Charging_Method){
+          this.$http.post('/yongxu/Toexamine/Upd_Confirm_Receipt',
+         
+          {Id:id,Charging_Method:Charging_Method,Auditor_Id:localStorage.getItem('userId')}).then((res)=>{
+            if(res.data == true){
+                  this.$message({
+                      message:'收款成功',
+                      type:'success'
+                  });
+                  this.dialogFormVisible = false
+                  this.dialogFormVisible8 = false
+                  this.dialogFormVisible10 = false
+                  this.getFinancialAudit()
+              }  else{
+                 
+                  this.$message({
+                      message:'收款失败',
+                      type:'warning'
+                  });
+              }
+          })
       },
       getFinancialAudit(){
-        this.$http.get('yongxu/Toexamine/Get_Financial_Audit').then((res)=>{
+        this.$http.get('yongxu/Toexamine/Get_Financial_Audit',{params:{
+          Display_Page_Number:this.pageNum,
+          PageNumber:this.currentPage
+        }}).then((res)=>{
           console.log(res)
-           this.FinancialAuditArr = res.data
+           this.FinancialAuditArr = res.data.Get_Financial_Audit
+           this.total = res.data.PageCount
 
         })    
       },
@@ -114,7 +222,7 @@ export default {
 
       },
       handleCurrentChange(val) {
-          this.currentPage4 = val
+          this.currentPage= val
           this.getFinancialAudit()
           console.log(`当前页: ${val}`);
       },

@@ -1,49 +1,39 @@
 <template>
     <div>
-          <div class="flex case-child" ></div>
+            <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="caseArr" border style="width: 100%"  @row-click="lineCilck">
+                 <el-table :data="closeCasekArr" border style="width: 100%"  @row-click="lineCilck">
+                      <el-table-column prop="Case_No" label="案件编号" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="Creattime" label="申请日期" width="">
-                        <template slot-scope="scope">
-                             <span>{{scope.row.Creattime | getTime}}</span>    
-                        </template>   
-                                               </el-table-column>
-                          <el-table-column prop="date" label="合同" width=""> 
-                                <template slot-scope="scope"> 
-                               <span style="color:red" @click="look(scope.row.Id)">
-                                 预览
-                               </span>
-                              </template>
-                          </el-table-column>
-                             <el-table-column  label="状态" width=""> 
-                                    <template slot-scope="scope"> 
-                                    <span v-if="scope.row.type == '0'" style="color:red;">
-                                        {{scope.row.Status}}
-                                  </span>
-                                  <span v-if="scope.row.type == '1'">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '2'">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '3'">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '4'">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '-2'" style="color:blue;cursor:pointer">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '-1'">{{scope.row.Status}}</span>
-                                  </template>
-                             </el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
+                     <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
+                      <el-table-column prop="staff_Name" label="承办律师" width=""> </el-table-column>
+                      <el-table-column  label="合同起止日期" width="" :show-overflow-tooltip="true"> 
+                           <template slot-scope="scope" >
+                                   
+                            <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
+                            <p v-else>{{scope.row.Contract_Date_From | getTime}}</p>
+                                </template>
+                             
+                      </el-table-column>
+                        <el-table-column  label="立案日期" width="" :show-overflow-tooltip="true"> 
+                           <template slot-scope="scope" >
+                                <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
+                            <p v-else>{{scope.row.Filing_Date | getTime}}</p>
+                                    
+                                </template>
+                      </el-table-column>
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span  @click="noPassCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="passCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                             <button  style="cursor:pointer" class="btn-caozuo" @click="closeCase(scope.row.Id)" >结案</button>
                           </template>
                         </el-table-column>
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[5,10,15,20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -56,7 +46,7 @@ export default {
     data(){
         return{
                 cur:0,
-                caseArr:[],
+                closeCasekArr:[],
                 //当前页
                 currentPage:1,
                 total:0,
@@ -65,25 +55,25 @@ export default {
     },
     inject:["reload"],
     methods:{
-         getCaseArr(){
-        this.$http.get('/yongxu/Toexamine/Get_Case_Audit',{params:{
-          Display_Page_Number:this.pageNum,
-          PageNumber:this.currentPage,
+         getCloseCasekArr(){
+        this.$http.get('/yongxu/windShow/junctionQuery',{params:{
+          branch:this.currentPage,
+          live:this.pageNum,
         }}).then((res)=>{
             console.log(res)
-            this.caseArr = res.data.Case_Audit
-            this.total = res.data.PageCount
+            this.closeCasekArr = res.data.table
+            this.total = res.data.keep
         })
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         this.pageNum = val
-         this.getCaseArr()
+         this.getCloseCasekArr()
 
       },
       handleCurrentChange(val) {
           this.currentPage = val
-          this.getCaseArr()
+          this.getCloseCasekArr()
           console.log(`当前页: ${val}`);
       },
      lineCilck(row, event, column){
@@ -131,10 +121,37 @@ export default {
                 return false
               }
           })
-      }
+      },
+      // 对话框,结案操作
+       closeCase(id) {
+        this.$confirm('此操作将此案件结案, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get('/yongxu/windShow/junctionCorrection',{params:{id:id,keep:3}}).then((res)=>{
+             if(res.data == 1){
+                this.$message({
+                  type: 'success',
+                  message: '结案操作成功!'
+                });
+             }else{
+                this.$message({
+                  type: 'warning',
+                  message: '操作失败!'
+                });
+             }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });
+      },
     },
     mounted(){
-        this.getCaseArr()
+        this.getCloseCasekArr()
     },
      filters:{
           getTime:function(time){

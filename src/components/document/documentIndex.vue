@@ -38,8 +38,18 @@
                     <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
                      <el-table-column prop="Postfix" label="文档类型" width=""> </el-table-column>
                       <el-table-column prop="Staff_Name" label="更新人员" width=""> </el-table-column>
-                       <el-table-column prop="Date _Created" label="创建日期" width="180"> </el-table-column>
-                          <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
+                       <el-table-column  label="创建日期" width="">
+                           <template slot-scope="scope">
+                              <p  v-if="!scope.row.Date_Created" style="color:#ccc">暂无</p>
+                            <p v-else>{{scope.row.Date_Created | getTime}}</p>
+                           </template>
+                          </el-table-column>
+                          <el-table-column  label="更新日期" width=""> 
+                                <template slot-scope="scope">
+                              <p  v-if="!scope.row.Update_Date" style="color:#ccc">暂无</p>
+                            <p v-else>{{scope.row.Update_Date | getTime}}</p>
+                           </template>
+                          </el-table-column>
                              <el-table-column prop="Size" label="文件大小" width=""> </el-table-column>
                         <el-table-column label="操作"> 
                               <template slot-scope="scope">   
@@ -368,6 +378,15 @@ console.log(row, event, column)
     mounted(){
       this.getChildMenu()
       this.getTableData()
+    },
+      filters:{
+          getTime:function(time){
+        if(time==''||time==null){
+            return time
+        }else{
+          return time.substring(0,10)
+        }
+          },
     },
     components:{
       
