@@ -675,14 +675,15 @@ export default {
             }).then((res)=>{
                  console.log(res)
                 if(res.data == true){
+                
                 this.$message({
-                    message:'添加成功',
+                    message:'更新成功',
                     type:'warning'
                 });
                 return false
                 }else{
                     this.$message({
-                    message:'添加失败',
+                    message:'更新失败',
                     type:'warning'
                 });
                 return false
@@ -690,6 +691,7 @@ export default {
                
             })
         },
+    
         /**验证提交表单 */
         checkData(){
              if(this.customValue==""||this.customValue==null){

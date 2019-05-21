@@ -205,7 +205,7 @@ var _this = this
         child:0,
         child_cur:0,
         arr:[],
-        arr1:[{title:'我的客户'},{title:'事务所客户'}],
+        arr1:[{title:'我的客户',url:'Customer/Show_My_Customers'},{title:'事务所客户',url:'Customer/Display_All_Customers'}],
         activeName: 'name0',
 
         index:0,
@@ -254,13 +254,25 @@ var _this = this
         // console.log(tab,event);
       },
       changeLi(i,v){
-          this.cur = i
-          this.title = v.title
-          console.log(v.title)
-          if(i==1){
-            this.getComponyList()
+        console.log(v)
+        return false
+          this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:v.url}}).then((res)=>{
+          console.log(res)
+          if(res.data == true){
+              this.cur = i
+              this.title = v.title
+              console.log(v.title)
+              if(i==1){
+                this.getComponyList()
+              }
+          }else{
+              this.$message({
+                message:'没有权限',
+                type:'warning'
+                }); 
+                return false
           }
-         
+        })   
       },
        handleSizeChange(val) {
         console.log(`每页 ${val} 条`);

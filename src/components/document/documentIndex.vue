@@ -246,7 +246,23 @@ console.log(row, event, column)
         this.child = 1
       },
       openNew(){
-        this.dialogFormVisible = true
+        this.common.checkAuth({params:{
+          userid:localStorage.getItem('userId'),
+          url:'Document/Add_Instrument'
+        }}).then((res)=>{
+            console.log(res)
+            if(res.data == true){
+              this.dialogFormVisible = true
+            }else{
+                this.$message({
+                message:'没有权限',
+                type:'warning'
+                }); 
+                return false
+            }
+         
+        })
+       
       },
       downLine(id){
         console.log(id)

@@ -22,23 +22,31 @@
               <li class="showTab-li">
         
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                      <el-table-column prop="name" label="员工编号" width=""> </el-table-column>
-                    <el-table-column prop="name" label="姓名" width=""></el-table-column>
-                    <el-table-column prop="name" label="职务" width=""> </el-table-column>
-                     <el-table-column prop="name" label="部门" width=""> </el-table-column>
-                       <el-table-column prop="name" label="分所" width=""> </el-table-column>
-                          <el-table-column prop="date" label="入职日期" width=""> </el-table-column>
-                        <el-table-column prop="address" label="状态"> </el-table-column>
+                   
+                    <el-table-column prop="Staff_Name" label="姓名" width=""></el-table-column>
+                    <el-table-column prop="Position_Name" label="职务" width=""> </el-table-column>
+                     <el-table-column prop="Org_Name" label="部门" width=""> </el-table-column>
+                          <el-table-column  label="入职日期" width=""> 
+                            <template slot-scope="scope">
+                              {{scope.row.Creattime | getTime}}
+                            </template>
+                          </el-table-column>
+                        <el-table-column  label="状态"> 
+                          <template slot-scope="scope">
+                            <p v-if="scope.row.Status == 1">在职</p>
+                             <p v-if="scope.row.Status == 2">离职</p>
+                          </template>
+                        </el-table-column>
                         <el-table-column  label="备注" width="160"> 
                             <template slot-scope="scope">
-                              <input type="text" :placeholder="scope.row.address" class="remarks-input" readonly="readonly">
+                              <input type="text" :placeholder="scope.row.Remarks" class="remarks-input" readonly="readonly">
                               </template>
                         </el-table-column>
 
                 </el-table>
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                 :page-sizes="[5, 10, 15, 20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                   </li>
@@ -118,53 +126,19 @@ import { fail } from 'assert';
       return {
         innerVisible:false,
         activeName: 'name0',
-       currentPage4: 4,
+        currentPage: 1,
+        total:0,
+        pageNum:5,
         index:0,
-          cur:0,
-          arr:[{title:'我的客户'},{title:'事务所客户'}],
-         input23: '',
-          tableData: [{
-          id:1,
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:2,
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:3,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '立案'
-        }, {
-           id:4,
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '立案'
-        }],
-         options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        cur:0,
+        arr:[{title:'我的客户'},{title:'事务所客户'}],
+        input23: '',
+        tableData: [],
         value: '',
         value5: '',
         dialogFormVisible:false,
         formLabelWidth:'',
-            form: {
+        form: {
           name: '',
           region: '',
           date1: '',
@@ -179,6 +153,16 @@ import { fail } from 'assert';
       };
     },
     methods: {
+      getList(){
+        this.$http.get('/yongxu/Install/Show_Organization',{params:{
+          Display_Page_Number:this.pageNum,
+          PageNumber:this.currentPage
+        }}).then((res)=>{
+          console.log(res)
+          this.tableData = res.data.Show_Organization
+          this.total = res.data.PageCount
+        })
+      },
       handleClick(tab, event) {
         this.child_cur = tab.index
         // console.log(tab.index)
@@ -202,20 +186,27 @@ import { fail } from 'assert';
     console.log(row, event, column)
     this.dialogFormVisible=true;
       },
-      getChildMenu(){
-        this.$http.get('/api/data').then((res)=>{
-        this.arr = res.data[3].children
-        })
-      },
+ 
       searchData(){
         this.child = 1
       }
     },
     mounted(){
-      this.getChildMenu()
+      this.getList()
     },
     components:{
       
+    },
+    filters:{
+       getTime:function(time){
+        if(time==''||time==null){
+            return time
+        }else{
+          return time.substring(0,10)
+        }
+         
+        
+      }
     }
   };
 </script>

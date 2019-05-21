@@ -1,153 +1,28 @@
  <template>
     <div id="case" class="case"> 
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-        
-           <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
-         
-            <div v-show="child_cur==0">
+           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
           
+            <div v-show="child_cur==0">
             <div class="flex case-child" >  
-           
               <div class="case-child-first flex">
-                <p  v-for="(v,i) in arr1" @click="changeLi(i)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
+                <p  v-for="(v,i) in arr1" @click="changeLi(i,v.url)" :key="i"  :class="{'isactive':cur === i}">{{v.title}}</p>
               </div>
-                
-                <div class="case-child-end flex">
-                    <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"  v-show="cur==0"/>
-                      <input placeholder="请输入关键词搜索"  v-model="SearchInput1" class="case-input" v-show="cur==1"/>                    
-                      <button class="case-button" @click="searchContent()"  v-show="cur==0"><i class="el-icon-search"></i></button>
-                      <button class="case-button" @click="searchContent1()"  v-show="cur==1"><i class="el-icon-search"></i></button>
-                    </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
-                </div>
-
             </div>
             <div class="showTab">
             <ul class="showTab-ul">
           
               <li class="showTab-li" v-show="cur==0">
-            
-              <div class="selectMenu flex">
-              <div class="case-type flex">
-                 <p>案件类型：</p>
-                  <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)">
-                    <el-option v-for="item in optionMenu" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
-                  </el-select>
+                    <caseAllList></caseAllList>
+              </li>
 
-                  <el-select v-model="Casevalue1" placeholder="请选择" style="margin-left: 10px;" @change="changeTowValue(Casevalue1)">
-                  <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
-                 </el-select>
-              </div>
+              <li class="showTab-li" v-show="cur==1">
+                  <casePart></casePart>
+               </li>
 
-               <div class="case-state flex">
-               <p>案件状态：</p> 
-               <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;" @change="changeStatus(value)"> 
-               <el-option v-for="item in options"  :key="item.value"  :label="item.label" :value="item.value"></el-option>
-               </el-select>
-               </div>          
-              <div class="case-time flex">
-               <p>起止时间：</p>
-                <el-date-picker
-                @change="changeTime"
-                v-model="dateValue"
-                type="datetimerange"
-                :picker-options="pickerOptions2"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right">
-                </el-date-picker>
-                </div>
-              
-                <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
-                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
-              </div>
-                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <span>
-                                {{scope.row.Category_Name}}一{{scope.row.Value}}
-                            </span>
-                        </template>
-                      </el-table-column>
-                       <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column  label="合同起止日期" width="120">
-                                <template slot-scope="scope">
-                                    <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
-                                    <p v-else>{{scope.row.Contract_Date_From | getTime}}</p>
-                                    
-                                </template>
-                            
-                             </el-table-column>
-                             <el-table-column  label="立案日期" width="100" sortable>
-                                <template slot-scope="scope" >
-                                    <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
-                                    <p v-else>{{scope.row.Filing_Date | getTime}}</p>
-                                </template>
-                               
-                                </el-table-column>
-                       
-                        <el-table-column  label="立案状态">
-                            <template slot-scope="scope">
-                                <p v-if="scope.row.type == -2" @click="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer">{{scope.row.Status}}</p>
-                                <p v-else> {{scope.row.Status}}</p>
-                            </template>
-                           </el-table-column>
-
-                            <el-table-column  label="操作">
-                            <template slot-scope="scope">
-                                <p v-if="scope.row.type == -2" @click="uploadData(scope.row.Id)" style="cursor:pointer">{{scope.row.Status}}</p>
-                                <p v-else> {{scope.row.Status}}</p>
-                            </template>
-                           </el-table-column>
-
-                </el-table>
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                   </el-pagination>
-                </div>
-                  </li>
-
-                  <li class="showTab-li" v-show="cur==1">
-                    <!-- <empower></empower> -->
-              <div class="selectMenu flex">
-                    <el-table :data="tableDataShouQuan" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width=""> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
-                          <el-table-column  label="合同起止日期" width="">
-                            
-                                <template slot-scope="scope">
-                                    <p>{{scope.row.Contract_Date_From | getTime}}</p>
-                                </template> 
-                             </el-table-column>
-                             <el-table-column  label="立案日期" width="">
-                                <template slot-scope="scope">
-                                    <p>{{scope.row.Creattime | getTime}}</p>
-                                </template>
-                                </el-table-column>
-                        <el-table-column  label="立案状态">
-                            <template slot-scope="scope">
-                                   <p> {{scope.row.Status}}</p>
-                            </template>
-                           </el-table-column>
-
-                </el-table>
-              </div>
-
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :current-page="currentPage1"
-                 :page-sizes="[5, 10, 15, 20]" :page-size="numPage1"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
-                   </el-pagination>
-                </div>
-                  </li>
+                <li class="showTab-li" v-show="cur==2">
+                  <caseMine></caseMine>
+               </li>
                 </ul>
             </div>
             </div>
@@ -194,6 +69,9 @@
 <script>
 import store from '../../vuex/store'
 import empower from './caseEmpower'
+import caseAllList from './caseChild/caseAllList'
+import casePart from './caseChild/casePart'
+import caseMine from './caseChild/caseMine'
   export default {
     data() {
       return {
@@ -214,10 +92,10 @@ import empower from './caseEmpower'
         currentPage4: 1,
         child:0,
         child_cur:0,
-        arr1:[{title:'所有案件'},{title:'授权案件'}],
+        arr1:[{title:'所有案件',url:'Index/Show_All_Cases'},{title:'部门案件',url:'Index/Show_Department_Case'},{title:'我的案件',url:'Index/Show_All_Case'}],
         activeName: 'name0',
         index:0,
-        cur:0,
+        cur:2,
         arr:[{title:'案件'},{title:'利益检索'}], 
          input23: '',
         
@@ -280,204 +158,43 @@ import empower from './caseEmpower'
     methods: {
       handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
       },
-      changeLi(i){
-          this.cur = i
+      changeLi(i,url){
+        this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
+          console.log(res)
+          if(res.data == true){
+              this.cur = i
+          }else{
+              this.$message({
+                message:'没有权限',
+                type:'warning'
+                }); 
+                return false
+          }
+        })  
       },
-       handleSizeChange(val) {
-         this.numPage = val
-         this.getCaseList()
-         console.log(`每页 ${ this.numPage} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(val)
-        this.currentPage4 = val
-        this.getCaseList()
-
-        console.log(`当前页: ${this.currentPage4}`);
-      },
-      toAdd(){
-        this.$router.push({path:'/index/caseAdd'})
-      },
-      lineCilck(row, event, column){
-           //console.log(row.Charging_Method)
-          this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
-           //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})
-           
-      },
+     getTwoMenu(){
+       this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:1}}).then((res)=>{
+         console.log(res)
+         this.arr = res.data
+       })
+     },
       searchData(){
         this.child = 1
-      },
-      changeTime(value){
-             console.log(value)
-             if(value==null){
-               this.start = '',
-               this.end = '',
-                this.getCaseList()
-                return 
-             }
-              let value1= value[0]
-              let value2= value[1]
-              var start = new Date(value1);  
-              var youWant1=start.getFullYear() + '-' + (start.getMonth() + 1) + '-' + start.getDate() + ' ' + start.getHours() + ':' + start.getMinutes() + ':' + start.getSeconds(); 
-              var end = new Date(value2);  
-              var youWant2=end.getFullYear() + '-' + (end.getMonth() + 1) + '-' + end.getDate() + ' ' + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds(); 
-              this.start = youWant1
-              this.end = youWant2
-              
-             this.getCaseList()
-      },
-      getCaseList(){ 
-
-        var statusValue;
-          if(this.value == '' || this.value == null){
-                statusValue = -3;
-          }else{
-             statusValue = this.value
-          }
-         var userId = localStorage.getItem('userId')
-        
-         this.$http.get('/yongxu/Index/DisplayCase',{params:{
-           sessionId:localStorage.getItem('sessionId'),
-           UserId:userId,
-           Dic_Id:this.Casevalue2,
-           Status:statusValue,
-           MaxTime:this.end,
-           MinTime:this.start,
-           VagueName:this.SearchInput,
-           Display_Page_Number:this.numPage,
-           PageNumber:this.currentPage4,
-         }}).then((res)=>{
-           console.log(res)
-           this.tableData = res.data.GetCase
-           this.tableData1 = res.data
-           this.total = res.data.PageCount
-            console.log(res.data)
-        }).catch((err)=>{
-          console.log(err)
-        })
-      },
-      updateData(id,type_id){
-        console.log('123456')
-        this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-      },
-      getTableDataShouQuan(){
-        //localStorage.getItem('userId')
-
-        this.$http.get('/yongxu/Index/Authorized_Case',{params:{User_Id:localStorage.getItem('userId'),Name:this.SearchInput1,Display_Page_Number:this.numPage1,PageNumber:this.currentPage1}}).then((res)=>{
-            console.log(res)
-           this.tableDataShouQuan=res.data.Get_Authorized
-           this.total1 = res.data.PageCount
-        })
-      },
-      handleSizeChange1(val) {
-         this.numPage1 = val
-         this.getTableDataShouQuan()
-         console.log(`每页 ${ this.numPage1} 条`);
-      },
-      handleCurrentChange1(val) {
-        console.log(val)
-        this.currentPage1 = val
-        this.getCaseList()
-
-        console.log(`当前页: ${this.currentPage1}`);
-      },
-
-      getSelectMenu(){
-         this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
-           this.optionMenu = res.data
-        })
-      },
-       getSelectChildeMenu(id){ 
-         this.optionChildMenu = ''
-         this.Casevalue1 =''
-         console.log(id)
-         this.selectOneId = id
-         this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          console.log(res)
-          this.optionChildMenu = res.data  
-          this.Casevalue1 =res.data[0].Id
-           //this.Casevalue1 = res.data
-        })
-      },
-      changeTowValue(id){
-        console.log(id)
-         this.Casevalue2 = id
-         this.getCaseList()
-      },
-      changeStatus(id){
-        console.log(id)
-         this.statusValue = id
-         this.getCaseList()
-      },
-      searchContent(){
-        console.log('123465')
-       this.getCaseList()
-      },
-      //授权案件查询
-      searchContent1(){
-        this.getTableDataShouQuan()
-      },
-      exportData(){
-        console.log(JSON.stringify(this.tableData))
-         var qs = require('qs');
-      
-        var param = new URLSearchParams()
-        param.append('table',JSON.stringify(this.tableData))
-       
-       this.$http.post('/yongxu/Index/export',param).then((res)=>{
-            console.log(res)
-        })
-      },
-      downExcel() {
-      const th = ['案件编号', '案件名称', '客户名称', '案件类别','承办律师','合同起止日期','立案日期','立案状态']
-      const filterVal = ['Case_No', 'Case_Name', 'Customer_Name_Zh','Value','Case_Lawyer_Name','Contract_Date_From','Creattime','Status']
-      const data = this.tableData.map(v => filterVal.map(k => v[k]))
-      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
-      this.$toExcel({th, data, fileName, fileType, sheetName})
       }
-
     },
     mounted(){
-      this.getCaseList()
-      this.getSelectMenu()
-      this.getTableDataShouQuan()
+      this.getTwoMenu()
     },
     components:{
-      JsonExcel:'downloadExcel',
-      empower
+      caseAllList,
+      caseMine,
+      casePart
     },
-   　filters:{
-      getStatus:function(Status){
-          if(Status == 1){
-              return '启用'
-          }else{
-               return '禁用'
-          }　
-　　　　},
-     
-     getTime:function(time){
-        if(time==''||time==null){
-            return time
-        }else{
-          return time.substring(0,10)
-        }
-         
-        
-      }
-　　　　},
-  watch:{
-    Casevalue1:function(newV,oldV){
-        this.changeTowValue(newV)
-    }
-  }
   };
 </script>
 <style>
-@import '../../assets/sass/main.css'
+@import '../../assets/sass/main.css';
 </style>
 
 

@@ -31,7 +31,7 @@
 
 <div class="topMenu-nav">
     <ul class="flex">
-            <router-link :to="v.Item_Path" class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
+            <router-link :to="'/index/'+v.Item_Path" class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
             <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
             <p>{{v.Item_Name}}</p>
             </router-link>
@@ -43,7 +43,7 @@
                 <el-popover ref="popover2" placement="bottom-end" trigger="click">
                     <div>
                       <ul class="flex">
-                          <router-link v-for="(v,i) in arr1"    :to="v.Item_Path" tag="li" :key="i" style="margin-left:20px;" class="setting flex" >
+                          <router-link v-for="(v,i) in arr1"    :to="'/'+v.Item_Path" tag="li" :key="i" style="margin-left:20px;" class="setting flex" >
                               <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
                               <p>{{v.Item_Name}}</p>
                          </router-link>
@@ -62,18 +62,20 @@
 export default {
     data(){
         return{
-            arr:[{Item_Name:'案件',Item_Path:'/index/caseIndex',Icon:'icon-anjian'},
-            {Item_Name:'客户',Item_Path:'/index/customerIndex',Icon:'icon-kehu'},
-            {Item_Name:'文书',Item_Path:'/index/documentIndex',Icon:'icon-weimingming'},
-            {Item_Name:'审核',Item_Path:'/index/auditingIndex',Icon:'icon-bumenzhinenggongzuoshenhe'},
-            {Item_Name:'统计',Item_Path:'/index/countIndex',Icon:'icon-tongji'},
-            // {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}
-            ],
-            arr1:[{Item_Name:'合同模板',Item_Path:'/index/setContract',Icon:'icon-anjian'},
-            {Item_Name:'组织架构',Item_Path:'/index/setIndex',Icon:'icon-kehu'},
-            {Item_Name:'权限管理',Item_Path:'/index/setPower',Icon:'icon-weimingming'},
-            {Item_Name:'基础数据',Item_Path:'/index/setBase',Icon:'icon-bumenzhinenggongzuoshenhe'},
-            ],
+            // arr:[{Item_Name:'案件',Item_Path:'/index/caseIndex',Icon:'icon-anjian'},
+            // {Item_Name:'客户',Item_Path:'/index/customerIndex',Icon:'icon-kehu'},
+            // {Item_Name:'文书',Item_Path:'/index/documentIndex',Icon:'icon-weimingming'},
+            // {Item_Name:'审核',Item_Path:'/index/auditingIndex',Icon:'icon-bumenzhinenggongzuoshenhe'},
+            // {Item_Name:'统计',Item_Path:'/index/countIndex',Icon:'icon-tongji'},
+            // // {Item_Name:'设置',Item_Path:'/index/auditingIndex',Icon:'icon-icon_set_up'}
+            // ],
+            arr:[],
+            // arr1:[{Item_Name:'合同模板',Item_Path:'/index/setContract',Icon:'icon-anjian'},
+            // {Item_Name:'组织架构',Item_Path:'/index/setIndex',Icon:'icon-kehu'},
+            // {Item_Name:'权限管理',Item_Path:'/index/setPower',Icon:'icon-weimingming'},
+            // {Item_Name:'基础数据',Item_Path:'/index/setBase',Icon:'icon-bumenzhinenggongzuoshenhe'},
+            // ],
+            arr1:[],
             cur:0,
         }
     },
@@ -89,9 +91,15 @@ export default {
             this.$router.push('/')
         },
         getTopMenu(){
-            this.$http.get('/myTest/getMenu').then((res)=>{
+            this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                 console.log(res)
-                 this.arr = res.data.message
+                this.arr = res.data
+            })
+        },
+        getSetTopMenu(){
+              this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:6}}).then((res)=>{
+                console.log(res)
+                this.arr1 = res.data
             })
         },
          goTONew(menu){
@@ -105,7 +113,8 @@ export default {
        
     },
     mounted(){
-        // this.getTopMenu()
+        this.getTopMenu()
+        this.getSetTopMenu()
     }
 }
 </script>

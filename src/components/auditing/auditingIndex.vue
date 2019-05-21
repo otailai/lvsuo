@@ -10,50 +10,11 @@
                   <p v-if="child_cur==3">风结案审核</p>
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-           <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
          
             <div v-show="child_cur==0">
               <caseAditing></caseAditing>
-            <!-- <div class="flex case-child" ></div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-              <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="caseArr" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                       <el-table-column prop="Creattime" label="申请日期" width=""> </el-table-column>
-                          <el-table-column prop="date" label="合同" width=""> 
-                                <template slot-scope="scope"> 
-                               <span style="color:red" @click="look(scope.row.Id)">
-                                 预览
-                               </span>
-                              </template>
-                          </el-table-column>
-                             <el-table-column  label="状态" width=""> 
-                                    <template slot-scope="scope"> 
-                                    <span v-if="scope.row.address == '立案'" style="color:red">
-                                    {{scope.row.address}}
-                                  </span>
-                                  <span v-else style="color:blue">{{scope.row.Status}}</span>
-                                  </template>
-                             </el-table-column>
-                        <el-table-column  label="操作"> 
-                          <template  slot-scope="scope">
-                              <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="open2(scope.row.id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
-                          </template>
-                        </el-table-column>
-                  </el-table>
-                 <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                 :page-sizes="[100, 200, 300, 400]" :page-size="100"  layout="total, sizes, prev, pager, next, jumper" :total="400">
-                   </el-pagination>
-                </div>
-                </li>
-                </ul>
-            </div> -->
+        
             </div>
             
        
@@ -90,9 +51,9 @@ import auditingCloseCase from './auditingCloseCase'
         child:0,
         child_cur:0,
         arr:[
-            {"id":"9","title":"案件审核"}, {"id":"10","title":"风控审核"}, {"id":"11","title":"财务审核"}, {"id":"12","title":"结案审核"}
+           
         ],
-        arr1:[{title:'我的客户'},{title:'事务所客户'}],
+        
         activeName: 'name0',
         currentPage4: 1,
         index:0,
@@ -128,8 +89,10 @@ import auditingCloseCase from './auditingCloseCase'
 console.log(row, event, column)
       },
     getChildMenu(){
-        this.$http.get('/api/data').then((res)=>{
-        this.arr = res.data[3].children
+        this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
+          Menu_Id:4
+        }}).then((res)=>{
+          this.arr = res.data
         })
       },
       searchData(){
@@ -157,7 +120,7 @@ console.log(row, event, column)
       
     },
     mounted(){
-
+      this.getChildMenu()
     },
     filters:{
           getTime:function(time){

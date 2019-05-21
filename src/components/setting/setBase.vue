@@ -15,117 +15,21 @@
                                              <setBaseCaseType></setBaseCaseType>
                               </div>
                               <!-- cur = 1 -->
-                                 <div v-show="child_cur==1" class="bar">
-                                                <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button></div>
-                                                </div>
-                                                <div class="showTab">
-                                                <ul class="showTab-ul">
-                                                <li class="showTab-li">
-                                                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="id" label="id" width="150"></el-table-column>
-                                                <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="power" label="power" width="430"> </el-table-column>
-                                                <el-table-column label="操作" width="150">
-                                                <template slot-scope="scope">
-                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo"> 删除</button>
-                                                </template>
-                                                </el-table-column>    
-                                            </el-table>
-                                            <div class="block flex">
-                                            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                            </el-pagination>
-                                            </div>
-                                            </li>
-                                            </ul>
-                                        </div>
+                              <div v-show="child_cur==1" class="bar">
+                                   <customeCaseType> </customeCaseType>
                               </div>
                               <!-- cur = 2 -->
                                  <div v-show="child_cur==2" class="bar">
-                                                <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button></div>
-                                                </div>
-                                                <div class="showTab">
-                                                <ul class="showTab-ul">
-                                                <li class="showTab-li">
-                                                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="id" label="id" width="150"></el-table-column>
-                                                <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="power" label="power" width="430"> </el-table-column>
-                                                <el-table-column label="操作" width="150">
-                                                <template slot-scope="scope">
-                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo"> 删除</button>
-                                                </template>
-                                                </el-table-column>    
-                                            </el-table>
-                                            <div class="block flex">
-                                            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                            </el-pagination>
-                                            </div>
-                                            </li>
-                                            </ul>
-                                        </div>
+                                         <industryCaseType></industryCaseType>
                               </div>
                               <!-- cur =3 -->
 
                                  <div v-show="child_cur==3" class="bar">
-                                                <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button></div>
-                                                </div>
-                                                <div class="showTab">
-                                                <ul class="showTab-ul">
-                                                <li class="showTab-li">
-                                                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="id" label="id" width="150"></el-table-column>
-                                                <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="power" label="power" width="430"> </el-table-column>
-                                                <el-table-column label="操作" width="150">
-                                                <template slot-scope="scope">
-                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo"> 删除</button>
-                                                </template>
-                                                </el-table-column>    
-                                            </el-table>
-                                            <div class="block flex">
-                                            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                            </el-pagination>
-                                            </div>
-                                            </li>
-                                            </ul>
-                                        </div>
+                                         <causesCase></causesCase>
                               </div>
                               <!-- cur =4 -->
                                  <div v-show="child_cur==4" class="bar">
-                                                <div class="case-child-end1 flex">
-                                                <div> <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button></div>
-                                                </div>
-                                                <div class="showTab">
-                                                <ul class="showTab-ul">
-                                                <li class="showTab-li">
-                                                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="id" label="id" width="150"></el-table-column>
-                                                <el-table-column prop="name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="power" label="power" width="430"> </el-table-column>
-                                                <el-table-column label="操作" width="150">
-                                                <template slot-scope="scope">
-                                                <button @click="editInfo(scope.row.id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo"> 删除</button>
-                                                </template>
-                                                </el-table-column>    
-                                            </el-table>
-                                            <div class="block flex">
-                                            <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                            </el-pagination>
-                                            </div>
-                                            </li>
-                                            </ul>
-                                        </div>
+                                            <jobCase></jobCase>
                               </div>
                               </el-tab-pane>
                             </el-tabs>  
@@ -137,6 +41,10 @@
 <script>
 import store from '../../vuex/store'
 import setBaseCaseType from './setBase/setBaseCaseType'
+import customeCaseType from './setBase/customeCaseType'
+import industryCaseType from './setBase/industryCaseType'
+import causesCase from './setBase/causesCase'
+import jobCase from './setBase/jobCase'
   export default {
     data() {
       return {
@@ -217,7 +125,11 @@ import setBaseCaseType from './setBase/setBaseCaseType'
       
     },
     components:{
-      setBaseCaseType
+      setBaseCaseType,
+      customeCaseType,
+      industryCaseType,
+      causesCase,
+      jobCase
     },
    　filters:{
       getTime(time){
