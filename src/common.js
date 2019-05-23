@@ -4,7 +4,7 @@ Vue.prototype.$http = axios
 const httpUrl = '/yongxu/Base/getUserJudge'
 function checkAuth (params) {
     return new Promise((resolve, reject) => {
-        axios.get(this.httpUrl, params).then(
+        axios.get(this.httpUrl,params).then(
           (res) => {
             resolve(res)
           },

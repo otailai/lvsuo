@@ -52,12 +52,17 @@
                            <p class="check_name">权限</p>
                            <div class="check_box flex column">
                               <el-tree
+                                     ref="tree"
                                     :data="data"
                                     show-checkbox
                                     node-key="id"
                                     :default-expanded-keys="[2, 3]"
                                     :default-checked-keys="[5]"
-                                    :props="defaultProps">
+                                    :props="defaultProps"
+                                    @check-change="handleCheckChange"
+                                    >
+                                    
+                                 
                                 </el-tree>
 
                                  
@@ -155,6 +160,10 @@ import store from '../../vuex/store'
 
     },
     methods: {
+     handleCheckChange(data, checked,indeterminate ) {
+        console.log(indeterminate);
+      },
+
        handleSizeChange(val) {
          this.numPage = val
          this.getPowerList()

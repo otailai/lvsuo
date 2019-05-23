@@ -246,7 +246,7 @@
       <el-dialog  :visible.sync="dialogFormVisibleUpdate" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
-              <p>文档名称gengxin</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
+              <p>文档名称(更新)</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
