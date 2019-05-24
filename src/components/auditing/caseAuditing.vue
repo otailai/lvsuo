@@ -43,7 +43,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[5,10,15,20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,13]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -60,7 +60,7 @@ export default {
                 //当前页
                 currentPage:1,
                 total:0,
-                pageNum:5,
+                pageNum:10,
         }
     },
     inject:["reload"],
@@ -91,12 +91,18 @@ export default {
       },
       noPassCase(id,type){
           if(type != 0){
-               this.$message({
-                    message:'操作失败，此案件状态不需操作',
-                    type:'warning'
-                });
+
+            this.$message({
+                 message:'操作失败，此案件状态不需操作',
+                 type:'warning'
+             });
             return false
           }
+          this.$confirm('此操作将使此案件不通过, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
            this.$http.get('/yongxu/Toexamine/Upd_Case_Auditfail',{params:{
                  User_Id:localStorage.getItem('userId'),
                  Id:id,
@@ -109,6 +115,13 @@ export default {
                 return false
               }
           })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });
+          
       },
       passCase(id,type){
           if(type != 0){
@@ -118,7 +131,12 @@ export default {
                 });
             return false
           }
-          this.$http.get('/yongxu/Toexamine/Upd_Case_Aubitadopt',{params:{
+           this.$confirm('此操作将使此案件通过, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$http.get('/yongxu/Toexamine/Upd_Case_Aubitadopt',{params:{
                  User_Id:localStorage.getItem('userId'),
                  Id:id,
           }}).then((res)=>{
@@ -130,7 +148,14 @@ export default {
                 this.reload()
                 return false
               }
-          })
+          }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });          
+        });
+        })
+        
       }
     },
     mounted(){

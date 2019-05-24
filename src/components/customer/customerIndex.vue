@@ -255,7 +255,6 @@ var _this = this
       },
       changeLi(i,v){
         console.log(v)
-        return false
           this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:v.url}}).then((res)=>{
           console.log(res)
           if(res.data == true){
@@ -350,6 +349,13 @@ var _this = this
 
       },
       searchContent(){
+        // if(){
+        //   var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]") 
+        //   var rs = ""; 
+        //   for (var i = 0; i < value.length; i++) {
+        //   rs = rs+s.substr(i, 1).replace(pattern, ''); 
+        //   } 
+        // }
         this.getMyList();
       },
       searchContent1(){

@@ -20,6 +20,7 @@ import setDemo from './components/setting/setDemo'
 import caseWord from './components/case/caseWord'
 import caseUpdate from './components/case/caseUpdate'
 import auditingRisk from './components/auditing/auditingRisk'
+import caseSearch from './components/search/caseSearch'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
@@ -31,6 +32,7 @@ export default[
 {path:'/index/caseUpdate/:id/:typeId',component:caseUpdate,name:caseUpdate},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:caseEdit},
 {path:'/index/customerIndex',component:customerIndex,name:customerIndex},
+{path:'/index/search',component:caseSearch,name:caseSearch},
 {path:'/index/documentIndex',component:documentIndex,name:documentIndex},
 {path:'/index/auditingIndex',component:auditingIndex,name:auditingIndex},
 {path:'/index/countIndex',component:countIndex,name:countIndex},

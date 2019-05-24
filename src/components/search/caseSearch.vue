@@ -1,90 +1,42 @@
  <template>
     <div id="case" class="case"> 
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+        <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+                 
+            <!-- <div class="flex case-child2" v-show="child==0">
           
-            <div v-show="child_cur==0">
-            <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
+                    <div class="input-search flex">
+                      <i class="el-icon-search"></i>
+                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
+                    </div>
           
-              <li class="showTab-li">
-                    <caseAllList></caseAllList>
-              </li>
+              <div class="btn-searchData"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
+            </div> -->
 
-                </ul>
-            </div>
-            </div>
-            
-       
-          <div v-show="child_cur==1">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-          
-             
-
-              <li class="showTab-li">
-                  <casePart></casePart>
-               </li>
-
-                </ul>
-            </div>
+            <div class="flex case-child3">
+                  <div class="search-div flex">
+                    <div class="input-search flex">
+                      <i class="el-icon-search ii"></i>
+                     <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
+                      <button class="case-button"><i class="el-icon-search"></i></button>
+                    </div>  
+                  </div>               
+                      <div class="search-table">
+                         <div class="showNum">共检测到：{{total}}条结果</div>
+                      <el-table :data="tableData" border style="width: 100%"  @row-click="1">
+                      <el-table-column prop="date" label="日期" width="180"></el-table-column>
+                      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
+                      <el-table-column prop="address" label="地址"> </el-table-column>
+                      </el-table>
+                    </div>
+           
           </div>
-        
-
-         <div v-show="child_cur==2">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <caseMine></caseMine>
-               </li>
-                </ul>
-            </div>
-          </div>
-
-
-           <div v-show="child_cur==3">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <caseMine></caseMine>
-               </li>
-                </ul>
-            </div>
-          </div>
-
-           <div v-show="child_cur==4">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <caseMine></caseMine>
-               </li>
-                </ul>
-            </div>
-          </div>
-        </el-tab-pane>
-      
-        <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
-                
+        </el-tab-pane>    
         </el-tabs> 
     </div>
-
 </template>
 <script>
 import store from '../../vuex/store'
-import empower from './caseEmpower'
-import caseAllList from './caseChild/caseAllList'
-import casePart from './caseChild/casePart'
-import caseMine from './caseChild/caseMine' 
   export default {
     data() {
       return {
@@ -109,7 +61,7 @@ import caseMine from './caseChild/caseMine'
         activeName: 'name0',
         index:0,
         cur:2,
-        arr:[{Item_Name:'所有案件'},{Item_Name:'分所案件'},{Item_Name:'部门案件'},{Item_Name:'我的案件'},{Item_Name:'授权案件'}], 
+        arr:[{title:'案件'},{title:'利益检索'}], 
          input23: '',
         
         tableData: [],
@@ -188,8 +140,8 @@ import caseMine from './caseChild/caseMine'
       },
      getTwoMenu(){
        this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:1}}).then((res)=>{
-        //  console.log(res)
-        //  this.arr = res.data
+         console.log(res)
+         this.arr = res.data
        })
      },
       searchData(){
@@ -200,9 +152,7 @@ import caseMine from './caseChild/caseMine'
       this.getTwoMenu()
     },
     components:{
-      caseAllList,
-      caseMine,
-      casePart
+   
     },
   };
 </script>

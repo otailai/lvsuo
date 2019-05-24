@@ -95,13 +95,13 @@ export default {
     methods:{
           handleSizeChange(val) {
          this.numPage = val
-         this.getBaseCaseTypeList()
+         this.getCustomeTypeList()
          console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
         console.log(val)
         this.currentPage = val
-        this.getBaseCaseTypeList()
+        this.getCustomeTypeList()
 
         console.log(`当前页: ${this.currentPage}`);
       },

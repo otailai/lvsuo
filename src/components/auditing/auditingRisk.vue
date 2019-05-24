@@ -23,8 +23,8 @@
                             
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span @click="open(scope.row.Id)" style="cursor:pointer">错误</span>
-                            <span @click="open1(scope.row.Id)" style="cursor:pointer">正确</span>
+                              <span @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
                           </template>
                         </el-table-column>
                   </el-table>
@@ -84,7 +84,12 @@ export default {
                 });
             return false
           }
-           this.$http.get('/yongxu/Toexamine/Upd_Case_Auditfail',{params:{
+          this.$confirm('此操作将使案件审核不通过, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$http.get('/yongxu/Toexamine/Upd_Case_Auditfail',{params:{
                  User_Id:localStorage.getItem('userId'),
                  Id:id,
           }}).then((res)=>{
@@ -96,6 +101,13 @@ export default {
                 return false
               }
           })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+         
       },
       passCase(id,type){
           if(type != 0){
@@ -105,6 +117,11 @@ export default {
                 });
             return false
           }
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
           this.$http.get('/yongxu/Toexamine/Upd_Case_Aubitadopt',{params:{
                  User_Id:localStorage.getItem('userId'),
                  Id:id,
@@ -118,6 +135,13 @@ export default {
                 return false
               }
           })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+         
       },
       // 对话框,审核不通过
        open(id) {

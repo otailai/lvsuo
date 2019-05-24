@@ -3,24 +3,37 @@
      <button @click="getPdf()">下载pdf</button>
       <button @click="getDoc()">导出doc</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first">({{todayTime}}[1])穗金鹏民字第[2]号</div>
-        <p class="title11">民 事 委 托 代 理</p>
+        <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
+        <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">民 事 委 托 代 理</strong></p>
+        <p class="height" ></p>
+        <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">合</strong></p>
         <p class="height"></p>
-        <p class="height">合</p>
+        <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">同</strong></p>
         <p class="height"></p>
-        <p class="height">同</p>
-        <p class="height"></p>
-        <p class="height">书</p>
+        <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">书</strong></p>
         <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-        <div class="input1 flex">
-            <p class="input1-p">聘请方:</p><span class="input1-input" >{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span>
-        </div>
+        <!-- <div class="input1 flex" style="text-align: center;"> -->
+        <p style="width: 80%;
+    margin: auto;"><strong style="font-size: 14.0pt;
+    font-family: 仿宋_GB2312;
+    letter-spacing: .1pt;    width: 110px;
+    text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
+    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span></p>
+        <!-- </div> -->
          <div class="height"></div>
-         <div class="input1 flex">
-            <p class="input1-p">受聘聘方:</p><span class="input1-input">{{laywerName}}</span>
-        </div>
+                 <p style="width: 80%;
+    margin: auto;"><strong style="font-size: 14.0pt;
+    font-family: 仿宋_GB2312;
+    letter-spacing: .1pt;    width: 110px;
+    text-align: left;display:inline-block;color:#000000;">受聘聘方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
+    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{laywerName}}</span></p>
+         <!-- <div class="input1 flex" style="text-align: center;">
+            <p class="input1-p"><strong style="font-size: 14.0pt;
+    font-family: 仿宋_GB2312;
+    letter-spacing: .1pt;">受聘聘方:</strong></p><span class="input1-input" style="font-size: 14pt;font-family:仿宋_GB2312;">{{laywerName}}</span>
+        </div> -->
         <p class=MsoNormal align=right style='text-align:right;line-height:22.0pt;
             mso-line-height-rule:exactly'><span lang=EN-US style='font-size:14.0pt;
             font-family:仿宋_GB2312;letter-spacing:.1pt'></span></p>
@@ -183,6 +196,9 @@ body{
 .row{
     flex-direction: row
 }
+span{
+    color: #000000;
+}
 .flex1{
     display: flex;
     justify-content: space-between;
@@ -218,13 +234,15 @@ body{
     text-align: left;
 }
 .input1-input{
+    color: #000000;
     border:none;
     border-bottom: 2px solid #000;
-    flex: 1;
+    /* flex: 1; */
+    display: inline-block;
+    width: 515px;
     text-align: center;
     font-size: 22px;
     letter-spacing:8px;
-     
 }
 .MsoNormal{
     /* display: flex;
@@ -233,7 +251,9 @@ body{
 .row-span{
     min-width: 200px;
     display: inline-block;
-    font-size: 14pt; font-family: 仿宋_GB2312; letter-spacing: 0.1pt;
+    font-size: 14pt; 
+    font-family: 仿宋_GB2312; 
+    letter-spacing: 0.1pt;
 }
 .col-flex{
     display: flex;

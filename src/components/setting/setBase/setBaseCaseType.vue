@@ -257,10 +257,7 @@ export default {
         });
       },
       //修改案件类型
-        updataCaseType(id,type){
-          console.log(this.Id)
-          console.log(this.type)
-
+        updataCaseType(){
         if(this.update_name == '' || this.update_name == null){
              this.$message({
                 message:'分类名称不能为空',
