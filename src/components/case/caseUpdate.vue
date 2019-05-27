@@ -184,30 +184,13 @@
                  </div>  
                 <div class="flex  add-lawyer-index">
              
-                  <div class="flex">
-                        <p class="title">姓名</p>
-                         <p class="title">类型</p>
-                           <p class="input-icon"></p>
-                    </div>
-                    <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].Party_Name"/>
-                        <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyJob"/>   -->
-                         <el-select v-model="input1Arr[0].Party_Category"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
-                         <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
-                        </el-select>  
-                        <div class="input-icon"></div>
-                    </div>
-                      <div class="flex" v-for="(v,i) in PartyInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].Party_Name"/>
-                         <el-select v-model="input1Arr[i+1].Party_Category"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
-                         <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
-                        </el-select>  
-                        <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
-                    </div>
+                <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
+                    
+                     
                     </div>
                     </div>
                  </div>
-                    
+               
 
                  <div class="add-method flex">
                      <div class="add-method-index flex">
@@ -219,6 +202,9 @@
                      </div>
                      </div>
                      </div> 
+
+                   
+
 
                     <div class="add-Pay add-job" v-show="costId == 9">
                     <div class="add-Pay-index flex">
@@ -350,6 +336,18 @@
                     <div class="add-icon flex" @click="addNameJob()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
                  </div>
               </div>
+
+               <div class="add-method flex">
+                     <div class="add-method-index flex">
+                    <p>合同类型</p>
+                     <div class="select-input">
+                     <el-select v-model="Source_Contract" placeholder="请选择">
+                         <el-option v-for="item in fileTypeArr" :key="item.Id" :label="item.value" :value="item.Id"></el-option>
+                    </el-select>                           
+                     </div>
+                       <button class="shangchuan_btn" v-show="Source_Contract == 2" @click="picUpload()">上传</button> 
+                     </div>
+                     </div> 
                 
                 <div class="end-btn flex">
                     <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="updateAddAll()">提交审核</button>
@@ -359,6 +357,39 @@
                 </el-dialog>
              </div>
              
+               <!-- 对话框 -->
+     <el-dialog  :visible.sync="dialogFormVisible1" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+        <div class="dialogFormVisible flex">
+          <div class="dialogFormVisivleInput flex">
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
+          </div>
+           <div class="dialogFormVisivleFile flex">
+                  <el-upload
+                    class="upload-demo"
+                    drag
+                    action="/yongxu/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  </el-upload>
+          </div>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件添加</p>/<p>客户合同</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary"  @click="saveDoc()">保存</el-button> -->
+    </div>
+  </div>
+</el-dialog>
     </div>
 </template>
 <script>
@@ -508,6 +539,22 @@ export default {
             Customer_Type:'',//客户类型
             Case_Id:'',//案件Id
             newInputArr:{},
+            Service_Content:'',
+            fileTypeArr:[{value:'律所合同',Id:1},{value:'客户合同',Id:2}],
+            fileType:1,
+            Source_Contract:'',
+
+            code:'',
+            fileName:'',
+            nameData:{
+                 File_Name:'',
+            },
+            updateId:'',
+            File_Name:'',
+            fileName1:'',
+            Suffix_Name:'',
+            size:'',
+            dialogFormVisible1:false,
         }
           
         
@@ -594,7 +641,16 @@ export default {
             //   'caseWay':this.caseWay,
               'Case_Introduction':this.textarea,//案件详情
               'Laywer_Arr':this.inputArr,//律师数组
-              'Party_Arr':this.input1Arr,//当事人数组
+            //   'Party_Arr':this.input1Arr,//当事人数组
+                //服务内容
+                'Service_Content':this.Service_Content,
+                  'Source_Contract':this.Source_Contract,
+             //合同
+                'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
+
 
               "Charging_Method":this.costValue,//收费方式id
               'Time_Arr':this.nameJobArr//费率数组
@@ -622,13 +678,22 @@ export default {
               'Party_Name':this.oppositeParty,//对方当事人
               'Cause_Id':this.caseWhy,//案由Id
 
+    //服务内容
+                'Service_Content':this.Service_Content,
+                  'Source_Contract':this.Source_Contract,
+             //合同
+                 'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
+
             // 'caseValue':this.caseValue,
               'Case_Type':this.caseValue2,//二级案件类别
               'Case_Name':this.caseName,//案件名称
             //   'caseWay':this.caseWay,
               'Case_Introduction':this.textarea,//案件详情
               'Laywer_Arr':this.inputArr,//律师数组
-              'Party_Arr':this.input1Arr,//当事人数组
+            //   'Party_Arr':this.input1Arr,//当事人数组
 
               "Charging_Method":this.costValue,//收费方式id
               'Fixed_Arr':this.timeArr,//定额
@@ -653,6 +718,14 @@ export default {
               'Receiving_Organ':this.compony,//案件受理机关
               'Party_Name':this.oppositeParty,//对方当事人
               'Cause_Id':this.caseWhy,//案由Id
+                //服务内容
+                'Service_Content':this.Service_Content,
+                  'Source_Contract':this.Source_Contract,
+            //合同
+                 'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
 
             // 'caseValue':this.caseValue,
               'Case_Type':this.caseValue2,//二级案件类别
@@ -660,7 +733,7 @@ export default {
             //   'caseWay':this.caseWay,
               'Case_Introduction':this.textarea,//案件详情
               'Laywer_Arr':this.inputArr,//律师数组
-              'Party_Arr':this.input1Arr,//当事人数组
+            //   'Party_Arr':this.input1Arr,//当事人数组
 
               "Charging_Method":this.costValue,//收费方式id
               'Risk_Arr':this.riskArr, //风险
@@ -827,6 +900,19 @@ export default {
                 return false
             }
 
+               var nary=arr.sort();
+           
+            for(var i=0;i<arr.length;i++){
+                if (nary[i]==nary[i+1]){
+                  this.$message({
+                    message:'律师数据重复请重新选择',
+                    type:'warning'
+                    });
+                    return false
+                }
+            }
+
+
              var arrJob=[]
             for(var i in this.inputArr){
                 arrJob.push(this.inputArr[i].Case_Rule_Id)
@@ -852,29 +938,37 @@ export default {
                 return false
             }
             
-            var arrParty=[]
-            for(var i in this.input1Arr){
-                arrParty.push(this.input1Arr[i].Party_Name)
-            }
-            if (arrParty.indexOf('') != -1){
-                 this.$message({
-                    message:'当事人姓名不能为空',
+                //服务内容
+              if(this.Service_Content==""||this.Service_Content==null){
+                this.$message({
+                    message:'服务内容不能为空',
                     type:'warning'
                 });
                 return false
             }
+            // var arrParty=[]
+            // for(var i in this.input1Arr){
+            //     arrParty.push(this.input1Arr[i].Party_Name)
+            // }
+            // if (arrParty.indexOf('') != -1){
+            //      this.$message({
+            //         message:'当事人姓名不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
 
-            var arrPartyJob=[]
-            for(var i in this.input1Arr){
-                arrPartyJob.push(this.input1Arr[i].Party_Category)
-            }
-            if (arrPartyJob.indexOf('') != -1){
-                 this.$message({
-                    message:'请选择当事人类型',
-                    type:'warning'
-                });
-                return false
-            }
+            // var arrPartyJob=[]
+            // for(var i in this.input1Arr){
+            //     arrPartyJob.push(this.input1Arr[i].Party_Category)
+            // }
+            // if (arrPartyJob.indexOf('') != -1){
+            //      this.$message({
+            //         message:'请选择当事人类型',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
 
               if(this.costValue==""||this.costValue==null){
                 this.$message({
@@ -978,6 +1072,23 @@ export default {
                 return false
             }
         }
+
+           if(this.Source_Contract==""||this.Source_Contract==null){
+                this.$message({
+                    message:'请选择合同类型',
+                    type:'warning'
+                });
+                return false
+            }
+          if(this.Source_Contract==2){
+            if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+            }
                 return true
         },
         getAlreadyName(id,name){
@@ -1062,6 +1173,7 @@ export default {
               console.log(this.costId)
             console.log(this.cur)
         },
+      
         changeId(){
                   this.customId = 0
                   this.userNameE=''
@@ -1238,12 +1350,14 @@ export default {
                 this.introduce = caseInfo.Case_Introduction
                 this.textarea = caseInfo.Case_Introduction
                 this.Case_Id = caseInfo.Id
+                this.Service_Content = caseInfo.Service_Content
+                this.Source_Contract = caseInfo.Source_Contract
                 //受理机关
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.compony = caseInfo.Receiving_Organ
                 
-                this.Party_Name = caseInfo.Party_Name
-                this.oppositeParty = caseInfo.Party_Name
+                // this.Party_Name = caseInfo.Party_Name
+                // this.oppositeParty = caseInfo.Party_Name
 
                 this.Type_Id = caseInfo.Type_Id
                 this.caseValue = caseInfo.One_Type_Id
@@ -1263,13 +1377,13 @@ export default {
                 _self.userInfo = this.newInputArr.slice(1)
                  console.log(_self.userInfo)
                 //当事人信息
-                this.partyInfoArr = res.data.Get_Party
-                  for(var i in this.partyInfoArr){
-                    this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,Party_Name:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id,Party_Category:this.partyInfoArr[i].Party_Category_Id})
-                }
-                console.log(this.input1Arr)
-                 _self.PartyInfo = _self.input1Arr.slice(1)
-                 console.log(_self.PartyInfo)
+                // this.partyInfoArr = res.data.Get_Party
+                //   for(var i in this.partyInfoArr){
+                //     this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,Party_Name:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id,Party_Category:this.partyInfoArr[i].Party_Category_Id})
+                // }
+                // console.log(this.input1Arr)
+                //  _self.PartyInfo = _self.input1Arr.slice(1)
+                //  console.log(_self.PartyInfo)
                 //收费方式
                 this.way = res.data.Value
                 this.cur = res.data.Id
@@ -1332,7 +1446,92 @@ export default {
                 this.getSelectMenuTwo()
             })
         },
-
+     //文件上传
+    picUpload(){
+        this.dialogFormVisible1 = true
+        this.nameData.File_Name = ''
+        this.fileName = ''
+    },
+      //保存上传文件
+             //保存上传文件
+            saveDoc(){
+            if(this.fileName == ''|| this.fileName==null){
+               this.$message({
+                    message:'文档名称不允许为空',
+                    type:'warning'
+                });
+                return false  
+                }
+                  if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+                this.$http.post('/yongxu/Document/Add_Document',{
+                    User_Id: localStorage.getItem('userId'),
+                    Case_Id:this.Case_Id,
+                    File_Name:this.fileName,
+                    fileName:this.fileName1,
+                    size:this.size,
+                    Suffix_Name:this.Suffix_Name,
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data == true){
+                          this.$message({
+                        message:'保存成功',
+                        type:'success'
+                    });
+                     this.dialogFormVisible = false
+                    this.getTableData()
+                    }
+                    else{
+                           this.$message({
+                        message:'保存失败',
+                        type:'warning'
+                    });
+                    }
+                   
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+    //上传回调
+       //上传回调
+       successFile(res){
+            console.log(res)
+            if(res.code == 200){
+                    this.code = 200
+                    this.File_Name = res.File_Name
+                    this.Suffix_Name =res.Suffix_Name
+                    this.fileName1 = res.fileName
+                    this.size = res.size
+                    console.log(this.fileName1)
+                   this.$message({
+                    message:res.message,
+                    type:'success'
+                    });  
+                    this.dialogFormVisible1 = false
+            } 
+          },
+          errorFile(){
+              this.$message({
+                    message:'上传失败',
+                    type:'warning'
+                });  
+          },
+          progressFile(){
+           
+          },
+          beforeFile(file){
+            console.log(file.name)
+             var json = file.name.split(".")
+             var file_name =json[0];
+             this.fileName = file_name
+             this.nameData.File_Name = this.fileName
+            
+          },
 
     },
     created(){
@@ -1378,6 +1577,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/sass/caseAdd.scss';
+@import '../../assets/sass/main.css';
 .td-width{
     text-align: center;
     width:100px
@@ -1499,8 +1699,35 @@ export default {
         }
     }
 }
-
-
+.serve_content{
+        border: 1px solid #ccc;
+    margin-left: 7px;
+    margin-top: 10px;
+}
+.shangchuan_btn{
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #FFF;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #FFF;
+    background-color: #7E2C2E;
+    border-color: #7E2C2E;
+    margin-left: 43px;
+}
 
 </style>
 

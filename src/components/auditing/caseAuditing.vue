@@ -49,6 +49,11 @@
                 </li>
                 </ul>
             </div>
+              <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
+                          <iframe src='https://view.officeapps.live.com/op/view.aspx?src=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
+
+                          </iframe>
+              </el-dialog>
     </div>
 </template>
 <script>
@@ -61,6 +66,7 @@ export default {
                 currentPage:1,
                 total:0,
                 pageNum:10,
+                dialogFormVisibleWord:false,
         }
     },
     inject:["reload"],
@@ -122,6 +128,9 @@ export default {
           });          
         });
           
+      },
+      look(id){
+        this.dialogFormVisibleWord = true
       },
       passCase(id,type){
           if(type != 0){

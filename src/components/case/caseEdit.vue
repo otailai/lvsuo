@@ -81,22 +81,12 @@
                     </div>
                 <div class="add-lawyer  lex">
                 <div class="add-lawyer-title flex"> 
-                     <p class="add-userinfo-p">当事人信息</p>
+                     <p class="add-userinfo-p">服务内容</p>
                  </div>  
                 <div class="flex  add-lawyer-index">
-             
-                  <div class="flex">
-                        <p class="title">姓名</p>
-                         <p class="title">类别</p>
-                           <p class="input-icon"></p>
-                    </div>
-                    <div class="flex info" v-for="(v,i) in partyInfoArr" :key="i">
-                     <p class="p">{{v.Party_Name}}</p>
-                       <p class="p">{{v.Party_Category}}</p>
-                        <p class="input-icon"></p>
-                    </div>
-                    </div>
-                    </div>
+                        <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
+                </div>
+                </div>
                  </div>
                     
 
@@ -171,6 +161,17 @@
               
                  </div>
               </div>
+
+              <div class="add-method flex">
+                     <div class="add-method-index flex">
+                    <p>选择合同类型</p>
+                     <div class="select-input">
+                     <el-input v-model="Source_Contract" readonly="readonly"/>                   
+                    
+                     </div>
+                     </div>
+                     </div> 
+
              </div>
                 
                
@@ -340,6 +341,8 @@ export default {
             dialogFormVisibleWord:false,
             dataWord:{},
             zhubanlvshi:'',
+            Service_Content:'',
+            Source_Contract:'',
           
         }
     },
@@ -385,6 +388,13 @@ export default {
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
+                this.Service_Content = caseInfo.Service_Content
+                if(caseInfo.Source_Contract == 1){
+                        this.Source_Contract ='律所合同'
+                }else{
+                     this.Source_Contract ='客户合同'
+                }
+                
                 //案件律师信息
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
               
@@ -432,16 +442,12 @@ export default {
           progressFile(){
            
           },
-          beforeFile(){
-            if(this.fileName == ''|| this.fileName==null){
-               this.$message({
-                    message:'文档名称不允许为空',
-                    type:'warning'
-                });
-                return false  
-            }else{
-              this.nameData.File_Name = this.fileName
-            }
+         beforeFile(file){
+            console.log(file.name)
+             var json = file.name.split(".")
+             var file_name =json[0];
+             this.fileName = file_name
+             this.nameData.File_Name = this.fileName
           },
           getTableData(){
               console.log(this.Case_Id)
@@ -472,17 +478,17 @@ export default {
                 return false  
                 }
                 
-                let param  = new URLSearchParams()
-                  param.append('User_Id',localStorage.getItem('userId'))
-                  param.append('Case_Id',this.Case_Id)
-                  param.append('File_Name',this.File_Name)
-                  param.append('fileName',this.fileName1)
-                  param.append('size',this.size)
-                  param.append('Suffix_Name',this.Suffix_Name)
+                // let param  = new URLSearchParams()
+                //   param.append('User_Id',localStorage.getItem('userId'))
+                //   param.append('Case_Id',this.Case_Id)
+                //   param.append('File_Name',this.File_Name)
+                //   param.append('fileName',this.fileName1)
+                //   param.append('size',this.size)
+                //   param.append('Suffix_Name',this.Suffix_Name)
                 this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
-                    File_Name:this.File_Name,
+                    File_Name:this.fileName,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,

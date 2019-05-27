@@ -42,7 +42,7 @@
                 </div>
               
                 <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
-                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
+                <button class="dingzhi"><i class="el-icon-download"></i>顶置</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
@@ -241,23 +241,26 @@ export default {
       },
     // 打开添加
         toAdd(){
-        this.$router.push({path:'/index/caseAdd'})
+        this.$router.push({path:'/Index/caseAdd'})
       },
     //进入详情
        lineCilck(row, event, column){
            //console.log(row.Charging_Method)
-          this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+          this.$router.push({path:`/Index/caseEdit/${row.Id}/${row.Charging_Method}`})
            //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       //编辑操作
         updateData(id,type_id){
-         this.common.checkAuth({params:{url:'index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
+         this.common.checkAuth({params:{url:'Index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
+           console.log(res)
             if(res.data ==false){
              this.$message({
                 message:'没有权限',
                 type:'warning'
                 }); 
-             return false
+              this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
+
+            //  return false
           }else{
                //console.log('123456')
               this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
@@ -415,7 +418,7 @@ export default {
                 this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
-                    File_Name:this.File_Name,
+                    File_Name:this.fileName,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,

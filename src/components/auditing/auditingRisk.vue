@@ -21,10 +21,13 @@
                               </template>
                           </el-table-column>
                             
-                        <el-table-column  label="操作"> 
+                        <el-table-column  label="操作" width="180"> 
                           <template  slot-scope="scope">
-                              <span @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
                             <span @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                          
+                       
                           </template>
                         </el-table-column>
                   </el-table>
@@ -172,7 +175,7 @@ export default {
       },
          // 对话框,审核通过
        open1(id) {
-        this.$confirm('此操作将使风控审核不通过, 是否继续?', '提示', {
+        this.$confirm('此操作将通过风控审核, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

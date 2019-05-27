@@ -25,10 +25,13 @@
                                 <table style="width:100%">
                                     <thead>
                                         <th >客户名称</th>  
+                                           <th >联系方式</th>  
                                     </thead> 
                                     <tbody>
                                         <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
                                              <td>{{item.Customer_Name_Zh}}</td> 
+                                              <td>{{item.Contact_Party}}</td> 
+                                           
                                         </tr>
                                     </tbody>
                                 </table>
@@ -43,10 +46,10 @@
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first sselct">
                         
-                        <div class="flex"><p class="title">所属行业</p>
+                        <div class="flex" v-show="customValue==4"><p class="title">所属行业</p>
                   <el-select v-model="suoshuValue" placeholder="请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
-                        <div class="flex"><p class="title">职务</p>
+                        <div class="flex" v-show="customValue==4"><p class="title">职务</p>
                         <input type="text" class="common-input" placeholder="请输入" v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
@@ -145,6 +148,10 @@
                             @blur="blurInput()"
                              prefix-icon="el-icon-search"
                             > 
+                             <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+                                <template slot-scope="{ item }">
+                                    <p>姓名:{{ item.value }}</p><p>编号:{{ item.Staff_No }}</p>
+                                </template>
                             </el-autocomplete>
                         </el-popover>
 
@@ -164,8 +171,12 @@
                             placeholder="请输入内容"
                             @select="((item)=>handleSelect1(item,i))"
                              prefix-icon="el-icon-search"
-                              @blur="blurInput1(i)"
-                            > 
+                              @blur="blurInput1(i)"> 
+                            <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+                                <template slot-scope="{ item }">
+                                    <p>姓名:{{ item.value }}</p><p>编号:{{ item.Staff_No }}</p>
+                                </template>
+                           
                             </el-autocomplete>
                         </el-popover>
                         <el-select v-model="inputArr[i+1].laywerJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
@@ -179,13 +190,12 @@
                     </div>
 
               
-                <div class="add-lawyer  lex">
+                <!-- <div class="add-lawyer  lex">
                 <div class="add-lawyer-title flex"> 
                      <p class="add-userinfo-p">当事人信息</p>
                      <span @click="pushPartyInfo()"><i class="el-icon-circle-plus"></i> 其他当事人</span>
                  </div>  
                 <div class="flex  add-lawyer-index">
-             
                   <div class="flex">
                         <p class="title">姓名</p>
                          <p class="title">类型</p>
@@ -193,7 +203,7 @@
                     </div>
                     <div class="flex">
                         <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyName"/>
-                        <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyJob"/>   -->
+                    
                          <el-select v-model="input1Arr[0].partyJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
@@ -204,9 +214,21 @@
                          <el-select v-model="input1Arr[i+1].partyJob"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
-                        <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].partyJob"/>   -->
+                    
                         <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
                     </div>
+                    </div>
+                    </div>
+                 </div> -->
+                      <div class="add-lawyer  lex">
+                        <div class="add-lawyer-title flex"> 
+                            <p class="add-userinfo-p">服务内容</p>
+                        </div>  
+                     <div class="flex  add-lawyer-index">
+                
+                        <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
+                        
+                  
                     </div>
                     </div>
                  </div>
@@ -222,7 +244,6 @@
                      </div>
                      </div>
                      </div> 
-
                     <div class="add-Pay add-job" v-show="costId == 9">
                     <div class="add-Pay-index flex">
                    <div class="add-Pay-index-child">
@@ -298,8 +319,11 @@
                          @select="handleSelectNameArr"
                         @blur="blurInputNameArr()"
                          prefix-icon="el-icon-search"
-                      
                         > 
+                         <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+                                <template slot-scope="{ item }">
+                                    <p>姓名:{{ item.value }}</p><p>编号:{{ item.Staff_No }}</p>
+                                </template>
                         </el-autocomplete>
                     </el-popover>
 
@@ -340,6 +364,27 @@
                  </div>
               </div>
                 
+
+                
+
+                     <div class="add-method flex">
+                     <div class="add-method-index flex">
+                    <p>选择合同类型</p>
+                     <div class="select-input">
+                     <el-select v-model="fileType" placeholder="请选择" @change="changeCostWay(costValue)">
+                         <el-option v-for="item in fileTypeArr" :key="item.Id" :label="item.value" :value="item.Id"></el-option>
+                    </el-select>                           
+                     </div>
+                      <button class="shangchuan_btn" v-show="fileType == 2" @click="picUpload()">上传</button> 
+                     </div>
+                    
+                     </div> 
+
+
+
+                
+
+
                 <div class="end-btn flex">
                     <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
@@ -347,6 +392,39 @@
                         <caseWord :addData='addData'></caseWord>
                 </el-dialog>
              </div>
+               <!-- 对话框 -->
+     <el-dialog  :visible.sync="dialogFormVisible1" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+        <div class="dialogFormVisible flex">
+          <div class="dialogFormVisivleInput flex">
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
+          </div>
+           <div class="dialogFormVisivleFile flex">
+                  <el-upload
+                    class="upload-demo"
+                    drag
+                    action="/yongxu/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                  </el-upload>
+          </div>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件添加</p>/<p>客户合同</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary"  @click="saveDoc()">保存</el-button> -->
+    </div>
+  </div>
+</el-dialog>
              
     </div>
 </template>
@@ -491,7 +569,28 @@ export default {
                 name:'永旭',
                 laywerName:'广州金鹏律师事务所'
 
-            }
+            },
+            //服务内容
+            Service_Content:'',
+            //合同类型
+            fileTypeArr:[{value:'律所合同',Id:1},{value:'客户合同',Id:2}],
+            fileType:1,
+            //合同上传
+            dialogFormVisible1:false,
+           
+            Case_Id:'',
+            fileName:'',
+               nameData:{
+                File_Name:'',
+            },
+            File_Name:'',
+            code:'',
+            File_Name:'',
+            fileName1:'',
+            Suffix_Name:'',
+            size:'',
+            dialogFormVisible:false,
+            fileStatus:'',
         }
     },
           
@@ -502,7 +601,7 @@ export default {
         pushUserInfo(){
             this.userInfo.push(1)
             this.inputArr.push({laywerName:'',laywerJob:'',visible:false,laywerName1:'',Id:''})  
-            console.log(this.inputArr)
+            // console.log(this.inputArr)
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
@@ -528,9 +627,8 @@ export default {
            this.$router.push('/index/caseIndex')
         },
         addAll(){
-
             this.checkData()
-            console.log(this.checkData())
+            // console.log(this.checkData())
             if(this.checkData() == false){
                 return false
             }
@@ -559,6 +657,8 @@ export default {
               'compony':this.compony,
               'oppositePart':this.oppositeParty,
               'caseWhy':this.caseWhy,
+                    //服务内容
+                'Service_Content':this.Service_Content,
 
               'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
@@ -566,10 +666,16 @@ export default {
               'caseWay':this.caseWay,
               'textarea':this.textarea,
               'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
+            //   'partyArr':this.input1Arr,
+            //合同
+            'File_Name':this.File_Name,
+            'Suffix_Name':this.Suffix_Name,
+            'fileName':this.fileName1,
+            'size':this.size,
+            'Source_Contract':this.fileType,
 
-              "costValue":this.costValue,
-              'nameJobArr':this.nameJobArr
+            "costValue":this.costValue,
+            'nameJobArr':this.nameJobArr
               
                 }
           }
@@ -588,7 +694,8 @@ export default {
                 'tel':this.tel,
                'job':this.value2,
              
-             
+             //服务内容
+                'Service_Content':this.Service_Content,
              
                 'is':this.isValue,
                 'cardNo':this.cardNo,
@@ -605,8 +712,12 @@ export default {
 
 
               'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
-           
+            //   'partyArr':this.input1Arr,
+                'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
+                'Source_Contract':this.fileType,
                 "costValue":this.costValue,
                'timeArr':this.timeArr,
             }
@@ -624,12 +735,15 @@ export default {
               'suoshuhangye':this.suoshuValue,
               'job':this.value2,
 
+
+                    //服务内容
+                'Service_Content':this.Service_Content,
               'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
                 'oppositePart':this.oppositeParty,
                 'caseWhy':this.caseWhy,
-
+                'Source_Contract':this.fileType,
                 'caseValue':this.caseValue,
                 'caseValue2':this.caseValue2,
                 'caseName':this.caseName,
@@ -638,7 +752,11 @@ export default {
 
 
               'laywerArr':this.inputArr,
-              'partyArr':this.input1Arr,
+            //   'partyArr':this.input1Arr,
+                'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
 
               "costValue":this.costValue,
               'riskArr':this.riskArr, 
@@ -647,11 +765,11 @@ export default {
         addJson = JSON.stringify(addJson)
         console.log(addJson)
         //console.log(JSON.stringify(addJson))
-
+        //return false
         this.$http.post('/yongxu/Index/AddCases',{
                 map:addJson
             }).then((res)=>{
-                 console.log(res)
+                //  console.log(res)
                 if(res.data == true){
                 this.$message({
                     message:'添加成功',
@@ -794,7 +912,8 @@ export default {
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Id)
             }
-            console.log(arr)
+           
+            //console.log(arr)
             if (arr.indexOf('') != -1){
                  this.$message({
                     message:'请选择律师姓名',
@@ -802,6 +921,18 @@ export default {
                 });
                 return false
             }
+            var nary=arr.sort();
+           
+            for(var i=0;i<arr.length;i++){
+                if (nary[i]==nary[i+1]){
+                  this.$message({
+                    message:'律师数据重复请重新选择',
+                    type:'warning'
+                    });
+                    return false
+                }
+            }
+
 
              var arrJob=[]
             for(var i in this.inputArr){
@@ -828,29 +959,38 @@ export default {
                 return false
             }
             
-            var arrParty=[]
-            for(var i in this.input1Arr){
-                arrParty.push(this.input1Arr[i].partyName)
-            }
-            if (arrParty.indexOf('') != -1){
-                 this.$message({
-                    message:'当事人姓名不能为空',
+            //服务内容
+              if(this.Service_Content==""||this.Service_Content==null){
+                this.$message({
+                    message:'服务内容不能为空',
                     type:'warning'
                 });
                 return false
             }
+            
+            // var arrParty=[]
+            // for(var i in this.input1Arr){
+            //     arrParty.push(this.input1Arr[i].partyName)
+            // }
+            // if (arrParty.indexOf('') != -1){
+            //      this.$message({
+            //         message:'当事人姓名不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
 
-            var arrPartyJob=[]
-            for(var i in this.input1Arr){
-                arrPartyJob.push(this.input1Arr[i].partyJob)
-            }
-            if (arrPartyJob.indexOf('') != -1){
-                 this.$message({
-                    message:'请选择当事人类型',
-                    type:'warning'
-                });
-                return false
-            }
+            // var arrPartyJob=[]
+            // for(var i in this.input1Arr){
+            //     arrPartyJob.push(this.input1Arr[i].partyJob)
+            // }
+            // if (arrPartyJob.indexOf('') != -1){
+            //      this.$message({
+            //         message:'请选择当事人类型',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
 
               if(this.costValue==""||this.costValue==null){
                 this.$message({
@@ -952,6 +1092,23 @@ export default {
                 return false
             }
         }
+
+          if(this.fileType==""||this.fileType==null){
+                this.$message({
+                    message:'请选择合同类型',
+                    type:'warning'
+                });
+                return false
+            }
+          if(this.fileType==2){
+            if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+            }
                 return true
         },
         getAlreadyName(id,name){
@@ -975,7 +1132,7 @@ export default {
         /*获取已存在客户列表*/ 
         getCustomSelect(){
             this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
-              
+                console.log(res)
                 this.list = JSON.parse(JSON.stringify(res.data.Name))
             })
         },
@@ -1001,8 +1158,10 @@ export default {
                      this.costWay = res.data.AllCharging
                      /**获取律师数据 */
                      this.LawyerNameArr =res.data.Lawyer
+
                       for (let i = 0; i < this.LawyerNameArr.length; i += 1) {
                         this.LawyerNameArr[i].value =  this.LawyerNameArr[i].Staff_Name;      
+                        this.LawyerNameArr[i].Staff_No =  this.LawyerNameArr[i].Staff_No;      
                         }
                      
              })
@@ -1017,7 +1176,7 @@ export default {
        getSelectChildeMenu(id){
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         console.log(id)
+        //  console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           
@@ -1042,7 +1201,7 @@ export default {
 
         getCustomInfo(){
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.customId}}).then((res)=>{ 
-                 console.log(res)
+                //  console.log(res)
                   this.userNameE=res.data.Customer_Name_En
                   this.province=res.data.City
                   this.address = res.data.Detailed_Address
@@ -1051,9 +1210,18 @@ export default {
                   this.value2 = res.data.Position
                   this.customValue = res.data.CustomerId
                   this.cardNo =res.data.Customer_Number
-                 this.isValue=res.data.Identification
+                  this.isValue=res.data.Identification
         })
            
+        },
+        /**默认律师姓名 */
+        getInitName(){
+            this.$http.get('/yongxu/Index/Get_Lawyer_Default',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                // console.log(res)
+                this.inputArr[0].laywerName=res.data.Staff_Name
+                 this.inputArr[0].Id=res.data.Id
+                 this.inputArr[0].laywerJob = 18
+            })
         },
         /**改变客户类型 */
         changeCustomType(){
@@ -1070,7 +1238,7 @@ export default {
         },
       /**律师姓名下拉查询 */
       querySearch(queryString, cb) {
-          console.log(this.LawyerNameArr)
+        // console.log(this.LawyerNameArr)
         var restaurants =  this.LawyerNameArr
       
         // console.log(restaurants)
@@ -1090,17 +1258,17 @@ export default {
         this.inputArr[0].Id=item.Id        
         this.inputArr[0].visible=false
         //查找制定元素在数组中的索引值
-        console.log(this.LawyerNameArr)
-        var arr =[]
-        for(var i=0;i<this.LawyerNameArr.length;i++){
-            arr.push(this.LawyerNameArr[i].value)
-        }
+    //     console.log(this.LawyerNameArr)
+    //     var arr =[]
+    //     for(var i=0;i<this.LawyerNameArr.length;i++){
+    //         arr.push(this.LawyerNameArr[i].value)
+    //     }
         
-       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
-        console.log(this.LawyerNameArr);
-        console.log(item);
-        // const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
-        //console.log(res)
+    //    this.LawyerNameArr.splice(arr.indexOf(item.value),1)
+    //     console.log(this.LawyerNameArr);
+    //     console.log(item);
+    //     const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
+    //     console.log(res)
       },
       handleSelect1(item,i){
           console.log(i)
@@ -1108,13 +1276,13 @@ export default {
            this.inputArr[i+1].laywerName=item.value
            this.inputArr[i+1].Id=item.Id     
            this.inputArr[i+1].visible=false
-            var arr =[]
-        for(var i=0;i<this.LawyerNameArr.length;i++){
-            arr.push(this.LawyerNameArr[i].value)
-        }
+    //         var arr =[]
+    //     for(var i=0;i<this.LawyerNameArr.length;i++){
+    //         arr.push(this.LawyerNameArr[i].value)
+    //     }
         
-       this.LawyerNameArr.splice(arr.indexOf(item.value),1)
-        console.log(this.LawyerNameArr);
+    //    this.LawyerNameArr.splice(arr.indexOf(item.value),1)
+    //     console.log(this.LawyerNameArr);
       },
       blurInput(){
          this.inputArr[0].laywerName1 = ''
@@ -1124,7 +1292,7 @@ export default {
       },
        /**小时收费选择律师姓名 */
       handleSelectNameArr(item) {
-        console.log(item);
+        // console.log(item);
         this.nameJobArr[0].nameJobName=item.value
         this.nameJobArr[0].Id=item.Id        
         this.nameJobArr[0].visible=false
@@ -1132,8 +1300,8 @@ export default {
         //console.log(res)
       },
       handleSelect1NameArr(item,i){
-          console.log(i)
-          console.log(item);
+        //   console.log(i)
+        //   console.log(item);
            this.nameJobArr[i+1].nameJobName=item.value
            this.nameJobArr[i+1].Id=item.Id     
            this.nameJobArr[i+1].visible=false
@@ -1143,9 +1311,85 @@ export default {
       },
       blurInput1NameArr(i){
          this.nameJobArr[i+1].nameJobName1 = ''
-      }
-
-
+      },
+    //文件上传
+    picUpload(){
+        this.dialogFormVisible1 = true
+        this.nameData.File_Name = ''
+        this.fileName = ''
+    },
+      //保存上传文件
+            saveDoc(){
+                if(this.code != 200){
+               this.$message({
+                    message:'请先上传文件',
+                    type:'warning'
+                });
+                return false  
+                }
+                
+                this.$http.post('/yongxu/Document/Add_Document',{
+                    User_Id: localStorage.getItem('userId'),
+                    Case_Id:this.Case_Id,
+                    File_Name:this.fileName,
+                    fileName:this.fileName1,
+                    size:this.size,
+                    Suffix_Name:this.Suffix_Name,
+                }).then((res)=>{
+                    console.log(res)
+                    if(res.data == true){
+                          this.$message({
+                        message:'保存成功',
+                        type:'success'
+                    });
+                     this.dialogFormVisible = false
+                    this.changeState(2)
+                    }
+                    else{
+                           this.$message({
+                        message:'保存失败',
+                        type:'warning'
+                    });
+                    }
+                   
+                }).catch((err)=>{
+                    console.log(err)
+                })
+            },
+    //上传回调
+       successFile(res){
+            console.log(res)
+            if(res.code == 200){
+                    this.code = 200
+                    this.File_Name = res.File_Name
+                    this.Suffix_Name =res.Suffix_Name
+                    this.fileName1 = res.fileName
+                    this.size = res.size
+                    console.log(this.fileName1)
+                   this.$message({
+                    message:res.message,
+                    type:'success'
+                    });  
+                    this.dialogFormVisible1 = false
+            } 
+          },
+          errorFile(){
+              this.$message({
+                    message:'上传失败',
+                    type:'warning'
+                });  
+          },
+          progressFile(){
+           
+          },
+          beforeFile(file){
+            console.log(file.name)
+             var json = file.name.split(".")
+             var file_name =json[0];
+             this.fileName = file_name
+             this.nameData.File_Name = this.fileName
+            
+          },
     },
     created(){
         this.customValue=3
@@ -1157,6 +1401,7 @@ export default {
      //  this.getSuoShuHangYeType()
        this.getJobList()
        this.getSelectMenu()
+       this.getInitName()
     },
     computed:{
         //数据检索
@@ -1189,6 +1434,7 @@ export default {
 
 <style lang="scss">
 @import '../../assets/sass/caseAdd.scss';
+@import '../../assets/sass/main.css';
 .td-width{
     text-align: center;
     width:100px
@@ -1285,6 +1531,72 @@ export default {
 }
 
 }
+.serve_content{
+        border: 1px solid #ccc;
+    margin-left: 7px;
+    margin-top: 10px;
+}
+.el-autocomplete-suggestion li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    cursor: pointer;
+    p{
+        color: #999;
+    }
+    &:hover{
+        background: #000000;
+        opacity: 0.8;
+        color: #ffffff;
+    }
+}
+.my-autocomplete {
+  li {
+    line-height: normal;
+    padding: 7px;
+        display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    .name {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .addr {
+      font-size: 12px;
+      color: #b4b4b4;
+    }
 
+    .highlighted .addr {
+      color: #ddd;
+    }
+  }
+}
+.shangchuan_btn{
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #FFF;
+    border: 1px solid #DCDFE6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: 0;
+    margin: 0;
+    -webkit-transition: .1s;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #FFF;
+    background-color: #7E2C2E;
+    border-color: #7E2C2E;
+    margin-left: 43px;
+}
 </style>
 

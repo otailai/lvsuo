@@ -51,26 +51,26 @@
                       <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
-                                {{scope.row.Value}}
+                                {{scope.row.Category_Name}}一{{scope.row.Value}}
                             </span>
                         </template>
                       </el-table-column>
                        <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
                           <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
-                                    <p  v-if="!scope.row.Creattime" style="color:#ccc">暂无</p>
-                                    <p v-else>{{scope.row.Creattime | getTime}}</p>
+                                    <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
+                                    <p v-else>{{scope.row.Contract_Date_From | getTime}}</p>
                                     
                                 </template>
                             
                              </el-table-column>
-                             <!-- <el-table-column  label="立案日期" width="100" sortable>
+                             <el-table-column  label="立案日期" width="100" sortable>
                                 <template slot-scope="scope" >
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
                                 </template>
                                
-                                </el-table-column> -->
+                                </el-table-column>
                        
                         <el-table-column  label="立案状态">
                             <template slot-scope="scope">
@@ -81,11 +81,11 @@
 
                             <el-table-column  label="操作">
                             <template slot-scope="scope">
-                                 <p v-if="scope.row.type == -2" @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">返回修改</p>
+                                <p v-if="scope.row.type == -2" @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">返回修改</p>
                                 <p v-if="scope.row.type == -1" @click.stop> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 0" @click.stop> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 1" style="cursor:pointer;color:blue" @click.stop="shangchun(scope.row.Id)">上传合同</p>
-                                <p v-if="scope.row.type == 2" style="cursor:pointer;color:blue" @click.stop="finishCase(scope.row.Id)">申请结案</p>
+                                <p v-if="scope.row.type == 2" style="cursor:pointer;color:blue"  @click.stop="finishCase(scope.row.Id)">申请结案</p>
                                  <p v-if="scope.row.type == 3" style="cursor:pointer;color:blue" @click.stop="deleteCase(scope.row.Id)">作废案件</p>
                                 <p v-if="scope.row.type == 4" @click.stop> {{scope.row.Status}}</p>
                             </template>
@@ -97,8 +97,7 @@
                  :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
-      <!-- 对话框 -->
-     <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+                 <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
               <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
@@ -136,7 +135,6 @@
 export default {
     data(){
         return{
-        
             Casevalue:[],
             currentPage:1,
             total:0,
@@ -152,21 +150,8 @@ export default {
             SearchInput:'',
             //默认一级Id
              selectOneId:1,
-               //案件ID
-            Case_Id:'',
              //案件状态
                value: '',
-               //文档名称
-               fileName:'',
-                nameData:{
-                 File_Name:'',
-              },
-              File_Name:'',
-              code:'',
-            File_Name:'',
-            fileName1:'',
-            Suffix_Name:'',
-            size:'',
              //日期
          pickerOptions2: {
           shortcuts: [{
@@ -203,22 +188,51 @@ export default {
         optionMenu:[],
         //2下拉菜单
         optionChildMenu:[],
-        dialogFormVisible:false
+           //案件ID
+            Case_Id:'',
+             //案件状态
+               value: '',
+               //文档名称
+               fileName:'',
+                nameData:{
+                 File_Name:'',
+              },
+              File_Name:'',
+              code:'',
+            File_Name:'',
+            fileName1:'',
+            Suffix_Name:'',
+            size:'',
+            dialogFormVisible:false
         }
     },
     methods:{
         // 获取案件列表
         getCaseList(){ 
+        var statusValue;
+          if(this.value == '' || this.value == null){
+                statusValue = -3;
+          }else{
+             statusValue = this.value
+          }
          var userId = localStorage.getItem('userId')
-         this.$http.get('/yongxu/Index/Authorized_Case',{params:{
+        
+         this.$http.get('/yongxu/Index/Show_Branch_Case',{params:{
         //    sessionId:localStorage.getItem('sessionId'),
-           User_Id:3,
-           Name:this.SearchInput,
+           UserId:userId,
+           Dic_Id:this.Casevalue2,
+           Status:statusValue,
+           MaxTime:this.end,
+           MinTime:this.start,
+           VagueName:this.SearchInput,
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
          }}).then((res)=>{
+              console.log('party')
            console.log(res)
-           this.tableData = res.data.Get_Authorized
+          
+           this.tableData = res.data.Department_Case
+           this.tableData1 = res.data
            this.total = res.data.PageCount
             console.log(res.data)
         }).catch((err)=>{
@@ -236,10 +250,8 @@ export default {
            //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       //编辑操作
-        updateData(id,type_id){
+         updateData(id,type_id){
          this.common.checkAuth({params:{url:'index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
-           console.log(res)
-          //  return false
               if(res.data ==false){
              this.$message({
                 message:'没有权限',
@@ -251,8 +263,7 @@ export default {
               this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
           }
          })
-      
-      },
+         },
       //时间查询
          changeTime(value){
              console.log(value)
@@ -277,14 +288,14 @@ export default {
          handleSizeChange(val) {
          this.numPage = val
          this.getCaseList()
-         console.log(`每页 ${ this.numPage1} 条`);
+         console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
         console.log(val)
         this.currentPage = val
         this.getCaseList()
 
-        console.log(`当前页: ${this.currentPage1}`);
+        console.log(`当前页: ${this.currentPage}`);
       },
         //下载excel
      downExcel() {
@@ -330,9 +341,8 @@ export default {
            //this.Casevalue1 = res.data
         })
       },
-      //合同上传
+        //合同上传
       shangchun(id){
-       console.log(localStorage.getItem('userId'))
         this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
           if(res.data ==false){
              this.$message({
@@ -346,7 +356,6 @@ export default {
                 this.dialogFormVisible =true
           }
         })
-      
       },
         successFile(res){
             console.log(res)
@@ -386,6 +395,7 @@ export default {
                   this.File_Name = this.nameData.File_Name
                   console.log(this.File_Name)
               }
+             
                 if(this.code != 200){
                this.$message({
                     message:'请先上传文件',
@@ -429,7 +439,7 @@ export default {
                     console.log(err)
                 })
             },
-            //申请结案
+              //申请结案
             finishCase(id){
                  this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
                 console.log(res)
@@ -451,7 +461,7 @@ export default {
                           type:'success'
                           }); 
                       this.getCaseList()
-                     
+                      
                     })
           }
          })
@@ -479,12 +489,13 @@ export default {
                           type:'success'
                           }); 
                       this.getCaseList()
-                    
+                     
                     })
           }
          })
             
             },
+            //更改状态上传
             changeState(){
               this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
                   Case_Id:this.Case_Id,

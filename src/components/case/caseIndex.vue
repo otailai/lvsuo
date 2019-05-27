@@ -27,7 +27,7 @@
              
 
               <li class="showTab-li">
-                  <casePart></casePart>
+                  <caseBranch></caseBranch>
                </li>
 
                 </ul>
@@ -41,7 +41,7 @@
             <div class="showTab">
             <ul class="showTab-ul">
                 <li class="showTab-li">
-                  <caseMine></caseMine>
+                  <casePart></casePart>
                </li>
                 </ul>
             </div>
@@ -66,7 +66,7 @@
             <div class="showTab">
             <ul class="showTab-ul">
                 <li class="showTab-li">
-                  <caseMine></caseMine>
+                  <empower></empower>
                </li>
                 </ul>
             </div>
@@ -81,10 +81,11 @@
 </template>
 <script>
 import store from '../../vuex/store'
-import empower from './caseEmpower'
+import empower from './caseChild/caseEmpower'
 import caseAllList from './caseChild/caseAllList'
 import casePart from './caseChild/casePart'
-import caseMine from './caseChild/caseMine' 
+import caseMine from './caseChild/caseMine'
+import caseBranch from './caseChild/caseBranch'
   export default {
     data() {
       return {
@@ -202,7 +203,9 @@ import caseMine from './caseChild/caseMine'
     components:{
       caseAllList,
       caseMine,
-      casePart
+      casePart,
+      empower,
+      caseBranch
     },
   };
 </script>

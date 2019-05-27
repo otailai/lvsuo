@@ -79,16 +79,17 @@
     <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
       <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
-              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
           </div>
            <div class="dialogFormVisivleFile flex">
               <!-- <div class="dialogFormVisivleFile1">
                  <img-inputer v-model="imgFile" theme="light" size="large" :on-change="chooseImg" type="file" accept="image/png,image/gif,image/jpeg" placeholder="将文件拖到此处，或点击上传,只能上传jpg/png文件，且不超过500kb"/>  
               </div> -->
                 <el-upload
+                    ref="upload"
                     class="upload-demo"
                     drag
-                    action="http://192.168.0.107:8080/Base/uploadRawFile"
+                    action="/yongxu/Base/uploadRawFile"
                     :data='nameData'
                     :on-success="successFile"
                     :on-progress="progressFile"
@@ -108,6 +109,7 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary" @click="fileUpload()">上传</el-button> -->
     <el-button type="primary" @click="saveDoc()">保存</el-button>
     </div>
   </div>
@@ -287,6 +289,10 @@ console.log(row, event, column)
           })
 	          
           },
+          fileUpload(){
+            this.$refs.upload.submit()
+          },
+          //回调
              successFile(res){
             console.log(res)
             if(res.code == 200){
@@ -308,20 +314,28 @@ console.log(row, event, column)
                     type:'warning'
                 });  
           },
-          progressFile(){
-           
+          progressFile(event, file, fileList){
+            console.log(file)
+            return false
           },
-          beforeFile(){
-            if(this.fileName == ''|| this.fileName==null){
-               this.$message({
-                    message:'文档名称不允许为空',
-                    type:'warning'
-                });
-                return false  
-            }else{
-              this.nameData.File_Name = this.fileName
-            }
+            beforeFile(file){
+             console.log(file.name)
+             var json = file.name.split(".")
+             var file_name =json[0];
+            this.fileName = file_name
+            this.nameData.File_Name = this.fileName
           },
+          // beforeFile(){
+          //   if(this.fileName == ''|| this.fileName==null){
+          //      this.$message({
+          //           message:'文档名称不允许为空',
+          //           type:'warning'
+          //       });
+          //       return false  
+          //   }else{
+          //     this.nameData.File_Name = this.fileName
+          //   }
+          // },
           getTableData(){
             this.$http.get('/yongxu/Document/Inquiry_Document',
             {
@@ -356,15 +370,15 @@ console.log(row, event, column)
                 return false  
                 }
                 
-                let param  = new URLSearchParams()
-                  param.append('User_Id',localStorage.getItem('userId'))
-                  param.append('File_Name',this.File_Name)
-                  param.append('fileName',this.fileName1)
-                  param.append('size',this.size)
-                  param.append('Suffix_Name',this.Suffix_Name)
+                // let param  = new URLSearchParams()
+                //   param.append('User_Id',localStorage.getItem('userId'))
+                //   param.append('File_Name',this.File_Name)
+                //   param.append('fileName',this.fileName1)
+                //   param.append('size',this.size)
+                //   param.append('Suffix_Name',this.Suffix_Name)
                 this.$http.post('/yongxu/Document/Add_Instrument',{
                     User_Id: localStorage.getItem('userId'),
-                    File_Name:this.File_Name,
+                    File_Name:this.fileName,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
