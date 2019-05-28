@@ -95,7 +95,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
                    </el-pagination>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
@@ -138,7 +138,7 @@ export default {
         return{
             Casevalue:[],
             currentPage:1,
-            total:0,
+            total1:0,
             numPage:10,
             tableData:[],
             //一级下拉
@@ -233,7 +233,7 @@ export default {
            console.log(res)
            console.log('1231')
            this.tableData = res.data.All_Cases
-           this.total = res.data.PageCount
+           this.total1 = res.data.PageCount
             console.log(res.data)
         }).catch((err)=>{
           console.log(err)

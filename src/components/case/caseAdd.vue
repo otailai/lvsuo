@@ -50,7 +50,7 @@
                   <el-select v-model="suoshuValue" placeholder="请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                         <div class="flex" v-show="customValue==4"><p class="title">职务</p>
-                        <input type="text" class="common-input" placeholder="请输入" v-model="value2"/>
+                        <input type="text" class="common-input" placeholder="请输入"  v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
                     <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="tel"/></div>
@@ -224,11 +224,14 @@
                         <div class="add-lawyer-title flex"> 
                             <p class="add-userinfo-p">服务内容</p>
                         </div>  
-                     <div class="flex  add-lawyer-index">
+                     <div class="flex  add-lawyer-index" style="width:90%;margin-top:10px;">
                 
-                        <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
-                        
-                  
+                        <!-- <textarea name="" id="" cols="40" rows="8"  class="serve_content" @click="openEditor()" v-model="Service_Content"></textarea> -->
+                        <!-- <div class="serve_content" @click="openEditor()" v-html="Service_Content">
+
+                        </div> -->
+                    <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption" style="width:428px;"></quill-editor>
+
                     </div>
                     </div>
                  </div>
@@ -254,13 +257,26 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].dateName"/>
+                    <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].dateName"/> -->
+                       <el-date-picker
+                        v-model="timeArr[0].dateName"
+                        type="datetime"
+                         value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="选择日期时间">
+                        </el-date-picker>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].describe"/>
                        <div class="input-icon"></div>
                     </div>
                     <div class="flex" v-for="(v,i) in payDate" :key="i">
-                    <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].dateName"/>
+                    <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].dateName"/> -->
+                      <el-date-picker
+                          class="time_input"
+                          v-model="timeArr[i+1].dateName"
+                          value-format="yyyy-MM-dd HH:mm:ss"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                        </el-date-picker>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].describe"/>
                        <div class="input-icon" @click="deleteLine(i,payDate)"><i class="el-icon-remove"></i></div>
@@ -425,7 +441,25 @@
     </div>
   </div>
 </el-dialog>
-             
+             <!-- 富文本编译器 -->
+              <el-dialog  :visible.sync="dialogFormVisible2" :modal-append-to-body='false' :modal='false' top="300px" width="490px">
+        <div class="dialogFormVisible flex">
+          <!-- <div class="dialogFormVisivleInput flex">
+              <p>服务内容</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
+          </div> -->
+          <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption"></quill-editor>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件添加</p>/<p>服务内容</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary"  @click="saveDoc()">保存</el-button> -->
+    </div>
+  </div>
+</el-dialog>
     </div>
 </template>
 <script>
@@ -591,10 +625,22 @@ export default {
             size:'',
             dialogFormVisible:false,
             fileStatus:'',
+            //富文本
+            editorOption:{
+                modules:{
+                  
+                },
+                placeholder:'',
+                theme:'snow'
+            },
+            dialogFormVisible2:false,
         }
     },
           
     methods:{
+        openEditor(){
+            this.dialogFormVisible2 = true
+        },
         deleteLine(i,arr){
             arr.splice(i,1)
         },
@@ -640,6 +686,9 @@ export default {
                 });
                 return false
             }
+            if(this.customValue == 3){
+                this.suoshuValue = 0
+            }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
@@ -658,7 +707,7 @@ export default {
               'oppositePart':this.oppositeParty,
               'caseWhy':this.caseWhy,
                     //服务内容
-                'Service_Content':this.Service_Content,
+              'Service_Content':this.Service_Content,
 
               'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
@@ -708,7 +757,7 @@ export default {
                 'caseValue2':this.caseValue2,
                 'caseName':this.caseName,
                 'caseWay':this.caseWay,
-                'textarea':this.textarea,
+                'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
 
 
               'laywerArr':this.inputArr,
@@ -748,7 +797,7 @@ export default {
                 'caseValue2':this.caseValue2,
                 'caseName':this.caseName,
                 'caseWay':this.caseWay,
-                'textarea':this.textarea,
+                'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
 
 
               'laywerArr':this.inputArr,
@@ -765,7 +814,7 @@ export default {
         addJson = JSON.stringify(addJson)
         console.log(addJson)
         //console.log(JSON.stringify(addJson))
-        //return false
+       // return false
         this.$http.post('/yongxu/Index/AddCases',{
                 map:addJson
             }).then((res)=>{
@@ -784,6 +833,12 @@ export default {
                 return false
                 }
                
+            }).catch((err)=>{
+                this.$message({
+                    message:'服务器异常',
+                    type:'warning'
+                });
+                return false
             })
         },
         /**验证提交表单 */
@@ -1016,6 +1071,16 @@ export default {
                 });
                 return false
             }
+            var nary=arrJobArr8.sort();
+            for(var i=0;i<arrJobArr8.length;i++){
+                if (nary[i]==nary[i+1]){
+                  this.$message({
+                    message:'律师数据重复请重新选择',
+                    type:'warning'
+                    });
+                    return false
+                }
+            }
 
             var arrJobArrJob8=[]
             for(var i in this.nameJobArr){
@@ -1190,15 +1255,15 @@ export default {
             this.costId = id
         },
         changeId(){
-               
-              this.customId = 0
-              this.userNameE=''
+                 
+                  this.customId = 0
+                  this.userNameE=''
                   this.province=''
                   this.address = ''
                   this.tel=''
                   this.suoshuValue = ''
                   this.value2 = ''
-                  this.customValue = ''
+                //   this.customValue = ''
                   this.cardNo=''
                   this.isValue=''
         },
@@ -1536,9 +1601,14 @@ export default {
 
 }
 .serve_content{
-        border: 1px solid #ccc;
+    border: 1px solid #ccc;
     margin-left: 7px;
     margin-top: 10px;
+    font-size: 14px;
+    font-size: 14.0pt;
+    height: 100px;
+    overflow: auto;
+    text-overflow:ellipsis;
 }
 .el-autocomplete-suggestion li{
     display: flex;

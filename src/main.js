@@ -17,6 +17,11 @@ import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'
 import "babel-polyfill"
 import global from './common'
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor)
 Vue.prototype.common = global
 Vue.component('ImgInputer', ImgInputer)
 Vue.use(htmlToPdf)

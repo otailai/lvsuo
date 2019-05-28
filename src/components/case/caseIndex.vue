@@ -1,9 +1,20 @@
  <template>
     <div id="case" class="case"> 
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i" @click="gotoWeb(v.path)">
+            <div class="flex case-child" >  
+            </div>
+            <div class="showTab">
+            <ul class="showTab-ul">
           
-            <div v-show="child_cur==0">
+              <li class="showTab-li">
+                     <router-view></router-view>
+              </li>
+
+                </ul>
+            </div>
+           
+            <!-- <div v-show="child_cur==0">
             <div class="flex case-child" >  
             </div>
             <div class="showTab">
@@ -70,7 +81,7 @@
                </li>
                 </ul>
             </div>
-          </div>
+          </div> -->
         </el-tab-pane>
       
         <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
@@ -106,11 +117,11 @@ import caseBranch from './caseChild/caseBranch'
         currentPage4: 1,
         child:0,
         child_cur:0,
-        arr1:[{title:'所有案件',url:'Index/Show_All_Cases'},{title:'部门案件',url:'Index/Show_Department_Case'},{title:'我的案件',url:'Index/Show_All_Case'}],
+        arr1:[{title:'所有案件',url:'Index/Show_All_Cases',path:'/index/caseIndex/caseAllList'},{title:'部门案件',url:'Index/Show_Department_Case',path:'/index/caseIndex/caseAllList'},{title:'我的案件',url:'Index/Show_All_Case',path:'/index/caseIndex/caseAllList'}],
         activeName: 'name0',
         index:0,
         cur:2,
-        arr:[{Item_Name:'所有案件'},{Item_Name:'分所案件'},{Item_Name:'部门案件'},{Item_Name:'我的案件'},{Item_Name:'授权案件'}], 
+        arr:[{Item_Name:'所有案件',path:'/index/caseIndex/caseAllList'},{Item_Name:'分所案件',path:'/index/caseIndex/caseBranch'},{Item_Name:'部门案件',path:'/index/caseIndex/casePart'},{Item_Name:'我的案件',path:'/index/caseIndex/caseMine'},{Item_Name:'授权案件',path:'/index/caseIndex/caseEmpower'}], 
          input23: '',
         
         tableData: [],
@@ -171,7 +182,12 @@ import caseBranch from './caseChild/caseBranch'
     },
     methods: {
       handleClick(tab, event) {
+        console.log(event)
         this.child_cur = tab.index
+        this.$router.push(this.arr[this.child_cur].path)
+      },
+      gotoWeb(path){
+        this.$router.push(path)
       },
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{

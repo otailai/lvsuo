@@ -149,7 +149,7 @@
     border-radius: 0px;
 }
 .el-date-picker{
-    width: 120px;
+    /* width: 120px; */
 
 }
 .el-date-editor--datetimerange.el-input, .el-date-editor--datetimerange.el-input__inner{

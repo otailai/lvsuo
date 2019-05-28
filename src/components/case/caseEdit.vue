@@ -23,10 +23,10 @@
                         <div class="flex"><p class="title">客户类型</p> 
                         <p>{{Customer_Type}}</p>
                         </div>
-                        <div class="flex"><p class="title">所属行业</p>
+                        <div class="flex" v-show="Customer_Type_Id == 4"><p class="title">所属行业</p>
                         <p>{{industry}}</p>
                         </div>
-                        <div class="flex"><p class="title">职务</p>
+                        <div class="flex" v-show="Customer_Type_Id == 4"><p class="title">职务</p>
                         <p>{{Position}}</p>
                          </div>
                            <div class="flex"><p class="title">联系方式</p>
@@ -48,9 +48,10 @@
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
-                        <p>
-                            {{introduce}}
-                        </p>
+                         <!-- <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="introduce">
+
+                         </textarea> -->
+                        <div v-html="introduce"></div>
                         </div>
                     <div class="flex"><p class="title">对方当事人</p><p>{{Party_Name}}</p></div>
                     <div class="flex"><p class="title">受理机关</p><p>{{Receiving_Organ}}</p></div>
@@ -83,8 +84,12 @@
                 <div class="add-lawyer-title flex"> 
                      <p class="add-userinfo-p">服务内容</p>
                  </div>  
-                <div class="flex  add-lawyer-index">
-                        <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
+                <div class="flex  add-lawyer-index" style="width:90%;margin-top:10px;">
+                        <!-- <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea> -->
+                       <div v-html="Service_Content"></div>
+                      <!-- <quill-editor v-model="Service_Content" ref="myQuillEditor"  @focus="onEditorFocus($event)" :options="editorOption" style="width:428px;" class="ql-editor"></quill-editor> -->
+
+                        <!-- <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption"></quill-editor> -->
                 </div>
                 </div>
                  </div>
@@ -305,6 +310,7 @@ export default {
             dialogFormVisible:false,
             dialogFormVisibleUpdate:false,
             //客户基本信息
+            Customer_Type_Id:'',
             Customer_Name_Zh:'',
              Customer_Type: "",
              Contact_Party: "",
@@ -344,6 +350,15 @@ export default {
             Service_Content:'',
             Source_Contract:'',
             ifClick:'',
+            //富文本
+            editorOption:{
+                modules:{
+                  
+                },
+                placeholder:'',
+                theme:'snow'
+            },
+        
         }
     },
     methods:{
@@ -378,6 +393,7 @@ export default {
                 // 客户信息
                 let arr=res.data.Get_Customer_Information
                 this.Customer_Name_Zh = arr.Customer_Name_Zh
+                this.Customer_Type_Id = arr.Customer_Type_Id
                 this.Customer_Type= arr.Customer_Type,
                 this.Contact_Party= arr.Contact_Party,
                 this.Detailed_Address= arr.Detailed_Address,
@@ -397,7 +413,7 @@ export default {
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
-                this.Service_Content = caseInfo.Service_Content
+                this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
                 }else{
@@ -475,6 +491,9 @@ export default {
                         })
               })
           },
+
+
+
             //保存上传文件
             saveDoc(){
             if(this.fileName == ''|| this.fileName==null){
@@ -674,6 +693,11 @@ export default {
         border: 1px solid #ccc;
     margin-left: 7px;
     margin-top: 10px;
+}
+.textarea{
+    // width: 240;
+    // min-height: 150px;
+    // border: 1px solid #ccc;
 }
 </style>
 

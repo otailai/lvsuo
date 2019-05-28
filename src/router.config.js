@@ -21,13 +21,23 @@ import caseWord from './components/case/caseWord'
 import caseUpdate from './components/case/caseUpdate'
 import auditingRisk from './components/auditing/auditingRisk'
 import caseSearch from './components/search/caseSearch'
+import caseAllList from './components/case/caseChild/caseAllList'
+import caseBranch from  './components/case/caseChild/caseBranch'
+import casePart from  './components/case/caseChild/casePart'
+import caseMine from  './components/case/caseChild/caseMine'
+import caseEmpower from  './components/case/caseChild/caseEmpower'
 export default[
     {path:'/',component:login,name:login},
     {path:'/login',component:login,name:login},
-    {path:'/index',redirect: '/index/caseIndex',component:index,name:index,
+    {path:'/index',redirect: '/index/caseIndex/caseAllList',component:index,name:index,
     meta:{requireAuth:true},
     children:[
-{path:'/index/caseIndex',component:caseIndex,name:caseIndex, meta:{requireAuth:true},},
+{path:'/index/caseIndex',redirect: '/index/caseIndex/caseAllList',component:caseIndex,name:caseIndex, meta:{requireAuth:true}, children:[{path:'/index/caseIndex/caseAllList',component:caseAllList,name:caseAllList},
+{path:'/index/caseIndex/caseBranch',component:caseBranch,name:caseBranch},
+{path:'/index/caseIndex/casePart',component:casePart,name:casePart},
+{path:'/index/caseIndex/caseMine',component:caseMine,name:caseMine},
+{path:'/index/caseIndex/caseEmpower',component:caseEmpower,name:caseEmpower}
+]},
 {path:'/index/caseAdd',component:caseAdd,name:caseAdd},
 {path:'/index/caseUpdate/:id/:typeId',component:caseUpdate,name:caseUpdate},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:caseEdit},

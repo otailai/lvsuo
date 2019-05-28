@@ -182,10 +182,11 @@
                      <p class="add-userinfo-p">服务内容</p>
                      <!-- <span @click="pushPartyInfo()"><i class="el-icon-circle-plus"></i> 其他当事人</span> -->
                  </div>  
-                <div class="flex  add-lawyer-index">
+                <div class="flex  add-lawyer-index"  style="width:90%;margin-top:10px;">
              
-                <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea>
-                    
+                     <!-- <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea> -->
+                     <!-- <div class="serve_content" @click="openEditor()" v-html="Service_Content"></div> -->
+                      <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption" style="width:428px;" class="ql-editor"></quill-editor>
                      
                     </div>
                     </div>
@@ -219,6 +220,7 @@
                          <el-date-picker
                         v-model="timeArr[0].Payment_Time"
                         type="datetime"
+                         value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="选择日期时间">
                         </el-date-picker>
                         
@@ -436,6 +438,25 @@
     </div>
   </div>
 </el-dialog>
+ <!-- 富文本编译器 -->
+              <el-dialog  :visible.sync="dialogFormVisible3" :modal-append-to-body='false' :modal='false' top="300px" width="490px">
+        <div class="dialogFormVisible flex">
+          <!-- <div class="dialogFormVisivleInput flex">
+              <p>服务内容</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
+          </div> -->
+          <quill-editor v-model="Service_Content" ref="myQuillEditor"></quill-editor>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件添加</p>/<p>服务内容</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary"  @click="saveDoc()">保存</el-button> -->
+    </div>
+  </div>
+</el-dialog>
     </div>
 </template>
 <script>
@@ -602,12 +623,24 @@ export default {
             size:'',
             dialogFormVisible1:false,
             dialogFormVisible2:false,
+            dialogFormVisible3:false,
+             //富文本
+            editorOption:{
+                modules:{
+                  
+                },
+                placeholder:'',
+                theme:'snow'
+            },
         }
           
         
     },
           
     methods:{
+           openEditor(){
+            this.dialogFormVisible3 = true
+        },
         deleteLine(i,arr){
             arr.splice(i,1)
         },
@@ -1121,14 +1154,14 @@ export default {
             }
         }
 
-           if(this.Source_Contract==""||this.Source_Contract==null){
+        if(this.Source_Contract==""||this.Source_Contract==null){
                 this.$message({
                     message:'请选择合同类型',
                     type:'warning'
                 });
                 return false
             }
-          if(this.Source_Contract==2){
+          if(this.Source_Contract==2 && this.firstSource_Contract==1){
             if(this.code != 200){
                this.$message({
                     message:'请先上传文件',
@@ -1663,7 +1696,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../assets/sass/caseAdd.scss';
-@import '../../assets/sass/main.css';
+//@import '../../assets/sass/main.css';
 .td-width{
     text-align: center;
     width:100px
@@ -1786,9 +1819,14 @@ export default {
     }
 }
 .serve_content{
-        border: 1px solid #ccc;
+    border: 1px solid #ccc;
     margin-left: 7px;
     margin-top: 10px;
+    font-size: 14px;
+    font-size: 14.0pt;
+    height: 100px;
+    overflow: auto;
+    text-overflow:ellipsis;
 }
 .shangchuan_btn{
     display: inline-block;
