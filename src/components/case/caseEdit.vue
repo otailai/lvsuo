@@ -199,7 +199,7 @@
                                     <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 1">风控审核</p>
                                      <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 2">更新</p>
                                       <a  v-if="scope.row.type == 3" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
-                                     <p  v-if="scope.row.type == 0" @click="lookWord(`${{Type_Id }}`)">查看</p>
+                                      <p  v-if="scope.row.type == 0" @click="lookWord(`${{Type_Id }}`)">查看</p>
                                 </template>
                                
                                 </el-table-column>
@@ -343,7 +343,7 @@ export default {
             zhubanlvshi:'',
             Service_Content:'',
             Source_Contract:'',
-          
+            ifClick:'',
         }
     },
     methods:{
@@ -357,7 +357,16 @@ export default {
             //console.log(row.File_Path)
         },
         toAdd(){
+            if(this.ifClick == false){
+               this.$message({
+                    type:'warning',
+                    message:'案件审核暂无通过，无法上传',
+                })
+                return false
+            }else{
             this.dialogFormVisible=true
+
+            }
         },
         getCaseEdit(){
              console.log(this.$route.params.id)
@@ -457,6 +466,11 @@ export default {
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
                         console.log(res)
+                            if(res.data.type == 0){
+                                this.ifClick = false
+                            }else{
+                                this.ifClick = true
+                            }
                              this.tableData.unshift(res.data)
                         })
               })
@@ -656,5 +670,10 @@ export default {
     justify-content: center;
     margin-top: 25px;
   }
+  .serve_content{
+        border: 1px solid #ccc;
+    margin-left: 7px;
+    margin-top: 10px;
+}
 </style>
 

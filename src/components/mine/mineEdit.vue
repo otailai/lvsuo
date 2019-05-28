@@ -8,7 +8,7 @@
                     action="https://jsonplaceholder.typicode.com/posts/"
                     list-type="picture-card"
                     :on-preview="handlePictureCardPreview"
-                    :on-remove="handleRemove" limit="1">
+                    :on-remove="handleRemove" :limit="1">
                     <i class="el-icon-plus"></i>
                     </el-upload>
                     <el-dialog :visible.sync="dialogVisible">
@@ -20,7 +20,7 @@
             <div class="mine-top-form flex">
                 <input type="text" class="common-input" />
                 <input type="text" class="common-input" />
-                 <el-select v-model="value" placeholder="请选择" style="width:200px">
+                 <el-select v-model="value1" placeholder="请选择" style="width:200px">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -45,8 +45,8 @@
                 </div>
 
                  <div class="mine-bottom-left-div">
-                    <p>职业领域:</p>
-                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea">
+                    <p>职业领域1:</p>
+                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea1">
                     
                     </textarea>
                 </div>
@@ -76,38 +76,40 @@
 export default {
     data(){
         return{
+            textarea1:'',
             textarea:'',
              dialogImageUrl: '',
              dialogVisible: false,
                options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+                    value: '选项1',
+                    label: '黄金糕'
+                    }, {
+                    value: '选项2',
+                    label: '双皮奶'
+                    }, {
+                    value: '选项3',
+                    label: '蚵仔煎'
+                    }, {
+                    value: '选项4',
+                    label: '龙须面'
+                    }, {
+                    value: '选项5',
+                    label: '北京烤鸭'
+                    }],
+            value1:'选项1',
         }
     },
     methods:{
-         handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
+        },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url;
         this.dialogVisible = true;
       },
       getcontent(){
           var content = this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
-           console.log(content)
+         console.log(content)
       }
     }
 }

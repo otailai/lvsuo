@@ -386,11 +386,11 @@
 
 
                 <div class="end-btn flex">
-                    <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="addAll()">提交审核</button>
+                    <!-- <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button>  -->
+                    <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
-                 <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWord :addData='addData'></caseWord>
-                </el-dialog>
+                
+                  
              </div>
                <!-- 对话框 -->
      <el-dialog  :visible.sync="dialogFormVisible1" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
@@ -788,6 +788,13 @@ export default {
         },
         /**验证提交表单 */
         checkData(){
+              if(this.search==""||this.search==null){
+                this.$message({
+                    message:'客户名称不能为空',
+                    type:'warning'
+                });
+                return false
+            }
              if(this.customValue==""||this.customValue==null){
                 this.$message({
                     message:'客户类型不能为空',
@@ -804,8 +811,8 @@ export default {
                          type:'warning'
                      });
                        return false  
-            }
-            }
+                }
+            }  
             if(this.customValue ==4 ){
                 if(this.cardNo.length <6) 
                 { 
@@ -814,15 +821,23 @@ export default {
                          type:'warning'
                      });
                        return false  
-            }
-            }
-              if(this.search==""||this.search==null){
+                }
+                 if(this.value1==""||this.value1==null){
                 this.$message({
-                    message:'客户名称不能为空',
+                    message:'请选择所属行业',
                     type:'warning'
                 });
                 return false
             }
+               if(this.value2==""||this.value2==null){
+                this.$message({
+                    message:'职务不能为空',
+                    type:'warning'
+                });
+                return false
+            }
+            }
+            
             if(this.province==""||this.province==null){
                 this.$message({
                     message:'省市区信息不能为空',
@@ -837,13 +852,7 @@ export default {
                 });
                 return false
             }
-              if(this.value1==""||this.value1==null){
-                this.$message({
-                    message:'请选择所属行业',
-                    type:'warning'
-                });
-                return false
-            }
+          
              if(this.tel==""||this.tel==null){
                 this.$message({
                     message:'联系电话不能为空',
@@ -851,13 +860,7 @@ export default {
                 });
                 return false
             }
-              if(this.value2==""||this.value2==null){
-                this.$message({
-                    message:'职务不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+           
                if(this.isValue==""||this.isValue==null){
                 this.$message({
                     message:'请选择是否常年客户',
@@ -1187,7 +1190,8 @@ export default {
             this.costId = id
         },
         changeId(){
-            this.customId = 0
+               
+              this.customId = 0
               this.userNameE=''
                   this.province=''
                   this.address = ''

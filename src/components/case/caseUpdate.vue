@@ -179,8 +179,8 @@
               
                 <div class="add-lawyer  lex">
                 <div class="add-lawyer-title flex"> 
-                     <p class="add-userinfo-p">当事人信息</p>
-                     <span @click="pushPartyInfo()"><i class="el-icon-circle-plus"></i> 其他当事人</span>
+                     <p class="add-userinfo-p">服务内容</p>
+                     <!-- <span @click="pushPartyInfo()"><i class="el-icon-circle-plus"></i> 其他当事人</span> -->
                  </div>  
                 <div class="flex  add-lawyer-index">
              
@@ -345,15 +345,22 @@
                          <el-option v-for="item in fileTypeArr" :key="item.Id" :label="item.value" :value="item.Id"></el-option>
                     </el-select>                           
                      </div>
-                       <button class="shangchuan_btn" v-show="Source_Contract == 2" @click="picUpload()">上传</button> 
+                       <button class="shangchuan_btn"  v-show="Source_Contract == 2 &&  firstSource_Contract == 2" @click="picUpload1()">重新上传</button> 
+                       <button class="shangchuan_btn"  v-show="Source_Contract == 2 &&  firstSource_Contract == 2" @click="dialogFormVisible = true">预览</button>
+                        <button class="shangchuan_btn" v-show="Source_Contract == 2 && firstSource_Contract == 1" @click="picUpload()">上传</button> 
+                    
+
+                       <!-- <button class="shangchuan_btn" v-show="Source_Contract == 2" @click="picUpload()">上传</button> -->
+                       <!-- <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> -->
                      </div>
                      </div> 
                 
                 <div class="end-btn flex">
-                    <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button> <button class="btn btn2" @click="updateAddAll()">提交审核</button>
+                     <button class="btn btn2" @click="updateAddAll()">提交审核</button>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWord :addData='addData'></caseWord>
+                        <iframe src='https://view.officeapps.live.com/op/view.aspx?src=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
+                        </iframe>
                 </el-dialog>
              </div>
              
@@ -369,10 +376,10 @@
                     drag
                     action="/yongxu/Base/uploadRawFile"
                     :data='nameData'
-                    :on-success="successFile"
-                    :on-progress="progressFile"
-                    :before-upload="beforeFile"
-                    :on-error="errorFile"
+                    :on-success="successFile1"
+                    :on-progress="progressFile1"
+                    :before-upload="beforeFile1"
+                    :on-error="errorFile1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -387,6 +394,45 @@
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
     <!-- <el-button type="primary"  @click="saveDoc()">保存</el-button> -->
+    </div>
+  </div>
+</el-dialog>
+
+ <el-dialog  :visible.sync="dialogFormVisible2" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+      <div class="dialogFormVisible flex">
+          <div class="dialogFormVisivleInput flex">
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
+          </div>
+           <div class="dialogFormVisivleFile flex">
+              <!-- <div class="dialogFormVisivleFile1">
+                 <img-inputer v-model="imgFile" theme="light" size="large" :on-change="chooseImg" type="file" accept="image/png,image/gif,image/jpeg" placeholder="将文件拖到此处，或点击上传,只能上传jpg/png文件，且不超过500kb"/>  
+              </div> -->
+                <el-upload
+                    ref="upload"
+                    class="upload-demo"
+                    drag
+                    action="/yongxu/Base/uploadRawFile"
+                    :data='nameData'
+                    :on-success="successFile"
+                    :on-progress="progressFile"
+                    :before-upload="beforeFile"
+                    :on-error="errorFile"
+                    multiple>
+                    <i class="el-icon-upload"></i>
+                    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                    
+                  </el-upload>
+          </div>
+          
+      </div>
+  
+   <div slot="title" class="dialog-title">
+        <div class="dialogFormVisivleHeader_left flex"><p>案件文书</p>/<p>我的文档</p>/<p>新建文档</p></div>
+  </div>
+  <div slot="footer" class="dialog-footer">
+    <div class="dialogFormVisivleFooter flex">
+    <!-- <el-button type="primary" @click="fileUpload()">上传</el-button> -->
+    <el-button type="primary" @click="saveDoc()">保存</el-button>
     </div>
   </div>
 </el-dialog>
@@ -543,7 +589,7 @@ export default {
             fileTypeArr:[{value:'律所合同',Id:1},{value:'客户合同',Id:2}],
             fileType:1,
             Source_Contract:'',
-
+            firstSource_Contract:'',
             code:'',
             fileName:'',
             nameData:{
@@ -555,6 +601,7 @@ export default {
             Suffix_Name:'',
             size:'',
             dialogFormVisible1:false,
+            dialogFormVisible2:false,
         }
           
         
@@ -645,6 +692,7 @@ export default {
                 //服务内容
                 'Service_Content':this.Service_Content,
                   'Source_Contract':this.Source_Contract,
+                  
              //合同
                 'File_Name':this.File_Name,
                 'Suffix_Name':this.Suffix_Name,
@@ -1352,12 +1400,13 @@ export default {
                 this.Case_Id = caseInfo.Id
                 this.Service_Content = caseInfo.Service_Content
                 this.Source_Contract = caseInfo.Source_Contract
+                this.firstSource_Contract = caseInfo.Source_Contract
                 //受理机关
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.compony = caseInfo.Receiving_Organ
                 
-                // this.Party_Name = caseInfo.Party_Name
-                // this.oppositeParty = caseInfo.Party_Name
+                this.Party_Name = caseInfo.Party_Name
+                this.oppositeParty = caseInfo.Party_Name
 
                 this.Type_Id = caseInfo.Type_Id
                 this.caseValue = caseInfo.One_Type_Id
@@ -1446,14 +1495,19 @@ export default {
                 this.getSelectMenuTwo()
             })
         },
-     //文件上传
-    picUpload(){
+     //文件新上传
+    picUpload1(){
+        this.dialogFormVisible2 = true
+        this.nameData.File_Name = ''
+        this.fileName = ''
+    },
+    //重新文件上传
+     picUpload(){
         this.dialogFormVisible1 = true
         this.nameData.File_Name = ''
         this.fileName = ''
     },
-      //保存上传文件
-             //保存上传文件
+    //保存上传文件
             saveDoc(){
             if(this.fileName == ''|| this.fileName==null){
                this.$message({
@@ -1469,13 +1523,16 @@ export default {
                 });
                 return false  
                 }
-                this.$http.post('/yongxu/Document/Add_Document',{
-                    User_Id: localStorage.getItem('userId'),
-                    Case_Id:this.Case_Id,
+                console.log(this.Case_Id)
+                this.$http.get('/yongxu/Index/Del_Add_Upload',{
+                 params:{
+                        User_Id: localStorage.getItem('userId'),
+                    Case_Id:parseInt(this.Case_Id),
                     File_Name:this.fileName,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
+                 }
                 }).then((res)=>{
                     console.log(res)
                     if(res.data == true){
@@ -1483,8 +1540,7 @@ export default {
                         message:'保存成功',
                         type:'success'
                     });
-                     this.dialogFormVisible = false
-                    this.getTableData()
+                     this.dialogFormVisible2 = false
                     }
                     else{
                            this.$message({
@@ -1497,22 +1553,20 @@ export default {
                     console.log(err)
                 })
             },
-    //上传回调
        //上传回调
        successFile(res){
             console.log(res)
             if(res.code == 200){
-                    this.code = 200
-                    this.File_Name = res.File_Name
-                    this.Suffix_Name =res.Suffix_Name
-                    this.fileName1 = res.fileName
-                    this.size = res.size
-                    console.log(this.fileName1)
-                   this.$message({
-                    message:res.message,
-                    type:'success'
-                    });  
-                    this.dialogFormVisible1 = false
+            this.code = 200
+            this.File_Name = res.File_Name
+            this.Suffix_Name =res.Suffix_Name
+            this.fileName1 = res.fileName
+            this.size = res.size
+              console.log(this.fileName1)
+             this.$message({
+              message:res.message,
+              type:'success'
+              });  
             } 
           },
           errorFile(){
@@ -1530,7 +1584,39 @@ export default {
              var file_name =json[0];
              this.fileName = file_name
              this.nameData.File_Name = this.fileName
-            
+          },
+          //新上传
+           successFile1(res){
+            console.log(res)
+            if(res.code == 200){
+                    this.code = 200
+                    this.File_Name = res.File_Name
+                    this.Suffix_Name =res.Suffix_Name
+                    this.fileName1 = res.fileName
+                    this.size = res.size
+                    console.log(this.fileName1)
+                   this.$message({
+                    message:res.message,
+                    type:'success'
+                    });  
+                    this.dialogFormVisible1 = false
+            } 
+          },
+          errorFile1(){
+              this.$message({
+                    message:'上传失败',
+                    type:'warning'
+                });  
+          },
+          progressFile1(){
+           
+          },
+          beforeFile1(file){
+            console.log(file.name)
+             var json = file.name.split(".")
+             var file_name =json[0];
+             this.fileName = file_name
+             this.nameData.File_Name = this.fileName
           },
 
     },
@@ -1575,7 +1661,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../../assets/sass/caseAdd.scss';
 @import '../../assets/sass/main.css';
 .td-width{

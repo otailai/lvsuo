@@ -190,7 +190,7 @@ export default {
     },
     mounted(){
         this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-            console.log(res.data.PublicKey)
+         
             console.log('服务已开启')
             this.pub = res.data.PublicKey
         }).catch((err)=>{

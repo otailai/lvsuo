@@ -139,7 +139,7 @@ export default {
             Casevalue:[],
             currentPage:1,
             total:0,
-            numPage:5,
+            numPage:10,
             tableData:[],
             //一级下拉
             Casevalue1:'',
