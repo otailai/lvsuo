@@ -8,19 +8,19 @@
             <div class="mine-top-form flex">
                
                <div class="mine-div flex">
-                    <p class="mine-p">律师姓名: </p><span class="mine-span">李三三</span>
+                    <p class="mine-p">律师姓名: </p><span class="mine-span">{{userName}}</span>
                </div>
                <div class="mine-div flex">
-                    <p class="mine-p">职业证号: </p><span class="mine-span">123465789</span>
+                    <p class="mine-p">职业证号: </p><span class="mine-span">{{number}}</span>
                </div>
                <div class="mine-div flex">
-                    <p class="mine-p">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务: </p><span class="mine-span">高级合作人</span>
+                    <p class="mine-p">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务: </p><span class="mine-span">{{job}}</span>
                </div>
                <div class="mine-div flex">
-                    <p class="mine-p">联系方式: </p><span class="mine-span">李三三</span>
+                    <p class="mine-p">联系方式: </p><span class="mine-span">{{tel}}</span>
                </div>
                  <div class="mine-div flex">
-                    <p class="mine-p">电子邮件: </p><span class="mine-span">李三三</span>
+                    <p class="mine-p">电子邮件: </p><span class="mine-span">{{email}}</span>
                </div>
               
                
@@ -33,38 +33,35 @@
             <div class="mine-bottom-left flex">
                 <div class="mine-bottom-left-div">
                     <p class="mine-title">职业领域:</p>
-                     <p class="mine-title-p">刑事辩护、民商事代理、政府法律顾问等。</p>
+                     <p class="mine-title-p">{{jobTextare}}</p>
                 </div>
 
                  <div class="mine-bottom-left-div">
                     <p class="mine-title">教育背景:</p>
-                    <p class="mine-title-p">1983年本科毕业于西南政法大学法律系，1988年在西南政法大学刑法专业研究生毕业。</p>
+                    <p class="mine-title-p">{{teach}}</p>
                 </div>
 
                 <div class="mine-bottom-left-div">
                    <p class="mine-title">工作经历:</p>
-                    <p class="mine-title-p">1983年—1986年在中南财经政法大学法律系刑法教研室任教；
+                   
+                         <p class="mine-title-p"  v-html="jobStrory">
+                          
                         </p>
-                         <p class="mine-title-p">
-                            1988年—1993年在广州市第二对外经济律师事务所当律师、诉讼仲裁部部长；
-                        </p>
-                         <p class="mine-title-p">
-                         1993年创立广州金鹏律师事务所并担任主任、高级合伙人。
-                        </p>
+                      
                 </div>
                 <div class="mine-bottom-left-div">
                     <p class="mine-title">社会职务:</p>
-                     <p class="mine-title-p" v-html="contentHtml"></p>
+                     <p class="mine-title-p" v-html="jobSociety"></p>
                 </div>
                 <div class="mine-bottom-left-div">
                    <p class="mine-title">获得荣誉:</p>
-                     <p class="mine-title-p" v-html="contentHtml"></p>
+                     <p class="mine-title-p" v-html="honor"></p>
                 </div>
             </div>
             <div class="mine-bottom-right flex">
                   <div class="mine-bottom-left-div">
                      <p class="mine-title">主要业绩:</p>
-                    <p class="mine-title-p" v-html="contentHtml"></p>
+                    <p class="mine-title-p" v-html="grade"></p>
                 </div>
             </div>
         </div>
@@ -94,7 +91,21 @@ export default {
           label: '北京烤鸭'
         }],
           contentHtml:'第九届中华全国律师协会理事<br/>广东省律师协会副会长<br/>广州市律师协会名誉会长<br/><br/>广东省西南政法学校友会会长<br/><br/>广东省安徽商会监事长<br/><br/>中华全国律师协会政府法律顾问委员会委员<br/><br/>广东省第十二届人大常委会监督司法咨询专家<br/><br/>广东省检察机关规范司法行为监督员<br/><br/>广东法院诉讼服务窗口监督员<br/><br/>广东省法官检察官遴选委员<br/><br/>广州市第十四届人大常委会立法顾问<br/><br/>政协第十二届广州市委员会法制工作顾问<br/><br/>广东省人民政府法律顾问<br/><br/>广州市政府兼职法律顾问<br/><br/>广州市人民政府法律咨询专家<br/><br/>广州市仲裁委员会仲裁员<br/><br/>华南国际经济贸易仲裁委员会仲裁员<br/><br/>西南政法大学LPC兼职教授<br/><br/>中山大学、华南理工大学、暨南大学兼职硕士研究生导师等',
-        }
+          userName:'',
+          number:'',
+          job:'',
+          email:'',
+          tel:'',
+          //职业领域
+          jobTextare:'',
+          teach:'',
+          jobStrory:'',
+          jobSociety:'',
+          honor:'',
+          grade:'',
+
+       }
+     
     },
     methods:{
          handleRemove(file, fileList) {
@@ -106,7 +117,17 @@ export default {
       },
       goToEdit(){
           this.$router.push('./mineEdit')
+      },
+      getMineList(){
+          this.$http.get('/yongxu/Personal/Display_Information',{params:{
+              User_Id:localStorage.getItem('userId')
+          }}).then((res)=>{
+                this.userName = res.data.Staff_Name
+          })
       }
+    },
+    mounted(){
+        this.getMineList()
     }
 }
 </script>

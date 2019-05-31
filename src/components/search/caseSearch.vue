@@ -1,7 +1,6 @@
  <template>
     <div id="case" class="case"> 
-       <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-        <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+     
                  
             <!-- <div class="flex case-child2" v-show="child==0">
           
@@ -10,29 +9,61 @@
                       <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
                     </div>
           
-              <div class="btn-searchData"><button class="btn-search" @click="searchData()">搜索数据库</button></div>
+             
             </div> -->
 
-            <div class="flex case-child3">
+            <div class="flex case-child3" style="margin-top:30px;">
                   <div class="search-div flex">
                     <div class="input-search flex">
                       <i class="el-icon-search ii"></i>
-                     <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
-                      <button class="case-button"><i class="el-icon-search"></i></button>
+                     <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
+                      <button class="case-button" @click="getSeachList()"><i class="el-icon-search"></i></button>
+                      
                     </div>  
                   </div>               
                       <div class="search-table">
                          <div class="showNum">共检测到：{{total}}条结果</div>
-                      <el-table :data="tableData" border style="width: 100%"  @row-click="1">
-                      <el-table-column prop="date" label="日期" width="180"></el-table-column>
-                      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-                      <el-table-column prop="address" label="地址"> </el-table-column>
+                      <el-table :data="searchList" border style="width: 100%"  @row-click="lineCilck">
+                      <el-table-column prop="Case_No" label="案件编号" width=""></el-table-column>
+                     
+                      <el-table-column  label="案件名称" width="" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.Case_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Case_Name}}</span>
+                            <span v-else>{{scope.row.Case_Name}}</span>
+                        </template>
+                      </el-table-column>
+                    <el-table-column  label="主办律师" width="" :show-overflow-tooltip="true"> 
+                       <template slot-scope="scope">
+                            <span v-if="scope.row.Staff_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Staff_Name}}</span>
+                            <span v-else>{{scope.row.Staff_Name}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Staff_No" label="律师编号" width="" :show-overflow-tooltip="true">
+
+                    </el-table-column>
+                    <el-table-column  label="对方当事人姓名" width="130" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.Party_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Party_Name}}</span>
+                            <span v-else>{{scope.row.Party_Name}}</span>
+                        </template>
+                       </el-table-column>
+                    <el-table-column  label="客户名称" width="" :show-overflow-tooltip="true"> 
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.Customer_Name_Zh.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Customer_Name_Zh}}</span>
+                            <span v-else>{{scope.row.Customer_Name_Zh}}</span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
                       </el-table>
                     </div>
-           
+             <div class="block flex">
+                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+                 :page-sizes="[1,5,10]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                   </el-pagination>
+                </div>
           </div>
-        </el-tab-pane>    
-        </el-tabs> 
+   
     </div>
 </template>
 <script>
@@ -41,88 +72,42 @@ import store from '../../vuex/store'
     data() {
       return {
         //授权案件搜索
-        SearchInput1:'',
-        numPage1:1,
-        currentPage1:1,
-        total1:0,       
-         //
-        total:0,
-        dateValue:[],
-        Casevalue:'',
-        Casevalue1:'',
-        Casevalue2:0,
         SearchInput:'',
-        selectOneId:1,
-        numPage:10,
-        currentPage4: 1,
-        child:0,
-        child_cur:0,
-        arr1:[{title:'所有案件',url:'Index/Show_All_Cases'},{title:'部门案件',url:'Index/Show_Department_Case'},{title:'我的案件',url:'Index/Show_All_Case'}],
-        activeName: 'name0',
-        index:0,
-        cur:2,
-        arr:[{title:'案件'},{title:'利益检索'}], 
-         input23: '',
-        
-        tableData: [],
-        tableDataShouQuan:[],
-        value: '',
-        pickerOptions2: {
-          shortcuts: [{
-            text: '最近一周',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近一个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近三个月',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
-        value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value5: '',
-        optionMenu:[],
-        optionChildMenu:[],
-        options:[
-         {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
-        ],
-        tableData1:[],
-         excelData: [
-        {
-          name: '张三',
-          birthday: new Date('1990-01-01'),
-          sex: '男',
-          age: 28
-        },
-        {
-          name: '李四',
-          birthday: new Date('1991-01-01'),
-          sex: '女',
-          age: 27
-        }
-      ]
-
+        pageNum:10,
+        currentPage:1,
+        total:0,       
+        searchList:[],
 
       };
     },
     methods: {
-      handleClick(tab, event) {
-        this.child_cur = tab.index
+      getSeachList(){
+        this.$http.get('/yongxu/Retrieval/Show_Retrieval',{params:{
+           Display_Page_Number:this.pageNum,
+           PageNumber:this.currentPage,
+           parameter:this.SearchInput
+        }}).then((res)=>{
+            console.log(res)
+            this.searchList = res.data.Retrieval
+            this.total = res.data.PageCount
+        })
+      },
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+        this.pageNum = val
+         this.getSeachList()
+
+      },
+      handleCurrentChange(val) {
+          this.currentPage = val
+          this.getSeachList()
+          console.log(`当前页: ${val}`);
+      },
+     //进入详情
+       lineCilck(row, event, column){
+           //console.log(row.Charging_Method)
+          this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+           //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
@@ -138,18 +123,12 @@ import store from '../../vuex/store'
           }
         })  
       },
-     getTwoMenu(){
-       this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:1}}).then((res)=>{
-         console.log(res)
-         this.arr = res.data
-       })
-     },
       searchData(){
-        this.child = 1
+        this.getSeachList();
       }
     },
     mounted(){
-      this.getTwoMenu()
+     
     },
     components:{
    

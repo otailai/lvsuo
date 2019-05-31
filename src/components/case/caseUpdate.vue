@@ -13,6 +13,7 @@
                     </span>
                     </div>
                 <div class="add-userinfo flex">
+                    
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex sselct">
@@ -186,7 +187,7 @@
              
                      <!-- <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea> -->
                      <!-- <div class="serve_content" @click="openEditor()" v-html="Service_Content"></div> -->
-                      <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption" style="width:428px;" class="ql-editor"></quill-editor>
+                      <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption" style="width:428px;" class="ql-editor" ></quill-editor>
                      
                     </div>
                     </div>

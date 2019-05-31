@@ -14,6 +14,7 @@
                                     <p>角色与权限设置</p>
                                 </li>
                             </ul> -->
+                          
                              <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
                               <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
 
@@ -31,7 +32,7 @@
                                                 <el-table-column label="操作" width="150">
                                                 <template slot-scope="scope">
                                                 <button @click="editInfo(scope.row.Id)" class="btn-caozuo">编辑</button>
-                                                <button class="btn-caozuo" @click="editInfo(scope.row.Id)"> 删除</button>
+                                                <button class="btn-caozuo" @click="deleteRole(scope.row.Id)"> 删除</button>
                                                 </template>
                                                 </el-table-column>    
                                             </el-table>
@@ -41,40 +42,81 @@
                                             </el-pagination>
                                             </div>
                                             </li>
+                                            
                                             </ul>
                                         </div>
-                 <el-dialog  :visible.sync="dialogFormVisible" :append-to-body='true' top="300px" width="800px"> 
-                     <div class="name_div flex row">
-                            <p class="name_p">角色名称</p>
-                            <input type="text" class="name_input"/>
-                     </div>
-                      <div class="check flex row">
-                           <p class="check_name">权限</p>
-                           <div class="check_box flex column">
-                              <el-tree
-                                     ref="tree"
-                                    :data="data"
-                                    show-checkbox
-                                    node-key="id"
-                                    :default-expanded-keys="[2, 3]"
-                                    :default-checked-keys="[5]"
-                                    :props="defaultProps"
-                                    @check-change="handleCheckChange"
-                                    >
-                                    
-                                 
-                                </el-tree>
 
-                                 
-                                 
-                           </div>
-                     </div>
+                        <el-dialog  :visible.sync="dialogFormVisible1" :append-to-body='true' top="300px" width="800px"> 
+                         <div class="dialogFormVisible_box">
+                            
+                          <div class="flex row margin_t">
+                            <p class="flex_title">角色名称</p>
+                         
+                            <input type="text" class="this_input" v-model="role_update_name">
+                         
+                          </div>
+
+                           <div class="flex row margin_t">
+                            <p class="flex_title">权限</p>
+                         
+                            <el-tree
+                                  :data="data"
+                                    show-checkbox
+                                    
+                                    node-key="Id"
+                                    ref="tree"
+                                    highlight-current
+                                  
+                                    :default-checked-keys="Items"
+                                    :props="defaultProps">
+                                </el-tree>
+                         
+                          </div>
+                         </div>
+                   
                         <div slot="footer" class="dialog-footer">
-                          <el-button @click="dialogFormVisible = false">取 消</el-button>
-                          <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                          <el-button @click="dialogFormVisible1 = false">取 消</el-button>
+                          <el-button type="primary" @click="tijiao()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex"></div>
+                     <div class="dialogFormVisivleHeader_left flex">添加角色权限</div>
+                    </div>
+                      </el-dialog>
+
+
+
+                           <el-dialog  :visible.sync="dialogFormVisible2" :append-to-body='true' top="300px" width="800px"> 
+                         <div class="dialogFormVisible_box">
+                            
+                          <div class="flex row margin_t">
+                            <p class="flex_title">角色名称</p>
+                         
+                            <input type="text" class="this_input" v-model="role_name">
+                         
+                          </div>
+
+                           <div class="flex row margin_t">
+                            <p class="flex_title">权限</p>
+                         
+                            <el-tree
+                                  :data="data"
+                                    show-checkbox
+                                    node-key="Id"
+                                    ref="tree1"
+                                    highlight-current
+                                    :default-checked-keys="Items"
+                                    :props="defaultProps">
+                                </el-tree>
+                         
+                          </div>
+                         </div>
+                   
+                        <div slot="footer" class="dialog-footer">
+                          <el-button @click="dialogFormVisible2 = false">取 消</el-button>
+                          <el-button type="primary" @click="editRole()">确 定</el-button>
+                        </div>
+                         <div slot="title" class="dialog-title">
+                     <div class="dialogFormVisivleHeader_left flex">修改角色权限</div>
                     </div>
                       </el-dialog>
                               </div>
@@ -92,9 +134,10 @@ import store from '../../vuex/store'
       return {
         activeName:'name0',
         selectOneId:1,
-        numPage:5,
+        numPage:10,
         currentPage: 1,
-        dialogFormVisible:false,
+        dialogFormVisible1:false,
+        dialogFormVisible2:false,
         total:1,
         child:0,
         child_cur:0,
@@ -106,64 +149,103 @@ import store from '../../vuex/store'
         {id:1,name:'管理员',power:'权限'}
         ],
         arr:[
-            {title:'角色与权限设置'}, {title:'角色与权限设置1'}
+            {title:'角色与权限设置'}
         ],
         value: '',
         value5: '',
-        data: [
-          {
-          id: 1,
-          label: '一级 1',
-               children: [{
-                   id: 4,
-                   label: '二级 1-1',
-                        children: [{
-                            id: 9,
-                            label: '三级 1-1-1'
-                        }, 
-                        {
-                          id: 10,
-                          label: '三级 1-1-2'
-                        }]
-                    }]
-            },
-            {
-          id: 2,
-          label: '一级 2',
-          children: [
-                {
-                id: 5,
-                label: '二级 2-1'
-                },
-              {
-                id: 6,
-                label: '二级 2-2'
-              }
-            ]
-            },
-             {
-          id: 3,
-          label: '一级 3',
-          children: [{
-            id: 7,
-            label: '二级 3-1'
-          }, {
-            id: 8,
-            label: '二级 3-2'
-          }]
-        }],
+        role_name:'',
+        role_update_name:'',
+        Id:'',
+        data: [],
          defaultProps: {
           children: 'children',
           label: 'label'
-        }
+        },
+        branchList:[],
+        Items:[],
         }
 
     },
     methods: {
-     handleCheckChange(data, checked,indeterminate ) {
-        console.log(indeterminate);
-      },
+        tijiao(){
+            
+            if(this.role_update_name == '' || this.role_update_name==null){
+                  this.$message({
+                        type:'warning',
+                        message:'请先填写角色名称'
+                    })
+                    return false
+            }
 
+            var arr = []
+            var arr1 =[]
+            var arr2 = []
+            var arr3 = []
+            var arr4=[]
+              this.$nextTick(function() {
+                console.log(this.$refs.tree[1].getCheckedNodes());
+             
+                arr =  this.$refs.tree[1].getCheckedNodes()
+                arr2 = this.$refs.tree[1].getHalfCheckedKeys()
+              
+                for(var i =0 ;i<arr.length;i++){
+                   arr1[i] = arr[i].Id     
+                   arr4[i] =arr[i].Id      
+                }
+                console.log(arr2)
+                console.log(arr1)
+               arr1 = arr1.concat(arr2)
+               console.log(arr4)
+               if(arr1.length == 0){
+                    this.$message({
+                        type:'warning',
+                        message:'请至少选择一种权限菜单'
+                    })
+                    return false
+            }
+           
+            this.$http.post('/yongxu/Install/Add_Role',{User_Id:localStorage.getItem('userId'),Rule_Name:this.role_update_name,Items:arr1,Item:arr4}).then((res)=>{
+                        console.log(res)
+                        if(res.data == true){
+                            this.$message({
+                                type:'success',
+                                message:'添加成功'
+                            })
+                            this.dialogFormVisible1 = false
+                            this.getPowerList()
+                        }else{
+                                this.$message({
+                                        type:'warning',
+                                        message:'添加失败'
+                                    })
+                        }
+            }).catch((res)=>{
+                  this.$message({
+                                type:'warning',
+                                message:'服务器异常'
+                            })
+                    })
+              }) 
+         
+            
+
+        },
+     handleCheckChange(data, checked,indeterminate ) {
+        // console.log(data);
+        //  console.log(checked);
+        //   console.log(indeterminate);
+      this.$nextTick(function() {
+            console.log(this.$refs.tree.getCheckedNodes())
+        })
+        return false
+    let res = this.$refs.tree.getCheckedNodes()
+      let arr = []
+      res.forEach((item) => {
+        arr.push(item.id)
+      })
+        console.log(arr)
+      },
+    
        handleSizeChange(val) {
          this.numPage = val
          this.getPowerList()
@@ -177,11 +259,17 @@ import store from '../../vuex/store'
         console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
-        this.dialogFormVisible = true
+        this.dialogFormVisible1 = true
       },
       lineCilck(row, event, column){
             console.log(row, event, column)
       },
+    //   获取data
+    getDataList(){
+        this.$http.get('/yongxu/Install/Show_Permission_Item').then((res)=>{
+            this.data = res.data
+        })
+    },
       getPowerList(){ 
 
          this.$http.get('/yongxu/Install/Show_Role_Permissions',{params:{
@@ -193,8 +281,92 @@ import store from '../../vuex/store'
            console.log(res)
         })
       },
+      deleteRole(id){
+          this.$http.get('/yongxu/Install/Del_Roles',{params:{Id:id}}).then((res)=>{
+              console.log(res)
+              if(res.data == "删除成功"){
+                  this.$message({
+                      type:'success',
+                      message:'删除成功'
+                      })
+                this.getPowerList()
+              }else{
+                     this.$message({
+                      type:'warning',
+                      message:'删除失败'
+                      })
+                      return false
+              }
+          }).catch((res)=>{
+               this.$message({
+                      type:'success',
+                      message:'服务器异常'
+                      })
+                      return false
+          })
+      },
       editInfo(id){
-
+          this.Id = id
+           this.dialogFormVisible2 = true
+          this.$http.get('/yongxu/Install/Upd_Sel_Role',{params:{
+              Id:this.Id
+          }}).then((res)=>{
+              console.log(res)
+              this.role_name = res.data.Rule_Name
+            //   this.$refs.tree1[1].setCheckedKeys(res.data.Items)
+              this.Items = res.data.Item
+          })
+         
+      },
+      editRole(){
+              if(this.role_name == '' || this.role_name==null){
+                  this.$message({
+                        type:'warning',
+                        message:'请先填写角色名称'
+                    })
+                    return false
+            }
+            var    arr =  this.$refs.tree1[1].getCheckedNodes()
+            var    arr2 = this.$refs.tree1[1].getHalfCheckedKeys()
+            var arr1 = []
+            var arr4 =[]
+                for(var i =0 ;i<arr.length;i++){
+                   arr1[i] = arr[i].Id   
+                   arr4[i] = arr[i].Id      
+                }
+                  console.log(arr2)
+                   console.log(arr1)
+               arr1 = arr1.concat(arr2)
+               console.log(arr4)
+            if(arr1.length == 0){
+                    this.$message({
+                        type:'warning',
+                        message:'请至少选择一种权限菜单'
+                    })
+                    return false
+            }
+            this.$http.post('/yongxu/Install/Upd_Role',{
+              Rule_Name:this.role_name,
+              Items:arr1,
+              Item:arr4,
+              User_Id:localStorage.getItem('userId'),
+              Id:this.Id
+          }).then((res)=>{
+              if(res.data == true){
+                  this.$message({
+                      type:'success',
+                      message:'修改成功'
+                  })
+                  this.dialogFormVisible2 = false
+                  this.getPowerList()
+              }else{
+                     this.$message({
+                      type:'success',
+                      message:'修改失败'
+                  })
+              }
+          })
+       
       },
          handleClick(tab, event) {
         this.child_cur = tab.index
@@ -205,6 +377,7 @@ import store from '../../vuex/store'
     },
     mounted(){
       this.getPowerList()
+      this.getDataList()
     },
     components:{
       
@@ -233,19 +406,51 @@ import store from '../../vuex/store'
 }
 
 .el-tabs__header{
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-              /* border-bottom: 1px solid #ccc; */
-                  height: 40px;
-                    margin-top: 20px;
-        }
-        .el-tabs__nav-wrap{
-              /* border-bottom: 1px solid #ccc; */
+     display: flex;
+     flex-direction: row;
+     justify-content: flex-start;
+       /* border-bottom: 1px solid #ccc; */
+           height: 40px;
+             margin-top: 20px;
+ }
+ .el-tabs__nav-wrap{
+       /* border-bottom: 1px solid #ccc; */
 
-        }
-     
-     
+ }
+  .dialogFormVisible_box{
+  display: flex;
+  flex-direction: column;
+}
+.margin_t{
+  margin-top: 25px;
+}
+.flex_title{
+  width: 150px;
+  text-align: center;
+  height: 31px;
+  line-height: 31px;
+}
+.this_input{
+    background-color: #FFF;
+    background-image: none;
+    /* border-radius: 4px; */
+    border: 1px solid #DCDFE6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 31px;
+    line-height: 31px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 500px;
+}
+.el-select{
+  width: 500px;
+}   
 </style>
 
 

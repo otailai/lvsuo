@@ -46,8 +46,8 @@
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
@@ -55,7 +55,7 @@
                             </span>
                         </template>
                       </el-table-column>
-                       <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
+                       <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
                           <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
@@ -140,7 +140,7 @@ export default {
             Casevalue:[],
             currentPage:1,
             total:0,
-            numPage:5,
+            numPage:10,
             tableData:[],
             //一级下拉
             Casevalue1:'',
@@ -239,7 +239,25 @@ export default {
       },
     // 打开添加
         toAdd(){
-        this.$router.push({path:'/index/caseAdd'})
+             this.common.checkAuth({params:{url:'AddCases11',userid:localStorage.getItem('userId')}}).then((res)=>{
+           console.log(res)
+            if(res.data ==false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });     
+              return false
+          }else{
+               //console.log('123456')
+              this.$router.push({path:'/index/caseAdd'})
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
+         })
       },
     //进入详情
        lineCilck(row, event, column){

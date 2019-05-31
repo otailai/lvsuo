@@ -1,5 +1,30 @@
 <template>
     <div>
+             <div class="selectMenu flex">
+              <div class="case-type flex"> 
+                 <p>案件类型：</p>
+                  <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)">
+                    <el-option v-for="item in optionMenu" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
+                  </el-select>
+
+                  <el-select v-model="Casevalue1" placeholder="请选择" style="margin-left: 10px;" @change="changeTowValue(Casevalue1)">
+                  <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
+                 </el-select>
+              </div>
+
+               <div class="case-state flex" style="margin-left:10px;">
+               <p>案件状态：</p> 
+               <el-select v-model="value" placeholder="请选择" style="margin-left: 10px;" @change="changeStatus(value)"> 
+               <el-option v-for="item in options"  :key="item.value"  :label="item.label" :value="item.value"></el-option>
+               </el-select>
+               </div>      
+               <div class="input flex">
+                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
+                          
+                      <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
+                    
+                    </div>    
+              </div>
           <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
@@ -342,6 +367,55 @@ export default {
   height: 25px;
   margin-left: 2px;
 
+}
+.input{
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 250px;
+    margin-right: 20px;
+    border-radius: 45px;
+    border: 1px solid #DDDDDD;
+    
+}
+.case-input{
+      width:  200px;
+    height: 36px;
+    /* border: 1px solid #DDDDDD; */
+    border-top-left-radius: 45px;
+    border-bottom-left-radius: 45px;
+   
+    padding-left: 21px;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    color: #4a4a4a;
+    background-color: transparent;
+}
+.case-button{
+    outline: none;
+    width: 48px;
+    height: 28px;
+    border: none;
+    border-radius: 36px 36px 36px 36px;
+    background-color: #fefeff;
+    margin-right: 4px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+ .input:hover{
+    border: 1px solid #7E2C2E;
+}
+.case-button:hover{
+    background: #7E2C2E;
+    color: #ffffff;
+}
+.case-child-end{
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.selectMenu{
+    margin-top: 20px;
 }
 </style>
 

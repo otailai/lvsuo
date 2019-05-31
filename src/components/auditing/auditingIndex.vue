@@ -7,12 +7,12 @@
                 <p v-if="child_cur==0">案件审核</p>
                  <p v-if="child_cur==1">风控审核</p>
                  <p v-else-if="child_cur==2">财务审核</p>
-                  <p v-if="child_cur==3">风结案审核</p>
+                  <p v-if="child_cur==3">结案审核</p>
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
            <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
-         
-            <div v-show="child_cur==0">
+           <router-view></router-view>
+            <!-- <div v-show="child_cur==0">
               <caseAditing></caseAditing>
         
             </div>
@@ -28,7 +28,7 @@
           
             <div v-show="child_cur==3">
               <auditingCloseCase></auditingCloseCase>
-          </div>
+            </div> -->
         </el-tab-pane>
       
         <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
@@ -69,7 +69,7 @@ import auditingCloseCase from './auditingCloseCase'
     methods: {
       handleClick(tab, event) {
         this.child_cur = tab.index
-       
+        this.$router.push('/index/auditingIndex/'+this.arr[this.child_cur].Item_Path)
         // console.log(tab,event);
       },
       changeLi(i){
@@ -86,13 +86,16 @@ import auditingCloseCase from './auditingCloseCase'
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
-console.log(row, event, column)
+          console.log(row, event, column)
       },
     getChildMenu(){
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
-          Menu_Id:4
+          Menu_Id:5
         }}).then((res)=>{
+          console.log(res)
           this.arr = res.data
+        }).then((res)=>{
+              this.getActiveMenu()
         })
       },
       searchData(){
@@ -115,12 +118,25 @@ console.log(row, event, column)
           });          
         });
       },
-    
+       getActiveMenu(){
+        // this.activeName = 'name'+this.child_cur
+        console.log(this.activeName)
+        console.log(this.$route.path)
+        var menuArr = []
+        for(var i =0 ;i<this.arr.length;i++){
+            menuArr[i] = '/index/auditingIndex/'+this.arr[i].Item_Path
+        }
+        console.log(menuArr)
+        var i =menuArr.indexOf(this.$route.path)
+        this.activeName = 'name'+i
+        
+     },
      
       
     },
     mounted(){
       this.getChildMenu()
+  
     },
     filters:{
           getTime:function(time){

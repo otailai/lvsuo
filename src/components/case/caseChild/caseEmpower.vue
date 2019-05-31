@@ -7,10 +7,10 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <!-- <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button> -->
                 </div>
              <div class="selectMenu flex">
-              <div class="case-type flex">
+              <!-- <div class="case-type flex">
                  <p>案件类型：</p>
                   <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)">
                     <el-option v-for="item in optionMenu" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
@@ -42,7 +42,7 @@
                 </div>
               
                 <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
-                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
+                <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button> -->
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
@@ -55,7 +55,18 @@
                             </span>
                         </template>
                       </el-table-column>
-                       <el-table-column prop="Staff_Name" label="承办律师" width=""> </el-table-column>
+                       <el-table-column  label="承办律师" width=""> 
+
+                            <template slot-scope="scope">
+                            <el-popover trigger="hover" placement="top" popper-class="back_color">
+                              <el-tag  v-for="(v,i) in laywerNameArr" :key="i">{{v}}</el-tag>
+                                <div slot="reference" class="name-wrapper" @mouseover="showLaywer(scope.row.Id)">
+                              <el-tag type="success"> <span> {{ scope.row.Staff_Name }}</span></el-tag>
+                              </div>
+                            </el-popover>
+                            </template>
+
+                       </el-table-column>
                           <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Creattime" style="color:#ccc">暂无</p>
@@ -140,7 +151,7 @@ export default {
             Casevalue:[],
             currentPage:1,
             total:0,
-            numPage:5,
+            numPage:10,
             tableData:[],
             //一级下拉
             Casevalue1:'',
@@ -193,8 +204,10 @@ export default {
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit('pick', [start, end]);
             }
-          }]
+          }],
         },
+         //律师姓名
+        laywerNameArr:[],
         //状态
         options:[
          {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
@@ -494,7 +507,17 @@ export default {
                 this.getCaseList()
                 this.dialogFormVisible = false
               })
-            }
+            },
+            //获取律师列表
+    showLaywer(id){
+      var _this =this
+       this.$http.get('/yongxu/Customer/Show_All_Lawyers',{params:{
+         Id:1,
+       }}).then((res)=>{
+         console.log(res)
+        this.laywerNameArr = res.data
+       })
+    },
     },
     components:{
          JsonExcel:'downloadExcel',

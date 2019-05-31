@@ -61,7 +61,7 @@ export default {
     data(){
         return{
             //聘请方
-            htmlTitle: '页面导出PDF文件名',
+            htmlTitle: '合同mobanPDF',
             name:'陈永旭',
             //受聘
             laywerName:'广州金鹏律师事务所',
@@ -189,7 +189,7 @@ export default {
 
 }
 </script>
-<style>
+<style scoped>
 body{
      font-family:楷体_GB2312;
 }

@@ -34,10 +34,10 @@
               <li class="showTab-li" v-show="cur==0">
 
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Id" label="序号" width=""></el-table-column>
-                    <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
-                     <el-table-column prop="Postfix" label="文档类型" width=""> </el-table-column>
-                      <el-table-column prop="Staff_Name" label="更新人员" width=""> </el-table-column>
+                    <el-table-column prop="Id" label="序号" width="" ></el-table-column>
+                    <el-table-column prop="File_Name" label="文档名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Postfix" label="文档类型" width="" :show-overflow-tooltip="true"> </el-table-column>
+                      <el-table-column prop="Staff_Name" label="更新人员" width="" :show-overflow-tooltip="true"> </el-table-column>
                        <el-table-column  label="创建日期" width="">
                            <template slot-scope="scope">
                               <p  v-if="!scope.row.Date_Created" style="color:#ccc">暂无</p>
@@ -250,7 +250,7 @@ console.log(row, event, column)
       openNew(){
         this.common.checkAuth({params:{
           userid:localStorage.getItem('userId'),
-          url:'Document/Add_Instrument'
+          url:'Document/Add_Document'
         }}).then((res)=>{
             console.log(res)
             if(res.data == true){
@@ -263,6 +263,12 @@ console.log(row, event, column)
                 return false
             }
          
+        }).catch((err)=>{
+          this.$message({
+                message:'服务器异常',
+                type:'warning'
+                }); 
+                return false
         })
        
       },

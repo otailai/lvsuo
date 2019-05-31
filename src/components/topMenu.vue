@@ -25,7 +25,7 @@
                     </div>
                 </el-row>   
             </div>
-        </el-col>
+        </el-col> 
 </el-row>
 </div>
 
@@ -43,7 +43,7 @@
                 <el-popover ref="popover2" placement="bottom-end" trigger="click">
                     <div>
                       <ul class="flex">
-                          <router-link v-for="(v,i) in arr1"    :to="'/'+v.Item_Path" tag="li" :key="i" style="margin-left:20px;" class="setting flex" >
+                          <router-link v-for="(v,i) in arr1"    :to="'/index/'+v.Item_Path" tag="li" :key="i" style="margin-left:20px;" class="setting flex" >
                               <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
                               <p>{{v.Item_Name}}</p>
                          </router-link>
@@ -97,7 +97,7 @@ export default {
             })
         },
         getSetTopMenu(){
-              this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:6}}).then((res)=>{
+              this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7}}).then((res)=>{
                 console.log(res)
                 this.arr1 = res.data
             })

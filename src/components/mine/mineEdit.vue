@@ -18,9 +18,9 @@
             </div>
          
             <div class="mine-top-form flex">
-                <input type="text" class="common-input" />
-                <input type="text" class="common-input" />
-                 <el-select v-model="value1" placeholder="请选择" style="width:200px">
+                <input type="text" class="common-input" placeholder="请输入您的姓名" v-model="name"/>
+                <input type="text" class="common-input" placeholder="请输入您的职业证号" v-model="number"/>
+                 <el-select v-model="value" placeholder="请选择" style="width:200px">
                     <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -29,8 +29,8 @@
                     </el-option>
                     </el-select>
 
-                <input type="text" class="common-input" />
-                <input type="text" class="common-input" />
+                <input type="text" class="common-input" placeholder="请输入您的联系方式" v-model="tel"/>
+                <input type="text" class="common-input" placeholder="请输入您的邮箱" v-model="email"/>
               
             </div>
         </div>
@@ -41,32 +41,32 @@
             <div class="mine-bottom-left flex">
                 <div class="mine-bottom-left-div">
                     <p>职业领域:</p>
-                     <input type="text" class="common-input w-all" />
+                     <input type="text" class="common-input w-all" v-model="jobTextare"/>
                 </div>
 
                  <div class="mine-bottom-left-div">
-                    <p>职业领域1:</p>
-                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea1">
+                    <p>教育背景:</p>
+                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="teach">
                     
                     </textarea>
                 </div>
                 <div class="mine-bottom-left-div">
-                    <p>职业领域:</p>
-                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea"></textarea>
+                    <p>工作经历:</p>
+                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="job"></textarea>
                 </div>
                 <div class="mine-bottom-left-div">
-                    <p>职业领域:</p>
-                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea"></textarea>
+                    <p>社会职务:</p>
+                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="job1"></textarea>
                 </div>
                 <div class="mine-bottom-left-div">
-                    <p>职业领域:</p>
-                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="textarea"></textarea>
+                    <p>获得荣誉:</p>
+                    <textarea name="" id="" cols="49" rows="6" class="textarea" v-model="honor"></textarea>
                 </div>
             </div>
             <div class="mine-bottom-right flex">
                   <div class="mine-bottom-left-div">
-                    <p>职业领域:</p>
-                    <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea"></textarea>
+                    <p>主要业绩:</p>
+                    <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="grade"></textarea>
                 </div>
             </div>
         </div>
@@ -96,7 +96,18 @@ export default {
                     value: '选项5',
                     label: '北京烤鸭'
                     }],
-            value1:'选项1',
+            value:'选项1',
+            name:'',
+            job:'',
+            job1:'',
+            number:'',
+            tel:'',
+            eamail:'',
+            jobTextare:'',
+            teach:'',
+            honor:'',
+            grade:'',
+
         }
     },
     methods:{
@@ -108,8 +119,26 @@ export default {
         this.dialogVisible = true;
       },
       getcontent(){
+
           var content = this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
          console.log(content)
+      },
+      addMineInfo(){
+          this.$http.post('/yongxu/Personal/Save_Information',{
+            //   Id:,
+            //   Avatar_Path:
+            //   Honor:,
+            //   Occupation_Number:,
+            //   Position_Id:,
+            //   Contact_Information:,
+            //   Contact_Mailbox:,
+            //   practice_Areas:,
+            //   Achievement:,
+            //   Education:,
+            //   Work_History:,
+            //   Social_Duty:,
+          
+          })
       }
     }
 }

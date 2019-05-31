@@ -96,7 +96,7 @@
                        <el-table-column  label="分所" width="170" :show-overflow-tooltip="true">
                                  <template slot-scope="scope">
                                 <el-popover trigger="hover" placement="top" popper-class="back_color1">
-                                  <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}|</p>
+                                  <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}&nbsp;</p>
                                   <div slot="reference" class="name-wrapper">
                                      <span  @mouseover="showBranches(scope.row.Id)"> {{ scope.row.Org_Name }}</span>
                                  </div>
@@ -271,7 +271,13 @@ var _this = this
                 }); 
                 return false
           }
-        })   
+        }).catch((res)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                }); 
+                return false
+        })
       },
        handleSizeChange(val) {
         console.log(`每页 ${val} 条`);

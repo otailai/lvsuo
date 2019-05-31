@@ -33,7 +33,7 @@
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="riskArr" border style="width: 100%"  @row-click="lineCilck">
+                 <el-table :data="riskBrandArr" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width=""> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
@@ -74,7 +74,7 @@ export default {
     data(){
         return{
                 cur:0,
-                riskArr:[],
+                riskBrandArr:[],
                 //当前页
                 currentPage:1,
                 total:0,
@@ -95,16 +95,15 @@ export default {
     },
     inject:["reload"],
     methods:{
-         getRiskArr(){
-        this.$http.get('/yongxu/Toexamine/Show_Noe_Risk',{params:{
-          User_Id:localStorage.getItem('userId'),
+         getRiskBrandArr(){
+        this.$http.get('/yongxu/Toexamine/Show_Two_Risk',{params:{
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage,
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
         }}).then((res)=>{
             console.log(res)
-            this.riskArr = res.data.Noe_Risk
+            this.riskBrandArr = res.data.Two_Risk
             this.total = res.data.PageCount
         })
       },
@@ -113,18 +112,18 @@ export default {
       console.log(id)
        this.Casevalue2 = id
        console.log(this.Casevalue2)
-       this.getRiskArr()
+       this.getRiskBrandArr()
       },
       //状态查询
       changeStatus(id){
         console.log(id)
          this.statusValue = id
-         this.getRiskArr()
+         this.getRiskBrandArr()
       },
       //搜索查询
       searchContent(){
        console.log(this.SearchInput)
-       this.getRiskArr()
+       this.getRiskBrandArr()
       },
       //获取一级下拉
         getSelectMenu(){
@@ -151,18 +150,18 @@ export default {
         this.value = ''
         this.Casevalue = ''
         this.Casevalue1 = ''
-        this.getRiskArr()
+        this.getRiskBrandArr()
         
       },
       handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
         this.pageNum = val
-         this.getRiskArr()
+         this.getRiskBrandArr()
 
       },
       handleCurrentChange(val) {
           this.currentPage = val
-          this.getRiskArr()
+          this.getRiskBrandArr()
           console.log(`当前页: ${val}`);
       },
      lineCilck(row, event, column){
@@ -242,14 +241,14 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:4}}).then((res)=>{
+          this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:4}}).then((res)=>{
              if(res.data == true){
                 this.$message({
                   type: 'success',
                   message: '操作成功!'
                 });
-                this.getRiskArr()
-                this.AuditLog(id,'一级风控审核',2)
+                this.getRiskBrandArr()
+                   this.AuditLog(id,'二级风控审核',2)
              }else{
                 this.$message({
                   type: 'warning',
@@ -271,15 +270,15 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then((res) => {
-          this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:3}}).then((res)=>{
+          this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:3}}).then((res)=>{
             console.log(res)
               if(res.data == true){
                  this.$message({
             type: 'success',
             message: '操作成功!'
           });
-            this.getRiskArr()
-                this.AuditLog(id,'一级风控审核',1)
+            this.getRiskBrandArr()
+            this.AuditLog(id,'二级风控审核',1)
               }else{
                  this.$message({
             type: 'warning',
@@ -296,7 +295,7 @@ export default {
           });          
         });
       },
-         //添加日志
+       //添加日志
       AuditLog(id,type,Findings_Audit,){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
@@ -309,7 +308,7 @@ export default {
       },
     },
     mounted(){
-        this.getRiskArr()
+        this.getRiskBrandArr()
         this.getSelectMenu()
     },
      filters:{

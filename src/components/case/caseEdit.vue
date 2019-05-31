@@ -6,8 +6,14 @@
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p>案件详情</p>
             </div>
+            
              <div class="add-content flex">
                 <!-- <div class="add-p flex"><p class="add-p-p">收起</p><i class="el-icon-d-arrow-right"></i></div> -->
+                 <div class="add-p flex">
+                    <span @click="closeBox()" class="flex">
+                   <i class="el-icon-close" ref="icon_right"></i>
+                    </span>
+                    </div>
                 <div class="add-userinfo flex">
                 <p class="add-userinfo-p">客户基本信息</p>
                 <div class="flex add-userinfo-index">
@@ -188,8 +194,8 @@
 
                        <el-table :data="tableData" border style="width: 100%;margin:auto"  @row-click="lineCilck">
                         <el-table-column prop="Id" label="Id" width=""></el-table-column>
-                        <el-table-column prop="File_Name" label="文档名称" width=""> </el-table-column>
-                        <el-table-column prop="Postfix" label="文件类型" width=""> </el-table-column>
+                        <el-table-column prop="File_Name" label="文档名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                        <el-table-column prop="Postfix" label="文件类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                         <el-table-column prop="Date_Created" label="创建日期" width="180"> </el-table-column>
                         <el-table-column prop="Update_Date" label="更新日期" width="180"> </el-table-column>
                             <el-table-column  label="状态" width="">
@@ -199,12 +205,14 @@
                                 </template>
                             
                              </el-table-column>
-                             <el-table-column  label="操作" width="">
+                             <el-table-column  label="操作" width="150">
                                 <template slot-scope="scope">
-                                    <p @click="goTO(scope.row.Id) " v-if="scope.row.type == 1">风控审核</p>
-                                     <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 2">更新</p>
-                                      <a  v-if="scope.row.type == 3" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
-                                      <p  v-if="scope.row.type == 0" @click="lookWord(`${{Type_Id }}`)">查看</p>
+                                    <p   v-if="scope.row.type == 1">一级审核</p>
+                                     <p v-if="scope.row.type == 2">二级审核</p>
+                                     <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4" style="cursor: pointer">更新</p>
+                                      <a  v-if="scope.row.type == 3" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
+                                      <p  v-if="scope.row.type == -1" @click="lookWord(`${{Type_Id }}`)">查看</p>
+                                       <p  v-if="scope.row.type == 0"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">一级风控</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">二级风控</span> </p>
                                 </template>
                                
                                 </el-table-column>
@@ -362,6 +370,31 @@ export default {
         }
     },
     methods:{
+        //风控传
+        toRisk(id,level){
+            this.$http.get('/yongxu/Document/Upd_Document_Status',{params:{Id:id,Examine_Level:level}}).then((res)=>{
+                console.log(res)
+                if(res.data == true){
+                        this.$message({
+                            type:'success',
+                            message:'提交成功'
+                        })
+                        this.getTableData()
+                }else{
+                        this.$message({
+                            type:'warning',
+                            message:'提交失败'
+                        })
+                        return false
+                }
+            }).catch((err)=>{
+                 this.$message({
+                            type:'warning',
+                            message:'系统异常'
+                        })
+                        return false
+            })
+        },
         deleteLine(i){
                this.arr.splice(i,1)
         },
@@ -482,7 +515,7 @@ export default {
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
                         console.log(res)
-                            if(res.data.type == 0){
+                            if(res.data.type == -1){
                                 this.ifClick = false
                             }else{
                                 this.ifClick = true
@@ -600,6 +633,9 @@ export default {
             },
             lookWord(id){
                 this.dialogFormVisibleWord = true
+            },
+            closeBox(){
+                this.$router.push('/index/caseIndex')
             }
     },
     mounted(){

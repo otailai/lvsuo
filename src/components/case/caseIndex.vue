@@ -1,7 +1,18 @@
  <template>
+ 
     <div id="case" class="case"> 
-       <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i" @click="gotoWeb(v.path)">
+         <div class="flex">
+                <p>所在位置：</p>
+                <router-link to='/index/caseIndex' tag="a">案件管理</router-link>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p v-show="child_cur == 0">所有案件</p>
+                 <p v-show="child_cur == 1">分所案件</p>
+                  <p v-show="child_cur == 2">部门案件</p>
+                   <p v-show="child_cur == 3">我的案件</p>
+                   <p v-show="child_cur == 4">授权案件</p>
+            </div>
+       <el-tabs v-model="activeName" @tab-click="handleClick">
+           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
             <div class="flex case-child" >  
             </div>
             <div class="showTab">
@@ -121,7 +132,7 @@ import caseBranch from './caseChild/caseBranch'
         activeName: 'name0',
         index:0,
         cur:2,
-        arr:[{Item_Name:'所有案件',path:'/index/caseIndex/caseAllList'},{Item_Name:'分所案件',path:'/index/caseIndex/caseBranch'},{Item_Name:'部门案件',path:'/index/caseIndex/casePart'},{Item_Name:'我的案件',path:'/index/caseIndex/caseMine'},{Item_Name:'授权案件',path:'/index/caseIndex/caseEmpower'}], 
+        arr:[], 
          input23: '',
         
         tableData: [],
@@ -184,11 +195,9 @@ import caseBranch from './caseChild/caseBranch'
       handleClick(tab, event) {
         console.log(event)
         this.child_cur = tab.index
-        this.$router.push(this.arr[this.child_cur].path)
+        this.$router.push('/index/caseIndex/'+this.arr[this.child_cur].Item_Path)
       },
-      gotoWeb(path){
-        this.$router.push(path)
-      },
+     
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
           console.log(res)
@@ -203,18 +212,35 @@ import caseBranch from './caseChild/caseBranch'
           }
         })  
       },
-     getTwoMenu(){
-       this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:1}}).then((res)=>{
-        //  console.log(res)
-        //  this.arr = res.data
-       })
+      getChildMenu(){
+        this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
+          Menu_Id:1
+        }}).then((res)=>{
+          console.log(res)
+          this.arr = res.data
+        }).then((res)=>{
+            this.getActiveMenu()
+        })
+      },
+     getActiveMenu(){
+        this.activeName = 'name'+this.child_cur
+        console.log(this.activeName)
+        console.log(this.$route.path)
+        var menuArr = []
+        for(var i =0 ;i<this.arr.length;i++){
+            menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
+        }
+        console.log(menuArr)
+        var i =menuArr.indexOf(this.$route.path)
+        this.activeName = 'name'+i
+        
      },
       searchData(){
         this.child = 1
       }
     },
     mounted(){
-      this.getTwoMenu()
+      this.getChildMenu()
     },
     components:{
       caseAllList,
