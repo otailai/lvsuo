@@ -53,13 +53,13 @@
                              <el-table-column prop="Size" label="文件大小" width=""> </el-table-column>
                         <el-table-column label="操作"> 
                               <template slot-scope="scope">   
-                             <a :href="'/yongxu//Base/download?filename='+scope.row.File_Path">下载</a>
+                             <a :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
                               </template>
                         </el-table-column>
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                  :page-sizes="[5,10,15,20]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
+                  :page-sizes="[1,5,10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
                   </li>
@@ -95,6 +95,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
+                    :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -125,7 +126,7 @@ import { constants } from 'fs';
         //分页
         PageCount:0,
         currentPage:1,
-        numPage:5,
+        numPage:10,
         //搜索
         searchInput:'',
         //上传
@@ -210,12 +211,10 @@ import { constants } from 'fs';
         value5: ''
       };
     },
+     inject:["reload"],
     methods: {
       handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
       },
       changeLi(i){
           this.cur = i
@@ -224,35 +223,26 @@ import { constants } from 'fs';
        handleSizeChange(val) {
          this.numPage = val
          this.getTableData()
-         console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
-        console.log(val)
         this.currentPage= val
         this.getTableData()
-
-        console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
-console.log(row, event, column)
       },
       getChildMenu(){
         this.$http.get('/api/data').then((res)=>{
         this.arr = res.data[0].children
         })
       },
-      searchData(){
-        this.child = 1
-      },
       openNew(){
         this.common.checkAuth({params:{
           userid:localStorage.getItem('userId'),
           url:'Document/Add_Document'
         }}).then((res)=>{
-            console.log(res)
             if(res.data == true){
               this.dialogFormVisible = true
             }else{
@@ -273,12 +263,10 @@ console.log(row, event, column)
        
       },
       downLine(id){
-        console.log(id)
       },
       // 图片上传
         chooseImg:function() {      
             let file = this.imgFile 
-            console.log(file)
            if(file==null||file==undefined){
                 this.$message({
                     message:'图片未上传',
@@ -291,7 +279,7 @@ console.log(row, event, column)
           this.$http.post('/yongxu/Base/uploadRawFile',data,{
             headers:{'Content-Type':'multipart/form-data'}  
           }).then((res)=>{
-            console.log(res)
+
           })
 	          
           },
@@ -300,15 +288,13 @@ console.log(row, event, column)
           },
           //回调
              successFile(res){
-            console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
                     this.Suffix_Name =res.Suffix_Name
                     this.fileName1 = res.fileName
                     this.size = res.size
-                    console.log(this.fileName1)
-                   this.$message({
+                    this.$message({
                     message:res.message,
                     type:'success'
                 });  
@@ -321,11 +307,10 @@ console.log(row, event, column)
                 });  
           },
           progressFile(event, file, fileList){
-            console.log(file)
-            return false
+           
           },
             beforeFile(file){
-             console.log(file.name)
+              console.log(file)
              var json = file.name.split(".")
              var file_name =json[0];
             this.fileName = file_name
@@ -353,7 +338,6 @@ console.log(row, event, column)
             }).then((res)=>{
                  this.tableData = res.data.Document
                  this.PageCount = res.data.PageCount
-                 console.log(res)
             })
           },
           searchData(){
@@ -389,13 +373,14 @@ console.log(row, event, column)
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
                 }).then((res)=>{
-                    console.log(res)
                     if(res.data == true){
                           this.$message({
                         message:'保存成功',
                         type:'success'
                     });
-                     this.dialogFormVisible = false
+
+                    this.dialogFormVisible = false
+                    this.reload()
                     this.getTableData()
                     }
                     else{
@@ -406,13 +391,16 @@ console.log(row, event, column)
                     }
                    
                 }).catch((err)=>{
-                    console.log(err)
+                      this.$message({
+                        message:'服务器异常',
+                        type:'warning'
+                    });
                 })
             },
          
     },
     mounted(){
-      this.getChildMenu()
+     // this.getChildMenu()
       this.getTableData()
     },
       filters:{

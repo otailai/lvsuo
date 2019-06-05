@@ -25,7 +25,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     </div>
                      <div class="input flex" v-show="cur==1">
-                      <input placeholder="请输入关键词搜索1"  v-model="Customer_Name1" class="case-input"   />
+                      <input placeholder="请输入关键词搜索"  v-model="Customer_Name1" class="case-input"   />
                       <button class="case-button" @click="searchContent1()"><i class="el-icon-search"></i></button>
                     </div>
                       <!-- <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button> -->
@@ -69,7 +69,7 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button>
               </div> -->
                <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true">
                       <template slot-scope="scope">
                           {{scope.row.Customer_Number|hideMiddle}} 
@@ -77,8 +77,8 @@
                       </template>
                     </el-table-column>
                       <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column prop="Value" label="行业" width=""> </el-table-column>
-                       <el-table-column prop="Customer_Type" label="客户类型" width=""> </el-table-column>
+                      <el-table-column prop="Value" label="行业" width="" :show-overflow-tooltip="true"> </el-table-column>
+                       <el-table-column prop="Customer_Type" label="客户类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                    
                 
                    <el-table-column  label="承办律师名称" width="120">
@@ -110,7 +110,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[5, 10, 15, 20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
+                 :page-sizes="[1,5, 10]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
 
@@ -120,7 +120,7 @@
                   <li class="showTab-li" v-show="cur==1">
               <div class="selectMenu flex">
                   <el-table :data="tableData1" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""></el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                      
@@ -133,7 +133,7 @@
 
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange1" :current-page="currentPage1"
-                 :page-sizes="[5, 10, 15, 20]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
                    </el-pagination>
                 </div>
                   </li>
@@ -172,9 +172,6 @@
             </div>
           </div>
         
-        <!-- </el-tab-pane> -->
-      
-        <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
                 
         </el-tabs> 
     </div>
@@ -192,13 +189,13 @@ var _this = this
         //列表查询
         Customer_Name:'',
         PageCount:0,
-        pageNum:5,
+        pageNum:10,
         currentPage: 1,
       //事务所客户
       tableData1:[],
       Customer_Name1:'',
         PageCount1:0,
-        pageNum1:5,
+        pageNum1:10,
        currentPage1:1,
 
       title:'',
@@ -249,18 +246,12 @@ var _this = this
     methods: {
       handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
       },
       changeLi(i,v){
-        console.log(v)
           this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:v.url}}).then((res)=>{
-          console.log(res)
           if(res.data == true){
               this.cur = i
               this.title = v.title
-              console.log(v.title)
               if(i==1){
                 this.getComponyList()
               }
@@ -280,22 +271,18 @@ var _this = this
         })
       },
        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
         this.pageNum = val
         this.getList()
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
         this.currentPage = val
           this.getList()
       },
         handleSizeChange1(val) {
-        console.log(`每页 ${val} 条`);
         this.pageNum1 = val
         this.getComponyList()
       },
       handleCurrentChange1(val) {
-        console.log(`当前页: ${val}`);
         this.currentPage1 = val
           this.getComponyList()
       },
@@ -303,7 +290,6 @@ var _this = this
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
-          console.log(row, event, column)
       },
       getChildMenu(){
         this.$http.get('/api/data').then((res)=>{
@@ -321,7 +307,7 @@ var _this = this
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-          console.log(res)
+         // console.log(res)
             this.tableData = res.data.Customers
             this.PageCount = res.data.PageCount
         })   
@@ -348,7 +334,6 @@ var _this = this
           Display_Page_Number:this.pageNum1,
           PageNumber:this.currentPage1
         }}).then((res)=>{
-          console.log(res)
             this.tableData1= res.data.list
             this.PageCount1 = res.data.PageCount
         })

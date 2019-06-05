@@ -1,9 +1,9 @@
 <template>
-    <div>
+       <div>
      <button @click="getPdf()">下载pdf</button>
       <button @click="getDoc()">导出doc</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
+        <div class="flex first" style="text-align: right;color:#000000;">(<span id="todayTime"></span>[1])穗金鹏民字第[2]号</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">民 事 委 托 代 理</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">合</strong></p>
@@ -14,13 +14,12 @@
         <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-        <!-- <div class="input1 flex" style="text-align: center;"> -->
-        <p style="width: 80%;
+          <p style="width: 80%;
     margin: auto;"><strong style="font-size: 14.0pt;
     font-family: 仿宋_GB2312;
     letter-spacing: .1pt;    width: 110px;
     text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
-    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span></p>
+    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000" id="Aleader"></span></p>
         <!-- </div> -->
          <div class="height"></div>
                  <p style="width: 80%;
@@ -28,7 +27,7 @@
     font-family: 仿宋_GB2312;
     letter-spacing: .1pt;    width: 110px;
     text-align: left;display:inline-block;color:#000000;">受聘聘方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
-    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{laywerName}}</span></p>
+    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000" id="laywerName"></span></p>
          <!-- <div class="input1 flex" style="text-align: center;">
             <p class="input1-p"><strong style="font-size: 14.0pt;
     font-family: 仿宋_GB2312;
@@ -46,9 +45,9 @@
          <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-<div class="WordSection1" style="layout-grid: 15.6pt;"></div>
-<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><strong style="mso-bidi-font-weight: normal;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方（聘请方）：<span class="row-span" id="Aname" style="mso-spacerun: yes;" v-html="Aname" ></span> </span></strong></p>
-<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">法定代表人： </span><span class="row-span" id="Aleader"></span></p>
+<div class="WordSection1" style="layout-grid: 15.6pt;">
+<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><strong style="mso-bidi-font-weight: normal;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方（聘请方）：<span class="row-span" id="Aname" style="mso-spacerun: yes;"></span> </span></strong></p>
+<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">法定代表人： </span><span class="row-span" id="Aleader1"></span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">地址： </span><span class="row-span" id="Aaddress"></span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">电话：<span class="row-span" id="Atel"></span> 传真:<span class="row-span" id="Afax"></span> 邮编 ：<span class="row-span" id="Acode"></span></span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">&nbsp;</span></p>
@@ -64,9 +63,9 @@
 <p class="MsoNormal" style="text-indent: 28.45pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><strong><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">第一条<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp; </span></span>委托代理事项</span></strong></p>
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">乙方接受甲方委托，委派律师在下列案件中担任甲方的委托代理人：</span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span>1</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、对方当事人名称或者姓名： </span><span id="toName" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
-<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span>2</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、案由： </span><span id="tocasWhy" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
-<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span>3</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、受理机关： </span><span id="toCompony" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
-<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp; </span><span style="mso-spacerun: yes;">&nbsp;&nbsp;</span>4</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、涉及标的： </span><span id="shejibiaode" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
+<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span>2</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、案由： </span><span id="tocaseWhy" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
+<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span>3</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、受理机关： </span><span id="tocaseCompony" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p>
+<p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp; </span><span style="mso-spacerun: yes;">&nbsp;&nbsp;</span>4</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">、涉及标的： </span><span id="shejibiaode" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"></span></p></p>
 <p class="MsoNormal" style="text-indent: 28.45pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><strong><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">第二条<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp; </span></span>委托代理权限</span></strong></p>
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">一般代理，包括：进行调解或者和解；提起上诉；参加二审庭审<span lang="EN-US">;</span>签署、送达、接受法律文书。</span></p>
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; mso-hansi-font-family: 宋体;">全权代理，包括：<span lang="EN-US">1</span>、调查取证；<span lang="EN-US">2</span>、提起诉讼；<span lang="EN-US">3</span>、提出答辩；<span lang="EN-US">4</span>、代为变更或者放弃诉讼请求；<span lang="EN-US">5</span>、代为承认诉讼请求；<span lang="EN-US">6</span>、提起反诉；<span lang="EN-US">7</span>、进行调解或者和解；<span lang="EN-US">8</span>、提起上诉；<span lang="EN-US">9</span>、申请执行；<span lang="EN-US">10</span>、收取或者收转执行标的；<span lang="EN-US">11</span>、签署、送达、接受法律文书。）</span></p>
@@ -89,6 +88,7 @@
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span></span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">经双方协商同意，甲方向乙方支付律师代理费人民币<u><span lang="EN-US">&nbsp;&nbsp;<span style="mso-spacerun: yes;" id="text3"></span>&nbsp;&nbsp;</span></u>元整，如本案最终胜诉<span lang="EN-US">,</span>甲方还需于二审判决生效后五日内向乙方支付胜诉额的<u><span lang="EN-US">&nbsp;&nbsp;<span style="mso-spacerun: yes;" id="text4"> </span>&nbsp;&nbsp;</span></u><span lang="EN-US">%</span>作为风险律师费。</span></p>
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">乙方律师办理甲方委托代理事项所发生的工作费用和差旅费用由甲方承担，共计人民币<u><span lang="EN-US">&nbsp;&nbsp;<span style="mso-spacerun: yes;" id="text5"> </span>&nbsp;&nbsp;</span></u>元。</span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span></span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;" id="fuwuneirong"></span></p>
+
 <p class="MsoNormal" style="text-indent: 28.45pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><strong style="mso-bidi-font-weight: normal;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">第六条</span></strong><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp; </span></span><strong><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; mso-hansi-font-family: 宋体;">支付时间、地点</span></strong></p>
 <p class="MsoNormal" style="text-indent: 28.0pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; mso-hansi-font-family: 宋体;">律师费及工作费用、差旅费用应于本协议签定之日给付，至迟不超过本协议签定后<u><span lang="EN-US">&nbsp;<span style="mso-spacerun: yes;" id="text6"> </span>&nbsp;</span></u>日内给付（如遇法定节假日时，可顺延至法定节假日后的第一天）。</span></p>
 <p class="MsoNormal" style="text-indent: 28.0pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; mso-hansi-font-family: 宋体;">乙方户名：广州金鹏律师事务所</span></p>
@@ -135,8 +135,8 @@
     <p class="col-flex">
         <span class="" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">       
         <span>
-        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方: <span></span></span>
-        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">代表: <span></span></span>
+        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方: <span id="jname"></span></span>
+        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">代表: <span id="jdaibiao"></span></span>
         <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">日期:   
             &nbsp;<span id="text12"></span>&nbsp;年
             &nbsp;<span id="text13"></span>&nbsp;月
@@ -149,8 +149,8 @@
      <p class="col-flex">
         <span class="" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">       
         <span>
-        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">乙方: <span></span></span>
-        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">代表: <span></span></span>
+        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">乙方: <span id="yname"></span></span>
+        <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">代表: <span id="ydaibiao"></span></span>
         <span class="row-span" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">日期:   
             &nbsp;<span id="text15"></span>&nbsp;年
             &nbsp;<span id="text16"></span>&nbsp;月
@@ -182,9 +182,12 @@
 <p class="MsoNormal" style="margin-left: 182.8pt; mso-para-margin-left: 17.41gd; text-indent: 116.5pt; mso-char-indent-count: 8.32; line-height: 21.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312;">&nbsp;</span></p>
 <p class="MsoNormal" style="margin-left: 182.8pt; mso-para-margin-left: 17.41gd; text-indent: 51.1pt; mso-char-indent-count: 3.65; line-height: 21.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312;">委托人签署：</span> <span id="custom_name"></span></p>
 <p class="MsoNormal" style="margin-left: 182.8pt; mso-para-margin-left: 17.41gd; text-indent: 96.2pt; mso-char-indent-count: 6.87; line-height: 21.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312;"><span id="text18"></span>&nbsp;&nbsp;年<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp;</span>&nbsp;</span><span id="text19"></span>&nbsp;&nbsp;月<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp;</span></span>&nbsp;<span id="text20"></span>&nbsp;&nbsp;日</span></p>
-    </div>
-      </div>     
 
+</div>
+     
+
+    </div>
+      </div>    
 </template>
 <script>
 import { setTimeout } from 'timers';
@@ -194,17 +197,18 @@ export default {
    
     data(){
         return{
+            dataWordArr:[],
+
             //聘请方
-            htmlTitle: '合同模板PDF',
-            name:'',
+            htmlTitle: '合同mobanPDF',
+            name:'陈永旭',
             //受聘
             laywerName:'广州金鹏律师事务所',
             div:'',
             //甲方
-            Aname:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
-            Aleader:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
-            Aaddress:this.dataWord.Get_Customer_Information.Detailed_Address,
-            Atel:this.dataWord.Get_Customer_Information.Contact_Party,
+            Aleader:'',
+            Aaddress:'',
+            Atel:'',
             Afax:'',
             Acode:'',
             //乙方
@@ -214,34 +218,29 @@ export default {
             Bfax:'(020)38390218',
             Bcode:'510623',
             //
-            text:this.dataWord.Get_Case_Information.Case_Name,
+            text:'',
             text1:'',
-            text2:this.dataWord.Get_Case_Information.Party_Name,
-            // 第五条
-            text3:'',
-            text4:'',
-            text5:'',
-          
-            text6:'',
-            //日期
-            text7:'',
-            text8:'',
-            text9:'',
-            //逾期
+            text2:'',
+            text3:'200',
+            text4:'90',
+            text5:'180',
+            text6:'1',
+            text7:'2019',
+            text8:'8',
+            text9:'10',
             text10:'十',
             text11:'',
-            //日期
-            text12:'',
-            text13:'',
-            text14:'',
-            text15:'',
-            text16:'',
-            text17:'',
+            text12:'2019',
+            text13:'4',
+            text14:'19',
+            text15:'2019',
+            text16:'8',
+            text17:'28',
            
-           text18:'',
-            text19:'',
-            text20:'',
-            custom_name:'',
+           text18:'2019',
+            text19:'8',
+            text20:'29',
+            custom_name:'委托人姓名',
             data:'',
                 //逾期几日
             todayTime:'',
@@ -261,71 +260,78 @@ export default {
     created(){
   
     },
-    mounted(){
-        console.log(this.dataWord)
+    mounted(){  
+     
         this.getData()
+        
     },
     methods:{
         getData(){
-             this.$http.get('/yongxu/Index/Contract_Template').then((res)=>{
-                      console.log(res)
-                        // this.$refs.div.innerHTML=res.data.Content
-                        this.data = res.data.Content  
-                         var date=new Date;
-                        var year=date.getFullYear(); 
-                        this.todayTime=  year    
-                        var month = date.getMonth()+1
-                        var day = date.getDate()  
-                        document.getElementById('text7').innerText =  year
-                        document.getElementById('text8').innerText = month 
-                        document.getElementById('text9').innerText = day    
-
-                       
-                         document.getElementById('text').innerText = this.dataWord.Get_Case_Information.Case_Name
-                         document.getElementById('Aname').innerText = this.dataWord.Get_Customer_Information.Customer_Name_Zh
-                         document.getElementById('Aleader').innerText = this.dataWord.Get_Customer_Information.Customer_Name_Zh
-                         document.getElementById('Aaddress').innerText = this.dataWord.Get_Customer_Information.Detailed_Address
-                         document.getElementById('Atel').innerText = this.dataWord.Get_Customer_Information.Contact_Party
-                         document.getElementById('Afax').innerText = ''
-                         document.getElementById('Acode').innerText = '' 
-                           
+   this.dataWordArr= JSON.parse(this.dataWord)
+        this.laywerName = '广州金鹏律师事务所' 
+        console.log(this.dataWordArr)
+        var date=new Date;
+        var year=date.getFullYear(); 
+        this.todayTime=  year      
+        var arr1 = [];  
+        for(var i =0;i< this.dataWordArr.laywerArr.length;i++){
+            arr1.push(this.dataWordArr.laywerArr[i].laywerJob)
+        }
+        var index=arr1.indexOf(18)
+        var text1 = this.dataWordArr.laywerArr[index].laywerName
         
-                         document.getElementById('Bname').innerText = '广州金鹏律师事务所'
-                         document.getElementById('Baddress').innerText = '广东省广州市天河区兴民路222号之三天盈广场东塔45楼'
-                         document.getElementById('Btel').innerText = '(020)38390333'
-                         document.getElementById('Bfax').innerText = '(020)38390218'
-                         document.getElementById('Bcode').innerText = '510623'
+      
+        document.getElementById('laywerName').innerText = '广州金鹏律师事务所'
+       
+        document.getElementById('Aname').innerText = this.dataWordArr.userNameC
+        document.getElementById('Aaddress').innerText = this.dataWordArr.address
+        document.getElementById('Atel').innerText = this.dataWordArr.tel
+        document.getElementById('Afax').innerText = ''
+        document.getElementById('Acode').innerText =  ''
+        document.getElementById('Aleader').innerText = this.dataWordArr.userNameC
+        document.getElementById('Aleader1').innerText = this.dataWordArr.userNameC
+        document.getElementById('Bname').innerText = '广州金鹏律师事务所'
+        document.getElementById('Baddress').innerText = '广东省广州市天河区兴民路222号之三天盈广场东塔45楼'
+        document.getElementById('Btel').innerText = '(020)38390333'
+        document.getElementById('Bfax').innerText = '(020)38390218'
+        document.getElementById('Bcode').innerText = '510623'
+         
+         document.getElementById('text').innerText = this.dataWordArr.caseName
+         document.getElementById('toName').innerText = this.dataWordArr.oppositePart
+        document.getElementById('tocaseWhy').innerText = this.dataWordArr.caseWhy
+            document.getElementById('tocaseCompony').innerText = this.dataWordArr.compony
+            document.getElementById('shejibiaode').innerText = ''
 
-
-                        document.getElementById('toName').innerText = this.dataWord.Get_Case_Information.Party_Name
-                        document.getElementById('tocasWhy').innerText = this.dataWord.Get_Case_Information.Cause_Action
-                        document.getElementById('toCompony').innerText = this.dataWord.Get_Case_Information.Receiving_Organ
-                        document.getElementById('shejibiaode').innerText = ''
-                      
-
-                       var arr1 = []; 
-                        for(var i =0;i< this.dataWord.Get_Lawyer_Information.length;i++){
-                            arr1.push(this.dataWord.Get_Lawyer_Information[i].Rule_Name)
-                        }
-                        var index=arr1.indexOf('主办律师')
-                        var text1 = this.dataWord.Get_Lawyer_Information[index].Staff_Name
-                        document.getElementById('text1').innerText = text1
-                        
-                         document.getElementById('text2').innerText = this.dataWord.Get_Case_Information.Party_Name
-                         document.getElementById('fuwuneirong').innerText = this.dataWord.Get_Case_Information.Service_Content.replace(/<[^>]+>|&[^>]+;/g,"").trim();
-         })
-                       
-        },
+            document.getElementById('text1').innerText = text1
+            document.getElementById('text2').innerText = this.dataWordArr.oppositePart
+             document.getElementById('text3').innerText = ''
+            document.getElementById('text4').innerText = ''
+            document.getElementById('text5').innerText = ''
+             document.getElementById('fuwuneirong').innerText = this.dataWordArr.Service_Content.replace(/<[^>]+>|&[^>]+;/g,"").trim();
+             console.log(this.dataWordArr.Service_Content)
+              document.getElementById('text6').innerText = ''
+// 逾期多少日
+               document.getElementById('text10').innerText = ''
+               //年月日
+                var date=new Date;
+                var year=date.getFullYear(); 
+               var month =date.getMonth()+1;
+               var day =date.getDate()    
+                document.getElementById('todayTime').innerText = year
+                document.getElementById('text7').innerText = year
+                    document.getElementById('text8').innerText = month
+                    document.getElementById('text9').innerText = day
+        }
     },
     components:{
         'setTimeout':setTimeout,
         
     },
-    watch:{
+     watch:{
     dataWord:function(newValue,oldValue){
-    this.getData();
-    }
-    }
+        this.getData();
+    },
+     }
 
 }
 </script>

@@ -43,9 +43,14 @@
                                                </el-table-column> 
                           <el-table-column prop="date" label="合同" width="60"> 
                                 <template slot-scope="scope"> 
-                               <span style="color:red" @click="look(scope.row.Id)">
+                               <span style="color:red"   @click="open3(scope.row.Id,scope.row.Charging_Method)" v-if="scope.row.Source_Contract == 1">
+                                
                                  预览
                                </span>
+                                 <span style="color:red"  @click="look(scope.row.Id)" v-if="scope.row.Source_Contract == 2">
+                                 预览
+                               </span>
+                              
                               </template>
                           </el-table-column>
     <el-table-column prop="Amount" label="合同金额" width="" :show-overflow-tooltip="true"> </el-table-column>
@@ -72,7 +77,8 @@
                         <el-table-column  label="财务操作" width="105"> 
                             <template  slot-scope="scope">
                             <span class="btn-div">
-                            <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button>
+                            <!-- <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button> -->
+                            
                             <button @click="openDialog(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer" class="btn-caozuo">收款</button>
 
                             </span>
@@ -81,14 +87,14 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,13]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
                 </ul>
             </div>
               <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
-                          <iframe src='https://view.officeapps.live.com/op/view.aspx?src=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
+                          <iframe :src="'https://view.officeapps.live.com/op/view.aspx?src=http://java.gzbigbang.cn'+fileUrl"  width='100%' height='1000px' frameborder='1'>
 
                           </iframe>
               </el-dialog>
@@ -181,12 +187,18 @@
     </div>
   </div>
 </el-dialog>
+  <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWord :dataWord='dataWord'></caseWord>
+                </el-dialog>
     </div>
 </template>
 <script>
+import caseWord from '../case/caseWord'
 export default {
     data(){
         return{
+                //文件路径
+                fileUrl:'',
                 cur:0,
                 caseArr:[],
                 //当前页
@@ -194,6 +206,7 @@ export default {
                 total:0,
                 pageNum:10,
                 dialogFormVisibleWord:false,
+                  dialogFormVisibleWord1:false,
                 //搜索
                 SearchInput:'',
                 Casevalue:'',
@@ -201,11 +214,12 @@ export default {
                 Casevalue2:0,
                 optionMenu:[],
                 optionChildMenu:[],
+                  dataWord:{},
                 value:'',
-                 //状态
-                options:[
-                {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
-                ],
+                //状态
+        options:[
+         {value:0,label:'审核中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-2,label:'返回修改'},{value:4,label:'待结案'}
+        ],
                    // 财务审核
                 FinancialAuditArr:[],
                 dialogFormVisible:false,
@@ -220,24 +234,24 @@ export default {
     },
     inject:["reload"],
     methods:{
-            openDialog(id,Charging_Method){
+          openDialog(id,Charging_Method){
           if(Charging_Method  == 9){
           this.dialogFormVisible = true
-          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
+          this.$http.get('/yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
             console.log(res)
            this.makeCollectionsArr= res.data
           })    
           }
             if(Charging_Method  == 8){
           this.dialogFormVisible8 = true
-          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
+          this.$http.get('/yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
             console.log(res)
            this.makeCollectionsArr8= res.data
           })    
           }
             if(Charging_Method  == 10){
           this.dialogFormVisible10 = true
-          this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
+          this.$http.get('/yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
             console.log(res)
            this.makeCollectionsArr10= res.data
           })    
@@ -245,8 +259,12 @@ export default {
        
       },
       getMonney(id,Charging_Method){
-          this.$http.post('/yongxu/Toexamine/Upd_Confirm_Receipt',
-         
+          this.$confirm('此操作将确认收款, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           this.$http.post('/yongxu/Toexamine/Upd_Confirm_Receipt',
           {Id:id,Charging_Method:Charging_Method,Auditor_Id:localStorage.getItem('userId')}).then((res)=>{
             if(res.data == true){
                   this.$message({
@@ -258,33 +276,48 @@ export default {
                   this.dialogFormVisible10 = false
                   this.getCaseArr()
                   this.AuditLog(id,'财务审核',1)
-              }  else{
-                 
+              }  else{ 
                   this.$message({
                       message:'收款失败',
                       type:'warning'
                   });
               }
+          }).catch((err)=>{
+             this.$message({
+                      message:'服务器异常',
+                      type:'warning'
+                  });
           })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+        
       },
       //添加日志
       AuditLog(id,type,Findings_Audit,){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
-                   console.log(res)
+                   //console.log(res)
             }else{
-              console.log('日志添加失败')
+              //console.log('日志添加失败')
             }
         })
       },
          getCaseArr(){
           var statusValue;
-          if(this.value == '' || this.value == null){
+          //console.log(this.value)
+          if(this.value ===''|| this.value === null){
                 statusValue = -3;
-          }else{
-             statusValue = this.value
           }
+         
+          else{
+              statusValue = this.value
+          }
+          //console.log(statusValue)
          var userId = localStorage.getItem('userId')
         this.$http.get('/yongxu/Toexamine/Get_Case_Audit',{params:{
           Display_Page_Number:this.pageNum,
@@ -293,27 +326,39 @@ export default {
           Status:statusValue,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-            console.log(res)
+            //console.log(res)
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
 
         })
       },
+      //预览html合同
+      open3(id,type){
+        this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
+             this.dataWord = res.data
+             this.dialogFormVisibleWord1 = true
+        }).catch((err)=>{
+          this.$message({
+            message:'服务器异常',
+            type:'warning'
+          })
+        })
+      },
       //获取二级菜单下拉
       changeTowValue(id){
-      console.log(id)
+      //console.log(id)
        this.Casevalue2 = id
        this.getCaseArr()
       },
       //状态查询
       changeStatus(id){
-        console.log(id)
-         this.statusValue = id
+         //console.log(id)
+         this.value = id
          this.getCaseArr()
       },
       //搜索查询
       searchContent(){
-       console.log(this.SearchInput)
+       //console.log(this.SearchInput)
        this.getCaseArr()
       },
       //获取一级下拉
@@ -326,10 +371,10 @@ export default {
        getSelectChildeMenu(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         console.log(id)
+         //console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          console.log(res)
+          //console.log(res)
           this.optionChildMenu = res.data  
           this.Casevalue1 =res.data[0].Id
            //this.Casevalue1 = res.data
@@ -345,7 +390,7 @@ export default {
         
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getCaseArr()
 
@@ -353,10 +398,10 @@ export default {
       handleCurrentChange(val) {
           this.currentPage = val
           this.getCaseArr()
-          console.log(`当前页: ${val}`);
+          //console.log(`当前页: ${val}`);
       },
      lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
       noPassCase(id,type){
           if(type != 0){
@@ -381,7 +426,10 @@ export default {
                     message:'操作成功,此案件审核不通过',
                     type:'success'
                 });
+                
                 this.AuditLog(id,'案件审核',2)
+                   this.getCaseArr()
+
                 return false
               }
           })
@@ -394,7 +442,19 @@ export default {
           
       },
       look(id){
-        this.dialogFormVisibleWord = true
+        this.$http.get('/yongxu/Toexamine/Sel_Url',{params:{
+          Case_Id:id
+        }}).then((res)=>{
+            this.fileUrl = res.data 
+        }).then((res)=>{
+          this.dialogFormVisibleWord = true
+        }).catch((err)=>{
+          this.$message({
+            message:'服务器异常',
+            type:'warning'
+          })
+        })
+      
       },
       passCase(id,type){
           if(type != 0){
@@ -419,7 +479,7 @@ export default {
                     type:'success'
                 });
                 this.AuditLog(id,'案件审核',1)
-                this.reload()
+                this.getCaseArr()
                 return false
               }
           }).catch(() => {
@@ -450,7 +510,10 @@ export default {
     Casevalue1:function(newV,oldV){
         this.changeTowValue(newV)
     }
-     }
+     },
+       components:{
+        'caseWord':caseWord,
+    },
     
 }
 </script>

@@ -3,12 +3,12 @@
     <div id="case" class="case"> 
          <div class="flex">
                 <p>所在位置：</p>
-                <router-link to='/index/caseIndex' tag="a">案件管理</router-link>
+                <p>案件管理</p>
                 <p><i class="el-icon-arrow-right"></i></p>
-                <p v-show="child_cur == 0">所有案件</p>
+                <p v-show="child_cur == 0">律所案件</p>
                  <p v-show="child_cur == 1">分所案件</p>
                   <p v-show="child_cur == 2">部门案件</p>
-                   <p v-show="child_cur == 3">我的案件</p>
+                   <p v-show="child_cur == 3">个人案件</p>
                    <p v-show="child_cur == 4">授权案件</p>
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -24,78 +24,9 @@
 
                 </ul>
             </div>
-           
-            <!-- <div v-show="child_cur==0">
-            <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-          
-              <li class="showTab-li">
-                    <caseAllList></caseAllList>
-              </li>
-
-                </ul>
-            </div>
-            </div>
-            
-       
-          <div v-show="child_cur==1">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-          
-             
-
-              <li class="showTab-li">
-                  <caseBranch></caseBranch>
-               </li>
-
-                </ul>
-            </div>
-          </div>
-        
-
-         <div v-show="child_cur==2">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <casePart></casePart>
-               </li>
-                </ul>
-            </div>
-          </div>
-
-
-           <div v-show="child_cur==3">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <caseMine></caseMine>
-               </li>
-                </ul>
-            </div>
-          </div>
-
-           <div v-show="child_cur==4">
-             <div class="flex case-child" >  
-            </div>
-            <div class="showTab">
-            <ul class="showTab-ul">
-                <li class="showTab-li">
-                  <empower></empower>
-               </li>
-                </ul>
-            </div>
-          </div> -->
         </el-tab-pane>
       
-        <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
+     
                 
         </el-tabs> 
     </div>
@@ -193,14 +124,12 @@ import caseBranch from './caseChild/caseBranch'
     },
     methods: {
       handleClick(tab, event) {
-        console.log(event)
         this.child_cur = tab.index
         this.$router.push('/index/caseIndex/'+this.arr[this.child_cur].Item_Path)
       },
      
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
-          console.log(res)
           if(res.data == true){
               this.cur = i
           }else{
@@ -216,7 +145,6 @@ import caseBranch from './caseChild/caseBranch'
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
           Menu_Id:1
         }}).then((res)=>{
-          console.log(res)
           this.arr = res.data
         }).then((res)=>{
             this.getActiveMenu()
@@ -224,13 +152,10 @@ import caseBranch from './caseChild/caseBranch'
       },
      getActiveMenu(){
         this.activeName = 'name'+this.child_cur
-        console.log(this.activeName)
-        console.log(this.$route.path)
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
         }
-        console.log(menuArr)
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
         

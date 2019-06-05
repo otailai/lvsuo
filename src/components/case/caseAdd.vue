@@ -183,7 +183,7 @@
                          <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
                         <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="inputArr[i+1].laywerJob"/>   -->
-                        <div class="input-icon" @click="deleteLine(i,userInfo)"><i class="el-icon-remove"></i></div>
+                        <div class="input-icon" @click="deleteLine(i,userInfo,inputArr)"><i class="el-icon-remove"></i></div>
                     </div>
                      
                     </div>
@@ -279,7 +279,7 @@
                         </el-date-picker>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].describe"/>
-                       <div class="input-icon" @click="deleteLine(i,payDate)"><i class="el-icon-remove"></i></div>
+                       <div class="input-icon" @click="deleteLine(i,payDate,timeArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addPayDate()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -307,7 +307,7 @@
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskName"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCount"/> -->
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCondition" style="width:700px"/>
-                     <div class="input-icon" @click="deleteLine(i,riskAcount)"><i class="el-icon-remove"></i></div>
+                     <div class="input-icon" @click="deleteLine(i,riskAcount,riskArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addRiskAcount()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -373,7 +373,7 @@
                       <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                   </el-select>    
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].nameJobRate"/><span class="rmb">RMB/小时</span>
-                    <div class="input-icon" @click="deleteLine(i,nameJob)"><i class="el-icon-remove"></i></div>
+                    <div class="input-icon" @click="deleteLine(i,nameJob,nameJobArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addNameJob()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -402,13 +402,16 @@
 
 
                 <div class="end-btn flex">
-                    <!-- <button class="btn btn1" @click="dialogFormVisible = true">预览合同</button>  -->
+                    <button class="btn btn1" @click="lookContract()">预览合同</button> 
                     <button class="btn btn2" @click="addAll()">提交审核</button>
                 </div>
                 
                   
              </div>
                <!-- 对话框 -->
+      <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWordAdd :dataWord='dataWord'></caseWordAdd>
+     </el-dialog>
      <el-dialog  :visible.sync="dialogFormVisible1" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
@@ -442,7 +445,7 @@
   </div>
 </el-dialog>
              <!-- 富文本编译器 -->
-              <el-dialog  :visible.sync="dialogFormVisible2" :modal-append-to-body='false' :modal='false' top="300px" width="490px">
+        <el-dialog  :visible.sync="dialogFormVisible2" :modal-append-to-body='false' :modal='false' top="300px" width="490px">
         <div class="dialogFormVisible flex">
           <!-- <div class="dialogFormVisivleInput flex">
               <p>服务内容</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
@@ -464,7 +467,7 @@
 </template>
 <script>
 import qs from 'qs';
-import caseWord from './caseWord'
+import caseWordAdd from './caseWordAdd'
 import { constants } from 'zlib';
 export default {
     data(){
@@ -611,6 +614,7 @@ export default {
             fileType:1,
             //合同上传
             dialogFormVisible1:false,
+            dialogFormVisibleWord:false,
            
             Case_Id:'',
             fileName:'',
@@ -634,6 +638,7 @@ export default {
                 theme:'snow'
             },
             dialogFormVisible2:false,
+            dataWord:{},
         }
     },
           
@@ -641,8 +646,10 @@ export default {
         openEditor(){
             this.dialogFormVisible2 = true
         },
-        deleteLine(i,arr){
+        deleteLine(i,arr,arr1){
             arr.splice(i,1)
+            arr1.splice(i+1,1)
+            console.log(arr1)
         },
         pushUserInfo(){
             this.userInfo.push(1)
@@ -671,6 +678,153 @@ export default {
         },
         closeBox(){
            this.$router.push('/index/caseIndex')
+        },
+        lookContract(data){
+              this.checkData()
+            // console.log(this.checkData())
+            if(this.checkData() == false){
+                return false
+            }
+            var addJson={}
+            if(this.costValue == ''||this.costValue == null){
+                 this.$message({
+                    message:'请选择收费方式',
+                    type:'warning'
+                });
+                return false
+            }
+            if(this.customValue == 3){
+                this.suoshuValue = 0
+            }
+            if(this.costValue == 8){
+            addJson = {
+              'userId':localStorage.getItem('userId'),
+              'costId':this.customId,
+              'userNameC':this.search,
+            // 'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+              'tel':this.tel,
+              'type':this.customValue,
+              'suoshuhangye':this.suoshuValue, 
+              'job':this.value2,
+              'is':this.isValue,
+              'cardNo':this.cardNo,
+              'compony':this.compony,
+              'oppositePart':this.oppositeParty,
+              'caseWhy':this.caseWhy,
+                    //服务内容
+              'Service_Content':this.Service_Content,
+
+              'caseValue':this.caseValue,
+              'caseValue2':this.caseValue2,
+              'caseName':this.caseName,
+              'caseWay':this.caseWay,
+              'textarea':this.textarea,
+              'laywerArr':this.inputArr,
+            //   'partyArr':this.input1Arr,
+            //合同
+            'File_Name':this.File_Name,
+            'Suffix_Name':this.Suffix_Name,
+            'fileName':this.fileName1,
+            'size':this.size,
+            'Source_Contract':this.fileType,
+
+            "costValue":this.costValue,
+            'nameJobArr':this.nameJobArr
+              
+                }
+          }
+            
+            if(this.costValue == 9){
+  addJson = {
+              'userId':localStorage.getItem('userId'),
+              'costId':this.customId,
+             
+             'userNameC':this.search,
+            //   'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+               'suoshuhangye':this.suoshuValue,
+                'type':this.customValue,
+                'tel':this.tel,
+               'job':this.value2,
+             
+             //服务内容
+                'Service_Content':this.Service_Content,
+             
+                'is':this.isValue,
+                'cardNo':this.cardNo,
+                'compony':this.compony,
+                'oppositePart':this.oppositeParty,
+                'caseWhy':this.caseWhy,
+
+
+                'caseValue':this.caseValue,
+                'caseValue2':this.caseValue2,
+                'caseName':this.caseName,
+                'caseWay':this.caseWay,
+                'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
+
+
+              'laywerArr':this.inputArr,
+            //   'partyArr':this.input1Arr,
+                'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
+                'Source_Contract':this.fileType,
+                "costValue":this.costValue,
+               'timeArr':this.timeArr,
+            }
+            }
+            if(this.costValue == 10){
+    addJson = {
+              'userId':localStorage.getItem('userId'),
+              'costId':this.customId,
+              'userNameC':this.search,
+            //   'userNameE':this.userNameE,
+              'province':this.province,
+              'address':this.address,
+              'tel':this.tel,
+              'type':this.customValue,
+              'suoshuhangye':this.suoshuValue,
+              'job':this.value2,
+
+
+                    //服务内容
+                'Service_Content':this.Service_Content,
+              'is':this.isValue,
+                'cardNo':this.cardNo,
+                'compony':this.compony,
+                'oppositePart':this.oppositeParty,
+                'caseWhy':this.caseWhy,
+                'Source_Contract':this.fileType,
+                'caseValue':this.caseValue,
+                'caseValue2':this.caseValue2,
+                'caseName':this.caseName,
+                'caseWay':this.caseWay,
+                'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
+
+
+              'laywerArr':this.inputArr,
+            //   'partyArr':this.input1Arr,
+                'File_Name':this.File_Name,
+                'Suffix_Name':this.Suffix_Name,
+                'fileName':this.fileName1,
+                'size':this.size,
+
+              "costValue":this.costValue,
+              'riskArr':this.riskArr, 
+            }
+            }
+        addJson = JSON.stringify(addJson)
+       
+        this.dataWord = addJson
+         console.log(this.dataWord)
+        this.dialogFormVisibleWord =true
+           
+
         },
         addAll(){
             this.checkData()
@@ -813,6 +967,7 @@ export default {
             }
         addJson = JSON.stringify(addJson)
         console.log(addJson)
+      
         //console.log(JSON.stringify(addJson))
        // return false
         this.$http.post('/yongxu/Index/AddCases',{
@@ -980,7 +1135,7 @@ export default {
                 return false
             }
             var nary=arr.sort();
-           
+            console.log(nary)
             for(var i=0;i<arr.length;i++){
                 if (nary[i]==nary[i+1]){
                   this.$message({
@@ -1496,7 +1651,7 @@ export default {
 
     },
     components:{
-        'caseWord':caseWord,
+        'caseWordAdd':caseWordAdd,
     },
 }
 </script>

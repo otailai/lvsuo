@@ -1,6 +1,12 @@
  <template>
     <div id="case" class="case"> 
-     
+      <div class="flex">
+                <p>所在位置：</p>
+                <p>案件管理</p>
+                <p><i class="el-icon-arrow-right"></i></p>
+                <p>检索</p>
+                 
+            </div>
                  
             <!-- <div class="flex case-child2" v-show="child==0">
           
@@ -59,7 +65,7 @@
                     </div>
              <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
           </div>
@@ -87,13 +93,11 @@ import store from '../../vuex/store'
            PageNumber:this.currentPage,
            parameter:this.SearchInput
         }}).then((res)=>{
-            console.log(res)
             this.searchList = res.data.Retrieval
             this.total = res.data.PageCount
         })
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getSeachList()
 
@@ -101,17 +105,14 @@ import store from '../../vuex/store'
       handleCurrentChange(val) {
           this.currentPage = val
           this.getSeachList()
-          console.log(`当前页: ${val}`);
       },
      //进入详情
        lineCilck(row, event, column){
-           //console.log(row.Charging_Method)
           this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
            //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
-          console.log(res)
           if(res.data == true){
               this.cur = i
           }else{

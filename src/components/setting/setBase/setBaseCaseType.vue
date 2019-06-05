@@ -7,9 +7,9 @@
                                                 <ul class="showTab-ul">
                                                 <li class="showTab-li">
                                                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                                                <el-table-column prop="Id" label="ID" width="150"></el-table-column>
-                                                <el-table-column prop="Category_Name" label="名称" width="150"> </el-table-column>
-                                                <el-table-column prop="type" label="级别" width="430"> 
+                                                <el-table-column prop="Id" label="ID" width="" ></el-table-column>
+                                                <el-table-column prop="Category_Name" label="名称"  width="" :show-overflow-tooltip="true"> </el-table-column>
+                                                <el-table-column prop="type" label="级别" width="" :show-overflow-tooltip="true"> 
                                                     <template slot-scope="scope">
                                                           <p v-if="scope.row.type==1">一级类型</p>
                                                            <p v-if="scope.row.type==2">二级类型</p>
@@ -24,7 +24,7 @@
                                             </el-table>
                                             <div class="block flex">
                                             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                            :page-sizes="[5,10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                            :page-sizes="[1,5,10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                                             </el-pagination>
                                             </div>
                                             </li>
@@ -107,7 +107,7 @@ export default {
     data(){
         return{
             tableData:[],
-            numPage:5,
+            numPage:10,
             currentPage:1,
             total:0,
             dialogFormVisible:false,
@@ -127,14 +127,14 @@ export default {
           handleSizeChange(val) {
          this.numPage = val
          this.getBaseCaseTypeList()
-         console.log(`每页 ${ this.numPage} 条`);
+         //console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
-        console.log(val)
+        //console.log(val)
         this.currentPage = val
         this.getBaseCaseTypeList()
 
-        console.log(`当前页: ${this.currentPage}`);
+        //console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
         this.name =''
@@ -142,7 +142,7 @@ export default {
         this.dialogFormVisible= true
       },
       lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
       getBaseCaseTypeList(){ 
 
@@ -152,20 +152,20 @@ export default {
          }}).then((res)=>{
            this.tableData = res.data.Get_Case_Type
            this.total = res.data.PageCount
-           console.log(res)
+           //console.log(res)
         })
       },
          handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
+        // //console.log(tab.index)
+        // //console.log(this.child_cur)
+        // //console.log(tab,event);
       },
       //获取一级类型下拉
       getOneCaseType(){
         var _self =this
         this.$http.get('/yongxu/Install/Sel_First_Class').then((res)=>{
-          console.log(res.data)
+          //console.log(res.data)
           let arr = res.data
           let arr1 =res.data
           this.update_options =arr1
@@ -173,7 +173,7 @@ export default {
           for(var i in arr){
               arr2.push(arr[i])
           }
-                 console.log(arr2)
+                 //console.log(arr2)
         this.options = arr2
          
         })
@@ -187,7 +187,7 @@ export default {
                 }); 
                 return false
         }
-        console.log(this.value)
+        //console.log(this.value)
          if(this.value.length == 0){
              this.$message({
                 message:'父级分类不能为空',
@@ -196,7 +196,7 @@ export default {
                 return false
         }
         this.$http.get('/yongxu/Install/Add_Type',{params:{User_Id:localStorage.getItem('userId'),Category_Id:this.value,Value:this.name}}).then((res)=>{
-            console.log(res)
+            //console.log(res)
             if(res.data == true){
                this.$message({
                             message:'添加成功',
@@ -223,7 +223,7 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Type',{params:{User_Id:localStorage.getItem('userId'),Id:id,Type_Label:type}}).then((res)=>{
-             console.log(res)
+             //console.log(res)
                 if(res.data == 2 ){
                      this.getBaseCaseTypeList()
                       this.$message({

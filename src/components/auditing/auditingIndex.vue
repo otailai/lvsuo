@@ -2,11 +2,11 @@
     <div id="case" class="case">
       <div class="add-top flex">
                 <p>所在位置：</p>
-                <router-link to='/index/auditingIndex' tag="a">审核</router-link>
+                <p>审核</p>
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p v-if="child_cur==0">案件审核</p>
-                 <p v-if="child_cur==1">风控审核</p>
-                 <p v-else-if="child_cur==2">财务审核</p>
+                 <p v-if="child_cur==1">部门风控</p>
+                 <p v-else-if="child_cur==2">分所风控</p>
                   <p v-if="child_cur==3">结案审核</p>
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
@@ -70,29 +70,29 @@ import auditingCloseCase from './auditingCloseCase'
       handleClick(tab, event) {
         this.child_cur = tab.index
         this.$router.push('/index/auditingIndex/'+this.arr[this.child_cur].Item_Path)
-        // console.log(tab,event);
+        //console.log(tab,event);
       },
       changeLi(i){
           this.cur = i
          
       },
        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        //console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        //console.log(`当前页: ${val}`);
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
-          console.log(row, event, column)
+          //console.log(row, event, column)
       },
     getChildMenu(){
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
           Menu_Id:5
         }}).then((res)=>{
-          console.log(res)
+          //console.log(res)
           this.arr = res.data
         }).then((res)=>{
               this.getActiveMenu()
@@ -120,13 +120,13 @@ import auditingCloseCase from './auditingCloseCase'
       },
        getActiveMenu(){
         // this.activeName = 'name'+this.child_cur
-        console.log(this.activeName)
-        console.log(this.$route.path)
+        //console.log(this.activeName)
+        //console.log(this.$route.path)
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] = '/index/auditingIndex/'+this.arr[i].Item_Path
         }
-        console.log(menuArr)
+        //console.log(menuArr)
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
         

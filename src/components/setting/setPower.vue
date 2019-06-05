@@ -15,8 +15,8 @@
                                 </li>
                             </ul> -->
                           
-                             <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-                              <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+                              <!-- <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab" id="nav-tab">
+                              <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i"> -->
 
                               <div v-show="child_cur==0" class="bar">
                                                 <div class="case-child-end1 flex">
@@ -38,7 +38,7 @@
                                             </el-table>
                                             <div class="block flex">
                                             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                            :page-sizes="[1, 5, 10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                            :page-sizes="[1, 5, 10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                                             </el-pagination>
                                             </div>
                                             </li>
@@ -65,9 +65,7 @@
                                     
                                     node-key="Id"
                                     ref="tree"
-                                    highlight-current
-                                  
-                                    :default-checked-keys="Items"
+                                    highlight-current  
                                     :props="defaultProps">
                                 </el-tree>
                          
@@ -120,8 +118,8 @@
                     </div>
                       </el-dialog>
                               </div>
-                              </el-tab-pane>
-                            </el-tabs>  
+                              <!-- </el-tab-pane>
+                            </el-tabs>   -->
                          </div>
                      
             </div>
@@ -168,7 +166,7 @@ import store from '../../vuex/store'
     },
     methods: {
         tijiao(){
-            
+           
             if(this.role_update_name == '' || this.role_update_name==null){
                   this.$message({
                         type:'warning',
@@ -176,26 +174,27 @@ import store from '../../vuex/store'
                     })
                     return false
             }
-
             var arr = []
             var arr1 =[]
             var arr2 = []
             var arr3 = []
             var arr4=[]
               this.$nextTick(function() {
-                console.log(this.$refs.tree[1].getCheckedNodes());
+                 //console.log(this.$refs.tree);
+              
+                //console.log(this.$refs.tree[0].getCheckedNodes());
              
-                arr =  this.$refs.tree[1].getCheckedNodes()
-                arr2 = this.$refs.tree[1].getHalfCheckedKeys()
+                arr =  this.$refs.tree.getCheckedNodes()
+                arr2 = this.$refs.tree.getHalfCheckedKeys()
               
                 for(var i =0 ;i<arr.length;i++){
                    arr1[i] = arr[i].Id     
                    arr4[i] =arr[i].Id      
                 }
-                console.log(arr2)
-                console.log(arr1)
+                //console.log(arr2)
+                //console.log(arr1)
                arr1 = arr1.concat(arr2)
-               console.log(arr4)
+               //console.log(arr4)
                if(arr1.length == 0){
                     this.$message({
                         type:'warning',
@@ -205,13 +204,15 @@ import store from '../../vuex/store'
             }
            
             this.$http.post('/yongxu/Install/Add_Role',{User_Id:localStorage.getItem('userId'),Rule_Name:this.role_update_name,Items:arr1,Item:arr4}).then((res)=>{
-                        console.log(res)
+                        //console.log(res)
                         if(res.data == true){
                             this.$message({
                                 type:'success',
                                 message:'添加成功'
                             })
                             this.dialogFormVisible1 = false
+                            this.role_update_name = ''
+                            this.$refs.tree.setCheckedNodes([])
                             this.getPowerList()
                         }else{
                                 this.$message({
@@ -231,11 +232,11 @@ import store from '../../vuex/store'
 
         },
      handleCheckChange(data, checked,indeterminate ) {
-        // console.log(data);
-        //  console.log(checked);
-        //   console.log(indeterminate);
+        // //console.log(data);
+        //  //console.log(checked);
+        //   //console.log(indeterminate);
       this.$nextTick(function() {
-            console.log(this.$refs.tree.getCheckedNodes())
+            //console.log(this.$refs.tree.getCheckedNodes())
         })
         return false
     let res = this.$refs.tree.getCheckedNodes()
@@ -243,26 +244,26 @@ import store from '../../vuex/store'
       res.forEach((item) => {
         arr.push(item.id)
       })
-        console.log(arr)
+        //console.log(arr)
       },
     
        handleSizeChange(val) {
          this.numPage = val
          this.getPowerList()
-         console.log(`每页 ${ this.numPage} 条`);
+         //console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
-        console.log(val)
+        //console.log(val)
         this.currentPage = val
         this.getPowerList()
 
-        console.log(`当前页: ${this.currentPage}`);
+        //console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
         this.dialogFormVisible1 = true
       },
       lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
     //   获取data
     getDataList(){
@@ -278,12 +279,17 @@ import store from '../../vuex/store'
          }}).then((res)=>{
            this.tableData = res.data.Role_Information
            this.total = res.data.PageCount
-           console.log(res)
+           //console.log(res)
         })
       },
       deleteRole(id){
-          this.$http.get('/yongxu/Install/Del_Roles',{params:{Id:id}}).then((res)=>{
-              console.log(res)
+          this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+             this.$http.get('/yongxu/Install/Del_Roles',{params:{Id:id}}).then((res)=>{
+              //console.log(res)
               if(res.data == "删除成功"){
                   this.$message({
                       type:'success',
@@ -304,6 +310,13 @@ import store from '../../vuex/store'
                       })
                       return false
           })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+         
       },
       editInfo(id){
           this.Id = id
@@ -311,11 +324,17 @@ import store from '../../vuex/store'
           this.$http.get('/yongxu/Install/Upd_Sel_Role',{params:{
               Id:this.Id
           }}).then((res)=>{
-              console.log(res)
+              console.log(this.$refs.tree1)
               this.role_name = res.data.Rule_Name
-            //   this.$refs.tree1[1].setCheckedKeys(res.data.Items)
-              this.Items = res.data.Item
-          })
+               this.$refs.tree1.setCheckedKeys(res.data.Item)
+              //this.Items = res.data.Item
+          }).catch((err)=>{
+             this.$message({
+                      type:'warning',
+                      message:'服务器异常'
+                      })
+                      return false
+            })
          
       },
       editRole(){
@@ -326,18 +345,20 @@ import store from '../../vuex/store'
                     })
                     return false
             }
-            var    arr =  this.$refs.tree1[1].getCheckedNodes()
-            var    arr2 = this.$refs.tree1[1].getHalfCheckedKeys()
+            // //console.log(this.$refs.tree1[0].getCheckedNodes())
+            // return false
+            var    arr =  this.$refs.tree1.getCheckedNodes()
+            var    arr2 = this.$refs.tree1.getHalfCheckedKeys()
             var arr1 = []
             var arr4 =[]
                 for(var i =0 ;i<arr.length;i++){
                    arr1[i] = arr[i].Id   
                    arr4[i] = arr[i].Id      
                 }
-                  console.log(arr2)
-                   console.log(arr1)
+                  //console.log(arr2)
+                   //console.log(arr1)
                arr1 = arr1.concat(arr2)
-               console.log(arr4)
+               //console.log(arr4)
             if(arr1.length == 0){
                     this.$message({
                         type:'warning',
@@ -370,9 +391,9 @@ import store from '../../vuex/store'
       },
          handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
+        // //console.log(tab.index)
+        // //console.log(this.child_cur)
+        // //console.log(tab,event);
       },
     },
     mounted(){
@@ -391,6 +412,8 @@ import store from '../../vuex/store'
 </script>
 <style>
 @import '../../assets/sass/main.css';
+</style>
+<style>
 .case-child-end1{
     justify-content: flex-start;
     margin-top: 20px;
@@ -405,19 +428,7 @@ import store from '../../vuex/store'
   flex-direction: column;
 }
 
-.el-tabs__header{
-     display: flex;
-     flex-direction: row;
-     justify-content: flex-start;
-       /* border-bottom: 1px solid #ccc; */
-           height: 40px;
-             margin-top: 20px;
- }
- .el-tabs__nav-wrap{
-       /* border-bottom: 1px solid #ccc; */
-
- }
-  .dialogFormVisible_box{
+.dialogFormVisible_box{
   display: flex;
   flex-direction: column;
 }
@@ -448,9 +459,10 @@ import store from '../../vuex/store'
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 500px;
 }
-.el-select{
+/* .el-select{
   width: 500px;
-}   
+}    */
+
 </style>
 
 

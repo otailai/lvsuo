@@ -47,10 +47,7 @@ export default {
     }
   },
   mounted(){
-    console.log(this.$route.path)
-    if(this.$route.path=='/index'){
-        this.$router.push('/index/caseIndex')
-    }
+    
     
    
   },

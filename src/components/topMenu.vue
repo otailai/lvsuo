@@ -10,14 +10,20 @@
             </div>
         </el-col>
   
-        <el-col :span="6">
+        <el-col :span="8">
             <div class="userInfo">
                 <el-row type="flex" class="row-bg" justify="end">
-                    <div class="username flex">
+                    <div class="username flex" @click="goTOMine()">
                      
-                            <img src="../assets/img/wujunxi.jpg" alt="" class="username-hello">
+                             <img src="../assets/img/renwu1.jpg" alt="" class="username-hello" v-if="pic == '' || pic == undefined">
+                             <img :src="'http://java.gzbigbang.cn'+pic" alt="" class="username-hello" v-if="pic != undefined">
+
                       
-                        <span class="username-name" @click="goTOMine()">陈晓梅</span>
+                        <span class="username-name">{{name}}</span>
+                    </div>
+                     <div class="login-out" @click="changePwd()">
+                        <i class=" iconfont icon-quanxianguanli1" style="font-size:16px;"></i>
+                        <span>修改密码</span>
                     </div>
                     <div class="login-out" @click="loginOut()">
                         <i class=" iconfont icon-dingbudaohang-zhangh"></i>
@@ -53,6 +59,43 @@
     </ul>
             
 </div>
+  <el-dialog  :visible.sync="dialogFormVisible" :append-to-body='true' top="300px" width="800px"> 
+                         <div class="dialogFormVisible_box">
+                            
+                          <div class="flex row margin_t">
+                            <p class="flex_title">旧密码：</p>
+                         
+                            <input type="text" class="this_input" v-model="oldPwd" placeholder="请输入原密码">
+                         
+                          </div>
+
+                            <div class="flex row margin_t">
+                            <p class="flex_title">新密码：</p>
+                         
+                            <input type="text" class="this_input" v-model="newPwd" placeholder="请输入新密码">
+                         
+                          </div>
+
+                            <div class="flex row margin_t">
+                            <p class="flex_title">确认新密码：</p>
+                         
+                            <input type="text" class="this_input" v-model="checKNewPwd" placeholder="请确认新密码">
+                         
+                          </div>
+
+                           
+                         </div>
+                   
+                        <div slot="footer" class="dialog-footer">
+                            <div class="flex row margin_t">
+                            <p class="flex_title"></p>
+                            <button @click="sendOk()" class="pwd_btn">确 定</button>
+                            </div>
+                        </div>
+                         <div slot="title" class="dialog-title">
+                     <div class="dialogFormVisivleHeader_left flex">修改密码</div>
+                    </div>
+                      </el-dialog>
 </div>
 
 
@@ -77,53 +120,214 @@ export default {
             // ],
             arr1:[],
             cur:0,
+            name:'',
+            pic:'',
+            newPwd:'',
+            oldPwd:'',
+            checKNewPwd:'',
+            dialogFormVisible:false,
+
         }
     },
     methods:{
         changeLi(i){
             this.cur=i;
-            console.log(i)
         },
         loginOut(){
             localStorage.removeItem('userId')
             localStorage.removeItem('sessionId')
-            // localStorage.removeItem()
+            localStorage.removeItem('Rule_Id')
+            localStorage.removeItem('Expiration_Date')
+            localStorage.removeItem('Username')
             this.$router.push('/')
         },
         getTopMenu(){
             this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
-                console.log(res)
                 this.arr = res.data
-            })
+            }).then(()=>{
+                  var menuArr = []
+                    for(var i =0 ;i<this.arr.length;i++){
+                    menuArr[i] = this.arr[i].Item_Path
+                    }
+                    //console.log('/index/'+menuArr[0])
+                    if(this.$route.path == '/index' || this.$route.path == '/index/'){
+                    this.$router.push('/index/'+menuArr[0])
+                    }
+                    })
         },
         getSetTopMenu(){
               this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7}}).then((res)=>{
-                console.log(res)
                 this.arr1 = res.data
             })
         },
          goTONew(menu){
-             console.log(menu)
             this.$router.push(menu)
         },
         goTOMine(){
-            console.log('123')
             this.$router.push('/index/mineIndex')
+        },
+        getUserInfo(){
+            this.$http.get('/yongxu/Index/Get_User_Information',{params:{
+                User_Id:localStorage.getItem('userId')
+            }}).then((res)=>{
+                this.name =res.data.Staff_Name
+                this.pic = res.data.Avatar_Path
+            })
+        },
+        changePwd(){
+            this.dialogFormVisible = true
+        },
+        sendOk(){
+            if(this.newPwd.length <6){
+                    this.$message({
+                        type:'warning',
+                        message:'新密码不能少于六位'
+                    })
+                    return false
+            }
+             if(this.newPwd.length >16){
+                    this.$message({
+                        type:'warning',
+                        message:'新密码不能大于16位'
+                    })
+                    return false
+            }
+              if(this.newPwd != this.checKNewPwd){
+                    this.$message({
+                        type:'warning',
+                        message:'两次密码输入不一致'
+                    })
+                    return false
+            }
+             if(this.newPwd == this.oldPwd){
+                    this.$message({
+                        type:'warning',
+                        message:'新旧密码不能一致'
+                    })
+                    return false
+            }
+            this.$http.get('/yongxu/Personal/Upd_Pwd',{params:{
+                Original_Pwd:this.oldPwd,
+                New_Pwd:this.newPwd,
+                User_Id:localStorage.getItem('userId')
+            }}).then((res)=>{
+                console.log(res)
+                if(res.data ==  2 ){
+                    this.$message({
+                        type:'success',
+                        message:'修改成功'
+                    })
+                    this.dialogFormVisible = false
+                    this.loginOut()
+                }
+                if(res.data ==  3 ){
+                     this.$message({
+                        type:'warning',
+                        message:'修改失败'
+                    })
+                    return false
+                }
+                if(res.data ==  1 ){
+                     this.$message({
+                        type:'warning',
+                        message:'原密码输入错误'
+                    })
+                    return false
+                }
+            }).catch((err)=>{
+                    this.$message({
+                        type:'warning',
+                        message:'服务器异常'
+                    })
+            })
         }
        
     },
     mounted(){
         this.getTopMenu()
         this.getSetTopMenu()
+        this.getUserInfo()
+    },
+    watch: {
+         $route(to,from){  
+             console.log(to.path)
+             var path = to.path.split('/')[2]
+             var menuArr = []
+             for(var i =0 ;i<this.arr.length;i++){
+                 menuArr[i] = this.arr[i].Item_Path
+             }
+             var menuArr1=[]
+             for(var i =0 ;i<this.arr1.length;i++){
+                 menuArr1[i] = this.arr1[i].Item_Path
+             }
+             menuArr = menuArr.concat(menuArr1)
+             menuArr.push('mineIndex')
+             menuArr.push('mineEdit')
+             menuArr.push('caseAdd')
+             menuArr.push('caseEdit')
+             menuArr.push('caseUpdate')
+            if(menuArr.indexOf(path) == -1){
+                 this.$router.push('/index/web404')
+            }
+        }
     }
 }
 </script>
 
 <style lang="sass" scoped>
- @import '../assets/sass/element.scss'
- @import '../assets/sass/topMenu.scss'
-
+ @import '../assets/sass/element.scss';
+ @import '../assets/sass/topMenu.scss';
 </style>
+<style>
+ .dialogFormVisible_box{
+  display: flex;
+  flex-direction: column;
+}
+.margin_t{
+  margin-top: 25px;
+}
+.flex_title{
+  width: 150px;
+  text-align: right;
+  height: 45px;
+  line-height: 45px;
+  margin-right: 10px;
+}
+.this_input{
+    background-color: #FFF;
+    background-image: none;
+    /* border-radius: 4px; */
+    border: 1px solid #DCDFE6;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 45px;
+    line-height: 45px;
+    outline: 0;
+    padding: 0 15px;
+    -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+    width: 500px;
+}
+.dialog-footer{
+    /* display: flex;
+    flex-direction: row;
+    justify-content: center; */
+}
+.pwd_btn{
+    width: 500px;
+    height: 45px;
+    background: #7E2C2E;
+    outline: none;
+    font-size: 18px;
+    color:#ffffff;
+    border: none;
+    cursor: pointer;
+}
+</style>
+
 
 
 

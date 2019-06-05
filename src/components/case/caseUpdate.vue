@@ -420,6 +420,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
+                    :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -637,7 +638,7 @@ export default {
           
         
     },
-          
+    inject:["reload"],
     methods:{
            openEditor(){
             this.dialogFormVisible3 = true
@@ -1575,6 +1576,7 @@ export default {
                         type:'success'
                     });
                      this.dialogFormVisible2 = false
+                     this.reload()
                     }
                     else{
                            this.$message({

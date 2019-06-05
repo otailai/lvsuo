@@ -15,6 +15,7 @@ const store = new Vuex.Store({
             //聘请人
             
         },
+        pic:'',
     },
     getters:{
         

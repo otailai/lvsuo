@@ -18,7 +18,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
-                 <button class="dingzhi" @click="clear()"><i class="el-icon-download"></i>清空</button>
+                 <button class="dingzhi" @click="clear()"><i class=""></i>清空</button>
 
              
               </div>
@@ -28,10 +28,10 @@
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="closeCasekArr" border style="width: 100%"  @row-click="lineCilck">
                       <el-table-column prop="Case_No" label="案件编号" width="" :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                     <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
-                      <el-table-column prop="staff_Name" label="承办律师" width=""> </el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
+                      <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="合同起止日期" width="" :show-overflow-tooltip="true"> 
                            <template slot-scope="scope" >
                                    
@@ -83,7 +83,7 @@ export default {
                 value:'',
                  //状态
                 options:[
-                {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
+                {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'}
                 ],
         }
     },
@@ -96,27 +96,27 @@ export default {
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput
         }}).then((res)=>{
-            console.log(res)
+            //console.log(res)
             this.closeCasekArr = res.data.Closing_Audit
             this.total = res.data.PageCount
         })
       },
          //获取二级菜单下拉
       changeTowValue(id){
-      console.log(id)
+      //console.log(id)
        this.Casevalue2 = id
-       console.log(this.Casevalue2)
+       //console.log(this.Casevalue2)
        this.getCloseCasekArr()
       },
       //状态查询
       changeStatus(id){
-        console.log(id)
+        //console.log(id)
          this.statusValue = id
          this.getCloseCasekArr()
       },
       //搜索查询
       searchContent(){
-       console.log(this.SearchInput)
+       //console.log(this.SearchInput)
        this.getCloseCasekArr()
       },
       //获取一级下拉
@@ -129,10 +129,10 @@ export default {
        getSelectChildeMenu(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         console.log(id)
+         //console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          console.log(res)
+          //console.log(res)
           this.optionChildMenu = res.data  
           this.Casevalue1 =res.data[0].Id
            //this.Casevalue1 = res.data
@@ -148,7 +148,7 @@ export default {
         
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getCloseCasekArr()
 
@@ -156,10 +156,10 @@ export default {
       handleCurrentChange(val) {
           this.currentPage = val
           this.getCloseCasekArr()
-          console.log(`当前页: ${val}`);
+          //console.log(`当前页: ${val}`);
       },
      lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
       // 对话框,结案操作
        closeCase(id) {
@@ -169,7 +169,7 @@ export default {
           type: 'warning'
         }).then(() => {
           this.$http.get('/yongxu/Toexamine/Closing_Operation',{params:{Case_Id:id}}).then((res)=>{
-            console.log(res)
+            //console.log(res)
              if(res.data == true){
                 this.$message({
                   type: 'success',
@@ -201,9 +201,9 @@ export default {
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
-                   console.log(res)
+                   //console.log(res)
             }else{
-              console.log('日志添加失败')
+              //console.log('日志添加失败')
             }
         })
       },

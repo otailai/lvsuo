@@ -6,11 +6,12 @@
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p>基础数据</p>
                  <p><i class="el-icon-arrow-right"></i></p>
-                <p v-show="child_cur == 0">案件类型</p>
-                  <p v-show="child_cur == 1">客户类型</p>
-                    <p v-show="child_cur == 2">所属行业</p>
-                      <p v-show="child_cur == 3">案由</p>
-                        <p v-show="child_cur == 4">职务</p>
+                 <!-- <p v-if="child_cur == 0">案件类型</p> -->
+                  <p v-if="child_cur == 1 && path_logo==true">客户类型</p>
+                    <p v-if="child_cur == 2 && path_logo==true">所属行业</p>
+                      <p v-if="child_cur == 3 && path_logo==true">案由</p>
+                        <p v-if="child_cur == 4 && path_logo==true">职务</p>
+                        <p v-if="child_cur == 0">案件类型</p>
                 
             
               </div>
@@ -74,22 +75,118 @@ import jobCase from './setBase/jobCase'
         ],
         value: '',
         value5: '',
+        path_logo:false
       };
     },
     methods: {
-         handleClick(tab, event) {
+        handleClick(tab, event) {
         this.child_cur = tab.index
-        this.$router.push('/index/'+this.arr[this.child_cur].path)
+        //console.log(this.child_cur)
+        if(this.child_cur == 1){
+            this.common.checkAuth({params:{url:'Install/Show_Customer_Type',userid:localStorage.getItem('userId')}}).then((res)=>{
+           //console.log(res)
+            if(res.data ==false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });     
+              this.getActiveMenu()
+               this.path_logo = false
+              return false
+          }else{
+              this.path_logo = true
+               this.$router.push('/index/'+this.arr[this.child_cur].path)
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
+         })
+        }
+       
+          if(this.child_cur == 2){
+            this.common.checkAuth({params:{url:'Install/Show_Customer_Industry',userid:localStorage.getItem('userId')}}).then((res)=>{
+           //console.log(res)
+            if(res.data ==false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });     
+                 this.getActiveMenu()
+                   this.path_logo = false
+              return false
+          }else{
+             this.path_logo = true
+               this.$router.push('/index/'+this.arr[this.child_cur].path)
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
+         })
+        }
+
+           if(this.child_cur == 3){
+            this.common.checkAuth({params:{url:'Install/Show_Cause_Action',userid:localStorage.getItem('userId')}}).then((res)=>{
+           //console.log(res)
+            if(res.data ==false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });    
+                 this.getActiveMenu() 
+                   this.path_logo = false
+              return false
+          }else{
+             this.path_logo = true
+               this.$router.push('/index/'+this.arr[this.child_cur].path)
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
+         })
+        }
+
+           if(this.child_cur == 4){
+            this.common.checkAuth({params:{url:'Install/Show_Position',userid:localStorage.getItem('userId')}}).then((res)=>{
+           //console.log(res)
+            if(res.data ==false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });     
+                 this.getActiveMenu()
+                   this.path_logo = false
+              return false
+          }else{
+             this.path_logo = true
+               this.$router.push('/index/'+this.arr[this.child_cur].path)
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
+         })
+        }
         },
         getActiveMenu(){
         this.activeName = 'name'+this.child_cur
-        console.log(this.activeName)
-        console.log(this.$route.path)
+        //console.log(this.activeName)
+        //console.log(this.$route.path)
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] = '/index/'+this.arr[i].path
         }
-        console.log(menuArr)
+        //console.log(menuArr)
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
         

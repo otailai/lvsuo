@@ -201,13 +201,14 @@
                             <el-table-column  label="状态" width="">
                             
                                 <template slot-scope="scope"> 
-                                    <p>{{scope.row.state}}</p>
+                                    <p v-if="scope.row.type == -1">查看合同</p>
+                                     <p v-else>{{scope.row.state}}</p>
                                 </template>
                             
                              </el-table-column>
                              <el-table-column  label="操作" width="150">
                                 <template slot-scope="scope">
-                                    <p   v-if="scope.row.type == 1">一级审核</p>
+                                    <p  v-if="scope.row.type == 1">一级审核</p>
                                      <p v-if="scope.row.type == 2">二级审核</p>
                                      <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4" style="cursor: pointer">更新</p>
                                       <a  v-if="scope.row.type == 3" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
@@ -227,7 +228,7 @@
      <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
           <div class="dialogFormVisivleInput flex">
-              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName"></div>
+              <p>文档名称</p><div class="dialogFormVisivleInput_right"><input type="text" class="common-input" v-model="fileName" readonly></div>
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
@@ -272,6 +273,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
+                     :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -318,6 +320,7 @@ export default {
             dialogFormVisible:false,
             dialogFormVisibleUpdate:false,
             //客户基本信息
+            contact_status:'',
             Customer_Type_Id:'',
             Customer_Name_Zh:'',
              Customer_Type: "",
@@ -369,10 +372,16 @@ export default {
         
         }
     },
+    inject:["reload"],
     methods:{
         //风控传
         toRisk(id,level){
-            this.$http.get('/yongxu/Document/Upd_Document_Status',{params:{Id:id,Examine_Level:level}}).then((res)=>{
+        this.$confirm('此操作将提交'+level+'级审核, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           this.$http.get('/yongxu/Document/Upd_Document_Status',{params:{Id:id,Examine_Level:level}}).then((res)=>{
                 console.log(res)
                 if(res.data == true){
                         this.$message({
@@ -394,6 +403,13 @@ export default {
                         })
                         return false
             })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+          
         },
         deleteLine(i){
                this.arr.splice(i,1)
@@ -424,6 +440,7 @@ export default {
             }}).then((res)=>{
                 console.log(res)
                 // 客户信息
+                
                 let arr=res.data.Get_Customer_Information
                 this.Customer_Name_Zh = arr.Customer_Name_Zh
                 this.Customer_Type_Id = arr.Customer_Type_Id
@@ -437,6 +454,7 @@ export default {
                 this.City=arr.City
                 this.Customer_Number =arr.Customer_Number
                 //案件信息
+                
                 let caseInfo = res.data.Get_Case_Information
                 this.Cause_Action = caseInfo.Cause_Action,
                 this.Case_Name=caseInfo.Case_Name
@@ -446,6 +464,7 @@ export default {
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
+                this.contact_status = caseInfo.Status
                 this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
@@ -515,7 +534,7 @@ export default {
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
                         console.log(res)
-                            if(res.data.type == -1){
+                            if(this.contact_status === 0){
                                 this.ifClick = false
                             }else{
                                 this.ifClick = true
@@ -565,7 +584,9 @@ export default {
                         message:'保存成功',
                         type:'success'
                     });
+
                      this.dialogFormVisible = false
+                     this.reload()
                     this.getTableData()
                     }
                     else{

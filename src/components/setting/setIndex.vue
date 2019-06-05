@@ -34,7 +34,7 @@
                         <el-table-column  label="状态"> 
                           <template slot-scope="scope">
                             <p v-if="scope.row.Status == 1">在职</p>
-                             <p v-if="scope.row.Status == 2">离职</p>
+                            <p v-if="scope.row.Status === 0">离职</p>
                           </template>
                         </el-table-column>
                         <el-table-column  label="备注" width="160"> 
@@ -46,7 +46,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[5, 10, 15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5, 10, 15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                   </li>
@@ -65,19 +65,19 @@
                       
 
                           <el-form-item label="职务" :label-width="formLabelWidth">
-                        <el-select v-model="form.job" placeholder="请选择活动区域" class="el-select1">
+                        <el-select v-model="form.job" placeholder="请选择职务" class="el-select1">
                                 <el-option :label="v.Position_Name"  :value="v.Id" v-for="(v,i) in jobArr" :key="i"></el-option> 
                         </el-select>
                          </el-form-item>
                       
                         <el-form-item label="分所" :label-width="formLabelWidth">
-                        <el-select v-model="form.branch" placeholder="请选择活动区域" class="el-select1" @change="changeBranch(form.branch)">
+                        <el-select v-model="form.branch" placeholder="请选择分所" class="el-select1" @change="changeBranch(form.branch)">
                                <el-option :label="v.Org_Name"  :value="v.Id" v-for="(v,i) in branchArr" :key="i"></el-option> 
                         </el-select>
                          </el-form-item>
 
                       <el-form-item label="部门" :label-width="formLabelWidth">
-                        <el-select v-model="form.party" placeholder="请选择活动区域" class="el-select1">
+                        <el-select v-model="form.party" placeholder="请选择部门" class="el-select1">
                                <el-option :label="v.Org_Name"  :value="v.Id" v-for="(v,i) in partyArr" :key="i"></el-option> 
                         </el-select>
                          </el-form-item>
@@ -93,7 +93,7 @@
                         </el-form-item>
 
                           <el-form-item label="状态" :label-width="formLabelWidth">
-                        <el-select v-model="form.state" placeholder="请选择活动区域" class="el-select1">
+                        <el-select v-model="form.state" placeholder="请选择状态" class="el-select1">
                           <el-option :label="v.name"  :value="v.Id" v-for="(v,i) in statusArr" :key="i"></el-option> 
                         </el-select>
                          </el-form-item>
@@ -103,7 +103,7 @@
                         </el-form-item>
                          
                         <el-form-item label="角色" :label-width="formLabelWidth">
-                        <el-select v-model="form.role" placeholder="请选择活动区域" class="el-select1">
+                        <el-select v-model="form.role" placeholder="请选择角色" class="el-select1">
                            <el-option :label="v.Rule_Name"  :value="v.Id" v-for="(v,i) in roleArr" :key="i"></el-option> 
                         </el-select>
                  
@@ -126,12 +126,84 @@
             </el-dialog>
         </el-dialog>
 
+         <el-dialog  :visible.sync="dialogFormVisible3" :modal-append-to-body='false' :modal='false' top="100px">
+          <div slot="title" class="dialog-title">
+            <p>修改成员</p>
+          </div>
+                        <el-form :model="form" class="form-select">
+                        <el-form-item label="姓名" :label-width="formLabelWidth">
+                          <el-input v-model="form.update_name" autocomplete="off" class="el-select1"></el-input>
+                        </el-form-item>
+                      
+
+                          <el-form-item label="职务" :label-width="formLabelWidth">
+                        <el-select v-model="form.update_job" placeholder="请选择职务" class="el-select1">
+                                <el-option :label="v.Position_Name"  :value="v.Id" v-for="(v,i) in jobArr" :key="i"></el-option> 
+                        </el-select>
+                         </el-form-item>
+                      
+                        <el-form-item label="分所" :label-width="formLabelWidth">
+                        <el-select v-model="form.update_branch" placeholder="请选择分所" class="el-select1" @change="changeUpdateBranch(form.update_branch)">
+                               <el-option :label="v.Org_Name"  :value="v.Id" v-for="(v,i) in branchArr" :key="i"></el-option> 
+                        </el-select>
+                         </el-form-item>
+
+                      <el-form-item label="部门" :label-width="formLabelWidth">
+                        <el-select v-model="form.update_party" placeholder="请选择部门" class="el-select1">
+                               <el-option :label="v.Org_Name"  :value="v.Id" v-for="(v,i) in partyArr" :key="i"></el-option> 
+                        </el-select>
+                         </el-form-item>
+
+                      
+                      
+                        <el-form-item label="手机" :label-width="formLabelWidth">
+                          <el-input v-model="form.update_tel" autocomplete="off" class="el-select1"></el-input>
+                        </el-form-item>
+                        
+                        <el-form-item label="微信" :label-width="formLabelWidth">
+                         <a href="#" style="color:red" @click="innerVisible = true">扫码绑定</a>
+                        </el-form-item>
+
+                          <el-form-item label="状态" :label-width="formLabelWidth">
+                        <el-select v-model="form.update_state" placeholder="请选择状态" class="el-select1">
+                          <el-option :label="v.name"  :value="v.Id" v-for="(v,i) in statusArr" :key="i"></el-option> 
+                        </el-select>
+                         </el-form-item>
+
+                        <el-form-item label="备注" :label-width="formLabelWidth">
+                          <el-input v-model="form.update_remark" autocomplete="off" class="el-select1"></el-input>
+                        </el-form-item>
+                         
+                        <el-form-item label="角色" :label-width="formLabelWidth">
+                        <el-select v-model="form.update_role" placeholder="请选择角色" class="el-select1">
+                           <el-option :label="v.Rule_Name"  :value="v.Id" v-for="(v,i) in roleArr" :key="i"></el-option> 
+                        </el-select>
+                 
+                         </el-form-item>
+                   
+                  </el-form>
+          <div slot="footer" class="dialog-footer">
+           <div class="flex dialogFormVisivleFooter">
+              <el-button type="primary" @click="update_Member()">保存</el-button>
+           </div>
+          </div>
+             <el-dialog
+              width="20%"
+              top="25%"
+              :visible.sync="innerVisible"
+              append-to-body>
+              <div class="img-div">
+                <img src="../../assets/img/erweima.png" alt="">
+              </div>
+            </el-dialog>
+        </el-dialog>
+
       <el-dialog  :visible.sync="dialogFormVisible1" :append-to-body='true' top="300px" width="800px"> 
                          <div class="dialogFormVisible_box">
                             <div class="flex row">
                             <p class="flex_title">分所名称</p>
                          
-                             <el-select v-model="value" placeholder="请选择">
+                             <el-select v-model="value" placeholder="请选择" class="el-select2">
                                     <el-option
                                       v-for="item in options"
                                       :key="item.Id"
@@ -181,6 +253,7 @@ import { fail } from 'assert';
         value5: '',
         dialogFormVisible:false,
         dialogFormVisible1:false,
+        dialogFormVisible3:false,
         formLabelWidth:'',
         form: {
           name: '',
@@ -191,6 +264,18 @@ import { fail } from 'assert';
           role:'',
           party:'',
           branch:'',
+
+          update_Id:'',
+          update_name: '',
+          update_job: '',
+          update_tel:'',
+          update_state:'',
+          update_remark:'',
+          update_role:'',
+          update_party:'',
+          update_branch:'',
+          update_User_Id:'',
+          user_auth_Id:'',
         },
         partyArr:[],
         roleArr:[],
@@ -215,8 +300,12 @@ import { fail } from 'assert';
       },
       changeBranch(id){
          this.partyArr = ''
-         this.getPartyArr(id)
-        
+         this.getPartyArr(id)  
+      },
+        changeUpdateBranch(id){
+         this.partyArr = ''
+         this.form.update_party = ''
+         this.getPartyArr(id)  
       },
       getPartyArr(id){
           this.$http.get('/yongxu/Install/Get_Department',{params:{
@@ -224,8 +313,8 @@ import { fail } from 'assert';
           }}).then((res)=>{
             this.partyArr = res.data
         })
-       
       },
+
        getBranchList(){
          this.$http.get('/yongxu/Install/Get_Law_Firm').then((res)=>{
            let arr = res.data
@@ -236,7 +325,7 @@ import { fail } from 'assert';
           for(var i in arr){
               arr2.push(arr[i])
           }
-            console.log(arr2)
+            //console.log(arr2)
             this.options = arr2
          })
      },
@@ -245,33 +334,33 @@ import { fail } from 'assert';
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-          console.log(res)
+          //console.log(res)
           this.tableData = res.data.Show_Organization
           this.total = res.data.PageCount
         })
       },
       handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
+        // //console.log(tab.index)
+        // //console.log(this.child_cur)
+        // //console.log(tab,event);
       },
       changeLi(i){
           this.cur = i
          
       },
        handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        //console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        //console.log(`当前页: ${val}`);
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
       },
       newParty(){
           this.common.checkAuth({params:{url:'Install/Add_Law_Aepartment',userid:localStorage.getItem('userId')}}).then((res)=>{
-           console.log(res)
+           //console.log(res)
             if(res.data ==false){
              this.$message({
                 message:'没有权限',
@@ -317,7 +406,7 @@ import { fail } from 'assert';
       },
       newMmber(){
           this.common.checkAuth({params:{url:'Install/Add_User_Information',userid:localStorage.getItem('userId')}}).then((res)=>{
-           console.log(res)
+           //console.log(res)
             if(res.data ==false){
              this.$message({
                 message:'没有权限',
@@ -404,12 +493,20 @@ import { fail } from 'assert';
           Orgid:this.form.branch,
           Contact_Information:this.form.tel,
         }).then((res)=>{
-            console.log(res)
+            //console.log(res)
             if(res.data == true){
                     this.$message({
                     message:'添加成功',
                     type:'success'
                 })
+            this.form.party = ''
+            this.form.job = ''
+            this.form.name = ''
+            this.form.state = ''
+            this.form.remark = ''
+            this.form.role = ''
+            this.form.branch = ''
+            this.form.tel = ''
             this.getList()
           this.dialogFormVisible = false
             }else{
@@ -426,7 +523,124 @@ import { fail } from 'assert';
         })
       },
       lineCilck(row, event, column){
-    console.log(row, event, column)
+          //console.log(row.Id)
+          this.$http.get('/yongxu/Install/Upd_Sel_Member',{params:{Id:row.Id}}).then((res)=>{
+               //console.log(res)
+          this.form.update_name = res.data.Staff_Name
+          this.form.update_job = res.data.Position
+          this.form.update_tel = res.data.Contact_Information
+          this.form.update_state = res.data.Status
+          this.form.update_remark = res.data.Remarks
+          this.form.update_role = res.data.Rule_Id
+          this.form.update_party = res.data.Department
+          this.form.update_branch = res.data.Orgid
+          this.form.update_Id = res.data.staff_Id
+          this.form.update_User_Id = res.data.User_Id
+          this.form.user_auth_Id = res.data.user_auth_Id
+          }).then((res)=>{
+          this.getPartyArr(this.form.update_branch)
+          this.dialogFormVisible3 = true
+          }).catch((err)=>{
+            this.$message({
+              message:'服务器异常',
+              type:'warning'
+            })
+          })  
+      },
+      update_Member(){
+        if(this.form.update_name == ''||this.form.update_name==null){
+            this.$message({
+              message:'成员名称不可为空',
+              type:'warning'
+            })
+            return false
+        }
+         if(this.form.update_job == ''||this.form.update_job==null){
+            this.$message({
+              message:'成员职务不可为空',
+              type:'warning'
+            })
+            return false
+        }
+         if(this.form.update_branch == ''||this.form.update_branch==null){
+            this.$message({
+              message:'分所名称不可为空',
+              type:'warning'
+            })
+            return false
+        }
+         if(this.form.update_party == ''||this.form.update_party==null){
+            this.$message({
+              message:'部门名称不可为空',
+              type:'warning'
+            })
+            return false
+        }
+         if(this.form.update_tel == ''||this.form.update_tel==null){
+            this.$message({
+              message:'联系方式不可为空',
+              type:'warning'
+            })
+            return false
+        }
+           var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+           if(!myreg.test(this.form.update_tel)){
+              this.$message({
+                  message:'请填写正确的手机号',
+                  type:'warning'
+              })
+              return false
+          }  
+         if(this.form.update_state === ''||this.form.update_state == null){
+            this.$message({
+              message:'状态不可为空',
+              type:'warning'
+            })
+            return false
+        }
+           if(this.form.update_role == ''||this.form.update_role==null){
+            this.$message({
+              message:'角色不可为空',
+              type:'warning'
+            })
+            return false
+        }
+     
+        this.$http.post('/yongxu/Install/Upd_Member',{
+            userid:localStorage.getItem('userId'),
+            user_auth_Id:this.form.user_auth_Id,
+            staff_Id:this.form.update_Id,
+            User_Id:this.form.update_User_Id,
+            Staff_Name:this.form.update_name,
+            Orgid:this.form.update_branch,
+            Department:this.form.update_party,
+            Position:this.form.update_job,
+            Status:this.form.update_state,
+            Remarks:this.form.update_remark,
+            Contact_Information:this.form.update_tel,
+            Rule_Id:this.form.update_role
+        }).then((res)=>{
+          //console.log(res)
+          if(res.data == true){
+             this.$message({
+              message:'更新成功',
+              type:'success'
+            })
+              this.getList()
+              this.dialogFormVisible3 = false
+          }else{
+              this.$message({
+              message:'更新失败',
+              type:'warning'
+            })
+            return false
+          }
+        }).catch((err)=>{
+            this.$message({
+              message:'服务器异常',
+              type:'warning'
+            })
+          })  
       },
  
       searchData(){
@@ -454,7 +668,7 @@ import { fail } from 'assert';
     }
   };
 </script>
-<style scoped>
+<style>
 @import '../../assets/sass/main.css';
 .title-case{
   flex-direction: row;
@@ -515,7 +729,7 @@ import { fail } from 'assert';
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 500px;
 }
-.el-select{
+.el-select2{
   width: 500px;
 }
 </style>

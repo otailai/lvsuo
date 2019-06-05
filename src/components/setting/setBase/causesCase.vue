@@ -24,7 +24,7 @@
                                             </el-table>
                                             <div class="block flex">
                                             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                            :page-sizes="[5,10]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                            :page-sizes="[1,5,10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                                             </el-pagination>
                                             </div>
                                             </li>
@@ -76,7 +76,7 @@ export default {
     data(){
         return{
             tableData:[],
-            numPage:5,
+            numPage:10,
             currentPage:1,
             total:0,
             dialogFormVisible:false,
@@ -96,14 +96,14 @@ export default {
           handleSizeChange(val) {
          this.numPage = val
          this.getCauseTypeList()
-         console.log(`每页 ${ this.numPage} 条`);
+         //console.log(`每页 ${ this.numPage} 条`);
       },
       handleCurrentChange(val) {
-        console.log(val)
+        //console.log(val)
         this.currentPage = val
         this.getCauseTypeList()
 
-        console.log(`当前页: ${this.currentPage}`);
+        //console.log(`当前页: ${this.currentPage}`);
       },
       toAdd(){
         this.name = '',
@@ -111,7 +111,7 @@ export default {
         this.dialogFormVisible= true
       },
       lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
       getCauseTypeList(){ 
 
@@ -121,14 +121,14 @@ export default {
          }}).then((res)=>{
            this.tableData = res.data.Cause_Action
            this.total = res.data.PageCount
-           console.log(res)
+           //console.log(res)
         })
       },
          handleClick(tab, event) {
         this.child_cur = tab.index
-        // console.log(tab.index)
-        // console.log(this.child_cur)
-        // console.log(tab,event);
+        // //console.log(tab.index)
+        // //console.log(this.child_cur)
+        // //console.log(tab,event);
       },
   
       //添加
@@ -141,7 +141,7 @@ export default {
                 return false
         }
         this.$http.get('/yongxu/Install/Add_Aummary',{params:{User_Id:localStorage.getItem('userId'),Value:this.name}}).then((res)=>{
-            console.log(res)
+            //console.log(res)
             if(res.data == true){
                this.$message({
                             message:'添加成功',
@@ -168,7 +168,7 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Cause_Action',{params:{Id:id,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-             console.log(res)
+             //console.log(res)
                 if(res.data == true ){
                      this.getCauseTypeList()
                       this.$message({

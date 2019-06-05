@@ -34,17 +34,17 @@
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="riskArr" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_Name" label="案件名称" width=""></el-table-column>
-                    <el-table-column prop="staff_Name" label="主办律师" width=""> </el-table-column>
-                     <el-table-column prop="Value" label="案件类别" width=""> </el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true"> 
                            <template slot-scope="scope" >
                                     <p>{{scope.row.Date_Created | getTime}}</p> 
                                 </template>
                       </el-table-column>
-                          <el-table-column  label="合同" width=""> 
+                          <el-table-column  label="文件" width="" :show-overflow-tooltip="true"> 
                                 <template slot-scope="scope"> 
-                               <a style="color:red" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">
+                               <a style="color:red" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">
                                    {{scope.row.File_Name}}
                                </a>
                               </template>
@@ -61,7 +61,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -89,7 +89,7 @@ export default {
                 value:'',
                  //状态
                 options:[
-                {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-1,label:'已作废'}
+                {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'}
                 ],
         }
     },
@@ -103,27 +103,27 @@ export default {
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-            console.log(res)
+            //console.log(res) 
             this.riskArr = res.data.Noe_Risk
             this.total = res.data.PageCount
         })
       },
         //获取二级菜单下拉
       changeTowValue(id){
-      console.log(id)
+      //console.log(id)
        this.Casevalue2 = id
-       console.log(this.Casevalue2)
+       //console.log(this.Casevalue2)
        this.getRiskArr()
       },
       //状态查询
       changeStatus(id){
-        console.log(id)
+        //console.log(id)
          this.statusValue = id
          this.getRiskArr()
       },
       //搜索查询
       searchContent(){
-       console.log(this.SearchInput)
+       //console.log(this.SearchInput)
        this.getRiskArr()
       },
       //获取一级下拉
@@ -136,10 +136,10 @@ export default {
        getSelectChildeMenu(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         console.log(id)
+         //console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          console.log(res)
+          //console.log(res)
           this.optionChildMenu = res.data  
           this.Casevalue1 =res.data[0].Id
            //this.Casevalue1 = res.data
@@ -155,7 +155,7 @@ export default {
         
       },
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getRiskArr()
 
@@ -163,10 +163,10 @@ export default {
       handleCurrentChange(val) {
           this.currentPage = val
           this.getRiskArr()
-          console.log(`当前页: ${val}`);
+          //console.log(`当前页: ${val}`);
       },
      lineCilck(row, event, column){
-            console.log(row, event, column)
+            //console.log(row, event, column)
       },
       noPassCase(id,type){
           if(type != 0){
@@ -272,7 +272,7 @@ export default {
           type: 'warning'
         }).then((res) => {
           this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:3}}).then((res)=>{
-            console.log(res)
+            //console.log(res)
               if(res.data == true){
                  this.$message({
             type: 'success',
@@ -301,9 +301,9 @@ export default {
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
-                   console.log(res)
+                   //console.log(res)
             }else{
-              console.log('日志添加失败')
+              //console.log('日志添加失败')
             }
         })
       },

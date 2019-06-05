@@ -61,7 +61,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[5,10,15,20]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>

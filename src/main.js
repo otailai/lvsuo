@@ -1,6 +1,7 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+import "babel-polyfill"
 import App from './App'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
@@ -15,7 +16,6 @@ import toExcel from '@/excel/json2excel'
 import htmlToPdf from './utils/ToPdf'
 import ImgInputer from 'vue-img-inputer'
 import 'vue-img-inputer/dist/index.css'
-import "babel-polyfill"
 import global from './common'
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
@@ -37,14 +37,16 @@ Vue.config.productionTip = false
 
 
 const router = new VueRouter({
+  mode: 'history',
   routes,
   linkActiveClass:"common-active",
+ 
 })
 
 router.beforeEach((to, from, next) => {
   if(to.meta.requireAuth){
     if(localStorage.getItem('userId')){
-      next()
+        next()
     }else{
       next({
         path:'/login',
@@ -52,7 +54,15 @@ router.beforeEach((to, from, next) => {
       })
     }
   }else{
-    next();
+    if(to.path == '/'){
+      next({
+        path:'/index',
+        query:{redirect:to.fullPath}
+      })
+    }else{
+      next();
+    }
+   
   }
 });
 
