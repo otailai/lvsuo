@@ -55,7 +55,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -72,7 +72,7 @@ export default {
                 //当前页
                 currentPage:1,
                 total:0,
-                pageNum:10,
+                pageNum:20,
                       //搜索
                 SearchInput:'',
                 Casevalue:'',
@@ -89,7 +89,7 @@ export default {
     },
     inject:["reload"],
     methods:{
-         getCloseCasekArr(){
+         getCloseCasekArr:function(){
         this.$http.get('/yongxu/Toexamine/Show_Closing_Audit',{params:{
           PageNumber:this.currentPage,
           Display_Page_Number:this.pageNum,
@@ -102,31 +102,31 @@ export default {
         })
       },
          //获取二级菜单下拉
-      changeTowValue(id){
+      changeTowValue:function(id){
       //console.log(id)
        this.Casevalue2 = id
        //console.log(this.Casevalue2)
        this.getCloseCasekArr()
       },
       //状态查询
-      changeStatus(id){
+      changeStatus:function(id){
         //console.log(id)
          this.statusValue = id
          this.getCloseCasekArr()
       },
       //搜索查询
-      searchContent(){
+      searchContent:function(){
        //console.log(this.SearchInput)
        this.getCloseCasekArr()
       },
       //获取一级下拉
-        getSelectMenu(){
+        getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
         })
       },
       //下拉二级下拉查询
-       getSelectChildeMenu(id){ 
+       getSelectChildeMenu:function(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
          //console.log(id)
@@ -138,7 +138,7 @@ export default {
            //this.Casevalue1 = res.data
         })
       },
-        clear(){
+        clear:function(){
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
@@ -147,22 +147,55 @@ export default {
         this.getCloseCasekArr()
         
       },
-      handleSizeChange(val) {
+      handleSizeChange:function(val) {
         //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getCloseCasekArr()
 
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
           this.currentPage = val
           this.getCloseCasekArr()
           //console.log(`当前页: ${val}`);
       },
-     lineCilck(row, event, column){
+     lineCilck:function(row, event, column){
             //console.log(row, event, column)
       },
       // 对话框,结案操作
-       closeCase(id) {
+       closeCase:function(id) {
+             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+          else{
+             if(res.data != 2){
+                          done();
+                        return false
+                }
         this.$confirm('此操作将此案件结案, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -195,9 +228,11 @@ export default {
             message: '已取消操作'
           });          
         });
+          }
+             })
       },
       //添加日志
-      AuditLog(id,type,Findings_Audit,){
+      AuditLog:function(id,type,Findings_Audit,){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
@@ -208,7 +243,7 @@ export default {
         })
       },
     },
-    mounted(){
+    mounted:function(){
         this.getCloseCasekArr()
         this.getSelectMenu()
     },

@@ -45,10 +45,10 @@
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first sselct">
                         
-                        <div class="flex"><p class="title">所属行业</p>
+                        <div class="flex" v-show="customValue == 4"><p class="title">所属行业</p>
                   <el-select v-model="suoshuValue" placeholder="请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
-                        <div class="flex"><p class="title">职务</p>
+                        <div class="flex" v-show="customValue == 4"><p class="title">职务</p>
                         <input type="text" class="common-input" placeholder="请输入" v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
@@ -89,6 +89,8 @@
                    
                    
                     <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="请输入" v-model="compony"/></div>
+                   
+                 
                     <!-- <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty"/></div> -->
                    
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div> -->
@@ -113,7 +115,7 @@
                              
                         </div> -->
                     <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty"/></div>
-
+                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="请输入" v-model="biaodie"/></div>
                     </div>
                     </div>
                  </div>
@@ -634,6 +636,7 @@ export default {
                 placeholder:'',
                 theme:'snow'
             },
+            biaodie:'',
         }
           
         
@@ -699,7 +702,7 @@ export default {
             }
             if(this.costValue == 8){
             addJson = {
-                   'User_Id':localStorage.getItem('userId'),//登录人Id
+              'User_Id':localStorage.getItem('userId'),//登录人Id
               'Customer_Id':this.custom_Id,//客户Id
               'Case_Id':this.Case_Id,//案件Id
               'Chinese_Name':this.search,//客户名称
@@ -727,6 +730,8 @@ export default {
                 //服务内容
                 'Service_Content':this.Service_Content,
                   'Source_Contract':this.Source_Contract,
+                  //标的额
+                  'Target':this.biaodie,
                   
              //合同
                 'File_Name':this.File_Name,
@@ -764,6 +769,8 @@ export default {
     //服务内容
                 'Service_Content':this.Service_Content,
                   'Source_Contract':this.Source_Contract,
+                    //标的额
+                  'Target':this.biaodie,
              //合同
                  'File_Name':this.File_Name,
                 'Suffix_Name':this.Suffix_Name,
@@ -804,6 +811,8 @@ export default {
                 //服务内容
                 'Service_Content':this.Service_Content,
                   'Source_Contract':this.Source_Contract,
+                    //标的额
+                  'Target':this.biaodie,
             //合同
                  'File_Name':this.File_Name,
                 'Suffix_Name':this.Suffix_Name,
@@ -876,7 +885,24 @@ export default {
                          type:'warning'
                      });
                        return false  
+                }
+
+                   if(this.suoshuValue==""||this.suoshuValue==null){
+                this.$message({
+                    message:'请选择所属行业',
+                    type:'warning'
+                });
+                return false
+                        }
+
+                 if(this.value2==""||this.value2==null){
+                this.$message({
+                    message:'职务不能为空',
+                    type:'warning'
+                });
+                return false
             }
+
             }
               if(this.search==""||this.search==null){
                 this.$message({
@@ -899,13 +925,7 @@ export default {
                 });
                 return false
             }
-              if(this.suoshuValue==""||this.suoshuValue==null){
-                this.$message({
-                    message:'请选择所属行业',
-                    type:'warning'
-                });
-                return false
-            }
+           
              if(this.tel==""||this.tel==null){
                 this.$message({
                     message:'联系电话不能为空',
@@ -913,13 +933,7 @@ export default {
                 });
                 return false
             }
-              if(this.value2==""||this.value2==null){
-                this.$message({
-                    message:'职务不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+             
                if(this.isValue==""||this.isValue==null){
                 this.$message({
                     message:'请选择是否常年客户',
@@ -952,6 +966,13 @@ export default {
              if(this.compony==""||this.compony==null){
                 this.$message({
                     message:'请填写受理机关',
+                    type:'warning'
+                });
+                return false
+            }
+               if(this.biaodie==""||this.biaodie==null){
+                this.$message({
+                    message:'标的额不能为空',
                     type:'warning'
                 });
                 return false
@@ -1436,6 +1457,7 @@ export default {
                 this.Service_Content = caseInfo.Service_Content
                 this.Source_Contract = caseInfo.Source_Contract
                 this.firstSource_Contract = caseInfo.Source_Contract
+                this.biaodie = caseInfo.Target //标的额
                 //受理机关
                 this.Receiving_Organ=caseInfo.Receiving_Organ
                 this.compony = caseInfo.Receiving_Organ
@@ -1563,7 +1585,7 @@ export default {
                  params:{
                         User_Id: localStorage.getItem('userId'),
                     Case_Id:parseInt(this.Case_Id),
-                    File_Name:this.fileName,
+                    File_Name:this.File_Name,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,

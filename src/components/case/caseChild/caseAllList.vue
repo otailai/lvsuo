@@ -96,7 +96,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1, 5, 10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
+                 :page-sizes="[20,50,100]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
                    </el-pagination>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
@@ -141,7 +141,7 @@ export default {
             Casevalue:[],
             currentPage:1,
             total1:0,
-            numPage:10,
+            numPage:20,
             tableData:[],
             //一级下拉
             Casevalue1:'',
@@ -225,7 +225,7 @@ export default {
        * numPage 分页每页条数
        * currentPage 当前页
       */     
-        getCaseList(){ 
+        getCaseList:function(){ 
         var statusValue;
           if(this.value === '' || this.value === null){
                 statusValue = -3;
@@ -251,7 +251,7 @@ export default {
         })
       },
     // 打开添加
-        toAdd(){
+        toAdd:function(){
          this.common.checkAuth({params:{url:'AddCases8',userid:localStorage.getItem('userId')}}).then((res)=>{
             if(res.data ==false){
              this.$message({
@@ -271,7 +271,7 @@ export default {
          })
       },
       //清空
-        clear(){
+        clear:function(){
         this.value = ''
         this.end=''
         this.start=''
@@ -283,29 +283,29 @@ export default {
         this.getCaseList() 
       },
     //进入详情
-       lineCilck(row, event, column){
-           //console.log(row.Charging_Method)
-          this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
-           //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
+       lineCilck:function(row, event, column){
+        
+                      //console.log(row.Charging_Method)
+                      this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+                       //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
+                 
+        
+         
+
+         
       },
       //编辑操作
-        updateData(id,type_id){
-         this.common.checkAuth({params:{url:'Index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
-              this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-          //   if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //     return false
-          // }else{
-               
-          //     this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-          // }
-         })
+        updateData:function(id,type_id){
+       
+                     this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
+                 
+          
+        //  this.common.checkAuth({params:{url:'Index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
+        //       this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
+        //  })
       },
       //时间查询
-         changeTime(value){
+         changeTime:function(value){
              if(value==null){
                this.start = '',
                this.end = '',
@@ -323,67 +323,122 @@ export default {
              this.getCaseList()
       },
 
-     handleSizeChange(val) {
+     handleSizeChange:function(val) {
          this.numPage = val
          this.getCaseList()
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
         this.currentPage = val
         this.getCaseList()
       },
       //下载excel
-     downExcel() {
-      const th = ['案件编号', '案件名称', '客户名称', '案件类别','承办律师','合同起止日期','立案日期','立案状态']
-      const filterVal = ['Case_No', 'Case_Name', 'Customer_Name_Zh','Value','Case_Lawyer_Name','Contract_Date_From','Creattime','Status']
-      const data = this.tableData.map(v => filterVal.map(k => v[k]))
-      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
-      this.$toExcel({th, data, fileName, fileType, sheetName})
+     downExcel:function() {
+     this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 else{
+                      const th = ['案件编号', '案件名称', '客户名称', '案件类别','承办律师','合同起止日期','立案日期','立案状态']
+                      const filterVal = ['Case_No', 'Case_Name', 'Customer_Name_Zh','Value','Case_Lawyer_Name','Contract_Date_From','Creattime','Status']
+                      const data = this.tableData.map(v => filterVal.map(k => v[k]))
+                      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
+                      this.$toExcel({th, data, fileName, fileType, sheetName})
+                 }
+              })
       },
     //获取二级菜单下拉
-        changeTowValue(id){
+        changeTowValue:function(id){
          this.Casevalue2 = id
          this.getCaseList()
       },
       //状态查询
-      changeStatus(id){
+      changeStatus:function(id){
          this.getCaseList()
       },
       //搜索查询
-      searchContent(){
+      searchContent:function(){
        this.getCaseList()
       },
       //获取一级下拉
-        getSelectMenu(){
+        getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
         })
       },
       //下拉二级下拉查询
-       getSelectChildeMenu(id){ 
-         this.optionChildMenu = ''
-         this.Casevalue1 =''
-         this.selectOneId = id
-         this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-         this.optionChildMenu = res.data  
-         this.Casevalue1 =res.data[0].Id
-        })
+       getSelectChildeMenu:function(id){
+        
+                    this.optionChildMenu = ''
+                    this.Casevalue1 =''
+                    this.selectOneId = id
+                    this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
+                    this.optionChildMenu = res.data  
+                    this.Casevalue1 =res.data[0].Id
+              
+                 
+         })
+        
       },
         //合同上传
-      shangchun(id){
-      this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
-        this.Case_Id = id
-        this.dialogFormVisible =true
-          // if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //    return false
-          // }else{
-          //     this.Case_Id = id
-          //     this.dialogFormVisible =true
-          // }
-        })
+      shangchun:function(id){
+            this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }else{
+                     this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
+                      this.Case_Id = id
+                      this.dialogFormVisible =true
+                      })
+                 }
+              })          
       },
       /**
        * 上传成功回调
@@ -392,7 +447,8 @@ export default {
        * fileName1 文件路径
        * size 文件大小
        */
-        successFile(res){
+        successFile:function(res){
+          console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
@@ -405,26 +461,26 @@ export default {
                 });  
             } 
           },
-          errorFile(){
+          errorFile:function(){
               this.$message({
                     message:'上传失败',
                     type:'warning'
                 });  
           },
-          progressFile(){
+          progressFile:function(){
            
           },
-          beforeFile(file){
+          beforeFile:function(file){
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
              this.nameData.File_Name = this.fileName 
           },
             //保存上传文件
-            saveDoc(){
-            if(this.fileName != ''|| this.fileName !=null){
-                  this.File_Name = this.nameData.File_Name
-              }
+            saveDoc:function(){
+            // if(this.fileName != ''|| this.fileName !=null){
+            //       this.File_Name = this.nameData.File_Name
+            //   }
               if(this.code != 200){
                this.$message({
                     message:'请先上传文件',
@@ -471,9 +527,42 @@ export default {
                 })
             },
               //申请结案
-            finishCase(id){
-               this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
-               this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
+            finishCase:function(id){
+                this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }else{
+                     this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
+                  this.$confirm('此操作将申请结案, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'success'
+            }).then(() => {
+           this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
                         Case_Id:id,
                         Status_Id:4
                     }}).then((res)=>{
@@ -481,24 +570,26 @@ export default {
                           message:'操作成功',
                           type:'success'
                           }); 
-                      this.getCaseList()
-                        
+                      this.getCaseList()  
                     })
-          //     if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //    return false
-          // }else{
-                 
-          // }
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });          
+              });
               })
-            
+                 }
+              })
+             
+  
+             
+           
             },
               //作废合同
-            deleteCase(id){
-                this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
+            deleteCase:function(id){
+                 
+                     this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
                 this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
                         Case_Id:id,
                         Status_Id:-1
@@ -510,20 +601,56 @@ export default {
                       this.getCaseList()
                        
                     })
-          //     if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //    return false
-          // }else{
-                 
-          // }
+                    //     if(res.data ==false){
+                    //    this.$message({
+                    //       message:'没有权限',
+                    //       type:'warning'
+                    //       }); 
+                    //    return false
+                    // }else{
+
+                    // }
          })
+                 
+        
+               
             
             },
+          checkLogin(){
+          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }else{
+                     return true
+                 }
+              })
+      },
             //更改状态上传
-            changeState(id){
+            changeState:function(id){
               this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
                 Case_Id:this.Case_Id,
                 Status_Id:id
@@ -551,9 +678,10 @@ export default {
         }else{
           return time.substring(0,10)
         }
-      }
+      },
+     
     },
-    mounted(){
+    mounted:function(){
         this.getSelectMenu()
         this.getCaseList()
     },

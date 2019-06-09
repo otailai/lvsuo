@@ -25,7 +25,7 @@
                                             </el-table>
                                             <div class="block flex">
                                             <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                                            :page-sizes="[1,5,10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                            :page-sizes="[20,50,100]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                                             </el-pagination>
                                             </div>
                                             </li>
@@ -90,7 +90,7 @@ export default {
     data(){
         return{
             tableData:[],
-            numPage:10,
+            numPage:20,
             currentPage:1,
             total:0,
             dialogFormVisible:false,
@@ -178,6 +178,39 @@ export default {
       },
       //删除案件编号
       deleteJobType(id){
+            this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+          else{
+             if(res.data != 2){
+                          done();
+                        return false
+                }
          this.$confirm('此操作将删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -208,6 +241,8 @@ export default {
             message: '已取消删除'
           });          
         });
+          }
+            })
       },
       //修改案件类型
         updataJobType(){

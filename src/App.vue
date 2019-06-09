@@ -27,7 +27,7 @@
 
 export default {
   name: 'App',
-  provide :function() {
+  provide:function() {
     return {
       reload:this.reload
     }
@@ -44,13 +44,14 @@ export default {
         this.$nextTick(function(){
             this.isRouterAlive=true
         })
-    }
+    },
   },
   mounted(){
     
     
    
   },
+ 
 }
 </script>
 

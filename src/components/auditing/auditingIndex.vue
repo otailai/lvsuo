@@ -67,28 +67,28 @@ import auditingCloseCase from './auditingCloseCase'
       };
     },
     methods: {
-      handleClick(tab, event) {
+      handleClick:function(tab, event) {
         this.child_cur = tab.index
         this.$router.push('/index/auditingIndex/'+this.arr[this.child_cur].Item_Path)
         //console.log(tab,event);
       },
-      changeLi(i){
+      changeLi:function(i){
           this.cur = i
          
       },
-       handleSizeChange(val) {
+       handleSizeChange:function(val) {
         //console.log(`每页 ${val} 条`);
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
         //console.log(`当前页: ${val}`);
       },
-      toAdd(){
+      toAdd:function(){
         this.$router.push({path:'/index/caseAdd'})
       },
-      lineCilck(row, event, column){
+      lineCilck:function(row, event, column){
           //console.log(row, event, column)
       },
-    getChildMenu(){
+    getChildMenu:function(){
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
           Menu_Id:5
         }}).then((res)=>{
@@ -98,10 +98,10 @@ import auditingCloseCase from './auditingCloseCase'
               this.getActiveMenu()
         })
       },
-      searchData(){
+      searchData:function(){
         this.child = 1
       },
-       open2() {
+       open2:function() {
         this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -118,7 +118,7 @@ import auditingCloseCase from './auditingCloseCase'
           });          
         });
       },
-       getActiveMenu(){
+       getActiveMenu:function(){
         // this.activeName = 'name'+this.child_cur
         //console.log(this.activeName)
         //console.log(this.$route.path)
@@ -134,7 +134,7 @@ import auditingCloseCase from './auditingCloseCase'
      
       
     },
-    mounted(){
+    mounted:function(){
       this.getChildMenu()
   
     },

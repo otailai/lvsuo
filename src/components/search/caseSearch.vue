@@ -65,7 +65,7 @@
                     </div>
              <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
           </div>
@@ -79,7 +79,7 @@ import store from '../../vuex/store'
       return {
         //授权案件搜索
         SearchInput:'',
-        pageNum:10,
+        pageNum:20,
         currentPage:1,
         total:0,       
         searchList:[],

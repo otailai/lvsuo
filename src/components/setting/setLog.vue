@@ -73,7 +73,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1, 5, 10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
+                 :page-sizes="[20,50,100]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="total1">
                    </el-pagination>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
@@ -126,7 +126,7 @@ export default {
             Casevalue:[],
             currentPage:1,
             total1:0,
-            numPage:10,
+            numPage:20,
             tableData:[],
             //一级下拉
             Casevalue1:'',

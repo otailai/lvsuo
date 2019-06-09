@@ -33,8 +33,51 @@
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="riskBrandArr" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
+ <el-table :data="riskBrandArr" border style="width: 100%"  @row-click="lineCilck">
+    <el-table-column type="expand">
+      <template slot-scope="props">
+     
+          <el-form label-position="left" inline class="demo-table-expand" v-if='props.row.Obtain_Audit_Notes'> 
+          <el-form-item label="日期">
+              <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Audit_Time}}</span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
+          <el-form-item label="备注">
+             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Remarks}}</span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
+          <el-form-item label="结果">
+            <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Findings_Audit}}</span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
+          <el-form-item label="审核人">
+            <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Staff_Name}}</span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
+        </el-form>
+
+          <el-form label-position="left" inline class="demo-table-expand" v-if='props.row.Two_Level_Remarks'> 
+          <el-form-item label="日期">
+              <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Audit_Time}}</span>
+              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
+          </el-form-item>
+          <el-form-item label="备注">
+             <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Remarks}}</span>
+              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
+          </el-form-item>
+          <el-form-item label="结果">
+            <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Findings_Audit}}</span>
+              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
+          </el-form-item>
+          <el-form-item label="审核人">
+            <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Staff_Name}}</span>
+              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
+          </el-form-item>
+        </el-form>
+      </template>
+    </el-table-column>
+   
+     <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true"> 
@@ -52,16 +95,21 @@
                             
                         <el-table-column  label="操作" width="180"> 
                           <template  slot-scope="scope">
-                            <span @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
-                          
+                            <span v-show="scope.row.state != 3 && scope.row.state != 4"  @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span v-show="scope.row.state != 3 && scope.row.state != 4"  @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                             <span v-show="scope.row.state == 3 || scope.row.state == 4" >已审核</span>
                        
                           </template>
                         </el-table-column>
-                  </el-table>
+  </el-table>
+
+
+                 <!-- <el-table :data="riskBrandArr" border style="width: 100%"  @row-click="lineCilck">
+                  
+                  </el-table> -->
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -70,6 +118,7 @@
     </div>
 </template>
 <script>
+import { constants } from 'fs';
 export default {
     data(){
         return{
@@ -78,7 +127,7 @@ export default {
                 //当前页
                 currentPage:1,
                 total:0,
-                pageNum:10,
+                pageNum:20,
                     //搜索
                 SearchInput:'',
                 Casevalue:'',
@@ -91,11 +140,12 @@ export default {
                 options:[
                 {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'}
                 ],
+                remark:'',
         }
     },
     inject:["reload"],
     methods:{
-         getRiskBrandArr(){
+         getRiskBrandArr:function(){
         this.$http.get('/yongxu/Toexamine/Show_Two_Risk',{params:{
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage,
@@ -108,31 +158,31 @@ export default {
         })
       },
         //获取二级菜单下拉
-      changeTowValue(id){
+      changeTowValue:function(id){
       //console.log(id)
        this.Casevalue2 = id
        //console.log(this.Casevalue2)
        this.getRiskBrandArr()
       },
       //状态查询
-      changeStatus(id){
+      changeStatus:function(id){
         //console.log(id)
          this.statusValue = id
          this.getRiskBrandArr()
       },
       //搜索查询
-      searchContent(){
+      searchContent:function(){
        //console.log(this.SearchInput)
        this.getRiskBrandArr()
       },
       //获取一级下拉
-        getSelectMenu(){
+        getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
         })
       },
       //下拉二级下拉查询
-       getSelectChildeMenu(id){ 
+       getSelectChildeMenu:function(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
          //console.log(id)
@@ -144,7 +194,7 @@ export default {
            //this.Casevalue1 = res.data
         })
       },
-        clear(){
+        clear:function(){
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
@@ -153,21 +203,21 @@ export default {
         this.getRiskBrandArr()
         
       },
-      handleSizeChange(val) {
+      handleSizeChange:function(val) {
         //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getRiskBrandArr()
 
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
           this.currentPage = val
           this.getRiskBrandArr()
           //console.log(`当前页: ${val}`);
       },
-     lineCilck(row, event, column){
+     lineCilck:function(row, event, column){
             //console.log(row, event, column)
       },
-      noPassCase(id,type){
+      noPassCase:function(id,type){
           if(type != 0){
                this.$message({
                     message:'操作失败，此案件状态不需操作',
@@ -200,7 +250,7 @@ export default {
         });
          
       },
-      passCase(id,type){
+      passCase:function(id,type){
           if(type != 0){
                this.$message({
                     message:'操作失败，此案件状态不需操作',
@@ -235,12 +285,46 @@ export default {
          
       },
       // 对话框,审核不通过
-       open(id) {
-        this.$confirm('此操作将使风控审核不通过, 是否继续?', '提示', {
+       open:function(id) {
+             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+          else{
+             if(res.data != 2){
+                          done();
+                        return false
+                }
+       this.$prompt('此操作将不通过二级风控审核, 是否继续?', '备注', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          // inputErrorMessage: '邮箱格式不正确'
+        }).then(({ value }) => {
           this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:4}}).then((res)=>{
              if(res.data == true){
                 this.$message({
@@ -262,14 +346,51 @@ export default {
             message: '已取消操作'
           });          
         });
+          }
+             })
       },
          // 对话框,审核通过
-       open1(id) {
-        this.$confirm('此操作将通过风控审核, 是否继续?', '提示', {
+       open1:function(id) {
+             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+          else{
+             if(res.data != 2){
+                          done();
+                        return false
+                }
+         this.$prompt('此操作将通过二级风控审核, 是否继续?', '备注', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
-        }).then((res) => {
+          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          // inputErrorMessage: '邮箱格式不正确'
+        }).then(({ value }) => {
+          this.remark =  value
           this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:3}}).then((res)=>{
             //console.log(res)
               if(res.data == true){
@@ -294,9 +415,11 @@ export default {
             message: '已取消操作'
           });          
         });
+          }
+          })
       },
        //添加日志
-      AuditLog(id,type,Findings_Audit,){
+      AuditLog:function(id,type,Findings_Audit){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
@@ -304,10 +427,19 @@ export default {
             }else{
               //console.log('日志添加失败')
             }
+        }).then((res)=>{
+           this.addRemark(id)
         })
       },
+       //提交备注
+    addRemark(id){
+      console.log(this.remark)
+      this.$http.get('/yongxu/Toexamine/Two_Risk_Remarks',{params:{Remarks:this.remark,Identification:id}}).then((res)=>{
+        console.log(res)
+      })
+    }   
     },
-    mounted(){
+    mounted:function(){
         this.getRiskBrandArr()
         this.getSelectMenu()
     },
@@ -378,6 +510,19 @@ export default {
 .selectMenu{
     margin-top: 20px;
 }
+
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>
 
 

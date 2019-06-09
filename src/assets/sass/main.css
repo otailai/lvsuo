@@ -120,17 +120,22 @@
 }
 .showTab .showTab-ul .showTab-li{
     width: 100%;
-    min-height: 1080px;
+    /* min-height: 1240px; */
+    min-height: 1000px;
     position: relative;
     margin-top: 20px;
+}
+.showTab .showTab-ul .showTab-li .el-table {
+    max-height: 1240px;
+    min-height: 900px;
+    overflow: auto;
 }
 .block{
     flex-direction: row;
     justify-content: center;
-    position: absolute;
-    bottom:100px;
-    left: 50%;
-    transform: translate(-50%,-50%);
+    height: 100px;
+    flex-direction: row;
+    align-items: center;
 }
 .el-pagination.is-background .el-pager li:not(.disabled).active {
     background-color: #7E2C2E;

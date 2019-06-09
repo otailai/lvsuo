@@ -5,88 +5,29 @@ Vue.use(Vuex)
 // <button @click="$store.commit('increment')">加一</button>
 // <button  @click="$store.dispatch('addPlus')">加一</button>
 const store = new Vuex.Store({
-    state:{
-        userCount:0,
-        partyCount:0,
-        dateCount:0,
-        riskCount:0,
-        nameJobCount:0,
-        caseAddData:{
-            //聘请人
-            
+    state: {
+        scorketId: '',
+        child_id:0,
+      },
+      mutations: {
+        changeChild(state,num){
+          state.child_id = num
         },
-        pic:'',
-    },
-    getters:{
-        
-    },
-    mutations:{
-            userIncrement (state) {
-            state.userCount++
-            },
-            partyIncrement (state) {
-                state.partyCount++
-            },
-            dateIncrement (state) {
-                state.dateCount++
-            },
-            riskIncrement (state) {
-                state.riskCount++
-            },
-            nameJobIncrement (state) {
-                state.nameJobCount++
-            },
-
-            userReduce (state) {
-                state.userCount--
-                },
-            partyReduce (state) {
-                state.partyCount--
-            },
-            dateReduce (state) {
-                state.dateCount--
-            },
-            riskReduce (state) {
-                state.riskCount--
-            },
-            nameJobReduce (state) {
-                state.nameJobCount--
-            }
-    },
-    actions:{
-        addUser(context){
-            context.commit('userIncrement')
+        SCORKETID (state, obj) {
+          state.scorketId = obj
         },
-        addParty(context){
-            context.commit('partyIncrement')
+        RESET (state) {
+          state.scorketId = null
+        }
+      },
+      actions: {
+        SAVE_ID ({commit}, obj) {
+          commit('SCORKETID', obj)
         },
-        addDate(context){
-            context.commit('dateIncrement')
-        },
-        addRisk(context){
-            context.commit('riskIncrement')
-        },
-        addNameJob(context){
-            context.commit('nameJobIncrement')
-        },
-        reduceUser(context){
-            context.commit('userReduce')
-        },
-        reduceParty(context){
-            context.commit('partyReduce')
-        },
-        reduceDate(context){
-            context.commit('dateReduce')
-        },
-        reduceRisk(context){
-            context.commit('riskReduce')
-        },
-        reduceNameJob(context){
-            context.commit('nameJobReduce')
-        },
-
-    },
-   
+        RESET_ID ({commit}) {
+          commit('SCORKETID')
+        }
+      }
 })
 
 export default store

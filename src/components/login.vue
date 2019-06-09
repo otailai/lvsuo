@@ -59,11 +59,12 @@ export default {
                 pub:'',
                 dataTest:'',
                 path:'',
+                result:'',
         }
         
     },
     methods:{
-        changeLogin(){
+        changeLogin:function(){
             if( this.cur==1){
                     this.cur=0;
 
@@ -72,7 +73,7 @@ export default {
 
             }
         },
-          checknumber(String) { 
+          checknumber:function(String) { 
             var Letters = "1234567890"; 
             var i; 
             var c; 
@@ -86,7 +87,7 @@ export default {
             } 
             return false; 
             } ,
-        denglu(){
+        denglu:function(){
             if(this.username==""||this.username==null){
                 this.$message({
                     message:'用户名不能为空',
@@ -109,7 +110,7 @@ export default {
                 return false
             }
            
-            console.log(this.checkIsLogin())
+            
             var encrypt = new JSEncrypt()
             encrypt.setPublicKey(this.pub)
             var str = this.username+'&&'+this.password
@@ -118,26 +119,71 @@ export default {
             var data = qs.stringify({
                 str:encrypted
             });
-            console.log(data)
-                //decrypt
-       this.$http.post('/yongxu/Login/Rsa_Land',data).then((res)=>{
+        console.log(data)
+        //decrypt
+       this.$http.post('/yongxu/Login/Judging_Landing',data).then((res)=>{
                 var str = res.data; 
                 console.log(res)
-                 if(res.data.status == 0){
+                // return false
+                 if(res.data == 1){
                      this.$message({
-                         message:'用户名或密码错误',
+                         message:'用户名错误',
                          type:'warning'
                      })
                      return false
                  }
-                  if(res.data.status == 1){
+                   if(res.data == 2){
+                     this.$message({
+                         message:'密码错误',
+                         type:'warning'
+                     })
+                     return false
+                 }
+                  if(res.data == 3){
                      this.$message({
                          message:'该账户被锁定',
                          type:'warning'
                      })
                      return false
                  }
-                if(res.data.status == 2){
+                  if(res.data == 5){
+                       this.$confirm('此账号已在其他地方登录, 是否继续登录?', '提示', {
+                       confirmButtonText: '确定',
+                       cancelButtonText: '取消',
+                       type: 'warning'
+                     }).then(() => {
+                         this.$http.post('/yongxu/Login/Occupancy_Landing',data).then((res)=>{
+                             console.log(res)
+                              localStorage.setItem('userId',res.data.User_Id)
+                              localStorage.setItem('sessionId',res.data.sessionId)
+                              localStorage.setItem('Rule_Id',res.data.Rule_Id)
+                              localStorage.setItem('Expiration_Date',res.data.Expiration_Date)
+                              localStorage.setItem('Username',res.data.Username)
+                              if(this.checkedState){ 
+                              this.setCookie('user',this.username,7); //保存帐号到cookie，有效期7天
+                              this.setCookie('pswd',this.password,7); //保存密码到cookie，有效期7天
+                              }else{
+                              this.delCookie('user');
+                              this.delCookie('pswd');
+                        }
+                        }).then(()=>{
+                            this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
+                            //console.log(res)
+                            var path = res.data[0].Item_Path
+                            this.$router.push('./index/'+path) 
+                        })
+                         })
+                     }).catch(() => {
+                       this.$message({
+                         type: 'info',
+                         message: '已取消删除'
+                       });          
+                     });
+                     return false
+                 }
+                if(res.data == 4){
+                    this.$http.post('/yongxu/Login/Rsa_Land',data).then((res)=>{
+                        console.log(res)
                     localStorage.setItem('userId',res.data.User_Id)
                     localStorage.setItem('sessionId',res.data.sessionId)
                     localStorage.setItem('Rule_Id',res.data.Rule_Id)
@@ -150,27 +196,32 @@ export default {
                     this.delCookie('user');
                     this.delCookie('pswd');
                     }
-                    this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:res.data.User_Id}}).then((res)=>{
-                    //console.log(res)
-                    var path = res.data[0].Item_Path
-                    this.$router.push('./index/'+path) 
+                    }).then(()=>{
+                        this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
+                        //console.log(res)
+                        var path = res.data[0].Item_Path
+                        this.$router.push('./index/'+path) 
                     })
-                    }
+                    })
+                   
+                    
+                }
               }).catch((err)=>{
                   this.$message({
-                            message:'服务器出错',
+                            message:'服务器出错,请重试',
                             type:'warning'
                         }); 
+                        this.getPublicKey()
               })   
         },
          //设置cookie
-                setCookie(name,value,day){
+                setCookie:function(name,value,day){
                 var date = new Date();
                 date.setDate(date.getDate() + day);
                 document.cookie = name + '=' + value + ';expires='+ date;
                 },
             //获取cookie
-                getCookie(name){
+                getCookie:function(name){
                 var reg = RegExp(name+'=([^;]+)');
                 var arr = document.cookie.match(reg);
                 if(arr){
@@ -180,39 +231,37 @@ export default {
                 }
                 },
             //删除cookie
-                delCookie(name){
+                delCookie:function(name){
                     this.setCookie(name,null,-1);
                 },
-            changeCheck(){  
+            changeCheck:function(){  
               this.checkedState =!this.checkedState
             },
-            getUserPas(){
+            getUserPas:function(){
                 if(this.getCookie('user')|| this.getCookie('pswd')){
                     this.username =this.getCookie('user')
                     this.password = this.getCookie('pswd')
                     this.checkedState = true
                 }    
             },
-            checkIsLogin(){
-                this.$http.get('/yongxu/Login/Judging_Landing',{params:{Username:this.username}}).then((res)=>{
-                    var result = res.data
-                        return result
-                })
+            getPublicKey(){
+                  this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
+                        console.log(res)
+                        this.pub = res.data.PublicKey
+                         }).catch((err)=>{
+                        this.$message({
+                        message:'服务器异常',
+                        type:'warning'
+                        })
+                    })
             }
+          
           
     },
     mounted(){
-        this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-            console.log(res)
-            this.pub = res.data.PublicKey
-        }).catch((err)=>{
-            this.$message({
-                message:'服务器异常',
-                type:'warning'
-            })
-        })
+     
+      this.getPublicKey()
         this.getUserPas()
-
     },
     watch:{
 

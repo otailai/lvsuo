@@ -41,7 +41,7 @@
                              <span>{{scope.row.Creattime | getTime}}</span>    
                         </template>   
                                                </el-table-column> 
-                          <el-table-column prop="date" label="合同" width="60"> 
+                          <el-table-column prop="date" label="合同" width=""> 
                                 <template slot-scope="scope"> 
                                <span style="color:red"   @click="open3(scope.row.Id,scope.row.Charging_Method)" v-if="scope.row.Source_Contract == 1">
                                 
@@ -70,11 +70,11 @@
                              </el-table-column>
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span  @click="noPassCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click="passCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                              <span  @click.stop="noPassCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                            <span @click.stop="passCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
                           </template>
                         </el-table-column>
-                        <el-table-column  label="财务操作" width="105"> 
+                        <el-table-column  label="财务操作" width=""> 
                             <template  slot-scope="scope">
                             <span class="btn-div">
                             <!-- <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button> -->
@@ -87,7 +87,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -204,7 +204,7 @@ export default {
                 //当前页
                 currentPage:1,
                 total:0,
-                pageNum:10,
+                pageNum:20,
                 dialogFormVisibleWord:false,
                   dialogFormVisibleWord1:false,
                 //搜索
@@ -234,7 +234,7 @@ export default {
     },
     inject:["reload"],
     methods:{
-          openDialog(id,Charging_Method){
+          openDialog:function(id,Charging_Method){
           if(Charging_Method  == 9){
           this.dialogFormVisible = true
           this.$http.get('/yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
@@ -258,7 +258,7 @@ export default {
           }
        
       },
-      getMonney(id,Charging_Method){
+      getMonney:function(id,Charging_Method){
           this.$confirm('此操作将确认收款, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -297,7 +297,7 @@ export default {
         
       },
       //添加日志
-      AuditLog(id,type,Findings_Audit,){
+      AuditLog:function(id,type,Findings_Audit,){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
          
             if(res.data == true){
@@ -307,7 +307,7 @@ export default {
             }
         })
       },
-         getCaseArr(){
+         getCaseArr:function(){
           var statusValue;
           //console.log(this.value)
           if(this.value ===''|| this.value === null){
@@ -333,7 +333,7 @@ export default {
         })
       },
       //预览html合同
-      open3(id,type){
+      open3:function(id,type){
         this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
              this.dataWord = res.data
              this.dialogFormVisibleWord1 = true
@@ -345,30 +345,30 @@ export default {
         })
       },
       //获取二级菜单下拉
-      changeTowValue(id){
+      changeTowValue:function(id){
       //console.log(id)
        this.Casevalue2 = id
        this.getCaseArr()
       },
       //状态查询
-      changeStatus(id){
+      changeStatus:function(id){
          //console.log(id)
          this.value = id
          this.getCaseArr()
       },
       //搜索查询
-      searchContent(){
+      searchContent:function(){
        //console.log(this.SearchInput)
        this.getCaseArr()
       },
       //获取一级下拉
-        getSelectMenu(){
+        getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
         })
       },
       //下拉二级下拉查询
-       getSelectChildeMenu(id){ 
+       getSelectChildeMenu:function(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
          //console.log(id)
@@ -380,7 +380,7 @@ export default {
            //this.Casevalue1 = res.data
         })
       },
-        clear(){
+        clear:function(){
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
@@ -389,23 +389,51 @@ export default {
         this.getCaseArr()
         
       },
-      handleSizeChange(val) {
+      handleSizeChange:function(val) {
         //console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getCaseArr()
 
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
           this.currentPage = val
           this.getCaseArr()
           //console.log(`当前页: ${val}`);
       },
-     lineCilck(row, event, column){
+     lineCilck:function(row, event, column){
             //console.log(row, event, column)
       },
-      noPassCase(id,type){
-          if(type != 0){
-
+      noPassCase:function(id,type){
+         this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 else{
+              if(type != 0){
             this.$message({
                  message:'操作失败，此案件状态不需操作',
                  type:'warning'
@@ -417,6 +445,10 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+            if(res.data != 2){
+                done();
+                return false
+            }
            this.$http.get('/yongxu/Toexamine/Upd_Case_Auditfail',{params:{
                  User_Id:localStorage.getItem('userId'),
                  Id:id,
@@ -439,9 +471,12 @@ export default {
             message: '已取消操作'
           });          
         });
+                 }
+              })
+       
           
       },
-      look(id){
+      look:function(id){
         this.$http.get('/yongxu/Toexamine/Sel_Url',{params:{
           Case_Id:id
         }}).then((res)=>{
@@ -456,44 +491,80 @@ export default {
         })
       
       },
-      passCase(id,type){
-          if(type != 0){
-               this.$message({
-                    message:'操作失败，此案件状态不需操作',
-                    type:'warning'
+      passCase:function(id,type){
+         this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+                 else{
+                      if(res.data != 2){
+                          done();
+                        return false
+                      }
+                    if(type != 0){
+                     this.$message({
+                     message:'操作失败，此案件状态不需操作',
+                     type:'warning'
+                     });
+                     return false
+                      }
+                  this.$confirm('此操作将使此案件通过, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                    this.$http.get('/yongxu/Toexamine/Upd_Case_Aubitadopt',{params:{
+                        User_Id:localStorage.getItem('userId'),
+                        Id:id,
+                  }}).then((res)=>{
+                      if(res.data == true){
+                            this.$message({
+                            message:'操作成功，此案件审核通过',
+                            type:'success'
+                        });
+                        this.AuditLog(id,'案件审核',1)
+                        this.getCaseArr()
+                        return false
+                      }
+                  }).catch(() => {
+                  this.$message({
+                    type: 'info',
+                    message: '已取消操作'
+                  });          
                 });
-            return false
-          }
-           this.$confirm('此操作将使此案件通过, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-            this.$http.get('/yongxu/Toexamine/Upd_Case_Aubitadopt',{params:{
-                 User_Id:localStorage.getItem('userId'),
-                 Id:id,
-          }}).then((res)=>{
-              if(res.data == true){
-                    this.$message({
-                    message:'操作成功，此案件审核通过',
-                    type:'success'
-                });
-                this.AuditLog(id,'案件审核',1)
-                this.getCaseArr()
-                return false
-              }
-          }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
-          });          
-        });
-        })
-        
+                })
+                
+                        }
+                      })
+         
       },
     
     },
-    mounted(){
+    mounted:function(){
         this.getCaseArr()
         this.getSelectMenu()
     },

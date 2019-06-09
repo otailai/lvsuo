@@ -1,7 +1,7 @@
 <template>
     <div>
-     <button @click="getPdf()">下载pdf</button>
-      <button @click="getDoc()">导出doc</button>
+     <button @click="getPdf()">pdf</button>
+      <button @click="getDoc()">doc</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
         <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">民 事 委 托 代 理</strong></p>
@@ -15,12 +15,7 @@
         <div class="height"></div>
         <div class="height"></div>
         <!-- <div class="input1 flex" style="text-align: center;"> -->
-        <p style="width: 80%;
-    margin: auto;"><strong style="font-size: 14.0pt;
-    font-family: 仿宋_GB2312;
-    letter-spacing: .1pt;    width: 110px;
-    text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
-    border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span></p>
+        <p style="width: 80%;margin: auto;"><strong style="font-size: 14.0pt;font-family: 仿宋_GB2312;letter-spacing: .1pt;width:110px;text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span></p>
         <!-- </div> -->
          <div class="height"></div>
                  <p style="width: 80%;
@@ -46,7 +41,7 @@
          <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-<div class="WordSection1" style="layout-grid: 15.6pt;"></div>
+<div class="WordSection1" style="layout-grid: 15.6pt;width:90%;margin:auto;">
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><strong style="mso-bidi-font-weight: normal;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方（聘请方）：<span class="row-span" id="Aname" style="mso-spacerun: yes;" v-html="Aname" ></span> </span></strong></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">法定代表人： </span><span class="row-span" id="Aleader"></span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">地址： </span><span class="row-span" id="Aaddress"></span></p>
@@ -183,8 +178,8 @@
 <p class="MsoNormal" style="margin-left: 182.8pt; mso-para-margin-left: 17.41gd; text-indent: 51.1pt; mso-char-indent-count: 3.65; line-height: 21.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312;">委托人签署：</span> <span id="custom_name"></span></p>
 <p class="MsoNormal" style="margin-left: 182.8pt; mso-para-margin-left: 17.41gd; text-indent: 96.2pt; mso-char-indent-count: 6.87; line-height: 21.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312;"><span id="text18"></span>&nbsp;&nbsp;年<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp;</span>&nbsp;</span><span id="text19"></span>&nbsp;&nbsp;月<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp;</span></span>&nbsp;<span id="text20"></span>&nbsp;&nbsp;日</span></p>
     </div>
-      </div>     
-
+      </div>      
+</div>
 </template>
 <script>
 import { setTimeout } from 'timers';
@@ -252,12 +247,7 @@ export default {
         }
     },
        props:['dataWord'],
-        methods:{ 
-            getDoc(){
-                $('#pdfDom').wordExport('生成文档')
-            }
-        
-    },
+       
     created(){
   
     },
@@ -266,6 +256,10 @@ export default {
         this.getData()
     },
     methods:{
+          getDoc(){
+                console.log('***************')
+                 $('#pdfDom').wordExport('生成文档')
+            },
         getData(){
              this.$http.get('/yongxu/Index/Contract_Template').then((res)=>{
                       console.log(res)
@@ -400,7 +394,9 @@ span{
     flex-direction: column;
     min-width: 300px;
 }
+.WordSection1{
 
+}
 </style>
 
 

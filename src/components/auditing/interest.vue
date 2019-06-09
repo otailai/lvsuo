@@ -42,7 +42,7 @@ export default {
         }
     },
     methods:{
-        closeX(){
+        closeX:function(){
             this.$router.push('./auditingIndex')
         }
     }

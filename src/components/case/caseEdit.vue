@@ -61,6 +61,7 @@
                         </div>
                     <div class="flex"><p class="title">对方当事人</p><p>{{Party_Name}}</p></div>
                     <div class="flex"><p class="title">受理机关</p><p>{{Receiving_Organ}}</p></div>
+                     <div class="flex"><p class="title">标的额</p><p>{{biaodie}}</p></div>
 
                     </div>
                     </div>
@@ -221,7 +222,8 @@
                 </el-table>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWord :dataWord='dataWord'></caseWord>
+                        <!-- <caseWord :dataWord='dataWord'></caseWord> -->
+                        <caseWord1 :dataWord='dataWord'></caseWord1>
                 </el-dialog>
               </div>
               <!-- 对话框 -->
@@ -295,6 +297,7 @@
 </template>
 <script>
 import caseWord from './caseWord'
+import caseWord1 from './caseWord1'
 export default {
     data(){
         return{
@@ -369,6 +372,8 @@ export default {
                 placeholder:'',
                 theme:'snow'
             },
+            //标的额
+            biaodie:'',
         
         }
     },
@@ -465,6 +470,7 @@ export default {
                 this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
                 this.contact_status = caseInfo.Status
+                this.biaodie = caseInfo.Target
                 this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
@@ -504,7 +510,7 @@ export default {
                     this.fileName1 = res.fileName
                     this.size = res.size
                     console.log(this.fileName1)
-                   this.$message({
+                    this.$message({
                     message:res.message,
                     type:'success'
                 });  
@@ -573,7 +579,7 @@ export default {
                 this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
-                    File_Name:this.fileName,
+                    File_Name:this.File_Name,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
@@ -666,6 +672,7 @@ export default {
     },
     components:{
         'caseWord':caseWord,
+        'caseWord1':caseWord1,
     },
 }
 </script>

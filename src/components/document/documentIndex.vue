@@ -59,7 +59,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                  :page-sizes="[1,5,10,15]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
+                  :page-sizes="[20,50,100]" :page-size="numPage"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
                   </li>
@@ -126,7 +126,7 @@ import { constants } from 'fs';
         //分页
         PageCount:0,
         currentPage:1,
-        numPage:10,
+        numPage:20,
         //搜索
         searchInput:'',
         //上传
@@ -368,7 +368,7 @@ import { constants } from 'fs';
                 //   param.append('Suffix_Name',this.Suffix_Name)
                 this.$http.post('/yongxu/Document/Add_Instrument',{
                     User_Id: localStorage.getItem('userId'),
-                    File_Name:this.fileName,
+                    File_Name:this.File_Name,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,

@@ -61,7 +61,7 @@
                   </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                 </li>
@@ -169,7 +169,7 @@ export default {
                 //当前页
                 currentPage:1,
                 total:0,
-                pageNum:5,
+                pageNum:20,
                  // 财务审核
                 FinancialAuditArr:[],
                 dialogFormVisible:false,
@@ -183,7 +183,7 @@ export default {
     },
     inject:["reload"],
     methods:{
-        openDialog(id,Charging_Method){
+        openDialog:function(id,Charging_Method){
           if(Charging_Method  == 9){
           this.dialogFormVisible = true
           this.$http.get('yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
@@ -207,7 +207,7 @@ export default {
           }
        
       },
-      getMonney(id,Charging_Method){
+      getMonney:function(id,Charging_Method){
           this.$http.post('/yongxu/Toexamine/Upd_Confirm_Receipt',
          
           {Id:id,Charging_Method:Charging_Method,Auditor_Id:localStorage.getItem('userId')}).then((res)=>{
@@ -229,7 +229,7 @@ export default {
               }
           })
       },
-      getFinancialAudit(){
+      getFinancialAudit:function(){
         this.$http.get('yongxu/Toexamine/Get_Financial_Audit',{params:{
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
@@ -240,22 +240,22 @@ export default {
 
         })    
       },
-      handleSizeChange(val) {
+      handleSizeChange:function(val) {
         console.log(`每页 ${val} 条`);
         this.pageNum = val
          this.getFinancialAudit()
 
       },
-      handleCurrentChange(val) {
+      handleCurrentChange:function(val) {
           this.currentPage= val
           this.getFinancialAudit()
           console.log(`当前页: ${val}`);
       },
-     lineCilck(row, event, column){
+     lineCilck:function(row, event, column){
             console.log(row, event, column)
       },
     },
-    mounted(){
+    mounted:function(){
         this.getFinancialAudit()
     },
      filters:{

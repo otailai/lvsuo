@@ -114,6 +114,7 @@
                              
                         </div> -->
                     <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty"/></div>
+                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="请输入" v-model="biaodie"/></div>
 
                     </div>
                     </div>
@@ -639,6 +640,8 @@ export default {
             },
             dialogFormVisible2:false,
             dataWord:{},
+            //标的额
+            biaodie:'',
         }
     },
           
@@ -715,7 +718,8 @@ export default {
               'caseWhy':this.caseWhy,
                     //服务内容
               'Service_Content':this.Service_Content,
-
+                //标的额
+                'Target':this.biaodie,
               'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
               'caseName':this.caseName,
@@ -752,7 +756,8 @@ export default {
              
              //服务内容
                 'Service_Content':this.Service_Content,
-             
+              //标的额
+                'Target':this.biaodie,
                 'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
@@ -794,6 +799,8 @@ export default {
 
                     //服务内容
                 'Service_Content':this.Service_Content,
+                 //标的额
+                'Target':this.biaodie,
               'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
@@ -862,6 +869,8 @@ export default {
               'caseWhy':this.caseWhy,
                     //服务内容
               'Service_Content':this.Service_Content,
+               //标的额
+                'Target':this.biaodie,
 
               'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
@@ -899,6 +908,8 @@ export default {
              
              //服务内容
                 'Service_Content':this.Service_Content,
+                 //标的额
+                'Target':this.biaodie,
              
                 'is':this.isValue,
                 'cardNo':this.cardNo,
@@ -941,6 +952,8 @@ export default {
 
                     //服务内容
                 'Service_Content':this.Service_Content,
+                 //标的额
+                'Target':this.biaodie,
               'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
@@ -1174,6 +1187,14 @@ export default {
             
             //服务内容
               if(this.Service_Content==""||this.Service_Content==null){
+                this.$message({
+                    message:'服务内容不能为空',
+                    type:'warning'
+                });
+                return false
+            }
+             //标的额
+                if(this.biaodie ==""||this.biaodie==null){
                 this.$message({
                     message:'服务内容不能为空',
                     type:'warning'
@@ -1555,7 +1576,7 @@ export default {
                 this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
-                    File_Name:this.fileName,
+                    File_Name:this.File_Name,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,

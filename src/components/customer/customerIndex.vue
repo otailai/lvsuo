@@ -110,7 +110,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5, 10]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount">
                    </el-pagination>
                 </div>
 
@@ -133,7 +133,7 @@
 
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange1" :current-page="currentPage1"
-                 :page-sizes="[1,5,10,15]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
+                 :page-sizes="[20,50,100]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
                    </el-pagination>
                 </div>
                   </li>
@@ -189,13 +189,13 @@ var _this = this
         //列表查询
         Customer_Name:'',
         PageCount:0,
-        pageNum:10,
+        pageNum:20,
         currentPage: 1,
       //事务所客户
       tableData1:[],
       Customer_Name1:'',
         PageCount1:0,
-        pageNum1:10,
+        pageNum1:20,
        currentPage1:1,
 
       title:'',
@@ -245,12 +245,18 @@ var _this = this
     },
     methods: {
       handleClick(tab, event) {
-        this.child_cur = tab.index
+        //this.child_cur = tab.index
+        //this.$store.child_id = tab.index
+        this.$store.commit('changeChild',tab.index)
+        this.child_cur = this.$store.child_id
+
       },
       changeLi(i,v){
           this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:v.url}}).then((res)=>{
           if(res.data == true){
               this.cur = i
+              this.$store.commit('changeChild',i)
+               console.log(this.$store.state.child_id)
               this.title = v.title
               if(i==1){
                 this.getComponyList()
@@ -290,6 +296,7 @@ var _this = this
         this.$router.push({path:'/index/caseAdd'})
       },
       lineCilck(row, event, column){
+         this.$router.push({path:`/index/customerEdit/${row.Id}`})
       },
       getChildMenu(){
         this.$http.get('/api/data').then((res)=>{
@@ -354,9 +361,13 @@ var _this = this
       }
     },
     mounted(){
-      this.title = this.arr1[0].title
+      
+      console.log(this.$store.state.child_id)
+      this.title = this.arr1[this.$store.state.child_id].title
+      this.cur = this.$store.state.child_id
       // this.getChildMenu()
       this.getMyList()
+      this.getComponyList()
 
     },
     components:{

@@ -22,7 +22,7 @@
                         <span class="username-name">{{name}}</span>
                     </div>
                      <div class="login-out" @click="changePwd()">
-                        <i class=" iconfont icon-quanxianguanli1" style="font-size:16px;"></i>
+                        <i class=" iconfont icon-quanxianguanli1" style="font-size:17px;"></i>
                         <span>修改密码</span>
                     </div>
                     <div class="login-out" @click="loginOut()">
@@ -102,6 +102,7 @@
     
 </template>
 <script>
+import { constants } from 'fs';
 export default {
     data(){
         return{
@@ -130,18 +131,49 @@ export default {
         }
     },
     methods:{
-        changeLi(i){
+        changeLi:function(i){
             this.cur=i;
         },
-        loginOut(){
-            localStorage.removeItem('userId')
-            localStorage.removeItem('sessionId')
-            localStorage.removeItem('Rule_Id')
-            localStorage.removeItem('Expiration_Date')
-            localStorage.removeItem('Username')
-            this.$router.push('/')
+        loginOut:function(){
+            // localStorage.removeItem('userId')
+            // localStorage.removeItem('sessionId')
+            // localStorage.removeItem('Rule_Id')
+            // localStorage.removeItem('Expiration_Date')
+            // localStorage.removeItem('Username')
+            this.$http.get('/yongxu/Login/Exit_Landing',{params:{
+            sessionId:localStorage.getItem('sessionId')
+            }}).then((res)=>{
+            console.log(res)
+            if(res.data == true){
+                localStorage.removeItem('userId')
+                localStorage.removeItem('sessionId')
+                localStorage.removeItem('Rule_Id')
+                localStorage.removeItem('Expiration_Date')
+                localStorage.removeItem('Username')
+                this.$router.push('/')
+            }else{
+                this.$message({
+                    message:'登出失败',
+                    type:"warning"
+                })
+                }
+            }).catch((err)=>{
+                 this.$message({
+                    message:'服务器异常',
+                    type:"warning"
+                })
+            })
         },
-        getTopMenu(){
+            loginOut1:function(){
+                localStorage.removeItem('userId')
+                localStorage.removeItem('sessionId')
+                localStorage.removeItem('Rule_Id')
+                localStorage.removeItem('Expiration_Date')
+                localStorage.removeItem('Username')
+                this.$router.push('/')
+
+        },
+        getTopMenu:function(){
             this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                 this.arr = res.data
             }).then(()=>{
@@ -155,18 +187,39 @@ export default {
                     }
                     })
         },
-        getSetTopMenu(){
+        getSetTopMenu:function(){
               this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7}}).then((res)=>{
                 this.arr1 = res.data
             })
         },
-         goTONew(menu){
+         goTONew:function(menu){
             this.$router.push(menu)
         },
-        goTOMine(){
-            this.$router.push('/index/mineIndex')
+        goTOMine:function(){
+             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }else{
+                    this.$router.push('/index/mineIndex')
+                 }
+              })
+          
         },
-        getUserInfo(){
+        getUserInfo:function(){
             this.$http.get('/yongxu/Index/Get_User_Information',{params:{
                 User_Id:localStorage.getItem('userId')
             }}).then((res)=>{
@@ -174,10 +227,30 @@ export default {
                 this.pic = res.data.Avatar_Path
             })
         },
-        changePwd(){
-            this.dialogFormVisible = true
+        changePwd:function(){
+              this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }else{
+                        this.dialogFormVisible = true
+                 }
+              })
         },
-        sendOk(){
+        sendOk:function(){
             if(this.newPwd.length <6){
                     this.$message({
                         type:'warning',
@@ -251,26 +324,64 @@ export default {
     watch: {
          $route(to,from){  
              console.log(to.path)
-             var path = to.path.split('/')[2]
-             var menuArr = []
-             for(var i =0 ;i<this.arr.length;i++){
-                 menuArr[i] = this.arr[i].Item_Path
-             }
-             var menuArr1=[]
-             for(var i =0 ;i<this.arr1.length;i++){
-                 menuArr1[i] = this.arr1[i].Item_Path
-             }
-             menuArr = menuArr.concat(menuArr1)
-             menuArr.push('mineIndex')
-             menuArr.push('mineEdit')
-             menuArr.push('caseAdd')
-             menuArr.push('caseEdit')
-             menuArr.push('caseUpdate')
-            if(menuArr.indexOf(path) == -1){
-                 this.$router.push('/index/web404')
-            }
-        }
+             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                     this.loginOut1()
+                     return false
+                 }
+                 else{
+                       var path = to.path.split('/')[2]
+                       var menuArr = []
+                       for(var i =0 ;i<this.arr.length;i++){
+                           menuArr[i] = this.arr[i].Item_Path
+                       }
+                       var menuArr1=[]
+                       for(var i =0 ;i<this.arr1.length;i++){
+                           menuArr1[i] = this.arr1[i].Item_Path
+                       }
+                       menuArr = menuArr.concat(menuArr1)
+                       menuArr.push('mineIndex')
+                       menuArr.push('mineEdit')
+                       menuArr.push('caseAdd')
+                       menuArr.push('caseEdit')
+                       menuArr.push('caseUpdate')
+                       menuArr.push('customerEdit')
+                      if(menuArr.indexOf(path) == -1){
+                           this.$router.push('/index/web404')
+                      }
+                 }
+             })
+           
+        },
+         watch:{
+    '$store.store.state.scorketId': {
+        handler: function(newer, older) {
+            console.log(newer)
+          //解释一下为什么这里我放了判断，因为我的需求使然，我存在vuex中的是userID，一个用户只有一个id，但可能会提交多条数据，watch只在数据发生变动的时候才执行操作，所以上面我每次都将store里面的数据置空操作。
+          if (newer == null) {
+            return
+          } 
+          else {
+            console.log(newer);
+          }
+        },
+            deep: true // 开启深度监听
+      }
     }
+    }   
 }
 </script>
 
