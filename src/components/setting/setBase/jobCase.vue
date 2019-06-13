@@ -217,8 +217,15 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Position',{params:{Id:id,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-             //console.log(res)
-                if(res.data == true ){
+             console.log(res)
+             if(res.data == 1 ){
+                   this.$message({
+                    type: 'warning',
+                    message: '职位已被占用无法删除'
+                  });          
+                  return false
+                }
+                if(res.data == 2 ){
                      this.getJobTypeList()
                       this.$message({
                       type: 'success',
@@ -226,7 +233,7 @@ export default {
                  });
                  return false
                 }
-                else{
+                  if(res.data == 3 ){
                    this.$message({
                     type: 'warning',
                     message: '删除失败'
@@ -270,12 +277,13 @@ export default {
                 }
             })
         },
-        //查询案件类型详情
+        //查询职务类型详情
          getJobTypeInfo(id){
            this.Id = id
            this.dialogFormVisible1 = true
-           this.$http.get('/yongxu/Install/Upd_Sel_Cause_Action',{params:{Id:id}}).then((res)=>{
-                   this.update_name = res.data.Value
+           this.$http.get('/yongxu/Install/Upd_Sel_Position',{params:{Id:id}}).then((res)=>{
+                   this.update_name = res.data.Position_Name
+                   this.update_Describe = res.data.Describe
             })
         },
        

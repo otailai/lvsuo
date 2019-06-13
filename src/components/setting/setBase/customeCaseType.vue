@@ -202,20 +202,27 @@ export default {
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Customer_Type',{params:{User_Id:localStorage.getItem('userId'),Id:id}}).then((res)=>{
              //console.log(res)
-                if(res.data == true ){
+               if(res.data == 1 ){
+                      this.$message({
+                      type: 'warning',
+                      message: '客户类型占用无法删除!'
+                 });
+                 return false
+                }
+                  if(res.data == 3 ){
+                      this.$message({
+                      type: 'warning',
+                      message: '删除失败!'
+                 });
+                 return false
+                }
+                if(res.data == 2 ){
                      this.getCustomeTypeList()
                       this.$message({
                       type: 'success',
                       message: '删除成功!'
                  });
                  return false
-                }
-                else{
-                   this.$message({
-                    type: 'warning',
-                    message: '删除失败'
-                  });          
-                  return false
                 }
             })
         

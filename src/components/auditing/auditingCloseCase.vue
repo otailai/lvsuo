@@ -18,7 +18,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
-                 <button class="dingzhi" @click="clear()"><i class=""></i>清空</button>
+                 <button class="dingzhi" @click="clear()">清空</button>
 
              
               </div>
@@ -27,12 +27,24 @@
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
                  <el-table :data="closeCasekArr" border style="width: 100%"  @row-click="lineCilck">
-                      <el-table-column prop="Case_No" label="案件编号" width="" :show-overflow-tooltip="true"></el-table-column>
+                      <el-table-column prop="Case_No" label="案件编号" width="110" :show-overflow-tooltip="true" sortable></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
+                         <el-table-column prop="date" label="合同" width=""> 
+                                <template slot-scope="scope"> 
+                               <span style="color:red"   @click.stop="open3(scope.row.Id,scope.row.Charging_Method)" v-if="scope.row.Source_Contract == 1">
+                                
+                                 预览
+                               </span>
+                                 <span style="color:red"  @click.stop="look(scope.row.Id)" v-if="scope.row.Source_Contract == 2">
+                                 预览
+                               </span>
+                              
+                              </template>
+                          </el-table-column>
                       <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="合同起止日期" width="" :show-overflow-tooltip="true"> 
+                      <el-table-column  label="合同起止日期" width="110" :show-overflow-tooltip="true"> 
                            <template slot-scope="scope" >
                                    
                             <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
@@ -40,7 +52,7 @@
                                 </template>
                              
                       </el-table-column>
-                        <el-table-column  label="立案日期" width="" :show-overflow-tooltip="true"> 
+                        <el-table-column  label="立案日期" width="110" :show-overflow-tooltip="true" prop="Filing_Date" sortable> 
                            <template slot-scope="scope" >
                                 <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                             <p v-else>{{scope.row.Filing_Date | getTime}}</p>
@@ -49,7 +61,9 @@
                       </el-table-column>
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                             <button  style="cursor:pointer" class="btn-caozuo" @click="closeCase(scope.row.Id)" >结案</button>
+                             <button  style="cursor:pointer" class="btn-caozuo" @click="closeCase(scope.row.Id)" v-if="scope.row.Status == 4">结案</button>
+                           <span v-if="scope.row.Status != 4">已结案</span>
+
                           </template>
                         </el-table-column>
                   </el-table>
@@ -61,9 +75,13 @@
                 </li>
                 </ul>
             </div>
+             <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWord :dataWord='dataWord'></caseWord>
+                </el-dialog>
     </div>
 </template>
 <script>
+import caseWord from '../case/caseWord'
 export default {
     data(){
         return{
@@ -85,6 +103,8 @@ export default {
                 options:[
                 {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'}
                 ],
+                dialogFormVisibleWord1:false,
+                 dataWord:{},
         }
     },
     inject:["reload"],
@@ -96,17 +116,41 @@ export default {
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput
         }}).then((res)=>{
-            //console.log(res)
+      
             this.closeCasekArr = res.data.Closing_Audit
             this.total = res.data.PageCount
         })
       },
+       sortChange(column){
+    
+        if(column.order !== null && column.prop === 'Filing_Date'){
+            var data = []
+            for(let i = 0;i<this.closeCasekArr.length;i++){
+             
+                if(this.closeCasekArr[i].Filing_Date === null || this.closeCasekArr[i].Filing_Date === undefined){
+                    data.push(this.closeCasekArr[i])
+                }else{
+                  data.unshift(this.closeCasekArr[i])
+                }
+            }
+            this.closeCasekArr = data
+       
+        }
+        if(column.order === null){
+          this.closeCasekArr = this.closeCasekArr
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
          //获取二级菜单下拉
       changeTowValue:function(id){
-      //console.log(id)
-       this.Casevalue2 = id
-       //console.log(this.Casevalue2)
-       this.getCloseCasekArr()
+         if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
+      
+      this.getCloseCasekArr()
       },
       //状态查询
       changeStatus:function(id){
@@ -159,7 +203,7 @@ export default {
           //console.log(`当前页: ${val}`);
       },
      lineCilck:function(row, event, column){
-            //console.log(row, event, column)
+                this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
       },
       // 对话框,结案操作
        closeCase:function(id) {
@@ -242,6 +286,34 @@ export default {
             }
         })
       },
+      //预览合同
+        look:function(id){
+        this.$http.get('/yongxu/Toexamine/Sel_Url',{params:{
+          Case_Id:id
+        }}).then((res)=>{
+            this.fileUrl = res.data 
+        }).then((res)=>{
+          this.dialogFormVisibleWord = true
+        }).catch((err)=>{
+          this.$message({
+            message:'服务器异常',
+            type:'warning'
+          })
+        })
+      
+      },
+      //预览html合同
+      open3:function(id,type){
+        this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
+             this.dataWord = res.data
+             this.dialogFormVisibleWord1 = true
+        }).catch((err)=>{
+          this.$message({
+            message:'服务器异常',
+            type:'warning'
+          })
+        })
+      },
     },
     mounted:function(){
         this.getCloseCasekArr()
@@ -260,7 +332,10 @@ export default {
     Casevalue1:function(newV,oldV){
         this.changeTowValue(newV)
     }
-     }
+     },
+      components:{
+        'caseWord':caseWord,
+    },
 }
 </script>
 <style>

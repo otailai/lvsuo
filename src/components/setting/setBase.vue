@@ -17,28 +17,8 @@
               </div>
                         <div style="margin-top:30px;">
                              <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
-                              <el-tab-pane :label="v.title" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+                              <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
                                    <router-view></router-view>
-                              <!-- <div v-show="child_cur==0" class="bar">
-                                             <setBaseCaseType></setBaseCaseType>
-                              </div> -->
-                              <!-- cur = 1 -->
-                              <!-- <div v-show="child_cur==1" class="bar">
-                                   <customeCaseType> </customeCaseType>
-                              </div> -->
-                              <!-- cur = 2 -->
-                                 <!-- <div v-show="child_cur==2" class="bar">
-                                         <industryCaseType></industryCaseType>
-                              </div> -->
-                              <!-- cur =3 -->
-
-                                 <!-- <div v-show="child_cur==3" class="bar">
-                                         <causesCase></causesCase>
-                              </div> -->
-                              <!-- cur =4 -->
-                                 <!-- <div v-show="child_cur==4" class="bar">
-                                            <jobCase></jobCase>
-                              </div> -->
                               </el-tab-pane>
                             </el-tabs>  
                          </div>
@@ -71,7 +51,7 @@ import jobCase from './setBase/jobCase'
         {id:1,name:'管理员',power:'权限'}
         ],
         arr:[
-            {title:'案件类型',path:'setBase/setBaseCaseType'}, {title:'客户类型',path:'setBase/customeCaseType'},{title:'所属行业',path:'setBase/industryCaseType'},{title:'案由',path:'setBase/causesCase'},{title:'职务',path:'setBase/jobCase'},
+            // {title:'案件类型',path:'setBase/setBaseCaseType'}, {title:'客户类型',path:'setBase/customeCaseType'},{title:'所属行业',path:'setBase/industryCaseType'},{title:'案由',path:'setBase/causesCase'},{title:'职务',path:'setBase/jobCase'},
         ],
         value: '',
         value5: '',
@@ -79,121 +59,41 @@ import jobCase from './setBase/jobCase'
       };
     },
     methods: {
+      getmenu(){
+        this.child_cur = this.$store.state.base.child_id
+        this.$http.get('/yongxu/Base/Get_Basics',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
+         // console.log(res)
+          this.arr = res.data
+          //console.log('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
+          this.$router.push('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
+        }).then(()=>{
+           this.getActiveMenu()
+        })
+      },
         handleClick(tab, event) {
-        this.child_cur = tab.index
-        //console.log(this.child_cur)
-        if(this.child_cur == 1){
-            this.common.checkAuth({params:{url:'Install/Show_Customer_Type',userid:localStorage.getItem('userId')}}).then((res)=>{
-           //console.log(res)
-            if(res.data ==false){
-             this.$message({
-                message:'没有权限',
-                type:'warning'
-                });     
-              this.getActiveMenu()
-               this.path_logo = false
-              return false
-          }else{
-              this.path_logo = true
-               this.$router.push('/index/'+this.arr[this.child_cur].path)
-          }
-         }).catch((err)=>{
-            this.$message({
-                message:'服务器异常',
-                type:'warning'
-                });     
-              return false
-         })
-        }
-       
-          if(this.child_cur == 2){
-            this.common.checkAuth({params:{url:'Install/Show_Customer_Industry',userid:localStorage.getItem('userId')}}).then((res)=>{
-           //console.log(res)
-            if(res.data ==false){
-             this.$message({
-                message:'没有权限',
-                type:'warning'
-                });     
-                 this.getActiveMenu()
-                   this.path_logo = false
-              return false
-          }else{
-             this.path_logo = true
-               this.$router.push('/index/'+this.arr[this.child_cur].path)
-          }
-         }).catch((err)=>{
-            this.$message({
-                message:'服务器异常',
-                type:'warning'
-                });     
-              return false
-         })
-        }
-
-           if(this.child_cur == 3){
-            this.common.checkAuth({params:{url:'Install/Show_Cause_Action',userid:localStorage.getItem('userId')}}).then((res)=>{
-           //console.log(res)
-            if(res.data ==false){
-             this.$message({
-                message:'没有权限',
-                type:'warning'
-                });    
-                 this.getActiveMenu() 
-                   this.path_logo = false
-              return false
-          }else{
-             this.path_logo = true
-               this.$router.push('/index/'+this.arr[this.child_cur].path)
-          }
-         }).catch((err)=>{
-            this.$message({
-                message:'服务器异常',
-                type:'warning'
-                });     
-              return false
-         })
-        }
-
-           if(this.child_cur == 4){
-            this.common.checkAuth({params:{url:'Install/Show_Position',userid:localStorage.getItem('userId')}}).then((res)=>{
-           //console.log(res)
-            if(res.data ==false){
-             this.$message({
-                message:'没有权限',
-                type:'warning'
-                });     
-                 this.getActiveMenu()
-                   this.path_logo = false
-              return false
-          }else{
-             this.path_logo = true
-               this.$router.push('/index/'+this.arr[this.child_cur].path)
-          }
-         }).catch((err)=>{
-            this.$message({
-                message:'服务器异常',
-                type:'warning'
-                });     
-              return false
-         })
-        }
+         this.$store.commit('changeBaseChild',tab.index)
+         this.child_cur = this.$store.state.base.child_id
+         this.$router.push('/index/setBase/'+this.arr[this.child_cur].Item_Path)
         },
         getActiveMenu(){
-        this.activeName = 'name'+this.child_cur
-        //console.log(this.activeName)
-        //console.log(this.$route.path)
+    
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
-            menuArr[i] = '/index/'+this.arr[i].path
+            menuArr[i] = '/index/setBase/'+this.arr[i].Item_Path
         }
-        //console.log(menuArr)
+        // console.log(menuArr)
         var i =menuArr.indexOf(this.$route.path)
-        this.activeName = 'name'+i
+        this.activeName = 'name'+i 
+       // console.log(i)
+
+     
         
      },
     },
     mounted(){
-        this.getActiveMenu()
+        this.getmenu()
+       
+       
     },
     components:{
       setBaseCaseType,

@@ -26,7 +26,7 @@
                     <el-table-column prop="Staff_Name" label="姓名" width=""></el-table-column>
                     <el-table-column prop="Position_Name" label="职务" width=""> </el-table-column>
                      <el-table-column prop="Org_Name" label="部门" width=""> </el-table-column>
-                          <el-table-column  label="入职日期" width=""> 
+                          <el-table-column  label="入职日期" width="" prop="Creattime" sortable> 
                             <template slot-scope="scope">
                               {{scope.row.Creattime | getTime}}
                             </template>
@@ -46,7 +46,7 @@
                 </el-table>
                  <div class="block flex">
                   <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                 :page-sizes="[1,5, 10, 15]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
+                 :page-sizes="[20,50,100]" :page-size="pageNum"  layout="total, sizes, prev, pager, next, jumper" :total="total">
                    </el-pagination>
                 </div>
                   </li>
@@ -130,7 +130,13 @@
           <div slot="title" class="dialog-title">
             <p>修改成员</p>
           </div>
-                        <el-form :model="form" class="form-select">
+
+                          <el-form :model="form" class="form-select">
+                        <el-form-item label="编号" :label-width="formLabelWidth">
+                          <el-input v-model="form.caseNum" autocomplete="off" class="el-select1" disabled="disabled"></el-input>
+                        </el-form-item>
+
+                       
                         <el-form-item label="姓名" :label-width="formLabelWidth">
                           <el-input v-model="form.update_name" autocomplete="off" class="el-select1"></el-input>
                         </el-form-item>
@@ -243,7 +249,7 @@ import { fail } from 'assert';
         activeName: 'name0',
         currentPage: 1,
         total:0,
-        pageNum:10,
+        pageNum:20,
         index:0,
         cur:0,
         arr:[{title:'我的客户'},{title:'事务所客户'}],
@@ -264,6 +270,7 @@ import { fail } from 'assert';
           role:'',
           party:'',
           branch:'',
+          caseNum:'',
 
           update_Id:'',
           update_name: '',
@@ -285,7 +292,7 @@ import { fail } from 'assert';
         partyName:'',
         value:'',
         options:[],
-      
+        sortRule:{prop:'Creattime',order:'descending'},
       
       };
     },
@@ -311,6 +318,7 @@ import { fail } from 'assert';
           this.$http.get('/yongxu/Install/Get_Department',{params:{
             Parent_Id:id
           }}).then((res)=>{
+            console.log(res)
             this.partyArr = res.data
         })
       },
@@ -334,7 +342,7 @@ import { fail } from 'assert';
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-          //console.log(res)
+         // console.log(res)
           this.tableData = res.data.Show_Organization
           this.total = res.data.PageCount
         })
@@ -350,9 +358,13 @@ import { fail } from 'assert';
          
       },
        handleSizeChange(val) {
+          this.pageNum = val
+         this.getList()
         //console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
+         this.currentPage = val
+         this.getList()
         //console.log(`当前页: ${val}`);
       },
       toAdd(){
@@ -461,6 +473,14 @@ import { fail } from 'assert';
             })
             return false
         }
+         var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+            if (!myreg.test(this.form.tel)) {
+                  this.$message({
+                    message:'请填写正确的手机号',
+                    type:'warning'
+                });
+                return false;
+            } 
          if(this.form.state == ''||this.form.state==null){
             this.$message({
               message:'状态不可为空',
@@ -525,7 +545,6 @@ import { fail } from 'assert';
       lineCilck(row, event, column){
           //console.log(row.Id)
           this.$http.get('/yongxu/Install/Upd_Sel_Member',{params:{Id:row.Id}}).then((res)=>{
-               //console.log(res)
           this.form.update_name = res.data.Staff_Name
           this.form.update_job = res.data.Position
           this.form.update_tel = res.data.Contact_Information
@@ -537,15 +556,11 @@ import { fail } from 'assert';
           this.form.update_Id = res.data.staff_Id
           this.form.update_User_Id = res.data.User_Id
           this.form.user_auth_Id = res.data.user_auth_Id
-          }).then((res)=>{
-          this.getPartyArr(this.form.update_branch)
-          this.dialogFormVisible3 = true
-          }).catch((err)=>{
-            this.$message({
-              message:'服务器异常',
-              type:'warning'
-            })
-          })  
+          this.form.caseNum = res.data.Staff_No
+           this.getPartyArr(this.form.update_branch)
+            this.dialogFormVisible3 = true
+         
+          })
       },
       update_Member(){
         if(this.form.update_name == ''||this.form.update_name==null){
@@ -696,7 +711,7 @@ import { fail } from 'assert';
 .remarks-input{
   width: 140px;
   height: 30px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
 }
 .dialogFormVisible_box{
   display: flex;

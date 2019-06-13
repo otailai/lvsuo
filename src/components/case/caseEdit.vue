@@ -93,7 +93,7 @@
                  </div>  
                 <div class="flex  add-lawyer-index" style="width:90%;margin-top:10px;">
                         <!-- <textarea name="" id="" cols="40" rows="8" v-model="Service_Content" class="serve_content"></textarea> -->
-                       <div v-html="Service_Content"></div>
+                       <div v-html="Service_Content" style="margin-left: 32px;"></div>
                       <!-- <quill-editor v-model="Service_Content" ref="myQuillEditor"  @focus="onEditorFocus($event)" :options="editorOption" style="width:428px;" class="ql-editor"></quill-editor> -->
 
                         <!-- <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption"></quill-editor> -->
@@ -145,7 +145,7 @@
                          <p class="input-icon"></p>
                     </div>
                     <div class="flex" v-for="(v,i) in ChargeInfoArr" :key="i">
-                   <p>{{v.Risk_Achievement}}</p>
+                     <p style="width:100%">{{v.Risk_Achievement}}</p>
                      <div class="input-icon"></div>
                     </div>
                     
@@ -222,8 +222,33 @@
                 </el-table>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <!-- <caseWord :dataWord='dataWord'></caseWord> -->
+                        <caseWord :dataWord='dataWord'></caseWord>
+                        <!-- <caseWord1 :dataWord='dataWord'></caseWord1> -->
+                          <!-- <caseWord2 :dataWord='dataWord'></caseWord2> -->
+                          <!-- <caseWord3 :dataWord='dataWord'></caseWord3> -->
+                          <!-- <caseWord4 :dataWord='dataWord'></caseWord4> -->
+
+                </el-dialog>
+                 <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
+                      
                         <caseWord1 :dataWord='dataWord'></caseWord1>
+                        
+
+                </el-dialog>
+                 <el-dialog  :visible.sync="dialogFormVisibleWord2" :modal-append-to-body='false' :modal='false' width="1000px">
+                     
+                          <caseWord2 :dataWord='dataWord'></caseWord2>
+                          
+
+                </el-dialog>
+                 <el-dialog  :visible.sync="dialogFormVisibleWord3" :modal-append-to-body='false' :modal='false' width="1000px">
+                        
+                          <caseWord3 :dataWord='dataWord'></caseWord3>
+
+                </el-dialog>
+                      <el-dialog  :visible.sync="dialogFormVisibleWord4" :modal-append-to-body='false' :modal='false' width="1000px">
+                                         
+                            <caseWord4 :dataWord='dataWord'></caseWord4>
                 </el-dialog>
               </div>
               <!-- 对话框 -->
@@ -298,6 +323,9 @@
 <script>
 import caseWord from './caseWord'
 import caseWord1 from './caseWord1'
+import caseWord2 from './caseWord2'
+import caseWord3 from './caseWord3'
+import caseWord4 from './caseWord4'
 export default {
     data(){
         return{
@@ -359,6 +387,10 @@ export default {
 
                 //费率收费
             dialogFormVisibleWord:false,
+            dialogFormVisibleWord1:false,
+            dialogFormVisibleWord2:false,
+            dialogFormVisibleWord3:false,
+            dialogFormVisibleWord4:false,
             dataWord:{},
             zhubanlvshi:'',
             Service_Content:'',
@@ -374,6 +406,7 @@ export default {
             },
             //标的额
             biaodie:'',
+            One_Type_Id:'',
         
         }
     },
@@ -387,7 +420,7 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Document/Upd_Document_Status',{params:{Id:id,Examine_Level:level}}).then((res)=>{
-                console.log(res)
+              //  console.log(res)
                 if(res.data == true){
                         this.$message({
                             type:'success',
@@ -438,12 +471,12 @@ export default {
             }
         },
         getCaseEdit(){
-             console.log(this.$route.params.id)
+           //  console.log(this.$route.params.id)
             this.$http.get('/yongxu/Index/Case_Details',{params:{
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
-                console.log(res)
+               // console.log(res)
                 // 客户信息
                 
                 let arr=res.data.Get_Customer_Information
@@ -471,6 +504,7 @@ export default {
                 this.Type_Id = caseInfo.Type_Id
                 this.contact_status = caseInfo.Status
                 this.biaodie = caseInfo.Target
+                this.One_Type_Id = caseInfo.One_Type_Id
                 this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
@@ -495,21 +529,21 @@ export default {
 
                 //传参
                 this.dataWord = res.data
-                console.log(res)
+               // console.log(res)
               
             }).then((res)=>{
                  this.getTableData()
             })
         },
           successFile(res){
-            console.log(res)
+         //   console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
                     this.Suffix_Name =res.Suffix_Name
                     this.fileName1 = res.fileName
                     this.size = res.size
-                    console.log(this.fileName1)
+                  //  console.log(this.fileName1)
                     this.$message({
                     message:res.message,
                     type:'success'
@@ -526,20 +560,20 @@ export default {
            
           },
          beforeFile(file){
-            console.log(file.name)
+           // console.log(file.name)
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
              this.nameData.File_Name = this.fileName
           },
           getTableData(){
-              console.log(this.Case_Id)
+            //  console.log(this.Case_Id)
               this.$http.get('/yongxu//Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                  console.log(res)
+                //  console.log(res)
                   this.tableData = res.data
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                        console.log(res)
+                       // console.log(res)
                             if(this.contact_status === 0){
                                 this.ifClick = false
                             }else{
@@ -584,7 +618,7 @@ export default {
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
                 }).then((res)=>{
-                    console.log(res)
+                //    console.log(res)
                     if(res.data == true){
                           this.$message({
                         message:'保存成功',
@@ -603,7 +637,7 @@ export default {
                     }
                    
                 }).catch((err)=>{
-                    console.log(err)
+                 //   console.log(err)
                 })
             },
             //更新文档
@@ -634,7 +668,7 @@ export default {
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
                     }).then((res)=>{
-                        console.log(res)
+                       // console.log(res)
                          if(res.data == true){
                           this.$message({
                         message:'更新成功',
@@ -659,20 +693,43 @@ export default {
                 })
             },
             lookWord(id){
-                this.dialogFormVisibleWord = true
+               // console.log(this.One_Type_Id)
+                if(this.One_Type_Id == 4){
+                        this.dialogFormVisibleWord = true
+                        return
+                }
+                  if(this.One_Type_Id == 10){
+                        this.dialogFormVisibleWord1 = true
+                         return
+                }
+                  if(this.One_Type_Id == 3){
+                        this.dialogFormVisibleWord2 = true
+                         return
+                }
+                  if(this.One_Type_Id == 1){
+                        this.dialogFormVisibleWord4 = true
+                         return
+                }
+                 if(this.One_Type_Id == 5){
+                        this.dialogFormVisibleWord3 = true
+                         return
+                }
+               
             },
             closeBox(){
-                this.$router.push('/index/caseIndex')
+                //this.$router.push('/index/caseIndex')
+                this.$router.go(-1);//返回上一层
             }
     },
     mounted(){
-       
         this.getCaseEdit()
-       
     },
     components:{
         'caseWord':caseWord,
         'caseWord1':caseWord1,
+        'caseWord2':caseWord2,
+        'caseWord3':caseWord3,
+        'caseWord4':caseWord4,
     },
 }
 </script>

@@ -28,7 +28,7 @@
                         <div class="r-psw flex">
                              <input name="remember" type="checkbox" value="" :checked="checkedState" class="login-box" ref="remember" @change="changeCheck()"/><span>记住密码</span> 
                         </div>
-                        <button class="login-btn" @click="denglu()">登陆</button>
+                        <button class="login-btn" @click="denglu()" @keyup.enter="denglu()">登陆</button> 
                         <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>微信扫码登陆</p></div>
                  </div>     
                  
@@ -36,7 +36,7 @@
                         <div class="title"></div>
                             <div class="pic flex">
                                 <img src="../assets/img/erweima.png" alt="">
-                                <span>微信扫一扫</span>
+                                <span>微信扫一扫</span> 
                             </div>
                         <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登陆</p></div>
                  </div>     
@@ -63,7 +63,30 @@ export default {
         }
         
     },
+    created(){
+       var _self = this
+ 
+        document.onkeydown = function(e) {
+          var key = window.event.keyCode
+    
+          if (key === 13) {
+            _self.denglu()
+          }
+        }
+    },
+     beforeDestroy() {
+      document.onkeydown = function(e) {
+        var key = window.event.keyCode
+    
+        if (key === 13) {
+          
+        }
+      }
+  },
     methods:{
+        submitLogin(){
+             this.denglu()
+        }, 
         changeLogin:function(){
             if( this.cur==1){
                     this.cur=0;
@@ -119,11 +142,11 @@ export default {
             var data = qs.stringify({
                 str:encrypted
             });
-        console.log(data)
+        //console.log(data)
         //decrypt
        this.$http.post('/yongxu/Login/Judging_Landing',data).then((res)=>{
                 var str = res.data; 
-                console.log(res)
+               // console.log(res)
                 // return false
                  if(res.data == 1){
                      this.$message({
@@ -153,7 +176,7 @@ export default {
                        type: 'warning'
                      }).then(() => {
                          this.$http.post('/yongxu/Login/Occupancy_Landing',data).then((res)=>{
-                             console.log(res)
+                           //  console.log(res)
                               localStorage.setItem('userId',res.data.User_Id)
                               localStorage.setItem('sessionId',res.data.sessionId)
                               localStorage.setItem('Rule_Id',res.data.Rule_Id)
@@ -183,7 +206,7 @@ export default {
                  }
                 if(res.data == 4){
                     this.$http.post('/yongxu/Login/Rsa_Land',data).then((res)=>{
-                        console.log(res)
+                        //console.log(res)
                     localStorage.setItem('userId',res.data.User_Id)
                     localStorage.setItem('sessionId',res.data.sessionId)
                     localStorage.setItem('Rule_Id',res.data.Rule_Id)
@@ -246,7 +269,7 @@ export default {
             },
             getPublicKey(){
                   this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-                        console.log(res)
+                      //  console.log(res)
                         this.pub = res.data.PublicKey
                          }).catch((err)=>{
                         this.$message({

@@ -68,7 +68,10 @@ import auditingCloseCase from './auditingCloseCase'
     },
     methods: {
       handleClick:function(tab, event) {
-        this.child_cur = tab.index
+         this.$store.commit('changeAuditChild',tab.index)
+         this.child_cur = this.$store.state.audit.child_id
+      
+      
         this.$router.push('/index/auditingIndex/'+this.arr[this.child_cur].Item_Path)
         //console.log(tab,event);
       },
@@ -90,10 +93,12 @@ import auditingCloseCase from './auditingCloseCase'
       },
     getChildMenu:function(){
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
-          Menu_Id:5
+          Menu_Id:5,
+          User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
           //console.log(res)
           this.arr = res.data
+          this.$router.push('/index/auditingIndex/'+this.arr[this.$store.state.audit.child_id].Item_Path)
         }).then((res)=>{
               this.getActiveMenu()
         })

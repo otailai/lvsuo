@@ -21,6 +21,8 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
+import Print from 'vue-print-nb'
+Vue.use(Print); //注册
 Vue.use(VueQuillEditor)
 Vue.prototype.common = global
 Vue.component('ImgInputer', ImgInputer)

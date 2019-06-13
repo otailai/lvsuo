@@ -19,7 +19,8 @@
             <ul class="showTab-ul">
           
               <li class="showTab-li">
-                     <router-view></router-view>
+                 
+                   <router-view></router-view>
               </li>
 
                 </ul>
@@ -124,7 +125,10 @@ import caseBranch from './caseChild/caseBranch'
     },
     methods: {
       handleClick(tab, event) {
-        this.child_cur = tab.index
+        this.$store.commit('changeCaseChild',tab.index)
+        this.child_cur = this.$store.state.case.child_id
+        //console.log(this.$store.state.case.child_id)
+       // this.child_cur = tab.index
         this.$router.push('/index/caseIndex/'+this.arr[this.child_cur].Item_Path)
       },
      
@@ -132,6 +136,7 @@ import caseBranch from './caseChild/caseBranch'
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
           if(res.data == true){
               this.cur = i
+
           }else{
               this.$message({
                 message:'没有权限',
@@ -143,9 +148,13 @@ import caseBranch from './caseChild/caseBranch'
       },
       getChildMenu(){
         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
-          Menu_Id:1
+          Menu_Id:1,
+          User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
+      //    console.log(res)
           this.arr = res.data
+          //console.log(this.$store.state.case.child_id)
+           this.$router.push('/index/caseIndex/'+this.arr[this.$store.state.case.child_id].Item_Path)
         }).then((res)=>{
             this.getActiveMenu()
         })
@@ -165,6 +174,7 @@ import caseBranch from './caseChild/caseBranch'
       }
     },
     mounted(){
+
       this.getChildMenu()
     },
     components:{

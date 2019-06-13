@@ -308,6 +308,9 @@ export default {
 </script>
 <style>
 @import '../../assets/sass/main.css';
+</style>
+
+<style>
 .mine{
     padding-bottom: 20px;
 }

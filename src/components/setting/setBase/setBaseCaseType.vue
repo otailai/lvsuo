@@ -257,6 +257,14 @@ export default {
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Type',{params:{User_Id:localStorage.getItem('userId'),Id:id,Type_Label:type}}).then((res)=>{
              //console.log(res)
+                if(res.data == 3){
+                   
+                      this.$message({
+                      type: 'warning',
+                      message: '此类型已被使用无法删除!'
+                 });
+                 return false
+                }
                 if(res.data == 2 ){
                      this.getBaseCaseTypeList()
                       this.$message({

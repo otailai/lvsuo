@@ -44,7 +44,7 @@
                 <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button> -->
               </div>
-                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" >
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
@@ -218,7 +218,7 @@ export default {
         optionMenu:[],
         //2下拉菜单
         optionChildMenu:[],
-        dialogFormVisible:false
+        dialogFormVisible:false,
         }
     },
     inject:["reload"],
@@ -235,6 +235,7 @@ export default {
          }}).then((res)=>{
            this.tableData = res.data.Get_Authorized
            this.total = res.data.PageCount
+            
         }).catch((err)=>{
         })
       },
@@ -295,7 +296,7 @@ export default {
         //下载excel
      downExcel() {
        this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -331,9 +332,37 @@ export default {
                  }
               })
       },
+       //排序
+        sortChange(column){
+        //console.log(column.order)
+        if(column.order !== null && column.prop === 'Filing_Date'){
+            var data = []
+            for(let i = 0;i<this.tableData.length;i++){
+             
+                if(this.tableData[i].Filing_Date === null || this.tableData[i].Filing_Date === undefined){
+                    //console.log('为空')
+                    data.push(this.tableData[i])
+                }else{
+                   //console.log('不为空')
+                  data.unshift(this.tableData[i])
+                }
+            }
+            this.tableData = data
+            //console.log(data)
+        }
+        if(column.order === null){
+          this.tableData = this.tableData
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
     //获取二级菜单下拉
         changeTowValue(id){
-         this.Casevalue2 = id
+            if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
          this.getCaseList()
       },
       //状态查询
@@ -365,7 +394,7 @@ export default {
       //合同上传
       shangchun(id){
         this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -483,7 +512,7 @@ export default {
             //申请结案
             finishCase(id){
                  this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -584,7 +613,7 @@ export default {
             },
               checkLogin(){
           this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',

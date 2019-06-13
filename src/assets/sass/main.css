@@ -357,6 +357,7 @@ el-date-editor .el-range__close-icon {
 }
 .search-table{
     margin-top: 50px;
+    min-height: 900px;
 }
 .showNum{
     margin-bottom:20px;
@@ -455,4 +456,7 @@ el-date-editor .el-range__close-icon {
   .case-child-end1{
     justify-content: flex-start;
     margin-top: 20px;
+}
+.el-table::before{
+    height: 0px;
 }

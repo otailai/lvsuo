@@ -70,7 +70,7 @@
               </div> -->
                <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true">
+                    <el-table-column prop="Customer_Number" label="客户编号" width="100" :show-overflow-tooltip="true" sortable>
                       <template slot-scope="scope">
                           {{scope.row.Customer_Number|hideMiddle}} 
                           <span></span>
@@ -81,7 +81,7 @@
                        <el-table-column prop="Customer_Type" label="客户类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                    
                 
-                   <el-table-column  label="承办律师名称" width="120">
+                   <el-table-column  label="承办律师名称" width="110">
                       <template slot-scope="scope">
                        <el-popover trigger="hover" placement="top" popper-class="back_color">
                          <el-tag  v-for="(v,i) in laywerNameArr" :key="i">{{v}}</el-tag>
@@ -121,7 +121,7 @@
               <div class="selectMenu flex">
                   <el-table :data="tableData1" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true"> </el-table-column>
+                    <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true" sortable> </el-table-column>
                      <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                      
                       <el-table-column prop="Value" label="行业" width=""> </el-table-column>
@@ -253,7 +253,6 @@ var _this = this
       },
       changeLi(i,v){
           this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:v.url}}).then((res)=>{
-          if(res.data == true){
               this.cur = i
               this.$store.commit('changeChild',i)
                console.log(this.$store.state.child_id)
@@ -261,13 +260,21 @@ var _this = this
               if(i==1){
                 this.getComponyList()
               }
-          }else{
-              this.$message({
-                message:'没有权限',
-                type:'warning'
-                }); 
-                return false
-          }
+        //   if(res.data == true){
+        //       this.cur = i
+        //       this.$store.commit('changeChild',i)
+        //        console.log(this.$store.state.child_id)
+        //       this.title = v.title
+        //       if(i==1){
+        //         this.getComponyList()
+        //       }
+        //   }else{
+        //       this.$message({
+        //         message:'没有权限',
+        //         type:'warning'
+        //         }); 
+        //         return false
+        //   }
         }).catch((res)=>{
             this.$message({
                 message:'服务器异常',
@@ -362,7 +369,7 @@ var _this = this
     },
     mounted(){
       
-      console.log(this.$store.state.child_id)
+      //console.log(this.$store.state.child_id)
       this.title = this.arr1[this.$store.state.child_id].title
       this.cur = this.$store.state.child_id
       // this.getChildMenu()

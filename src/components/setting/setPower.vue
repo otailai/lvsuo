@@ -164,6 +164,7 @@ import store from '../../vuex/store'
         }
 
     },
+  inject:["reload"],
     methods: {
         tijiao(){
            
@@ -214,6 +215,7 @@ import store from '../../vuex/store'
                             this.role_update_name = ''
                             this.$refs.tree.setCheckedNodes([])
                             this.getPowerList()
+                            this.reload()
                         }else{
                                 this.$message({
                                         type:'warning',
@@ -328,6 +330,7 @@ import store from '../../vuex/store'
                       type:'success',
                       message:'删除成功'
                       })
+                       this.reload()
                 this.getPowerList()
               }else{
                      this.$message({
@@ -413,6 +416,7 @@ import store from '../../vuex/store'
                       message:'修改成功'
                   })
                   this.dialogFormVisible2 = false
+                   this.reload()
                   this.getPowerList()
               }else{
                      this.$message({

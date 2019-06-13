@@ -26,7 +26,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
-                 <button class="dingzhi" @click="clear()"><i class="el-icon-download"></i>清空</button>
+                 <button class="dingzhi" @click="clear()">清空</button>
 
               </div>
             <div class="flex case-child" ></div>
@@ -54,6 +54,9 @@
             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Staff_Name}}</span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
           </el-form-item>
+           <el-form-item label="审核类型">
+             <span>部门风控(一级风控)</span>
+          </el-form-item>
         </el-form>
 
           <el-form label-position="left" inline class="demo-table-expand" v-if='props.row.Two_Level_Remarks'> 
@@ -73,6 +76,9 @@
             <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Staff_Name}}</span>
               <span v-if="!props.row.Two_Level_Remarks">暂无</span>
           </el-form-item>
+          <el-form-item label="审核类型">
+             <span>分所风控(二级风控)</span>
+          </el-form-item>
         </el-form>
       </template>
     </el-table-column>
@@ -80,7 +86,7 @@
      <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true"> 
+                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
                            <template slot-scope="scope" >
                                     <p>{{scope.row.Date_Created | getTime}}</p> 
                                 </template>
@@ -157,11 +163,34 @@ export default {
             this.total = res.data.PageCount
         })
       },
+       sortChange(column){
+        console.log(column.order)
+        if(column.order !== null && column.prop === 'Date_Created'){
+            var data = []
+            for(let i = 0;i<this.riskBrandArr.length;i++){
+             
+                if(this.riskBrandArr[i].Date_Created === null || this.riskBrandArr[i].Date_Created === undefined){
+                    data.push(this.riskBrandArr[i])
+                }else{
+                  data.unshift(this.riskBrandArr[i])
+                }
+            }
+            this.riskBrandArr = data
+            console.log(data)
+        }
+        if(column.order === null){
+          this.riskBrandArr = this.riskBrandArr
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
         //获取二级菜单下拉
       changeTowValue:function(id){
-      //console.log(id)
-       this.Casevalue2 = id
-       //console.log(this.Casevalue2)
+         if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
        this.getRiskBrandArr()
       },
       //状态查询

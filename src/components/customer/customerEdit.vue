@@ -38,8 +38,12 @@
                         <div class="flex"><p class="title">联系方式</p>
                         <p>{{Contact_Party}}</p>
                         </div>
-                         <div class="flex"><p class="title">是否常年客户</p>
+                        <div class="flex"><p class="title">是否常年客户</p>
                         <p>{{Identification}}</p>
+                        </div>
+                         <div class="flex"><p class="title">承办律师姓名</p>
+                         <p v-for="(v,i)  in laywerNameArr" :key="i" style="margin-right:10px">{{v}}</p>
+                       
                         </div>
                      
                         
@@ -68,17 +72,18 @@ export default {
             Identification:'',
             Customer_Type_Id:'',
             Position:'',
-            Customer:''
+            Customer:'',
+            laywerNameArr:[],
         }
     },
     inject:["reload"],
     methods:{
         getCaseEdit(){
-             console.log(this.$route.params.id)
+            // console.log(this.$route.params.id)
             this.$http.get('/yongxu/Customer/Get_Customer_Details',{params:{
                 Id:this.$route.params.id,
             }}).then((res)=>{
-                console.log(res)
+               // console.log(res)
                     this.Contact_Party = res.data.Contact_Party
                     this.Detailed_Address =res.data.Detailed_Address
                     this.Customer_Type =res.data.Value
@@ -91,12 +96,20 @@ export default {
                     this.Customer_Type_Id = res.data.Customer_Type
             })
         },
+            getLaywer(){
+                 this.$http.get('/yongxu/Customer/Show_All_Lawyers',{params:{
+                   Id:this.$route.params.id,
+                 }}).then((res)=>{
+                  this.laywerNameArr = res.data
+                 })
+            },
             closeBox(){
                 this.$router.push('/index/customerIndex')
             }
     },
     mounted(){
         this.getCaseEdit()
+        this.getLaywer()
        
     },
     components:{

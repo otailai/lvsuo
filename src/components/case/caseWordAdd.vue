@@ -2,7 +2,9 @@
        <div>
      <button @click="getPdf()">下载pdf</button>
       <button @click="getDoc()">导出doc</button>
+       <button v-print="'#pdfDom'">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
+       
         <div class="flex first" style="text-align: right;color:#000000;">(<span id="todayTime"></span>[1])穗金鹏民字第[2]号</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">民 事 委 托 代 理</strong></p>
         <p class="height" ></p>
@@ -14,8 +16,8 @@
         <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-          <p style="width: 80%;
-    margin: auto;"><strong style="font-size: 14.0pt;
+        <p style="width: 80%;
+    margin: auto;"><strong style="font-size: 14.0pt; 
     font-family: 仿宋_GB2312;
     letter-spacing: .1pt;    width: 110px;
     text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;
@@ -269,7 +271,7 @@ export default {
         getData(){
    this.dataWordArr= JSON.parse(this.dataWord)
         this.laywerName = '广州金鹏律师事务所' 
-        console.log(this.dataWordArr)
+        console.log(this.dataWordArr.caseValue)
         var date=new Date;
         var year=date.getFullYear(); 
         this.todayTime=  year      
@@ -300,7 +302,7 @@ export default {
          document.getElementById('toName').innerText = this.dataWordArr.oppositePart
         document.getElementById('tocaseWhy').innerText = this.dataWordArr.caseWhy
             document.getElementById('tocaseCompony').innerText = this.dataWordArr.compony
-            document.getElementById('shejibiaode').innerText = ''
+            document.getElementById('shejibiaode').innerText = this.dataWordArr.Target
 
             document.getElementById('text1').innerText = text1
             document.getElementById('text2').innerText = this.dataWordArr.oppositePart

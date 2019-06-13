@@ -19,10 +19,10 @@
                 <div class="flex"><p class="title">客户类型</p> 
                   <el-select v-model="customValue" placeholder="请选择" @change="changeCustomType()"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
                         </div>
-                      <el-popover placement="bottom" width="200" trigger="click" v-model="visible">
+                      <el-popover placement="bottom"  trigger="click" v-model="visible">
                         <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search" @change="changeId()"/></div>
                             <div>
-                                <table style="width:100%">
+                                <table style="width:100%;">
                                     <thead>
                                         <th >客户名称</th>  
                                            <th >联系方式</th>  
@@ -40,7 +40,15 @@
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div> -->
                      <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
                     <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
-                    <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
+                    <div class="flex"><p class="title">省/市地区</p> 
+                    <!-- <input type="text" class="common-input" placeholder="请输入" v-model="province"/> -->
+                    <el-cascader
+                         size="large"
+                         :options="options"
+                         v-model="selectedOptions"
+                         @change="handleChange">
+                    </el-cascader>
+                    </div>
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div> -->
  
                 </div>
@@ -411,7 +419,11 @@
              </div>
                <!-- 对话框 -->
       <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWordAdd :dataWord='dataWord'></caseWordAdd>
+          <div  v-if="this.caseValue==4"> <caseWordAdd :dataWord='dataWord'></caseWordAdd></div>
+          <div  v-if="this.caseValue==1"> <caseWordAdd1 :dataWord='dataWord'></caseWordAdd1></div>
+     </el-dialog>
+      <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
+                        <caseWordAdd1 :dataWord='dataWord'></caseWordAdd1>
      </el-dialog>
      <el-dialog  :visible.sync="dialogFormVisible1" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
         <div class="dialogFormVisible flex">
@@ -469,7 +481,9 @@
 <script>
 import qs from 'qs';
 import caseWordAdd from './caseWordAdd'
+import caseWordAdd1 from './caseWordAdd1'
 import { constants } from 'zlib';
+import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 export default {
     data(){
         return{
@@ -558,9 +572,8 @@ export default {
             riskAcount:[],
             nameJob:[],
 
-            options: [
-                 {value: '1',label: '黄金糕'}
-            ],
+           options: regionData,
+            selectedOptions: [],
             value: '1',
             value1: '1',
             value2: '',
@@ -616,7 +629,7 @@ export default {
             //合同上传
             dialogFormVisible1:false,
             dialogFormVisibleWord:false,
-           
+           dialogFormVisibleWord1:false,
             Case_Id:'',
             fileName:'',
                nameData:{
@@ -652,7 +665,7 @@ export default {
         deleteLine(i,arr,arr1){
             arr.splice(i,1)
             arr1.splice(i+1,1)
-            console.log(arr1)
+        //    console.log(arr1)
         },
         pushUserInfo(){
             this.userInfo.push(1)
@@ -801,7 +814,7 @@ export default {
                 'Service_Content':this.Service_Content,
                  //标的额
                 'Target':this.biaodie,
-              'is':this.isValue,
+                'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
                 'oppositePart':this.oppositeParty,
@@ -828,12 +841,60 @@ export default {
         addJson = JSON.stringify(addJson)
        
         this.dataWord = addJson
-         console.log(this.dataWord)
-        this.dialogFormVisibleWord =true
+        console.log(this.dataWord)
+        console.log(this.caseValue)
+         this.dialogFormVisibleWord =true
+       
+        // if(this.caseValue == 3){
+        //     this.dialogFormVisibleWord2 =true
+        // }
+        // if(this.caseValue == 4){
+        //     this.dialogFormVisibleWord3 =true
+        // }
+        // if(this.caseValue == 5){
+        //     this.dialogFormVisibleWord4 =true
+        // }
+        // if(this.caseValue == 6){
+        //     this.dialogFormVisibleWord5 =true
+        // }
+      
            
 
         },
         addAll(){
+        //      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+        //          console.log(res)
+        //          if(res.data == 1){
+        //              this.$message({
+        //                  message:'账号异地登陆 强制退出',
+        //                  type:'warning'
+        //              })
+        //               localStorage.removeItem('userId')
+        //               localStorage.removeItem('sessionId')
+        //               localStorage.removeItem('Rule_Id')
+        //               localStorage.removeItem('Expiration_Date')
+        //               localStorage.removeItem('Username')
+        //               this.$router.push('/')
+        //              return false
+        //          }
+        //          if(res.data == 3){
+        //              this.$message({
+        //                  message:'登录已过期',
+        //                  type:'warning'
+        //              })
+        //               localStorage.removeItem('userId')
+        //               localStorage.removeItem('sessionId')
+        //               localStorage.removeItem('Rule_Id')
+        //               localStorage.removeItem('Expiration_Date')
+        //               localStorage.removeItem('Username')
+        //               this.$router.push('/')
+        //               return false
+        //           }
+        //   else{
+        //      if(res.data != 2){
+        //                   done();
+        //                 return false
+        //         }
             this.checkData()
             // console.log(this.checkData())
             if(this.checkData() == false){
@@ -992,6 +1053,7 @@ export default {
                     message:'添加成功',
                     type:'warning'
                 });
+                 this.$router.push('/index/caseIndex')
                 return false
                 }else{
                     this.$message({
@@ -1008,6 +1070,8 @@ export default {
                 });
                 return false
             })
+         // }
+        //})
         },
         /**验证提交表单 */
         checkData(){
@@ -1026,7 +1090,7 @@ export default {
                 return false
             }
             if(this.customValue ==3 ){
-                 var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
+                var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
                 if(reg.test(this.cardNo) === false) 
                 { 
                      this.$message({
@@ -1083,7 +1147,14 @@ export default {
                 });
                 return false
             }
-           
+             var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+            if (!myreg.test(this.tel)) {
+                  this.$message({
+                    message:'联系电话格式不正确',
+                    type:'warning'
+                });
+                return false;
+            } 
                if(this.isValue==""||this.isValue==null){
                 this.$message({
                     message:'请选择是否常年客户',
@@ -1386,6 +1457,7 @@ export default {
                    /**获取客户类型下拉 */
                 //  this.customTypeArr = res.data.Types
                    /**获取所属行业下拉 */
+                   console.log(res)
                  this.suoshuhangyeArr = res.data.Industry
              })
         },
@@ -1414,16 +1486,18 @@ export default {
         /**h获取案件类型 */
          getSelectMenu(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
+              console.log(res)
            this.optionMenu = res.data
         })
       },
        getSelectChildeMenu(id){
+           this.caseValue2= ''
          this.optionChildMenu = ''
          this.Casevalue1 =''
         //  console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          
+            
            this.optionChildMenu = res.data  
         })
       },
@@ -1446,9 +1520,16 @@ export default {
 
         getCustomInfo(){
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.customId}}).then((res)=>{ 
-                //  console.log(res)
+                  console.log(res)
                   this.userNameE=res.data.Customer_Name_En
-                  this.province=res.data.City
+                  
+                 this.province=res.data.City
+                  console.log(res.data.City.split('-')[0])
+                   var a = TextToCode[res.data.City.split('-')[0]].code
+                   var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
+                   var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
+                    this.selectedOptions = [a,b,c]
+                 
                   this.address = res.data.Detailed_Address
                   this.tel=res.data.Contact_Party
                   this.suoshuValue = res.data.TradeId
@@ -1480,6 +1561,7 @@ export default {
                 //   this.search = ''
                   this.cardNo=''
                   this.isValue=''
+                  this.selectedOptions = []
         },
       /**律师姓名下拉查询 */
       querySearch(queryString, cb) {
@@ -1628,13 +1710,30 @@ export default {
            
           },
           beforeFile(file){
-            console.log(file.name)
+           // console.log(file.name)
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
              this.nameData.File_Name = this.fileName
             
           },
+          handleChange (value) { 
+             var province = ''
+         // console.log(value)
+          for(var i =0;i<value.length;i++){
+              if(i<value.length-1){
+                province += CodeToText[value[i]] + '-'
+              }else{
+               province += CodeToText[value[i]] 
+              }
+          }
+          // console.log(province)
+            this.province = province
+            console.log(this.province)
+        //   this.selectedOptions = CodeToText[value[0]]+'/'+CodeToText[value[1]]+'/'+CodeToText[value[2]]
+            //   this.province = CodeToText[value[0]]+'-'+CodeToText[value[1]]+'-'+CodeToText[value[2]]
+          //    console.log(this.province)
+            }
     },
     created(){
         this.customValue=3
@@ -1673,11 +1772,12 @@ export default {
     },
     components:{
         'caseWordAdd':caseWordAdd,
+          'caseWordAdd1':caseWordAdd1,
     },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../../assets/sass/caseAdd.scss';
 @import '../../assets/sass/main.css';
 .td-width{
@@ -1757,6 +1857,7 @@ export default {
                         outline: none;
                         position: relative;
                         height: 30px;
+                       
                         i{
                             position: absolute;
                             left: 14px;
@@ -1785,6 +1886,9 @@ export default {
     height: 100px;
     overflow: auto;
     text-overflow:ellipsis;
+}
+.el-autocomplete-suggestion{
+    min-width: 300px;
 }
 .el-autocomplete-suggestion li{
     display: flex;
@@ -1847,6 +1951,20 @@ export default {
     background-color: #7E2C2E;
     border-color: #7E2C2E;
     margin-left: 43px;
+}
+.el-cascader{
+    width: 200px;
+    border: none;
+    outline: none;
+    height: 35px;
+}
+.el-popover{
+    max-height: 300px;
+    overflow: auto;
+    min-width:310px;
+}
+.el-autocomplete{
+    width: 100%;
 }
 </style>
 

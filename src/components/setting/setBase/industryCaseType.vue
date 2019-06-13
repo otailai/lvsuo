@@ -70,7 +70,7 @@
 
                             <el-select v-model="update_value" placeholder="请选择" v-show="isReadonly==true" disabled>
                                     <el-option
-                                      v-for="item in options"
+                                      v-for="item in update_options"
                                       :key="item.Id"
                                       :label="item.Category_Name"
                                       :value="item.Id">
@@ -114,6 +114,7 @@ export default {
             dialogFormVisible:false,
             dialogFormVisible1:false,
             options:[],
+            options1:[],
             update_options:[],
             name:'',
             value:0,
@@ -200,7 +201,7 @@ export default {
             }
         })
       },
-      //删除案件编号
+      //删除
       deleteIndustryType(id,type){
             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  console.log(res)
@@ -251,6 +252,13 @@ export default {
                  });
                  return false
                 }
+                  if(res.data == 3 ){
+                          this.$message({
+                          type: 'warning',
+                          message: '此行业已被占用无法删除!'
+                    });
+                    return false
+                  }
                 if(res.data == 0 ){
                       this.getIndustryTypeList()
                           this.$message({

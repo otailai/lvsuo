@@ -47,12 +47,12 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>
-                      <button class="dingzhi" @click="clear()" style="margin-top:5px;"><i class="el-icon-download"></i>清空</button>
+                      <button class="dingzhi" @click="clear()" style="margin-top:5px;">清空</button>
                 <!-- <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
                 <button class="dingzhi"><i class="el-icon-download"></i>顶置</button> -->
               </div>
                   <el-table :data="tableData" border style="width: 100%">
-                    <el-table-column  label="审核日期" width="" sortable>
+                    <el-table-column  label="审核日期" width="" sortable prop="Audit_Time">
                                 <template slot-scope="scope" >
                                     <p  v-if="!scope.row.Audit_Time" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Audit_Time}}</p>
@@ -62,7 +62,7 @@
 
 
                   
-                    <el-table-column prop="Audit_Type" label="审核类型" width="" sortable :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="Audit_Type" label="审核类型" width=""  :show-overflow-tooltip="true"></el-table-column>
                  
                     <el-table-column prop="Staff_Name" label="审核人" width="" :show-overflow-tooltip="true"> </el-table-column>
                    
@@ -193,6 +193,7 @@ export default {
             size:'',
             dialogFormVisible:false,
             fileStatus:'',
+            // sortRule:{prop:'Audit_Time',order:'descending'},
         }
     },
     methods:{
@@ -216,10 +217,34 @@ export default {
            //console.log('1231')
            this.tableData = res.data.Audit_Log
            this.total1 = res.data.PageCount
+          //   if(this.sortRule.order !==null && this.sortRule.prop === 'Audit_Time'){
+          //       this.sortChange(this.sortRule)
+          //  }
             //console.log(res.data)
         }).catch((err)=>{
           //console.log(err)
         })
+      },
+      sortChange(column){
+       // console.log(column.order)
+        if(column.order !== null && column.prop === 'Audit_Time'){
+            var data = []
+            for(let i = 0;i<this.tableData.length;i++){
+             
+                if(this.tableData[i].Audit_Time === null || this.tableData[i].Audit_Time === undefined){
+                    data.push(this.tableData[i])
+                }else{
+                  data.unshift(this.tableData[i])
+                }
+            }
+            this.tableData = data
+            console.log(data)
+        }
+        if(column.order === null){
+          this.tableData = this.tableData
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
       },
         clear(){
         this.end=''

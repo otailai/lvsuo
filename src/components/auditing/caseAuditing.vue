@@ -25,7 +25,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                 </div>    
-                 <button class="dingzhi" @click="clear()"><i class="el-icon-download"></i>清空</button>
+                 <button class="dingzhi" @click="clear()">清空</button>
               </div>
           <div class="flex case-child" ></div>
             <div class="showTab">
@@ -36,18 +36,18 @@
                     <el-table-column prop="Staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                       <el-table-column prop="Creattime" label="申请日期" width="" :show-overflow-tooltip="true">
+                       <el-table-column prop="Creattime" label="申请日期" width="100" :show-overflow-tooltip="true" sortable>
                         <template slot-scope="scope">
                              <span>{{scope.row.Creattime | getTime}}</span>    
                         </template>   
                                                </el-table-column> 
-                          <el-table-column prop="date" label="合同" width=""> 
+                          <el-table-column prop="date" label="合同" width="50"> 
                                 <template slot-scope="scope"> 
-                               <span style="color:red"   @click="open3(scope.row.Id,scope.row.Charging_Method)" v-if="scope.row.Source_Contract == 1">
+                               <span style="color:red"   @click.stop="open3(scope.row.Id,scope.row.Charging_Method,scope.row.Category_Id)" v-if="scope.row.Source_Contract == 1">
                                 
                                  预览
                                </span>
-                                 <span style="color:red"  @click="look(scope.row.Id)" v-if="scope.row.Source_Contract == 2">
+                                 <span style="color:red"  @click.stop="look(scope.row.Id)" v-if="scope.row.Source_Contract == 2">
                                  预览
                                </span>
                               
@@ -188,12 +188,19 @@
   </div>
 </el-dialog>
   <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <caseWord :dataWord='dataWord'></caseWord>
+                        <div v-if="Category_Id == 4">
+                            <caseWord :dataWord='dataWord'></caseWord>
+                        </div>
+                            <div v-if="Category_Id == 1">
+                            <caseWord4 :dataWord='dataWord'></caseWord4>
+                        </div>
+                      
                 </el-dialog>
     </div>
 </template>
 <script>
 import caseWord from '../case/caseWord'
+import caseWord4 from '../case/caseWord4'
 export default {
     data(){
         return{
@@ -229,6 +236,9 @@ export default {
                 makeCollectionsArr:[],//定额
                 makeCollectionsArr8:[],//定时
                 makeCollectionsArr10:[],//风险
+                // sortRule:{prop:'Creattime',order:null},
+                //一级案件类型id
+                Category_Id:'',
                 
         }
     },
@@ -326,16 +336,39 @@ export default {
           Status:statusValue,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-            //console.log(res)
+           // console.log(res)
+
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
-
+             
         })
       },
+         sortChange(column){
+        console.log(column.order)
+        if(column.order !== null && column.prop === 'Creattime'){
+            var data = []
+            for(let i = 0;i<this.caseArr.length;i++){
+             
+                if(this.caseArr[i].Creattime === null || this.caseArr[i].Creattime === undefined){
+                    data.push(this.caseArr[i])
+                }else{
+                  data.unshift(this.caseArr[i])
+                }
+            }
+            this.caseArr = data
+            console.log(data)
+        }
+        if(column.order === null){
+          this.caseArr = this.caseArr
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
       //预览html合同
-      open3:function(id,type){
+      open3:function(id,type,Category_Id){
         this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
              this.dataWord = res.data
+            this.Category_Id = Category_Id
              this.dialogFormVisibleWord1 = true
         }).catch((err)=>{
           this.$message({
@@ -346,8 +379,13 @@ export default {
       },
       //获取二级菜单下拉
       changeTowValue:function(id){
-      //console.log(id)
-       this.Casevalue2 = id
+     
+      if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
+      
        this.getCaseArr()
       },
       //状态查询
@@ -384,8 +422,8 @@ export default {
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
-        this.Casevalue = ''
         this.Casevalue1 = ''
+        this.Casevalue = ''
         this.getCaseArr()
         
       },
@@ -402,10 +440,13 @@ export default {
       },
      lineCilck:function(row, event, column){
             //console.log(row, event, column)
+               //console.log(row.Charging_Method)
+                      this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+                       //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       noPassCase:function(id,type){
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -434,12 +475,12 @@ export default {
                  }
                  else{
               if(type != 0){
-            this.$message({
-                 message:'操作失败，此案件状态不需操作',
-                 type:'warning'
-             });
-            return false
-          }
+                this.$message({
+                     message:'操作失败，此案件状态不需操作', 
+                     type:'warning'
+                 });
+                return false
+            }
           this.$confirm('此操作将使此案件不通过, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -584,6 +625,7 @@ export default {
      },
        components:{
         'caseWord':caseWord,
+         'caseWord4':caseWord4,
     },
     
 }

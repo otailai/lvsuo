@@ -26,7 +26,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
-                 <button class="dingzhi" @click="clear()"><i class="el-icon-download"></i>清空</button>
+                 <button class="dingzhi" @click="clear()">清空</button>
 
               </div>
             <div class="flex case-child" ></div>
@@ -68,7 +68,7 @@
    <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true"> 
+                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
                            <template slot-scope="scope" >
                                     <p>{{scope.row.Date_Created | getTime}}</p> 
                                 </template>
@@ -154,6 +154,7 @@ export default {
                 ],
                 remark:'',
                 expandRowKeys:[],
+              
         }
     },
     inject:["reload"],
@@ -171,11 +172,34 @@ export default {
             this.total = res.data.PageCount
         })
       },
+          sortChange(column){
+       // console.log(column.order)
+        if(column.order !== null && column.prop === 'Date_Created'){
+            var data = []
+            for(let i = 0;i<this.riskArr.length;i++){
+             
+                if(this.riskArr[i].Date_Created === null || this.riskArr[i].Date_Created === undefined){
+                    data.push(this.riskArr[i])
+                }else{
+                  data.unshift(this.riskArr[i])
+                }
+            }
+            this.riskArr = data
+            console.log(data)
+        }
+        if(column.order === null){
+          this.riskArr = this.riskArr
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
         //获取二级菜单下拉
       changeTowValue:function(id){
-      //console.log(id)
-       this.Casevalue2 = id
-       //console.log(this.Casevalue2)
+            if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
        this.getRiskArr()
       },
       //状态查询

@@ -143,7 +143,7 @@ export default {
             this.$http.get('/yongxu/Login/Exit_Landing',{params:{
             sessionId:localStorage.getItem('sessionId')
             }}).then((res)=>{
-            console.log(res)
+           // console.log(res)
             if(res.data == true){
                 localStorage.removeItem('userId')
                 localStorage.removeItem('sessionId')
@@ -171,7 +171,6 @@ export default {
                 localStorage.removeItem('Expiration_Date')
                 localStorage.removeItem('Username')
                 this.$router.push('/')
-
         },
         getTopMenu:function(){
             this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
@@ -188,7 +187,8 @@ export default {
                     })
         },
         getSetTopMenu:function(){
-              this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7}}).then((res)=>{
+              this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                //  console.log(res)
                 this.arr1 = res.data
             })
         },
@@ -323,26 +323,26 @@ export default {
     },
     watch: {
          $route(to,from){  
-             console.log(to.path)
-             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
-                 if(res.data == 1){
-                     this.$message({
-                         message:'账号异地登陆 强制退出',
-                         type:'warning'
-                     })
-                     this.loginOut1()
-                     return false
-                 }
-                 if(res.data == 3){
-                     this.$message({
-                         message:'登录已过期',
-                         type:'warning'
-                     })
-                     this.loginOut1()
-                     return false
-                 }
-                 else{
+            // console.log(to.path)
+            //  this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+            //    //  console.log(res)
+            //      if(res.data == 1){
+            //          this.$message({
+            //              message:'账号异地登陆 强制退出',
+            //              type:'warning'
+            //          })
+            //          this.loginOut1()
+            //          return false
+            //      }
+            //      if(res.data == 3){
+            //          this.$message({
+            //              message:'登录已过期',
+            //              type:'warning'
+            //          })
+            //          this.loginOut1()
+            //          return false
+            //      }
+            //      else{
                        var path = to.path.split('/')[2]
                        var menuArr = []
                        for(var i =0 ;i<this.arr.length;i++){
@@ -362,8 +362,8 @@ export default {
                       if(menuArr.indexOf(path) == -1){
                            this.$router.push('/index/web404')
                       }
-                 }
-             })
+            //      }
+            //  })
            
         },
          watch:{

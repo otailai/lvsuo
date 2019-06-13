@@ -8,6 +8,7 @@
                     
                     </div>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                        <!-- <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button> -->
                 </div>
              <div class="selectMenu flex">
               <div class="case-type flex">
@@ -41,9 +42,9 @@
                 </el-date-picker>
                 </div>
               
-                <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
+                <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button>
                 <!-- <button class="dingzhi"><i class="el-icon-download"></i>顶置</button> -->
-                <button class="dingzhi" @click="clear()"><i class="el-icon-download"></i>清空</button>
+                <button class="dingzhi" @click="clear()">清空</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
@@ -65,8 +66,8 @@
                                 </template>
                             
                              </el-table-column>
-                             <el-table-column  label="立案日期" width="100" sortable>
-                                <template slot-scope="scope" >
+                             <el-table-column  label="立案日期" width="100" sortable prop="Filing_Date">
+                                <template slot-scope="scope">
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
                                 </template>
@@ -208,6 +209,7 @@ export default {
             size:'',
             dialogFormVisible:false,
             fileStatus:'',
+            allData:[],
         }
     },
     inject:["reload"],
@@ -272,27 +274,21 @@ export default {
       },
       //清空
         clear:function(){
+        this.Casevalue = ''
+         this.Casevalue2 = 0
         this.value = ''
         this.end=''
         this.start=''
         this.dateValue=''
         this.SearchInput=''
-        this.Casevalue2 = 0
-        this.Casevalue1 = '',
-        this.Casevalue = ''
+        this.Casevalue1 = ''
+       
+       // console.log(this.Casevalue2)
         this.getCaseList() 
       },
     //进入详情
        lineCilck:function(row, event, column){
-        
-                      //console.log(row.Charging_Method)
-                      this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
-                       //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
-                 
-        
-         
-
-         
+        this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
       },
       //编辑操作
         updateData:function(id,type_id){
@@ -325,6 +321,7 @@ export default {
 
      handleSizeChange:function(val) {
          this.numPage = val
+
          this.getCaseList()
       },
       handleCurrentChange:function(val) {
@@ -334,7 +331,6 @@ export default {
       //下载excel
      downExcel:function() {
      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -370,9 +366,51 @@ export default {
                  }
               })
       },
+        //下载excel
+     downExcel1:function() {
+     this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 else{
+                      const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
+                      const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
+                      const data = this.allData.map(v => filterVal.map(k => v[k]))
+                      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
+                      this.$toExcel({th, data, fileName, fileType, sheetName})
+                 }
+              })
+      },
     //获取二级菜单下拉
         changeTowValue:function(id){
-         this.Casevalue2 = id
+            if(id == '' || id ==null){
+          this.Casevalue2 = 0
+      }else{
+        this.Casevalue2 = id
+      }
          this.getCaseList()
       },
       //状态查询
@@ -397,16 +435,31 @@ export default {
                     this.selectOneId = id
                     this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
                     this.optionChildMenu = res.data  
-                    this.Casevalue1 =res.data[0].Id
-              
-                 
+                    this.Casevalue1 =res.data[0].Id  
          })
-        
+      },
+      sortChange(column){
+        if(column.order !== null && column.prop === 'Filing_Date'){
+            var data = []
+            for(let i = 0;i<this.tableData.length;i++){
+             
+                if(this.tableData[i].Filing_Date === null || this.tableData[i].Filing_Date === undefined){
+                    data.push(this.tableData[i])
+                }else{
+                  data.unshift(this.tableData[i])
+                }
+            }
+            this.tableData = data
+        }
+        if(column.order === null){
+          this.tableData = this.tableData
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
       },
         //合同上传
       shangchun:function(id){
             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -448,7 +501,6 @@ export default {
        * size 文件大小
        */
         successFile:function(res){
-          console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
@@ -529,7 +581,6 @@ export default {
               //申请结案
             finishCase:function(id){
                 this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -618,7 +669,6 @@ export default {
             },
           checkLogin(){
           this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -658,6 +708,12 @@ export default {
                 this.getCaseList()
                 this.dialogFormVisible = false
               })
+            },
+            getAllDataList(){
+              this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
+               // console.log(JSON.stringify(res.data))
+                this.allData = res.data
+              })
             }
     },
     components:{
@@ -682,6 +738,7 @@ export default {
      
     },
     mounted:function(){
+      this.getAllDataList()
         this.getSelectMenu()
         this.getCaseList()
     },

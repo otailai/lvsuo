@@ -39,9 +39,17 @@
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div> -->
                      <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
                     <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
-                    <div class="flex"><p class="title">省/市地区</p> <input type="text" class="common-input" placeholder="请输入" v-model="province"/></div>
+                    <div class="flex"><p class="title">省/市地区</p> 
+                    <!-- <input type="text" class="common-input" placeholder="请输入" v-model="province"/> -->
+                     <el-cascader
+                         size="large"
+                         :options="options"
+                         v-model="selectedOptions"
+                         @change="handleChange">
+                    </el-cascader>
+                    </div>
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入" v-model="address"/></div> -->
- 
+
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first sselct">
                         
@@ -173,7 +181,7 @@
                         <el-select v-model="inputArr[i+1].Case_Rule_Id"  placeholder="请选择" style="height:30px;width:100px;margin-top: 10px;">
                          <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                         </el-select>  
-                        <div class="input-icon" @click="deleteLine(i,userInfo)"><i class="el-icon-remove"></i></div>
+                        <div class="input-icon" @click="deleteLine(i,userInfo,inputArr)"><i class="el-icon-remove"></i></div>
                     </div>
                      
                     </div>
@@ -244,7 +252,7 @@
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Payment_Time"/> -->
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Charge_Amount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].Describe"/>
-                       <div class="input-icon" @click="deleteLine(i,payDate)"><i class="el-icon-remove"></i></div>
+                       <div class="input-icon" @click="deleteLine(i,payDate,timeArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addPayDate()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -272,7 +280,7 @@
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskName"/>
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].riskCount"/> -->
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="riskArr[i+1].Risk_Achievement" style="width:700px"/>
-                     <div class="input-icon" @click="deleteLine(i,riskAcount)"><i class="el-icon-remove"></i></div>
+                     <div class="input-icon" @click="deleteLine(i,riskAcount,riskArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addRiskAcount()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -335,7 +343,7 @@
                       <el-option v-for="item in layerSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
                   </el-select>    
                     <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="nameJobArr[i+1].Rate"/><span class="rmb">RMB/小时</span>
-                    <div class="input-icon" @click="deleteLine(i,nameJob)"><i class="el-icon-remove"></i></div>
+                    <div class="input-icon" @click="deleteLine(i,nameJob,nameJobArr)"><i class="el-icon-remove"></i></div>
                     </div>
                    </div>  
                     <div class="add-icon flex" @click="addNameJob()"><i class="el-icon-circle-plus"></i><p>添加</p></div>
@@ -467,6 +475,7 @@
 import qs from 'qs';
 import caseWord from './caseWord'
 import { constants } from 'zlib';
+import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 export default {
     data(){
         return{
@@ -637,6 +646,8 @@ export default {
                 theme:'snow'
             },
             biaodie:'',
+            options: regionData,
+            selectedOptions:[],
         }
           
         
@@ -646,15 +657,16 @@ export default {
            openEditor(){
             this.dialogFormVisible3 = true
         },
-        deleteLine(i,arr){
+        deleteLine(i,arr,arr1){
             arr.splice(i,1)
+            arr1.splice(i+1,1)
         },
         pushUserInfo(){
             this.userInfo.push(1)
            // this.inputArr.push({laywerName:'',laywerJob:'',visible:false,laywerName1:'',Id:''})  
             this.inputArr.push({laywerName:'',visible:false,laywerJob:'',laywerName1:'',Case_Rule_Id:'',Lawyer_Id:''})
 
-            console.log(this.inputArr)
+            //console.log(this.inputArr)
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
@@ -688,7 +700,7 @@ export default {
         updateAddAll(){
 
             this.checkData()
-            console.log(this.checkData())
+            //console.log(this.checkData())
             if(this.checkData() == false){
                 return false
             }
@@ -832,19 +844,20 @@ export default {
             }
             }
         addJson = JSON.stringify(addJson)
-        console.log(addJson)
+        //console.log(addJson)
         //console.log(JSON.stringify(addJson))
-       //return false
+        //return false
         this.$http.post('/yongxu/Index/Upd_Cases',{
                 map:addJson
             }).then((res)=>{
-                 console.log(res)
+                 //console.log(res)
                 if(res.data == true){
                 
                 this.$message({
                     message:'更新成功',
                     type:'warning'
                 });
+                this.$router.push('/index/caseIndex')
                 return false
                 }else{
                     this.$message({
@@ -875,7 +888,10 @@ export default {
                          type:'warning'
                      });
                        return false  
-            }
+                }
+                 if(this.suoshuValue==""||this.suoshuValue==null){
+                     this.suoshuValue = 0
+                 }
             }
             if(this.customValue ==4 ){
                 if(this.cardNo.length <6) 
@@ -933,7 +949,17 @@ export default {
                 });
                 return false
             }
-             
+            //    var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+            //   var isMob=  new RegExp(/^(0?\d{2,3}\-)?[1-9]\d{6,7}(\-\d{1,4})?$/);
+                  var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+                  console.log(myreg.test(this.tel))
+            if (!myreg.test(this.tel)) {
+                  this.$message({
+                    message:'联系电话格式不正确',
+                    type:'warning'
+                });
+                return false;
+            } 
                if(this.isValue==""||this.isValue==null){
                 this.$message({
                     message:'请选择是否常年客户',
@@ -995,7 +1021,7 @@ export default {
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Lawyer_Id)
             }
-            console.log(arr)
+            //console.log(arr)
             if (arr.indexOf('') != -1){
                  this.$message({
                     message:'请选择律师姓名',
@@ -1033,7 +1059,7 @@ export default {
             for(var i in this.inputArr){
                 arrJob1.push(this.inputArr[i].Case_Rule_Id)
             }
-            //console.log(arrJob1) //false
+            ////console.log(arrJob1) //false
            if(arrJob1.indexOf(18) == -1){
                  this.$message({
                     message:'请至少填写一位主办律师',
@@ -1128,7 +1154,7 @@ export default {
             for(var i in this.timeArr){
                 arr9.push(this.timeArr[i].Payment_Time)
             }
-              console.log(arr9)
+              //console.log(arr9)
             if (arr9.indexOf('') != -1 || arr9.indexOf(null) != -1 ){
                  this.$message({
                     message:'请选择付款日期',
@@ -1258,24 +1284,24 @@ export default {
           /**h获取案件类型2J */
          getSelectMenuTwo(){
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.caseValue}}).then((res)=>{
-             console.log(res)
+             //console.log(res)
            this.optionChildMenu = res.data
         })
       },
        getSelectChildeMenu(id){
+              this.caseValue2= ''
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         console.log(id)
+         //console.log(id)
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
-          
            this.optionChildMenu = res.data  
         })
       },
         changeCostWay(id){
             this.costId = id
-              console.log(this.costId)
-            console.log(this.cur)
+              //console.log(this.costId)
+            //console.log(this.cur)
         },
       
         changeId(){
@@ -1284,7 +1310,7 @@ export default {
                   this.province=''
                   this.address = ''
                   this.tel=''
-                  this.suoshuValue = ''
+                  this.suoshuValue = 0
                   this.value2 = ''
                   this.customValue = ''
                   this.cardNo=''
@@ -1292,11 +1318,16 @@ export default {
         },
 
         getCustomInfo(){
-            console.log(this.custom_Id)
+            //console.log(this.custom_Id)
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.custom_Id}}).then((res)=>{ 
-                 console.log(res)
+                 //console.log(res)
                   this.userNameE=res.data.Customer_Name_En
                   this.province=res.data.City
+                    //console.log(res.data.City.split('-')[0])
+                   var a = TextToCode[res.data.City.split('-')[0]].code
+                   var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
+                   var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
+                    this.selectedOptions = [a,b,c]
                   this.address = res.data.Detailed_Address
                   this.tel=res.data.Contact_Party
                   this.suoshuValue = res.data.TradeId
@@ -1322,10 +1353,10 @@ export default {
         },
       /**律师姓名下拉查询 */
       querySearch(queryString, cb) {
-          console.log(this.LawyerNameArr)
+          //console.log(this.LawyerNameArr)
         var restaurants =  this.LawyerNameArr
       
-        // console.log(restaurants)
+        // //console.log(restaurants)
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
         // 调用 callback 返回建议列表的数据
         cb(results);
@@ -1344,8 +1375,8 @@ export default {
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Lawyer_Id)
             }
-            console.log(item.Id)
-             console.log(arr)
+            //console.log(item.Id)
+             //console.log(arr)
            if (arr.indexOf(item.Id) != -1){
                  this.$message({
                     message:'律师姓名不能重复',
@@ -1361,15 +1392,15 @@ export default {
            
       },
       handleSelect1(item,i){
-          console.log(this.inputArr)
-          console.log(i)
-          console.log(item);
+          //console.log(this.inputArr)
+          //console.log(i)
+          //console.log(item);
           var arr=[]
             for(var j in this.inputArr){
                 arr.push(this.inputArr[j].Lawyer_Id)
             }
-            console.log(item.Id)
-             console.log(arr)
+            //console.log(item.Id)
+             //console.log(arr)
            if (arr.indexOf(item.Id) != -1){
                  this.$message({
                     message:'律师姓名不能重复',
@@ -1377,19 +1408,19 @@ export default {
                 });
                 return false
             }
-            console.log(i+1)
+            //console.log(i+1)
            this.inputArr[i+1].laywerName=item.value
            this.inputArr[i+1].Id=item.Id     
            this.inputArr[i+1].Lawyer_Id = item.Id   
            this.inputArr[i+1].visible=false
-           console.log(this.inputArr)
+           //console.log(this.inputArr)
     //         var arr =[]
     //     for(var i=0;i<this.inputArr.length;i++){
     //         arr.push(this.inputArr[i].laywerName)
     //     }
         
     //    this.LawyerNameArr.splice(arr.indexOf(item.value),1)
-    //     console.log(this.LawyerNameArr);
+    //     //console.log(this.LawyerNameArr);
       },
       blurInput(){
          this.inputArr[0].laywerName1 = ''
@@ -1399,17 +1430,17 @@ export default {
       },
        /**小时收费选择律师姓名 */
       handleSelectNameArr(item) {
-        console.log(item);
+        //console.log(item);
         this.nameJobArr[0].nameJobName=item.value
         this.nameJobArr[0].Lawyer_Id=item.Id 
         this.nameJobArr[0].Id=item.Id        
         this.nameJobArr[0].visible=false
         // const res = this.restaurants.filter((item) => { return item.value=== this.inputArr[0].laywerName;});
-        //console.log(res)
+        ////console.log(res)
       },
       handleSelect1NameArr(item,i){
-          console.log(i)
-          console.log(item);
+          //console.log(i)
+          //console.log(item);
            this.nameJobArr[i+1].nameJobName=item.value
 
            this.nameJobArr[i+1].Lawyer_Id=item.Id 
@@ -1423,16 +1454,17 @@ export default {
          this.nameJobArr[i+1].nameJobName1 = ''
       },
         getUpdateInfo(){
-            console.log(this.$route.params.id)
+            //console.log(this.$route.params.id)
             this.$http.get('/yongxu/Index/Case_Details',{params:{
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
-                console.log(res)
+                //console.log(res)
+                // return false
                 // 客户信息
                 let arr=res.data.Get_Customer_Information
                 this.custom_Id = arr.Id
-                this.Customer_Name_Zh = arr.Customer_Name_Zh
+                //this.Customer_Name_Zh = arr.Customer_Name_Zh
                 this.Customer_Type= arr.Customer_Type
                 this.Contact_Party= arr.Contact_Party
                 this.Detailed_Address= arr.Detailed_Address
@@ -1442,7 +1474,12 @@ export default {
                 this.industry= arr.industry
                 this.Customer_Name_Zh=arr.Customer_Name_Zh
                 this.City=arr.City
-                this.Customer_Number =arr.Customer_Number
+                  //console.log(arr.City.split('-')[0])
+                   var a = TextToCode[arr.City.split('-')[0]].code
+                   var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                   var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
+                   this.selectedOptions = [a,b,c]
+              
                 //案件信息
                 let caseInfo = res.data.Get_Case_Information
                 this.Cause_Id = caseInfo.Cause_Id
@@ -1472,38 +1509,38 @@ export default {
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
                 var _self =this
                 for(var i in _self.layWerInfoArr){
-                   console.log( _self.layWerInfoArr[i].Staff_Name)
+                   //console.log( _self.layWerInfoArr[i].Staff_Name)
         _self.inputArr.push({laywerName:_self.layWerInfoArr[i].Staff_Name,visible:false,laywerJob:_self.layWerInfoArr[i].Case_Rule_Id,laywerName1:'',Case_Rule_Id:_self.layWerInfoArr[i].Case_Rule_Id,Lawyer_Id:_self.layWerInfoArr[i].Id})
                   
                 }    
-                console.log(this.layWerInfoArr)
+                //console.log(this.layWerInfoArr)
                
                 this.newInputArr = _self.inputArr 
-                 console.log(this.newInputArr)
+                 //console.log(this.newInputArr)
                 _self.userInfo = this.newInputArr.slice(1)
-                 console.log(_self.userInfo)
+                 //console.log(_self.userInfo)
                 //当事人信息
                 // this.partyInfoArr = res.data.Get_Party
                 //   for(var i in this.partyInfoArr){
                 //     this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,Party_Name:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id,Party_Category:this.partyInfoArr[i].Party_Category_Id})
                 // }
-                // console.log(this.input1Arr)
+                // //console.log(this.input1Arr)
                 //  _self.PartyInfo = _self.input1Arr.slice(1)
-                //  console.log(_self.PartyInfo)
+                //  //console.log(_self.PartyInfo)
                 //收费方式
                 this.way = res.data.Value
                 this.cur = res.data.Id
                 this.costValue = res.data.Id
                 this.costId  = this.costValue
-                console.log( this.costId)
+                //console.log( this.costId)
                 if(this.costId == 8){
                 //小时收费
                 this.ChargeInfoArr = res.data.Charge
-                console.log(this.ChargeInfoArr)
+                //console.log(this.ChargeInfoArr)
                   for(var i in this.ChargeInfoArr){
                     this.nameJobArr.push({nameJobRate:this.ChargeInfoArr[i].Rate,Rate:this.ChargeInfoArr[i].Rate,visible:false,nameJobName1:'',nameJobName:this.ChargeInfoArr[i].Staff_Name,nameJobJob:this.ChargeInfoArr[i].Staff_Id,Lawyer_Id:this.ChargeInfoArr[i].Staff_Id,Rule_Id:this.ChargeInfoArr[i].Rule_Id})
                 }
-                 console.log(this.nameJobArr)
+                 //console.log(this.nameJobArr)
                 this.timeArr=[{describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''}]
                 this.riskArr=[{riskCondition:'',Risk_Achievement:''}]
 
@@ -1517,7 +1554,7 @@ export default {
                    
                 //定额收费
                 this.ChargeInfoArr = res.data.Charge
-                console.log(this.ChargeInfoArr)
+                //console.log(this.ChargeInfoArr)
                  for(var i in this.ChargeInfoArr){
                     this.timeArr.push({describe:this.ChargeInfoArr[i].Describe,payCount:this.ChargeInfoArr[i].Charge_Amount,dateName:this.ChargeInfoArr[i].Payment_Time,Payment_Time:this.ChargeInfoArr[i].Payment_Time,Charge_Amount:this.ChargeInfoArr[i].Charge_Amount,Describe:this.ChargeInfoArr[i].Describe})
                 }
@@ -1527,11 +1564,11 @@ export default {
                  this.riskAcount = this.riskArr.slice(1)
                 this.nameJob = this.nameJobArr.slice(1)
                 this.payDate = this.timeArr.slice(1)
-                console.log(this.payDate)
+                //console.log(this.payDate)
                 }
                 if(this.costId == 10){
                 this.ChargeInfoArr = res.data.Charge
-                console.log(this.ChargeInfoArr)
+                //console.log(this.ChargeInfoArr)
                   for(var i in this.ChargeInfoArr){
                     this.riskArr.push({riskCondition:this.ChargeInfoArr[i].Risk_Achievement,Risk_Achievement:this.ChargeInfoArr[i].Risk_Achievement})
                  }
@@ -1546,7 +1583,7 @@ export default {
               
                 //传参
                 this.dataWord = res.data
-                console.log(res)
+                //console.log(res)
             }).then((res)=>{
                 this.getCustomInfo()
                 this.getSelectMenuTwo()
@@ -1580,7 +1617,7 @@ export default {
                 });
                 return false  
                 }
-                console.log(this.Case_Id)
+                //console.log(this.Case_Id)
                 this.$http.get('/yongxu/Index/Del_Add_Upload',{
                  params:{
                         User_Id: localStorage.getItem('userId'),
@@ -1591,7 +1628,7 @@ export default {
                     Suffix_Name:this.Suffix_Name,
                  }
                 }).then((res)=>{
-                    console.log(res)
+                    //console.log(res)
                     if(res.data == true){
                           this.$message({
                         message:'保存成功',
@@ -1608,19 +1645,19 @@ export default {
                     }
                    
                 }).catch((err)=>{
-                    console.log(err)
+                    //console.log(err)
                 })
             },
        //上传回调
        successFile(res){
-            console.log(res)
+            //console.log(res)
             if(res.code == 200){
             this.code = 200
             this.File_Name = res.File_Name
             this.Suffix_Name =res.Suffix_Name
             this.fileName1 = res.fileName
             this.size = res.size
-              console.log(this.fileName1)
+              //console.log(this.fileName1)
              this.$message({
               message:res.message,
               type:'success'
@@ -1637,7 +1674,7 @@ export default {
            
           },
           beforeFile(file){
-            console.log(file.name)
+            //console.log(file.name)
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
@@ -1645,14 +1682,14 @@ export default {
           },
           //新上传
            successFile1(res){
-            console.log(res)
+            //console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
                     this.Suffix_Name =res.Suffix_Name
                     this.fileName1 = res.fileName
                     this.size = res.size
-                    console.log(this.fileName1)
+                    //console.log(this.fileName1)
                    this.$message({
                     message:res.message,
                     type:'success'
@@ -1670,12 +1707,29 @@ export default {
            
           },
           beforeFile1(file){
-            console.log(file.name)
+            //console.log(file.name)
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
              this.nameData.File_Name = this.fileName
           },
+           handleChange (value) {
+               var province = ''
+          //console.log(value)
+          for(var i =0;i<value.length;i++){
+              if(i<value.length-1){
+                province += CodeToText[value[i]] + '-'
+              }else{
+               province += CodeToText[value[i]] 
+              }
+          }
+           //console.log(province)
+            this.province = province
+        //      //console.log(CodeToText[value])
+        // //   this.selectedOptions = CodeToText[value[0]]+'/'+CodeToText[value[1]]+'/'+CodeToText[value[2]]
+        //       this.province = CodeToText[value[0]]+'-'+CodeToText[value[1]]+'-'+CodeToText[value[2]]
+        //       //console.log(this.province)
+            }
 
     },
     created(){
@@ -1690,6 +1744,7 @@ export default {
        this.getSelectMenu()
 
        this.getUpdateInfo()
+       
     },
     computed:{
         //数据检索
@@ -1698,8 +1753,8 @@ export default {
             if (_search) {
                 //不区分大小写处理
                 var reg = new RegExp(_search, 'ig')
-                // console.log(reg)
-                // console.log(this.list)
+                // //console.log(reg)
+                // //console.log(this.list)
                 //es6 filter过滤匹配，有则返回当前，无则返回所有
                 return this.list.filter(function(e) {
                     //匹配所有字段
@@ -1877,6 +1932,10 @@ export default {
     border-color: #7E2C2E;
     margin-left: 43px;
 }
-
+.el-popover{
+    max-height: 300px;
+    overflow: auto;
+    min-width:310px;
+}
 </style>
 

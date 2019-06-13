@@ -31,17 +31,17 @@
         
         <div class="mine-bottom flex">
             <div class="mine-bottom-left flex">
-                <div class="mine-bottom-left-div">
+                <div class="mine-bottom-left-div2">
                     <p class="mine-title">职业领域:</p>
                      <p class="mine-title-p">{{jobTextare}}</p>
                 </div>
 
-                 <div class="mine-bottom-left-div">
+                 <div class="mine-bottom-left-div2">
                     <p class="mine-title">教育背景:</p>
                     <p class="mine-title-p" v-html="teach"></p>
                 </div>
 
-                <div class="mine-bottom-left-div">
+                <div class="mine-bottom-left-div2">
                    <p class="mine-title">工作经历:</p>
                    
                          <p class="mine-title-p"  v-html="jobStrory">
@@ -49,17 +49,17 @@
                         </p>
                       
                 </div>
-                <div class="mine-bottom-left-div">
+                <div class="mine-bottom-left-div2">
                     <p class="mine-title">社会职务:</p>
                      <p class="mine-title-p" v-html="jobSociety"></p>
                 </div>
-                <div class="mine-bottom-left-div">
+                <div class="mine-bottom-left-div2">
                    <p class="mine-title">获得荣誉:</p>
                      <p class="mine-title-p" v-html="honor"></p>
                 </div>
             </div>
             <div class="mine-bottom-right flex">
-                  <div class="mine-bottom-left-div">
+                  <div class="mine-bottom-left-div2">
                      <p class="mine-title">主要业绩:</p>
                     <p class="mine-title-p" v-html="grade"></p>
                 </div>
@@ -168,10 +168,10 @@ export default {
     flex-direction: column;
     width: 41%;
 }
-.mine-bottom-left-div{
+.mine-bottom-left-div2{
     margin-top: 20px;
 }
-.mine-bottom-left-div p{
+.mine-bottom-left-div2 p{
     margin-bottom: 10px;
 }
 .w-all{

@@ -2,9 +2,10 @@
     <div>
      <button @click="getPdf()">pdf</button>
       <button @click="getDoc()">doc</button>
+       <button v-print="'#pdfDom'">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
         <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
-        <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">聘 请 常 年 法 律 顾 问</strong></p>
+        <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">聘 请 专 项 法 律 顾 问</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">协</strong></p>
         <p class="height"></p>
@@ -222,10 +223,10 @@ lang=EN-US></span></span></p>
 
 <p class=MsoNormal style='text-indent:28.0pt;mso-char-indent-count:2.0;
 line-height:29.0pt;mso-line-height-rule:exactly'><span style='font-size:14.0pt;
-font-family:仿宋_GB2312'>第十条：本协议书有效期限为一年，从二<span lang=EN-US>00<span
+font-family:仿宋_GB2312'>第十条：本协议书有效期限为一年，从<span lang=EN-US id=""><span
 style='mso-spacerun:yes'>&nbsp; </span></span>年<span lang=EN-US><span
 style='mso-spacerun:yes'>&nbsp; </span></span>月<span lang=EN-US><span
-style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp; </span></span>日起至二<span lang=EN-US>00<span
+style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp; </span></span>日起至<span lang=EN-US id=""><span
 style='mso-spacerun:yes'>&nbsp; </span></span>年<span lang=EN-US><span
 style='mso-spacerun:yes'>&nbsp; </span></span>月<span lang=EN-US><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp; </span></span>日止。协议书期满，双方如未提出异议，则本协议书有效期顺延一年，也可重新修订协议或终止协议。<span

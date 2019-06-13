@@ -38,7 +38,7 @@
                             <span v-else>{{scope.row.Case_Name}}</span>
                         </template>
                       </el-table-column>
-                    <el-table-column  label="主办律师" width="" :show-overflow-tooltip="true"> 
+                    <el-table-column  label="经办律师" width="" :show-overflow-tooltip="true"> 
                        <template slot-scope="scope">
                             <span v-if="scope.row.Staff_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Staff_Name}}</span>
                             <span v-else>{{scope.row.Staff_Name}}</span>
@@ -88,6 +88,7 @@ import store from '../../vuex/store'
     },
     methods: {
       getSeachList(){
+        // this.SearchInput = this.$store.state.search.searchInput
         this.$http.get('/yongxu/Retrieval/Show_Retrieval',{params:{
            Display_Page_Number:this.pageNum,
            PageNumber:this.currentPage,
@@ -125,15 +126,24 @@ import store from '../../vuex/store'
         })  
       },
       searchData(){
+      
         this.getSeachList();
       }
     },
     mounted(){
-     
+      
+      this.getSeachList()
+      
     },
     components:{
    
     },
+    // watch:{
+    //   SearchInput:function(newData,old){
+    //     console.log(newData)
+    //     this.$store.commit('changeSearchChild',newData)
+    //   }
+    // }
   };
 </script>
 <style>

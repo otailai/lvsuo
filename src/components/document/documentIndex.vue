@@ -24,7 +24,7 @@
                       <input placeholder="请输入关键词搜索"  v-model="searchInput" class="case-input"/>
                       <button class="case-button" @click="searchData"><i class="el-icon-search"></i></button>
                     </div>
-                      <el-button type="danger" round @click="openNew()"><i class="el-icon-plus"></i>新建文档</el-button>
+                      <el-button type="danger" round  @click="openNew()"><i class="el-icon-plus"></i>新建文档</el-button>
                 </div>
 
             </div>
@@ -38,7 +38,7 @@
                     <el-table-column prop="File_Name" label="文档名称" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Postfix" label="文档类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column prop="Staff_Name" label="更新人员" width="" :show-overflow-tooltip="true"> </el-table-column>
-                       <el-table-column  label="创建日期" width="">
+                       <el-table-column  label="创建日期" width="" sortable prop="Date_Created">
                            <template slot-scope="scope">
                               <p  v-if="!scope.row.Date_Created" style="color:#ccc">暂无</p>
                             <p v-else>{{scope.row.Date_Created | getTime}}</p>
@@ -208,7 +208,8 @@ import { constants } from 'fs';
           }]
         },
         value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
-        value5: ''
+        value5: '',
+      
       };
     },
      inject:["reload"],
@@ -239,6 +240,35 @@ import { constants } from 'fs';
         })
       },
       openNew(){
+         this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 console.log(res)
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                      return false
+                  }
+                 else{
         this.common.checkAuth({params:{
           userid:localStorage.getItem('userId'),
           url:'Document/Add_Document'
@@ -252,7 +282,6 @@ import { constants } from 'fs';
                 }); 
                 return false
             }
-         
         }).catch((err)=>{
           this.$message({
                 message:'服务器异常',
@@ -260,6 +289,8 @@ import { constants } from 'fs';
                 }); 
                 return false
         })
+                 }
+         })
        
       },
       downLine(id){
@@ -310,7 +341,6 @@ import { constants } from 'fs';
            
           },
             beforeFile(file){
-              console.log(file)
              var json = file.name.split(".")
              var file_name =json[0];
             this.fileName = file_name
@@ -338,8 +368,29 @@ import { constants } from 'fs';
             }).then((res)=>{
                  this.tableData = res.data.Document
                  this.PageCount = res.data.PageCount
+               
             })
           },
+          sortChange(column){
+
+        if(column.order !== null && column.prop === 'Date_Created'){
+            var data = []
+            for(let i = 0;i<this.tableData.length;i++){
+             
+                if(this.tableData[i].Date_Created === null || this.tableData[i].Date_Created === undefined){
+                    data.push(this.tableData[i])
+                }else{
+                  data.unshift(this.tableData[i])
+                }
+            }
+            this.tableData = data
+        }
+        if(column.order === null){
+          this.tableData = this.tableData
+        }
+        this.sortRule.order = column.order
+        this.sortRule.prop = column.prop
+      },
           searchData(){
              this.getTableData()
           },
