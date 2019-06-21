@@ -4,10 +4,9 @@
                 <p>所在位置：</p>
                 <p>审核</p>
                 <p><i class="el-icon-arrow-right"></i></p>
-                <p v-if="child_cur==0">案件审核</p>
-                 <p v-if="child_cur==1">部门风控</p>
-                 <p v-else-if="child_cur==2">分所风控</p>
-                  <p v-if="child_cur==3">结案审核</p>
+                 <P v-for="(v,i) in arr" :key="i+'a'" v-show="$store.state.audit.child_id  == i">
+                    {{v.Item_Name}}
+                </P>
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
            <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
@@ -68,12 +67,9 @@ import auditingCloseCase from './auditingCloseCase'
     },
     methods: {
       handleClick:function(tab, event) {
+        this.$router.push('/index/auditingIndex/'+this.arr[tab.index].Item_Path)
          this.$store.commit('changeAuditChild',tab.index)
          this.child_cur = this.$store.state.audit.child_id
-      
-      
-        this.$router.push('/index/auditingIndex/'+this.arr[this.child_cur].Item_Path)
-        //console.log(tab,event);
       },
       changeLi:function(i){
           this.cur = i
@@ -96,11 +92,11 @@ import auditingCloseCase from './auditingCloseCase'
           Menu_Id:5,
           User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
-          //console.log(res)
+        //  console.log(res)
           this.arr = res.data
           this.$router.push('/index/auditingIndex/'+this.arr[this.$store.state.audit.child_id].Item_Path)
-        }).then((res)=>{
-              this.getActiveMenu()
+          console.log(this.$store.state.audit.child_id)
+          this.getActiveMenu()
         })
       },
       searchData:function(){
@@ -142,6 +138,9 @@ import auditingCloseCase from './auditingCloseCase'
     mounted:function(){
       this.getChildMenu()
   
+    },
+     activated() {
+        this.getChildMenu()
     },
     filters:{
           getTime:function(time){

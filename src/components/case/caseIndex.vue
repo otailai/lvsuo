@@ -5,11 +5,14 @@
                 <p>所在位置：</p>
                 <p>案件管理</p>
                 <p><i class="el-icon-arrow-right"></i></p>
-                <p v-show="child_cur == 0">律所案件</p>
+                <P v-for="(v,i) in arr" :key="i+'a'" v-show="$store.state.case.child_id  == i">
+                    {{v.Item_Name}}
+                </P>
+                <!-- <p v-show="child_cur == 0">律所案件</p>
                  <p v-show="child_cur == 1">分所案件</p>
                   <p v-show="child_cur == 2">部门案件</p>
                    <p v-show="child_cur == 3">个人案件</p>
-                   <p v-show="child_cur == 4">授权案件</p>
+                   <p v-show="child_cur == 4">授权案件</p> -->
             </div>
        <el-tabs v-model="activeName" @tab-click="handleClick">
            <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
@@ -66,7 +69,7 @@ import caseBranch from './caseChild/caseBranch'
         cur:2,
         arr:[], 
          input23: '',
-        
+        title_show:0,
         tableData: [],
         tableDataShouQuan:[],
         value: '',
@@ -125,13 +128,19 @@ import caseBranch from './caseChild/caseBranch'
     },
     methods: {
       handleClick(tab, event) {
+       // console.log(tab.index)
+       
+        // this.child_cur = tab.index
+        // this.getActiveMenu()
+      
+        this.$router.push('/index/caseIndex/'+this.arr[tab.index].Item_Path)
         this.$store.commit('changeCaseChild',tab.index)
         this.child_cur = this.$store.state.case.child_id
-        //console.log(this.$store.state.case.child_id)
-       // this.child_cur = tab.index
-        this.$router.push('/index/caseIndex/'+this.arr[this.child_cur].Item_Path)
+       // console.log(this.$store.state.case.child_id)
+
+       
+        //this.getActiveMenu()
       },
-     
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
           if(res.data == true){
@@ -151,31 +160,35 @@ import caseBranch from './caseChild/caseBranch'
           Menu_Id:1,
           User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
-      //    console.log(res)
+     //  console.log(res)
           this.arr = res.data
           //console.log(this.$store.state.case.child_id)
            this.$router.push('/index/caseIndex/'+this.arr[this.$store.state.case.child_id].Item_Path)
-        }).then((res)=>{
-            this.getActiveMenu()
+           this.getActiveMenu()
         })
       },
      getActiveMenu(){
-        this.activeName = 'name'+this.child_cur
+        // this.activeName = 'name'+this.child_cur
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
         }
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
-        
+      //  console.log(this.activeName)
      },
       searchData(){
         this.child = 1
       }
     },
     mounted(){
-
       this.getChildMenu()
+    },
+    activated() {
+      this.getChildMenu()
+    },
+    watch:{
+      
     },
     components:{
       caseAllList,

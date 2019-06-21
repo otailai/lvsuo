@@ -12,14 +12,14 @@
                  </el-select>
               </div>
 
-                <div class="input flex" style="margin-left: 270px;">
+                <div class="input flex" style="margin-left: 200px;">
                       <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
                           
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
                  <button class="dingzhi" @click="clear()">清空</button>
-
+                  <img src="../../assets/img/shuaxin.png" alt="" @click="updateData()" class="shuaxin_btn" style="cursor: pointer;">
              
               </div>
             <div class="flex case-child" ></div>
@@ -109,6 +109,9 @@ export default {
     },
     inject:["reload"],
     methods:{
+           updateData(){
+        this.getCloseCasekArr()
+      },
          getCloseCasekArr:function(){
         this.$http.get('/yongxu/Toexamine/Show_Closing_Audit',{params:{
           PageNumber:this.currentPage,
@@ -253,7 +256,7 @@ export default {
                   message: '结案操作成功!'
                 });
                 this.getCloseCasekArr()
-                this.AuditLog(id,'结案审核',1)
+                this.AuditLog(id,4,1)
              }else{
                 this.$message({
                   type: 'warning',

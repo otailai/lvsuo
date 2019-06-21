@@ -6,12 +6,8 @@
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p>基础数据</p>
                  <p><i class="el-icon-arrow-right"></i></p>
-                 <!-- <p v-if="child_cur == 0">案件类型</p> -->
-                  <p v-if="child_cur == 1 && path_logo==true">客户类型</p>
-                    <p v-if="child_cur == 2 && path_logo==true">所属行业</p>
-                      <p v-if="child_cur == 3 && path_logo==true">案由</p>
-                        <p v-if="child_cur == 4 && path_logo==true">职务</p>
-                        <p v-if="child_cur == 0">案件类型</p>
+                
+                        <p v-show="child_cur == i" v-for="(v,i) in arr" :key="i">{{v.Item_Name}}</p>
                 
             
               </div>
@@ -62,7 +58,7 @@ import jobCase from './setBase/jobCase'
       getmenu(){
         this.child_cur = this.$store.state.base.child_id
         this.$http.get('/yongxu/Base/Get_Basics',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
-         // console.log(res)
+          console.log(res)
           this.arr = res.data
           //console.log('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
           this.$router.push('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
@@ -76,7 +72,6 @@ import jobCase from './setBase/jobCase'
          this.$router.push('/index/setBase/'+this.arr[this.child_cur].Item_Path)
         },
         getActiveMenu(){
-    
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] = '/index/setBase/'+this.arr[i].Item_Path

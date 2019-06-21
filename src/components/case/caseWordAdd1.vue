@@ -2,7 +2,7 @@
        <div>
      <button @click="getPdf()">下载pdf</button>
       <button @click="getDoc()">导出doc</button>
-       <button v-print="'#pdfDom'">打印</button>
+       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
         <div class="flex first" style="text-align: right;color:#000000;">(<span id="todayTime"></span>[1])穗金鹏民字第[2]号</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">刑 事 辩 护 委 托</strong></p>
@@ -46,7 +46,7 @@
          <div class="height"></div>
         <div class="height"></div>
         <div class="height"></div>
-<div class="WordSection1" style="layout-grid: 15.6pt;">
+<div class="WordSection1" style="layout-grid: 15.6pt;width:90%;margin:auto;">
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><strong style="mso-bidi-font-weight: normal;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">甲方（聘请方）：<span class="row-span" id="Aname" style="mso-spacerun: yes;"></span> </span></strong></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">法定代表人： </span><span class="row-span" id="Aleader1"></span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">地址： </span><span class="row-span" id="Aaddress"></span></p>
@@ -664,6 +664,9 @@ export default {
         
     },
     methods:{
+          pdfDom(){
+            this.$print(this.$refs.div) // 使用
+        },
         getData(){
    this.dataWordArr= JSON.parse(this.dataWord)
         this.laywerName = '广州金鹏律师事务所' 

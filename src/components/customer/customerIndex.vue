@@ -119,7 +119,7 @@
 
                   <li class="showTab-li" v-show="cur==1">
               <div class="selectMenu flex">
-                  <el-table :data="tableData1" border style="width: 100%"  @row-click="lineCilck">
+                  <el-table :data="tableData1" border style="width: 100%">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true" sortable> </el-table-column>
                      <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>

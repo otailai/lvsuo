@@ -22,6 +22,7 @@ import caseWord from './components/case/caseWord'
 import caseUpdate from './components/case/caseUpdate'
 
 import caseSearch from './components/search/caseSearch'
+import caseSearch1 from './components/search/caseSearch1'
 import caseAllList from './components/case/caseChild/caseAllList'
 import caseBranch from  './components/case/caseChild/caseBranch'
 import casePart from  './components/case/caseChild/casePart'
@@ -42,15 +43,17 @@ import causesCase from './components/setting/setBase/causesCase'
 import jobCase from './components/setting/setBase/jobCase'
 
 import web404 from './components/web404'
+import weixin from './components/weixin'
 export default[
     {path:'/',component:login,name:'login'},
     {path:'/login',component:login,name:'login'},
+    {path:'/weixin',component:weixin,name:'weixin'},
+    {path:'/web404',component:web404,name:'web404'},
     {path:'/index',component:index,name:'index',//redirect: '/index/caseIndex/caseAllList',
     meta:{requireAuth:true,keepAlive:true},
     children:[
-        
-{path:'/index/web404',component:web404,name:'web404'},
-{path:'/index/caseIndex',redirect: '/index/caseIndex/caseAllList',component:caseIndex,name:'caseIndex',children:[{path:'/index/caseIndex/caseAllList',meta:{requireAuth:true, keepAlive:true},component:caseAllList,name:'caseAllList'},
+{path:'/index/caseIndex',redirect: '/index/caseIndex/caseAllList',component:caseIndex,name:'caseIndex',meta:{requireAuth:true},children:[
+{path:'/index/caseIndex/caseAllList',meta:{requireAuth:true, keepAlive:true},component:caseAllList,name:'caseAllList'},
 {path:'/index/caseIndex/caseBranch',component:caseBranch,name:'caseBranch',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/caseIndex/casePart',component:casePart,name:'casePart',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/caseIndex/caseMine',component:caseMine,name:'caseMine',meta:{requireAuth:true,keepAlive:true}},
@@ -62,8 +65,10 @@ export default[
 {path:'/index/customerIndex',component:customerIndex,name:'customerIndex',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/customerEdit/:id',component:customerEdit,name:'customerEdit',meta:{requireAuth:true}},
 {path:'/index/search',component:caseSearch,name:'caseSearch',meta:{requireAuth:true,keepAlive:true}},
+{path:'/index/search1/:partyname/:Id/:Staff_Name/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
 {path:'/index/documentIndex',component:documentIndex,name:'documentIndex',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',redirect: '/index/auditingIndex/caseAuditing', children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:true},component:caseAuditing,name:'caseAuditing'},
+{path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',redirect: '/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:false}, 
+children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:true},component:caseAuditing,name:'caseAuditing'},
         {path:'/index/auditingIndex/auditingRisk',component:auditingRisk,name:'auditingRisk',meta:{requireAuth:true,keepAlive:true}},
         {path:'/index/auditingIndex/auditingRiskBrand',component:auditingRiskBrand,name:'auditingRiskBrand',meta:{requireAuth:true,keepAlive:true}},
         {path:'/index/auditingIndex/financialAuditing',component:financialAuditing,name:'financialAuditing',meta:{requireAuth:true,keepAlive:true}},
@@ -88,7 +93,7 @@ export default[
 
     ]},
     {path:'/topMenu',component:topMenu,name:'topMenu',meta:{requireAuth:true}},
-    {path:'*',redirect: '/index/web404', meta:{requireAuth:true},component:web404,name:'web404'},
+    {path:'*',redirect: '/web404', meta:{requireAuth:true},component:web404,name:'web404'},
    
 ]
     

@@ -2,7 +2,7 @@
     <div>
      <button @click="getPdf()">pdf</button>
       <button @click="getDoc()">doc</button>
-       <button v-print="'#pdfDom'">打印</button>
+       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
         <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">刑  事  辩  护  委   托</strong></p>
@@ -658,6 +658,9 @@ export default {
         this.getData()
     },
     methods:{
+          pdfDom(){
+            this.$print(this.$refs.div) // 使用
+        },
           getDoc(){
                 console.log('***************')
                  $('#pdfDom').wordExport('生成文档')

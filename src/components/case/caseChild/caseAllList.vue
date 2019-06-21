@@ -49,7 +49,7 @@
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
@@ -255,7 +255,7 @@ export default {
     // 打开添加
         toAdd:function(){
          this.common.checkAuth({params:{url:'AddCases8',userid:localStorage.getItem('userId')}}).then((res)=>{
-            if(res.data ==false){
+            if(res.data == false){
              this.$message({
                 message:'没有权限',
                 type:'warning'
@@ -292,10 +292,7 @@ export default {
       },
       //编辑操作
         updateData:function(id,type_id){
-       
                      this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-                 
-          
         //  this.common.checkAuth({params:{url:'Index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
         //       this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
         //  })

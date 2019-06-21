@@ -243,6 +243,7 @@ export default {
     // 打开添加
         toAdd(){
              this.common.checkAuth({params:{url:'AddCases11',userid:localStorage.getItem('userId')}}).then((res)=>{
+               console.log(res)
             if(res.data ==false){
              this.$message({
                 message:'没有权限',

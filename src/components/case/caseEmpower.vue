@@ -46,7 +46,7 @@ export default {
       searchContent1(){
         this.getTableDataShouQuan()
       },
-            getTableDataShouQuan(){
+    getTableDataShouQuan(){
         //localStorage.getItem('userId')
         this.$http.get('/yongxu/Index/Authorized_Case',{params:{User_Id:3,Name:this.SearchInput1,Display_Page_Number:1,PageNumber:1}}).then((res)=>{
             console.log(res)

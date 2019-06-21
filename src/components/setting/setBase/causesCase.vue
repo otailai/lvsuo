@@ -201,7 +201,7 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Cause_Action',{params:{Id:id,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-             //console.log(res)
+             console.log(res)
               if(res.data == 1 ){
               this.$message({
                       type: 'warning',

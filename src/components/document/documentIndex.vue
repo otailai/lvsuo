@@ -269,26 +269,8 @@ import { constants } from 'fs';
                       return false
                   }
                  else{
-        this.common.checkAuth({params:{
-          userid:localStorage.getItem('userId'),
-          url:'Document/Add_Document'
-        }}).then((res)=>{
-            if(res.data == true){
+  
               this.dialogFormVisible = true
-            }else{
-                this.$message({
-                message:'没有权限',
-                type:'warning'
-                }); 
-                return false
-            }
-        }).catch((err)=>{
-          this.$message({
-                message:'服务器异常',
-                type:'warning'
-                }); 
-                return false
-        })
                  }
          })
        

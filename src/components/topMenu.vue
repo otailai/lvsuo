@@ -10,12 +10,12 @@
             </div>
         </el-col>
   
-        <el-col :span="8">
+        <el-col :span="18">
             <div class="userInfo">
                 <el-row type="flex" class="row-bg" justify="end">
                     <div class="username flex" @click="goTOMine()">
                      
-                             <img src="../assets/img/renwu1.jpg" alt="" class="username-hello" v-if="pic == '' || pic == undefined">
+                             <img src="../assets/img/lol.jpg" alt="" class="username-hello" v-if="pic == '' || pic == undefined">
                              <img :src="'http://java.gzbigbang.cn'+pic" alt="" class="username-hello" v-if="pic != undefined">
 
                       
@@ -143,7 +143,7 @@ export default {
             this.$http.get('/yongxu/Login/Exit_Landing',{params:{
             sessionId:localStorage.getItem('sessionId')
             }}).then((res)=>{
-           // console.log(res)
+           console.log(res)
             if(res.data == true){
                 localStorage.removeItem('userId')
                 localStorage.removeItem('sessionId')
@@ -158,10 +158,12 @@ export default {
                 })
                 }
             }).catch((err)=>{
-                 this.$message({
-                    message:'服务器异常',
-                    type:"warning"
-                })
+                localStorage.removeItem('userId')
+                localStorage.removeItem('sessionId')
+                localStorage.removeItem('Rule_Id')
+                localStorage.removeItem('Expiration_Date')
+                localStorage.removeItem('Username')
+                 this.$router.push('/')
             })
         },
             loginOut1:function(){
@@ -359,8 +361,9 @@ export default {
                        menuArr.push('caseEdit')
                        menuArr.push('caseUpdate')
                        menuArr.push('customerEdit')
+                        menuArr.push('search1')
                       if(menuArr.indexOf(path) == -1){
-                           this.$router.push('/index/web404')
+                           this.$router.push('/web404')
                       }
             //      }
             //  })

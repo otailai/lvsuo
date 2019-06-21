@@ -19,7 +19,8 @@ const store = new Vuex.Store({
         },
         search:{
           searchInput:'',
-        }
+        },
+        openid:'',
       },
       mutations: {
         changeChild(state,num){
@@ -55,6 +56,10 @@ const store = new Vuex.Store({
         reset4(state){
           state.search.searchInput = null
         },
+        getOpenid(state,num){
+          state.openid=null;
+          state.openid = num
+        },
         SCORKETID (state, obj) {
           state.scorketId = obj
         },
@@ -68,7 +73,15 @@ const store = new Vuex.Store({
         },
         RESET_ID ({commit}) {
           commit('SCORKETID')
+        },
+        addOpenid({commit},obj){
+          commit('getOpenid', obj)
         }
+      },
+       getters:{
+        getOpenid (state) {
+          return state.getOpenid
+          }
       }
 })
 

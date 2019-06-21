@@ -26,6 +26,7 @@
                     
                 </div>    
                  <button class="dingzhi" @click="clear()">清空</button>
+                 <img src="../../assets/img/shuaxin.png" alt="" @click="updateData()" class="shuaxin_btn">
               </div>
           <div class="flex case-child" ></div>
             <div class="showTab">
@@ -57,29 +58,30 @@
     <el-table-column prop="Charge_Amount" label="已收金额" width="" :show-overflow-tooltip="true"> </el-table-column>
                              <el-table-column  label="状态" width=""> 
                                     <template slot-scope="scope"> 
-                                    <span v-if="scope.row.type == '0'" style="color:red;">
-                                        {{scope.row.Status}}
+                                    <span v-if="scope.row.type == '0'" style="color:red;" @click.stop="jiansuo(scope.row.Party_Name,scope.row.Id,scope.row.Staff_Name,scope.row.type)">
+                                        <!-- {{scope.row.Status}} -->
+                                        利益检索
                                   </span>
                                   <span v-if="scope.row.type == '1'">{{scope.row.Status}}</span>
                                   <span v-if="scope.row.type == '2'">{{scope.row.Status}}</span>
                                   <span v-if="scope.row.type == '3'">{{scope.row.Status}}</span>
                                   <span v-if="scope.row.type == '4'">{{scope.row.Status}}</span>
-                                  <span v-if="scope.row.type == '-2'" style="color:blue;cursor:pointer">{{scope.row.Status}}</span>
+                                  <span v-if="scope.row.type == '-2'">{{scope.row.Status}}</span>
                                   <span v-if="scope.row.type == '-1'">{{scope.row.Status}}</span>
                                   </template>
                              </el-table-column>
-                        <el-table-column  label="操作"> 
+                        <!-- <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                              <span  @click.stop="noPassCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
-                            <span @click.stop="passCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
+                              <span @click.stop="noPassCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
+                              <span @click.stop="passCase(scope.row.Id,scope.row.type)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
                           </template>
-                        </el-table-column>
+                        </el-table-column> -->
                         <el-table-column  label="财务操作" width=""> 
                             <template  slot-scope="scope">
                             <span class="btn-div">
                             <!-- <button @click="open2(scope.row.Id)" style="cursor:pointer" class="btn-caozuo">预览</button> -->
                             
-                            <button @click="openDialog(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer" class="btn-caozuo">收款</button>
+                            <button @click.stop="openDialog(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer" class="btn-caozuo">收款</button>
 
                             </span>
                           </template>
@@ -244,6 +246,12 @@ export default {
     },
     inject:["reload"],
     methods:{
+      updateData:function(){
+        this.getCaseArr()
+      },
+          jiansuo:function(partyname,Id,Staff_Name,type){
+            this.$router.push({path:`/index/search1/${partyname}/${Id}/${Staff_Name}/${type}`})
+          },
           openDialog:function(id,Charging_Method){
           if(Charging_Method  == 9){
           this.dialogFormVisible = true
@@ -285,7 +293,7 @@ export default {
                   this.dialogFormVisible8 = false
                   this.dialogFormVisible10 = false
                   this.getCaseArr()
-                  this.AuditLog(id,'财务审核',1)
+                  this.AuditLog(id,5,1)
               }  else{ 
                   this.$message({
                       message:'收款失败',
@@ -336,7 +344,7 @@ export default {
           Status:statusValue,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-           // console.log(res)
+           console.log(res)
 
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
@@ -500,7 +508,7 @@ export default {
                     type:'success'
                 });
                 
-                this.AuditLog(id,'案件审核',2)
+                this.AuditLog(id,1,2)
                    this.getCaseArr()
 
                 return false
@@ -514,8 +522,6 @@ export default {
         });
                  }
               })
-       
-          
       },
       look:function(id){
         this.$http.get('/yongxu/Toexamine/Sel_Url',{params:{
@@ -587,7 +593,7 @@ export default {
                             message:'操作成功，此案件审核通过',
                             type:'success'
                         });
-                        this.AuditLog(id,'案件审核',1)
+                        this.AuditLog(id,1,1)
                         this.getCaseArr()
                         return false
                       }
@@ -680,6 +686,9 @@ export default {
 }
 .selectMenu{
     margin-top: 20px;
+}
+.shuaxin_btn{
+  cursor: pointer;
 }
 </style>
 

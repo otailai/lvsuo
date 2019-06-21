@@ -22,7 +22,7 @@
               <li class="showTab-li">
         
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                   
+                    <el-table-column prop="Staff_No" label="编号" width=""></el-table-column>
                     <el-table-column prop="Staff_Name" label="姓名" width=""></el-table-column>
                     <el-table-column prop="Position_Name" label="职务" width=""> </el-table-column>
                      <el-table-column prop="Org_Name" label="部门" width=""> </el-table-column>
@@ -85,7 +85,7 @@
                       
                       
                         <el-form-item label="手机" :label-width="formLabelWidth">
-                          <el-input v-model="form.tel" autocomplete="off" class="el-select1"></el-input>
+                          <el-input v-model="form.tel" autocomplete="off" class="el-select1" maxlength="11" show-word-limit type="text"></el-input>
                         </el-form-item>
                         
                         <el-form-item label="微信" :label-width="formLabelWidth">
@@ -163,7 +163,7 @@
                       
                       
                         <el-form-item label="手机" :label-width="formLabelWidth">
-                          <el-input v-model="form.update_tel" autocomplete="off" class="el-select1"></el-input>
+                          <el-input v-model="form.update_tel" autocomplete="off" class="el-select1" maxlength="11" show-word-limit type="text"></el-input>
                         </el-form-item>
                         
                         <el-form-item label="微信" :label-width="formLabelWidth">
@@ -342,7 +342,7 @@ import { fail } from 'assert';
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-         // console.log(res)
+         console.log(res)
           this.tableData = res.data.Show_Organization
           this.total = res.data.PageCount
         })
@@ -441,6 +441,13 @@ import { fail } from 'assert';
         if(this.form.name == ''||this.form.name==null){
             this.$message({
               message:'成员名称不可为空',
+              type:'warning'
+            })
+            return false
+        }
+          if(this.form.name.length>16){
+            this.$message({
+              message:'成员名称格式不正确',
               type:'warning'
             })
             return false
@@ -566,6 +573,13 @@ import { fail } from 'assert';
         if(this.form.update_name == ''||this.form.update_name==null){
             this.$message({
               message:'成员名称不可为空',
+              type:'warning'
+            })
+            return false
+        }
+          if(this.form.update_name.length>16){
+            this.$message({
+              message:'成员名称格式不正确',
               type:'warning'
             })
             return false

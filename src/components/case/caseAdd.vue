@@ -20,7 +20,7 @@
                   <el-select v-model="customValue" placeholder="请选择" @change="changeCustomType()"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
                         </div>
                       <el-popover placement="bottom"  trigger="click" v-model="visible">
-                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search" @change="changeId()"/></div>
+                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="请输入" v-model="search" @change="changeId()" maxlength="11"/></div>
                             <div>
                                 <table style="width:100%;">
                                     <thead>
@@ -38,8 +38,8 @@
                            </div>
                         </el-popover>
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div> -->
-                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
-                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo"/></div>
+                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo" maxlength="18"/></div>
+                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="请输入" v-model="cardNo" maxlength="18"/></div>
                     <div class="flex"><p class="title">省/市地区</p> 
                     <!-- <input type="text" class="common-input" placeholder="请输入" v-model="province"/> -->
                     <el-cascader
@@ -61,7 +61,7 @@
                         <input type="text" class="common-input" placeholder="请输入"  v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
-                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="tel"/></div>
+                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="请输入" v-model="tel"  maxlength="11"/></div>
                     <div class="flex"><p class="title">是否常年客户</p>
                   <el-select v-model="isValue" placeholder="请选择"><el-option v-for="item in isValueArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
@@ -693,7 +693,7 @@ export default {
             this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:'',visible:false,nameJobName1:'',Id:''})  
         },
         closeBox(){
-           this.$router.push('/index/caseIndex')
+           this.$router.go(-1)
         },
         lookContract(data){
               this.checkData()
@@ -862,39 +862,6 @@ export default {
 
         },
         addAll(){
-        //      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-        //          console.log(res)
-        //          if(res.data == 1){
-        //              this.$message({
-        //                  message:'账号异地登陆 强制退出',
-        //                  type:'warning'
-        //              })
-        //               localStorage.removeItem('userId')
-        //               localStorage.removeItem('sessionId')
-        //               localStorage.removeItem('Rule_Id')
-        //               localStorage.removeItem('Expiration_Date')
-        //               localStorage.removeItem('Username')
-        //               this.$router.push('/')
-        //              return false
-        //          }
-        //          if(res.data == 3){
-        //              this.$message({
-        //                  message:'登录已过期',
-        //                  type:'warning'
-        //              })
-        //               localStorage.removeItem('userId')
-        //               localStorage.removeItem('sessionId')
-        //               localStorage.removeItem('Rule_Id')
-        //               localStorage.removeItem('Expiration_Date')
-        //               localStorage.removeItem('Username')
-        //               this.$router.push('/')
-        //               return false
-        //           }
-        //   else{
-        //      if(res.data != 2){
-        //                   done();
-        //                 return false
-        //         }
             this.checkData()
             // console.log(this.checkData())
             if(this.checkData() == false){
@@ -1551,6 +1518,7 @@ export default {
         },
         /**改变客户类型 */
         changeCustomType(){
+            
                 this.customId = 0
                 this.userNameE=''
                   this.province=''
@@ -1777,7 +1745,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '../../assets/sass/caseAdd.scss';
 @import '../../assets/sass/main.css';
 .td-width{
@@ -1890,6 +1858,7 @@ export default {
 .el-autocomplete-suggestion{
     min-width: 300px;
 }
+
 .el-autocomplete-suggestion li{
     display: flex;
     flex-direction: row;
@@ -1908,7 +1877,7 @@ export default {
   li {
     line-height: normal;
     padding: 7px;
-        display: flex;
+    display: flex;
       flex-direction: row;
       justify-content: space-between;
     .name {

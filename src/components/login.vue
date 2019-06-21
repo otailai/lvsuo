@@ -35,11 +35,15 @@
                   <div class="login-right-form flex" v-show="cur===1">
                         <div class="title"></div>
                             <div class="pic flex">
-                                <img src="../assets/img/erweima.png" alt="">
+                            <wxlogin appid="wxc9722e78824af65f" id='img_box' scope="snsapi_login"  :redirect_uri="url"></wxlogin>
+                            <div class="img_box" id="img_box">
+                                <img src="../assets/img/yx.png" alt="">
+                            </div>
+                            
                                 <span>微信扫一扫</span> 
                             </div>
                         <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登陆</p></div>
-                 </div>     
+                 </div>      
              </div>
            
     </div>
@@ -48,9 +52,13 @@
 <script>
 import qs from 'qs';
 import { fail } from 'assert';
+import wxlogin from 'vue-wxlogin';
+import MsgBus from './vueEvent';
+import { setInterval } from 'timers';
 export default {
     data(){
         return{
+                url:encodeURIComponent('http://dist.gzbigbang.cn'),
                 checked: false,
                 checkedState:false,
                 cur:0,
@@ -60,12 +68,13 @@ export default {
                 dataTest:'',
                 path:'',
                 result:'',
+                openid1:'',
         }
         
     },
     created(){
        var _self = this
- 
+       
         document.onkeydown = function(e) {
           var key = window.event.keyCode
     
@@ -88,12 +97,16 @@ export default {
              this.denglu()
         }, 
         changeLogin:function(){
-            if( this.cur==1){
+            if(this.cur==1){
                     this.cur=0;
 
             }else{
-                    this.cur=1;
-
+                this.cur=1; 
+                setInterval(function(){
+                     MsgBus.$on('msg',(e)=>{
+                         console.log(e)
+                     });
+                },1000)
             }
         },
           checknumber:function(String) { 
@@ -110,7 +123,14 @@ export default {
             } 
             return false; 
             } ,
+        weixindenglu(){
+            this.$http.get('/yongxu/Login/Wechat_Login',{params:{openid:this.$store.state.openid}}).then((res)=>{
+                console.log(res)
+            })
+        },
         denglu:function(){
+            this.checckIsHas()
+            console.log(this.$store.state.openid)
             if(this.username==""||this.username==null){
                 this.$message({
                     message:'用户名不能为空',
@@ -145,6 +165,7 @@ export default {
         //console.log(data)
         //decrypt
        this.$http.post('/yongxu/Login/Judging_Landing',data).then((res)=>{
+                
                 var str = res.data; 
                // console.log(res)
                 // return false
@@ -205,6 +226,19 @@ export default {
                      return false
                  }
                 if(res.data == 4){
+                    if(localStorage.getItem('userId')){
+                          this.$http.get('/yongxu/Login/Exit_Landing',{params:{
+                                sessionId:localStorage.getItem('sessionId')
+                            }}).then((res)=>{
+                                    if(res.data == true){
+                                        localStorage.removeItem('userId')
+                                        localStorage.removeItem('sessionId')
+                                        localStorage.removeItem('Rule_Id')
+                                        localStorage.removeItem('Expiration_Date')
+                                        localStorage.removeItem('Username')
+                                        }
+                    })
+                    }
                     this.$http.post('/yongxu/Login/Rsa_Land',data).then((res)=>{
                         //console.log(res)
                     localStorage.setItem('userId',res.data.User_Id)
@@ -224,6 +258,7 @@ export default {
                         //console.log(res)
                         var path = res.data[0].Item_Path
                         this.$router.push('./index/'+path) 
+                       
                     })
                     })
                    
@@ -277,20 +312,42 @@ export default {
                         type:'warning'
                         })
                     })
+            },
+            checckIsHas(){
+                  if(localStorage.getItem('userId')){
+                            this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
+                        //console.log(res)
+                        var path = res.data[0].Item_Path
+                        this.$router.push('./index/'+path) 
+                        })
+                         return false
+                    }else{
+
+                    }
             }
           
           
     },
     mounted(){
-     
+      this.checckIsHas()
       this.getPublicKey()
-        this.getUserPas()
+      this.getUserPas()
     },
     watch:{
+        
+      getOpenid:function(n){
+           console.log('1111111111111111111')
+           console.log(n)
+           // this.weixindenglu()
+        },
+    },
+    computed:{
 
     },
     components:{
-  
+
+        wxlogin
+ 
     }
 }
 </script>

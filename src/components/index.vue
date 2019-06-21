@@ -93,6 +93,16 @@ export default {
     },
     components:{
         topMenu
+    },
+    computed:{
+        userId(){
+            return localStorage.getItem('userId')
+        }
+    },
+    watch:{
+      userId(newData){
+          console.log('1111111')
+      }
     }
  
 }

@@ -8,17 +8,16 @@
                  
             </div>
                  
-            <!-- <div class="flex case-child2" v-show="child==0">
-          
+            <div class="flex case-child2" style="margin-top:30px;" v-show="pageShow==1">
                     <div class="input-search flex">
                       <i class="el-icon-search"></i>
-                      <input placeholder="请输入关键词搜索"  v-model="input23" class="case-input"/>
+                      <input placeholder="请输入关键词搜索"   class="case-input" v-model="SearchInput"/>
                     </div>
-          
-             
-            </div> -->
 
-            <div class="flex case-child3" style="margin-top:30px;">
+                    <div type="text" class="btn_search_a" @click="getSeachList1()">搜索数据库</div>
+            </div>
+
+            <div class="flex case-child3" style="margin-top:30px;" v-show="pageShow==2">
                   <div class="search-div flex">
                     <div class="input-search flex">
                       <i class="el-icon-search ii"></i>
@@ -83,12 +82,32 @@ import store from '../../vuex/store'
         currentPage:1,
         total:0,       
         searchList:[],
+        pageShow:1,
 
       };
     },
     methods: {
       getSeachList(){
         // this.SearchInput = this.$store.state.search.searchInput
+        this.$http.get('/yongxu/Retrieval/Show_Retrieval',{params:{
+           Display_Page_Number:this.pageNum,
+           PageNumber:this.currentPage,
+           parameter:this.SearchInput
+        }}).then((res)=>{
+            this.searchList = res.data.Retrieval
+            this.total = res.data.PageCount
+        })
+      },
+      getSeachList1(){
+        console.log('123')
+        if(this.SearchInput == ""||this.SearchInput==null ){
+          this.$message({
+            message:"输入为空",
+            type:"warning"
+          })
+            return false
+        }
+        this.pageShow = 2
         this.$http.get('/yongxu/Retrieval/Show_Retrieval',{params:{
            Display_Page_Number:this.pageNum,
            PageNumber:this.currentPage,
@@ -126,28 +145,50 @@ import store from '../../vuex/store'
         })  
       },
       searchData(){
-      
-        this.getSeachList();
+        if(this.SearchInput == ""||this.SearchInput==null ){
+          return false
+        }else{
+          this.getSeachList();
+        }
+       
       }
     },
-    mounted(){
-      
-      this.getSeachList()
-      
+    mounted(){ 
+      //this.getSeachList()
     },
     components:{
    
     },
-    // watch:{
-    //   SearchInput:function(newData,old){
-    //     console.log(newData)
-    //     this.$store.commit('changeSearchChild',newData)
-    //   }
-    // }
+    watch:{
+     
+      SearchInput:function(newData,old){
+         this.currentPage = 1
+          if(newData == "" || newData==null){
+            // console.log('2222222')
+              this.searchList = []
+              this.total = 0
+          }else{
+             this.getSeachList()
+          }
+      }
+    }
   };
 </script>
-<style>
+<style scoped>
 @import '../../assets/sass/main.css';
+.btn_search_a{
+  width: 250px;
+  height: 40px;
+  border-radius: 25px;
+  border: 1px solid #7E2C2E;
+  margin-top: 50px;
+  background: #7E2C2E;
+  color: #ffffff;
+  font-size: 18px;
+  text-align: center;
+  line-height: 40px;
+  cursor: pointer;
+}
 </style>
 
 

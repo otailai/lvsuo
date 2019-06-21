@@ -2,7 +2,7 @@
     <div>
      <button @click="getPdf()">pdf</button>
       <button @click="getDoc()">doc</button>
-       <button v-print="'#pdfDom'">打印</button>
+       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
 <p class=MsoNormal align=center style='text-align:center'><b><span
 style='font-size:22.0pt;mso-bidi-font-size:12.0pt;font-family:宋体'>广州金鹏律师事务所<span
@@ -165,6 +165,9 @@ export default {
         this.getData()
     },
     methods:{
+          pdfDom(){
+            this.$print(this.$refs.div) // 使用
+        },
           getDoc(){
                 console.log('***************')
                  $('#pdfDom').wordExport('生成文档')

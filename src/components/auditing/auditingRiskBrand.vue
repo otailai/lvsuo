@@ -20,13 +20,14 @@
                </el-select>
                </div>        -->
 
-                 <div class="input flex" style="margin-left: 270px;">
+                 <div class="input flex" style="margin-left: 200px;">
                       <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
                           
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
                  <button class="dingzhi" @click="clear()">清空</button>
+                   <img src="../../assets/img/shuaxin.png" alt="" @click="updateData()" class="shuaxin_btn" style="cursor: pointer;">
 
               </div>
             <div class="flex case-child" ></div>
@@ -151,6 +152,9 @@ export default {
     },
     inject:["reload"],
     methods:{
+         updateData(){
+        this.getRiskBrandArr()
+      },
          getRiskBrandArr:function(){
         this.$http.get('/yongxu/Toexamine/Show_Two_Risk',{params:{
           Display_Page_Number:this.pageNum,
@@ -361,7 +365,7 @@ export default {
                   message: '操作成功!'
                 });
                 this.getRiskBrandArr()
-                   this.AuditLog(id,'二级风控审核',2)
+                   this.AuditLog(id,3,2)
              }else{
                 this.$message({
                   type: 'warning',
@@ -428,7 +432,7 @@ export default {
             message: '操作成功!'
           });
             this.getRiskBrandArr()
-            this.AuditLog(id,'二级风控审核',1)
+            this.AuditLog(id,3,1)
               }else{
                  this.$message({
             type: 'warning',

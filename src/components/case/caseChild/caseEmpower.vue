@@ -228,11 +228,12 @@ export default {
          var userId = localStorage.getItem('userId')
          this.$http.get('/yongxu/Index/Authorized_Case',{params:{
         //    sessionId:localStorage.getItem('sessionId'),
-           User_Id:3,
+           User_Id:localStorage.getItem('userId'),
            Name:this.SearchInput,
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
          }}).then((res)=>{
+        //   console.log(res)
            this.tableData = res.data.Get_Authorized
            this.total = res.data.PageCount
             
