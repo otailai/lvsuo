@@ -38,13 +38,30 @@
 <div class="topMenu-nav">
     <ul class="flex">
             <router-link :to="'/index/'+v.Item_Path" class="flex"  tag="li"  v-for="(v,i) in arr"  @click="changeLi(i)"  :key="i">
-            <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
+            <!-- <div v-if="v.Item_Name == '审核'">
+                 <el-badge value="new" class="item" >
+                            <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
+                            <p>{{v.Item_Name}}</p>
+                </el-badge>
+            </div>
+            <div v-else>
+                 <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
             <p>{{v.Item_Name}}</p>
+            </div> -->
+               <div>
+                    <div :class="'nav-icon iconfont '+' '+v.Icon "></div>
+                            <p>{{v.Item_Name}}</p>
+               </div>
+           
             </router-link>
          
-            <li class="flex" v-popover:popover2>
-                     <div class='nav-icon iconfont icon-icon_set_up'></div>
+        
+            <li class="flex" v-popover:popover2 v-show="arr1Show==false">
+              
+                <div class='nav-icon iconfont icon-icon_set_up'></div>
                      <p>设置</p>
+              
+                    
            </li>
                 <el-popover ref="popover2" placement="bottom-end" trigger="click">
                     <div>
@@ -127,7 +144,7 @@ export default {
             oldPwd:'',
             checKNewPwd:'',
             dialogFormVisible:false,
-
+            arr1Show:false,
         }
     },
     methods:{
@@ -143,7 +160,7 @@ export default {
             this.$http.get('/yongxu/Login/Exit_Landing',{params:{
             sessionId:localStorage.getItem('sessionId')
             }}).then((res)=>{
-           console.log(res)
+           //console.log(res)
             if(res.data == true){
                 localStorage.removeItem('userId')
                 localStorage.removeItem('sessionId')
@@ -190,8 +207,11 @@ export default {
         },
         getSetTopMenu:function(){
               this.$http.get('/yongxu/Base/User_Two_Menu',{params:{Menu_Id:7,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                //  console.log(res)
-                this.arr1 = res.data
+                  if(res.data.length ===0){
+                     this.arr1Show = true
+                  }
+                    this.arr1 = res.data
+                   
             })
         },
          goTONew:function(menu){
@@ -231,7 +251,7 @@ export default {
         },
         changePwd:function(){
               this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+               //  console.log(res)
                 if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -325,7 +345,7 @@ export default {
     },
     watch: {
          $route(to,from){  
-            // console.log(to.path)
+             console.log(to.path)
             //  this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
             //    //  console.log(res)
             //      if(res.data == 1){
@@ -361,29 +381,17 @@ export default {
                        menuArr.push('caseEdit')
                        menuArr.push('caseUpdate')
                        menuArr.push('customerEdit')
-                        menuArr.push('search1')
+                       menuArr.push('search1')
                       if(menuArr.indexOf(path) == -1){
-                           this.$router.push('/web404')
+                        //    this.$router.push('/web404')
                       }
             //      }
             //  })
            
         },
          watch:{
-    '$store.store.state.scorketId': {
-        handler: function(newer, older) {
-            console.log(newer)
-          //解释一下为什么这里我放了判断，因为我的需求使然，我存在vuex中的是userID，一个用户只有一个id，但可能会提交多条数据，watch只在数据发生变动的时候才执行操作，所以上面我每次都将store里面的数据置空操作。
-          if (newer == null) {
-            return
-          } 
-          else {
-            console.log(newer);
-          }
-        },
-            deep: true // 开启深度监听
-      }
-    }
+ 
+         }
     }   
 }
 </script>

@@ -50,9 +50,9 @@ export default[
     {path:'/weixin',component:weixin,name:'weixin'},
     {path:'/web404',component:web404,name:'web404'},
     {path:'/index',component:index,name:'index',//redirect: '/index/caseIndex/caseAllList',
-    meta:{requireAuth:true,keepAlive:true},
+    meta:{requireAuth:true,keepAlive:false},
     children:[
-{path:'/index/caseIndex',redirect: '/index/caseIndex/caseAllList',component:caseIndex,name:'caseIndex',meta:{requireAuth:true},children:[
+{path:'/index/caseIndex',component:caseIndex,name:'caseIndex',meta:{requireAuth:true,keepAlive:false},children:[
 {path:'/index/caseIndex/caseAllList',meta:{requireAuth:true, keepAlive:true},component:caseAllList,name:'caseAllList'},
 {path:'/index/caseIndex/caseBranch',component:caseBranch,name:'caseBranch',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/caseIndex/casePart',component:casePart,name:'casePart',meta:{requireAuth:true,keepAlive:true}},
@@ -67,7 +67,7 @@ export default[
 {path:'/index/search',component:caseSearch,name:'caseSearch',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/search1/:partyname/:Id/:Staff_Name/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
 {path:'/index/documentIndex',component:documentIndex,name:'documentIndex',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',redirect: '/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:false}, 
+{path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',meta:{requireAuth:true,keepAlive:false}, 
 children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:true},component:caseAuditing,name:'caseAuditing'},
         {path:'/index/auditingIndex/auditingRisk',component:auditingRisk,name:'auditingRisk',meta:{requireAuth:true,keepAlive:true}},
         {path:'/index/auditingIndex/auditingRiskBrand',component:auditingRiskBrand,name:'auditingRiskBrand',meta:{requireAuth:true,keepAlive:true}},
@@ -80,7 +80,7 @@ children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepA
 {path:'/index/setContract',component:setContract,name:'setContract'},
 {path:'/index/setPower',component:setPower,name:'setPower'},
 {path:'/index/setLog',component:setLog,name:'setLog',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/setBase',component:setBase,name:'setBase',redirect:'/index/setBase/setBaseCaseType',children:[{path:'/index/setBase/setBaseCaseType',meta:{requireAuth:true},component:setBaseCaseType,name:'setBaseCaseType'}, 
+{path:'/index/setBase',component:setBase,name:'setBase',meta:{requireAuth:true,keepAlive:true},children:[{path:'/index/setBase/setBaseCaseType',meta:{requireAuth:true},component:setBaseCaseType,name:'setBaseCaseType'}, 
                 {path:'/index/setBase/customeCaseType',component:customeCaseType,name:'customeCaseType'},
                 {path:'/index/setBase/industryCaseType',component:industryCaseType,name:'industryCaseType'},
                 {path:'/index/setBase/causesCase',component:causesCase,name:'causesCase'},

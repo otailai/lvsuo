@@ -58,6 +58,9 @@
         text-align: center; 
         justify-content: center;
         cursor: pointer;
+        div{
+          cursor: pointer;
+        }
         &:hover {
           color:#7E2C2E;
           border-bottom: 3px solid #7E2C2E;

@@ -18,7 +18,7 @@
         class="lizi"
       >
       </vue-particles>
-        <div id="login" class="login flex">
+        <div id="login" class="login flex" @click="checkIsLogin()">
             <div class="login-left"></div>
              <div class="login-right flex">
                  <div class="login-right-form flex" v-show="cur===0">
@@ -35,7 +35,7 @@
                   <div class="login-right-form flex" v-show="cur===1">
                         <div class="title"></div>
                             <div class="pic flex">
-                            <wxlogin appid="wxc9722e78824af65f" id='img_box' scope="snsapi_login"  :redirect_uri="url"></wxlogin>
+                            <wxlogin appid="wx0b5e209ee6a56c2f" id='img_box' scope="snsapi_login"  :redirect_uri="url"></wxlogin>
                             <div class="img_box" id="img_box">
                                 <img src="../assets/img/yx.png" alt="">
                             </div>
@@ -54,11 +54,12 @@ import qs from 'qs';
 import { fail } from 'assert';
 import wxlogin from 'vue-wxlogin';
 import MsgBus from './vueEvent';
-import { setInterval } from 'timers';
+import { setInterval, clearTimeout } from 'timers';
+var loginInit  = true
 export default {
     data(){
         return{
-                url:encodeURIComponent('http://dist.gzbigbang.cn'),
+                url:encodeURIComponent('http://b2j276.natappfree.cc/index'),
                 checked: false,
                 checkedState:false,
                 cur:0,
@@ -69,28 +70,31 @@ export default {
                 path:'',
                 result:'',
                 openid1:'',
+                timer: null  ,
+                openId:"",
         }
         
     },
     created(){
        var _self = this
-       
+        _self.GetCodeDemo()
         document.onkeydown = function(e) {
           var key = window.event.keyCode
-    
           if (key === 13) {
             _self.denglu()
           }
         }
     },
      beforeDestroy() {
+      var _self =this
+      loginInit = true
+    clearTimeout(_self.timer)
       document.onkeydown = function(e) {
         var key = window.event.keyCode
-    
         if (key === 13) {
-          
         }
       }
+       
   },
     methods:{
         submitLogin(){
@@ -123,14 +127,53 @@ export default {
             } 
             return false; 
             } ,
-        weixindenglu(){
-            this.$http.get('/yongxu/Login/Wechat_Login',{params:{openid:this.$store.state.openid}}).then((res)=>{
-                console.log(res)
-            })
+        getQueryString(name){
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+          var r = window.location.search.substr(1).match(reg);
+          if (r != null) {
+            return unescape(r[2]);
+          }else {
+            return null;
+          }
         },
+          GetCodeDemo(){
+          var code = this.getQueryString('code')
+          if(code!=null){
+            this.openId=localStorage.setItem('openId',code)
+            this.$router.push({path:'/index'})
+          }
+        //   if(code != null){
+        //     var parameters = {};
+        //     parameters.appid = "wxd26bda82d18b5926";
+        //     parameters.secret = "f48c3c9dcf342904ef41941c0be75071";
+        //     parameters.code = code;
+        //     parameters.grant_type="authorization_code"
+        //     $.ajax({
+        //       type: 'POST',
+        //       data:parameters,
+        //       url:"http://weixin3.szfangle.com/wxapp/mobileApi/submitWxcode.fgl?",
+        //       success: function(res){
+        //         console.log(res)
+
+        //       },error:function(res){
+        //         console.log(res)
+        //       }
+        //     });
+        //   }
+        //}
+      },
         denglu:function(){
-            this.checckIsHas()
-            console.log(this.$store.state.openid)
+            //this.checckIsHas()
+            if(loginInit == false){
+                 this.$message({
+                    message:'操作频繁，请稍等',
+                    type:'warning'
+                });
+              this.timer =  setTimeout(function(){
+                    loginInit = true
+                },3000)
+                return false
+            }
             if(this.username==""||this.username==null){
                 this.$message({
                     message:'用户名不能为空',
@@ -140,7 +183,7 @@ export default {
             }
              if(this.password==""||this.password==null){
                 this.$message({
-                    message:'密码能为空',
+                    message:'密码不能为空',
                     type:'warning'
                 });
                 return false
@@ -152,8 +195,7 @@ export default {
                 });
                 return false
             }
-           
-            
+            loginInit = false
             var encrypt = new JSEncrypt()
             encrypt.setPublicKey(this.pub)
             var str = this.username+'&&'+this.password
@@ -162,13 +204,10 @@ export default {
             var data = qs.stringify({
                 str:encrypted
             });
-        //console.log(data)
+        console.log(data)
         //decrypt
        this.$http.post('/yongxu/Login/Judging_Landing',data).then((res)=>{
-                
                 var str = res.data; 
-               // console.log(res)
-                // return false
                  if(res.data == 1){
                      this.$message({
                          message:'用户名错误',
@@ -197,7 +236,7 @@ export default {
                        type: 'warning'
                      }).then(() => {
                          this.$http.post('/yongxu/Login/Occupancy_Landing',data).then((res)=>{
-                           //  console.log(res)
+                           console.log(res)
                               localStorage.setItem('userId',res.data.User_Id)
                               localStorage.setItem('sessionId',res.data.sessionId)
                               localStorage.setItem('Rule_Id',res.data.Rule_Id)
@@ -212,9 +251,9 @@ export default {
                         }
                         }).then(()=>{
                             this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
-                            //console.log(res)
+
                             var path = res.data[0].Item_Path
-                            this.$router.push('./index/'+path) 
+                            this.$router.push('/index/'+path) 
                         })
                          })
                      }).catch(() => {
@@ -227,6 +266,7 @@ export default {
                  }
                 if(res.data == 4){
                     if(localStorage.getItem('userId')){
+                        //console.log('haseLoscas'+localStorage.getItem('userId'))
                           this.$http.get('/yongxu/Login/Exit_Landing',{params:{
                                 sessionId:localStorage.getItem('sessionId')
                             }}).then((res)=>{
@@ -237,7 +277,7 @@ export default {
                                         localStorage.removeItem('Expiration_Date')
                                         localStorage.removeItem('Username')
                                         }
-                    })
+                        })
                     }
                     this.$http.post('/yongxu/Login/Rsa_Land',data).then((res)=>{
                         //console.log(res)
@@ -257,18 +297,15 @@ export default {
                         this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                         //console.log(res)
                         var path = res.data[0].Item_Path
-                        this.$router.push('./index/'+path) 
-                       
+                        this.$router.push('/index/'+path) 
                     })
-                    })
-                   
-                    
+                    }) 
                 }
               }).catch((err)=>{
-                  this.$message({
-                            message:'服务器出错,请重试',
-                            type:'warning'
-                        }); 
+                //   this.$message({
+                //             message:'服务器出错,请重试',
+                //             type:'warning'
+                //         }); 
                         this.getPublicKey()
               })   
         },
@@ -313,16 +350,19 @@ export default {
                         })
                     })
             },
+            checkIsLogin(){
+                this.checckIsHas()
+            },
             checckIsHas(){
                   if(localStorage.getItem('userId')){
-                            this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
+                       // console.log('hse')
+                        this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                         //console.log(res)
                         var path = res.data[0].Item_Path
-                        this.$router.push('./index/'+path) 
+                        console.log(path)
+                        this.$router.push('/index/'+path) 
                         })
                          return false
-                    }else{
-
                     }
             }
           
@@ -334,25 +374,31 @@ export default {
       this.getUserPas()
     },
     watch:{
+    openId:function(n){
         
+    },
       getOpenid:function(n){
-           console.log('1111111111111111111')
-           console.log(n)
+        //    console.log('1111111111111111111')
+        //    console.log(n)
            // this.weixindenglu()
         },
     },
     computed:{
-
+        
     },
     components:{
-
         wxlogin
- 
     }
 }
 </script>
 <style lang="sass" scoped>
-    @import '../assets/sass/login.scss'
+@import '../assets/sass/login.scss';
 </style>
+<style>
+.impowerBox .qrcode{
+    width: 135px;
+}
+</style>
+
 
 

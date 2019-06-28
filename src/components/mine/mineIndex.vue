@@ -2,7 +2,7 @@
     <div class="mine case">
       <div class="flex save"><span @click="goToEdit()"><i class="el-icon-edit"></i></span></div>
         <div class="mine-top flex">
-            <div class="pic">
+            <div class="pic" style="border: 1px solid #999999;">
                    <img :src="'http://java.gzbigbang.cn'+pic" alt="">
             </div>     
             <div class="mine-top-form flex">
@@ -71,9 +71,9 @@
 export default {
     data(){
         return{
-            textarea:'',
-             dialogImageUrl: '',
-             dialogVisible: false,
+        textarea:'',
+        dialogImageUrl: '',
+        dialogVisible: false,
           value:'',
           contentHtml:'第九届中华全国律师协会理事<br/>广东省律师协会副会长<br/>广州市律师协会名誉会长<br/><br/>广东省西南政法学校友会会长<br/><br/>广东省安徽商会监事长<br/><br/>中华全国律师协会政府法律顾问委员会委员<br/><br/>广东省第十二届人大常委会监督司法咨询专家<br/><br/>广东省检察机关规范司法行为监督员<br/><br/>广东法院诉讼服务窗口监督员<br/><br/>广东省法官检察官遴选委员<br/><br/>广州市第十四届人大常委会立法顾问<br/><br/>政协第十二届广州市委员会法制工作顾问<br/><br/>广东省人民政府法律顾问<br/><br/>广州市政府兼职法律顾问<br/><br/>广州市人民政府法律咨询专家<br/><br/>广州市仲裁委员会仲裁员<br/><br/>华南国际经济贸易仲裁委员会仲裁员<br/><br/>西南政法大学LPC兼职教授<br/><br/>中山大学、华南理工大学、暨南大学兼职硕士研究生导师等',
           userName:'',
@@ -197,6 +197,7 @@ export default {
 .pic img{
     width: 100%;
     height: 100%;
+   
 }
 .mine-div{
  margin-top: 20px;
@@ -225,6 +226,7 @@ export default {
     font-weight: 500;
     min-height: 100px;
 }
+
 </style>
 
 

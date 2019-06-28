@@ -49,8 +49,16 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if(to.meta.requireAuth){
-    if(localStorage.getItem('userId')){
-        next()
+    // console.log(localStorage.getItem('openId'))
+    if(localStorage.getItem('userId')||localStorage.getItem('openId')){
+            if(to.path == '/'){
+              next({
+                path:'/index',
+                query:{redirect:to.fullPath}
+              })
+            }else{
+              next();
+            }
     }else{
       next({
         path:'/login',
@@ -58,15 +66,8 @@ router.beforeEach((to, from, next) => {
       })
     }
   }else{
-    if(to.path == '/'){
-      next({
-        path:'/index',
-        query:{redirect:to.fullPath}
-      })
-    }else{
-      next();
-    }
-   
+    console.log('11111111')
+      next()
   }
 });
 

@@ -44,11 +44,11 @@
                 <button class="dingzhi" @click="downExcel()"><i class="el-icon-download"></i>导出</button>
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button> -->
               </div>
-                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" >
-                    <el-table-column prop="Case_No" label="案件编号" width="100" sortable :show-overflow-tooltip="true"></el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="" > </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width=""> </el-table-column>
-                      <el-table-column  label="案件类别" width="" :show-overflow-tooltip="true">
+                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle">
+                    <el-table-column prop="Case_No" label="案件编号" width="110" sortable :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="180" > </el-table-column>
+                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100"> </el-table-column>
+                      <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
                                 {{scope.row.Value}}
@@ -67,14 +67,14 @@
                             </template>
 
                        </el-table-column>
-                          <el-table-column  label="合同起止日期" width="120">
+                          <!-- <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Creattime" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Creattime | getTime}}</p>
                                     
                                 </template>
                             
-                             </el-table-column>
+                             </el-table-column> -->
                              <!-- <el-table-column  label="立案日期" width="100" sortable>
                                 <template slot-scope="scope" >
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
@@ -92,7 +92,16 @@
 
                             <el-table-column  label="操作">
                             <template slot-scope="scope">
-                                 <p v-if="scope.row.type == -2" @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">返回修改</p>
+                                 <!-- <p v-if="scope.row.type == -2" @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">修改</p> -->
+                                  <div v-if="scope.row.type == -2" style="justify-content: space-between;display: flex;">
+                                <p  @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">
+                                  修改
+                                </p>
+                                 <p  style="cursor:pointer;color:#333333;" @click.stop="deleteCase(scope.row.Id)">
+                                  作废
+                                </p>
+                              </div>
+                                <p v-if="scope.row.type == -1" @click.stop style="color:#999999;"> {{scope.row.Status}}</p>
                                 <!-- <p v-if="scope.row.type == -1" @click.stop> {{scope.row.Status}}</p> -->
                                 <p v-if="scope.row.type == 0" @click.stop> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 1" style="cursor:pointer;color:blue" @click.stop="shangchun(scope.row.Id)">上传合同</p>
@@ -392,6 +401,9 @@ export default {
            //this.Casevalue1 = res.data
         })
       },
+          cellStyle() {
+        return 'border-right: 1px solid #ebeef5'
+     },
       //合同上传
       shangchun(id){
         this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -559,7 +571,7 @@ export default {
               }).catch(() => {
                 this.$message({
                   type: 'info',
-                  message: '已取消删除'
+                  message: '已取消操作'
                 });          
               });
               })
@@ -568,40 +580,29 @@ export default {
             
             },
               //作废合同
-            deleteCase(id){
-                 this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
-                 this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
-                        Case_Id:id,
-                        Status_Id:-1
-                    }}).then((res)=>{
-                        this.$message({
-                          message:'操作成功',
-                          type:'success'
-                          }); 
-                      this.getCaseList()
-                    
-                    })
-          //     if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //    return false
-          // }else{
-          //         this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
-          //               Case_Id:id,
-          //               Status_Id:-1
-          //           }}).then((res)=>{
-          //               this.$message({
-          //                 message:'操作成功',
-          //                 type:'success'
-          //                 }); 
-          //             this.getCaseList()
-                    
-          //           })
-          // }
-         })
-            
+            deleteCase:function(id){
+                this.$confirm('此操作将作废结案, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'info'
+            }).then(() => {
+                        this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
+                            Case_Id:id,
+                            Status_Id:-1
+                        }}).then((res)=>{
+                            this.$message({
+                              message:'操作成功',
+                              type:'success'
+                              }); 
+                          this.getCaseList()
+                        })   
+             }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消作废'
+                });          
+              });
+               
             },
             changeState(){
               this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{

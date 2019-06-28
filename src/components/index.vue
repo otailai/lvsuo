@@ -101,7 +101,7 @@ export default {
     },
     watch:{
       userId(newData){
-          console.log('1111111')
+         // console.log('1111111')
       }
     }
  

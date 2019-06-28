@@ -95,7 +95,7 @@ import auditingCloseCase from './auditingCloseCase'
         //  console.log(res)
           this.arr = res.data
           this.$router.push('/index/auditingIndex/'+this.arr[this.$store.state.audit.child_id].Item_Path)
-          console.log(this.$store.state.audit.child_id)
+         // console.log(this.$store.state.audit.child_id)
           this.getActiveMenu()
         })
       },
@@ -120,14 +120,10 @@ import auditingCloseCase from './auditingCloseCase'
         });
       },
        getActiveMenu:function(){
-        // this.activeName = 'name'+this.child_cur
-        //console.log(this.activeName)
-        //console.log(this.$route.path)
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] = '/index/auditingIndex/'+this.arr[i].Item_Path
         }
-        //console.log(menuArr)
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
         
@@ -156,7 +152,26 @@ import auditingCloseCase from './auditingCloseCase'
       financialAuditing,
       auditingRisk,
       auditingCloseCase
-    }
+    },
+      watch:{
+        $route(to,from){
+          //   var menuArr = []
+          //        for(var i =0 ;i<this.arr.length;i++){
+          //              menuArr[i] ='/index/auditingIndex/'+this.arr[i].Item_Path
+          //          }
+          //  var path1 = to.path.split('/')[3]
+          //   var path = to.path
+          //  if(path1 == this.arr[0].Item_Path){
+          //        this.$router.push('/index/auditingIndex/'+this.arr[0].Item_Path)
+          //         var i =menuArr.indexOf(path)
+          //         this.activeName = 'name'+i
+          //            this.$store.commit('changeAuditChild',0)
+          //             this.child_cur = this.$store.state.audit.child_id
+          //  }
+        }
+      }
+              
+        
   };
 </script>
 <style>

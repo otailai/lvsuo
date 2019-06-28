@@ -15,6 +15,7 @@
                     :on-error="errorFile"
                     :data='nameData'
                      :on-remove="handleRemove"
+                     accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
                     >
                     <img v-if="imageUrl" :src="imageUrl" class="avatar">
                       <img  v-else :src="'http://java.gzbigbang.cn'+pic" class="avatar">
@@ -96,7 +97,7 @@ export default {
             textarea:'',
              dialogImageUrl: '',
              dialogVisible: false,
-               options: [],
+            options: [],
             value:'',
             name:'',
             job:'',
@@ -257,11 +258,24 @@ export default {
             return false
           },
         beforeFile(file){
-            //console.log(file.name)
+            console.log(file.type)
+            const isJPG = file.type === 'image/jpeg';
+            const isGIF = file.type === 'image/gif';
+            const isPNG = file.type === 'image/png';
+            const isBMP = file.type === 'image/bmp';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isJPG && !isGIF && !isPNG && !isBMP) {
+               this.$message.error('上传图片必须是JPG/GIF/PNG/BMP 格式!');
+               return false
+            }
+            if (!isLt2M) {
+            this.$message.error('上传头像图片大小不能超过 2MB!');
+               return false
+             }
              var json = file.name.split(".")
              var file_name =json[0];
             this.fileName = file_name
-            this.nameData.File_Name = this.fileName
+            this.nameData.File_Name = this.fileName 
           },
     //       getMineList(){
     //       this.$http.get('/yongxu/Personal/Display_Information',{params:{
@@ -386,6 +400,14 @@ export default {
     height: 178px;
     display: block;
   }
+  .avatar-uploader{
+      width: 148px;
+    height: 178px;
+}
+.el-upload{
+     width: 148px;
+    height: 178px;
+}
 </style>
 
 

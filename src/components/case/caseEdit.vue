@@ -560,7 +560,15 @@ export default {
            
           },
          beforeFile(file){
-           // console.log(file.name)
+             var type =file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase()
+             console.log(type)
+            if(type == 'bat' || type == 'exe'){
+                this.$message({
+                    message:'文件格式不正确',
+                    type:'warning'
+                    })
+                    return false
+            }
              var json = file.name.split(".")
              var file_name =json[0];
              this.fileName = file_name
@@ -662,6 +670,7 @@ export default {
                 }
                this.$http.post('/yongxu/Document/Update_Document',{
                     Id:this.updateId,
+                    Case_Id:this.Case_Id,
                     User_Id:localStorage.getItem('userId'),
                     File_Name:this.File_Name,
                     fileName:this.fileName1,

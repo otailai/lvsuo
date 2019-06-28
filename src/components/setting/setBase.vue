@@ -58,13 +58,13 @@ import jobCase from './setBase/jobCase'
       getmenu(){
         this.child_cur = this.$store.state.base.child_id
         this.$http.get('/yongxu/Base/Get_Basics',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
-          console.log(res)
+        //  console.log(res)
           this.arr = res.data
-          //console.log('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
           this.$router.push('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
-        }).then(()=>{
            this.getActiveMenu()
         })
+          
+        
       },
         handleClick(tab, event) {
          this.$store.commit('changeBaseChild',tab.index)
@@ -86,9 +86,10 @@ import jobCase from './setBase/jobCase'
      },
     },
     mounted(){
-        this.getmenu()
-       
-       
+        this.getmenu() 
+    },
+    activated() {
+        this.getmenu() 
     },
     components:{
       setBaseCaseType,
@@ -101,7 +102,12 @@ import jobCase from './setBase/jobCase'
       getTime(time){
           return time.substring(0,10)
       }
-　　　　}
+　　},
+  watch:{
+        $route(to,from){
+           
+        }
+      }
   };
 </script>
 <style>

@@ -160,35 +160,49 @@ import caseBranch from './caseChild/caseBranch'
           Menu_Id:1,
           User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
-     //  console.log(res)
           this.arr = res.data
-          //console.log(this.$store.state.case.child_id)
+           var menuArr = []
+          for(var i =0 ;i<this.arr.length;i++){
+            menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
+          }
+           var path = this.$route.path
            this.$router.push('/index/caseIndex/'+this.arr[this.$store.state.case.child_id].Item_Path)
            this.getActiveMenu()
         })
       },
      getActiveMenu(){
-        // this.activeName = 'name'+this.child_cur
         var menuArr = []
         for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
         }
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
-      //  console.log(this.activeName)
      },
       searchData(){
         this.child = 1
-      }
+      },
     },
     mounted(){
       this.getChildMenu()
+         
     },
     activated() {
       this.getChildMenu()
     },
     watch:{
-      
+        $route(to,from){
+          //  var menuArr = []
+          //   for(var i =0 ;i<this.arr.length;i++){
+          //   menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
+          //    }
+          // if(to.path == '/index/caseIndex'){
+          //     this.$router.push(menuArr[0])
+          //      var i =menuArr.indexOf(this.$route.path)
+          //      this.activeName = 'name'+i
+          //      this.$store.commit('changeCaseChild',i)
+          //      this.child_cur = this.$store.state.case.child_id
+          // }
+        }
     },
     components:{
       caseAllList,

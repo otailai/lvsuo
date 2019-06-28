@@ -344,7 +344,7 @@ export default {
           Status:statusValue,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-           console.log(res)
+           //console.log(res)
 
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
@@ -352,7 +352,7 @@ export default {
         })
       },
          sortChange(column){
-        console.log(column.order)
+       // console.log(column.order)
         if(column.order !== null && column.prop === 'Creattime'){
             var data = []
             for(let i = 0;i<this.caseArr.length;i++){
@@ -364,7 +364,7 @@ export default {
                 }
             }
             this.caseArr = data
-            console.log(data)
+            //console.log(data)
         }
         if(column.order === null){
           this.caseArr = this.caseArr
@@ -540,7 +540,7 @@ export default {
       },
       passCase:function(id,type){
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                // console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
