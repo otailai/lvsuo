@@ -93,7 +93,7 @@
                                       :value="item.Id">
                                     </el-option>
                                     </el-select>
-                         <el-select v-model="update_value" placeholder="请选择"  @change="changeOneCaseType(update_value)"  v-else>
+                         <el-select v-model="update_value" placeholder="请选择"  @change="changeOneCaseType1(update_value)"  v-else>
                                     <el-option
                                       v-for="item in oneList"
                                       :key="item.Id"
@@ -114,7 +114,7 @@
                                     </el-option>
                                     </el-select>
 
-                                     <el-select v-model="update_oneValue" placeholder="请选择" v-show="sign ==2">
+                                     <el-select v-model="update_oneValue" placeholder="请选择" v-show="sign ==2" @change="changeTwoCase(update_oneValue)">
                                     <el-option
                                       v-for="item in oneResonArr1"
                                       :key="item.Id"
@@ -176,8 +176,14 @@ export default {
     methods:{
       /**改变一级案件 */
       changeOneCaseType(val){
-        console.log(val)
+      //  console.log(val)
         this.getOneCaseRenson(val)
+      },
+      changeOneCaseType1(val){
+          this.Category_Id = val
+      },
+      changeTwoCase(val){
+        this.Category_Id = val
       },
       /**获取一级案件 */
       getOneSelectList(){
@@ -244,6 +250,7 @@ export default {
   
        /**添加一级案由 */
       addCauseType(){
+        console.log(this.oneValue)
         if(this.name == '' || this.name == null){
              this.$message({
                 message:'案由名称不能为空',
@@ -251,7 +258,7 @@ export default {
                 }); 
                 return false
         }
-         if(this.oneValue == '' || this.oneValue == null){
+         if(this.oneValue === '' || this.oneValue === null){
              this.$message({
                 message:'请选择一级案由',
                 type:'warning'
@@ -342,7 +349,7 @@ export default {
           type: 'warning'
         }).then(() => {
            this.$http.get('/yongxu/Install/Del_Cause',{params:{Id:id,sign:sign}}).then((res)=>{
-             console.log(res)
+           //  console.log(res)
               if(res.data == 4 ){
               this.$message({
                       type: 'warning',
@@ -385,7 +392,7 @@ export default {
       },
       //修改案件类型
         updataCauseType(id,sign){
-          console.log(this.update_name)
+          console.log(this.Category_Id)
         if(this.update_name == '' || this.update_name == null){
              this.$message({
                 message:'案由名称不能为空',
@@ -393,7 +400,7 @@ export default {
                 }); 
                 return false
         }
-        if(this.update_oneValue == '' || this.update_oneValue == null){
+        if(this.update_oneValue === '' || this.update_oneValue === null){
              this.$message({
                 message:'请选择一级案由',
                 type:'warning'
@@ -422,9 +429,9 @@ export default {
            this.Id = id
            this.dialogFormVisible1 = true
            this.$http.get('/yongxu/Install/Upd_Sel_Cause',{params:{Id:id,sign:sign}}).then((res)=>{
-             console.log(res)
+           //  console.log(res)
             if(sign==1){
-                      console.log(1111)
+                  //    console.log(res)
                       this.sign = sign
                       this.getOneSelectList(res.data.Superior_Id)
                       this.getOneCaseRenson(res.data.Superior_Id)

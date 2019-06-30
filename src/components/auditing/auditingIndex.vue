@@ -66,7 +66,7 @@ import auditingCloseCase from './auditingCloseCase'
       };
     },
     methods: {
-      handleClick:function(tab, event) {
+      handleClick:function(tab, event) { 
         this.$router.push('/index/auditingIndex/'+this.arr[tab.index].Item_Path)
          this.$store.commit('changeAuditChild',tab.index)
          this.child_cur = this.$store.state.audit.child_id
@@ -131,12 +131,15 @@ import auditingCloseCase from './auditingCloseCase'
      
       
     },
+
     mounted:function(){
       this.getChildMenu()
-  
     },
      activated() {
         this.getChildMenu()
+    },
+    beforeDestroy(){
+       
     },
     filters:{
           getTime:function(time){

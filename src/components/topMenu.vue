@@ -8,7 +8,7 @@
             <div class="logo">
 
             </div>
-        </el-col>
+        </el-col> 
   
         <el-col :span="18">
             <div class="userInfo">
@@ -16,8 +16,9 @@
                     <div class="username flex" @click="goTOMine()">
                      
                              <img src="../assets/img/lol.jpg" alt="" class="username-hello" v-if="pic == '' || pic == undefined">
-                             <img :src="'http://java.gzbigbang.cn'+pic" alt="" class="username-hello" v-if="pic != undefined">
-
+                             <img :src="'http://192.168.0.104:8080'+pic" alt="" class="username-hello" v-if="pic != undefined">
+                           
+ 
                       
                         <span class="username-name">{{name}}</span>
                     </div>
@@ -345,7 +346,7 @@ export default {
     },
     watch: {
          $route(to,from){  
-             console.log(to.path)
+            //console.log(to.path)
             //  this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
             //    //  console.log(res)
             //      if(res.data == 1){

@@ -1679,22 +1679,22 @@ export default {
                     }
                    
                 }).catch((err)=>{
-                    console.log(err)
+                 //   console.log(err)
                 })
             },
     //上传回调
        successFile(res){
-            console.log(res)
+           // console.log(res) 
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
                     this.Suffix_Name =res.Suffix_Name
                     this.fileName1 = res.fileName
                     this.size = res.size
-                    console.log(this.fileName1)
+                  //  console.log(this.fileName1)
                    this.$message({
                     message:res.message,
-                    type:'success'
+                    type:'success' 
                     });  
                     this.dialogFormVisible1 = false
             } 
@@ -1711,7 +1711,7 @@ export default {
           beforeFile(file){
            // console.log(file.name)
             var type =file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase()
-             console.log(type)
+           //  console.log(type)
             if(type == 'bat' || type == 'exe'){
                 this.$message({
                     message:'文件格式不正确',
@@ -1737,7 +1737,7 @@ export default {
           }
           // console.log(province)
             this.province = province
-            console.log(this.province)
+            //console.log(this.province)
         //   this.selectedOptions = CodeToText[value[0]]+'/'+CodeToText[value[1]]+'/'+CodeToText[value[2]]
             //   this.province = CodeToText[value[0]]+'-'+CodeToText[value[1]]+'-'+CodeToText[value[2]]
           //    console.log(this.province)
