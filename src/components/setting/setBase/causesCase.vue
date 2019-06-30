@@ -28,7 +28,7 @@
                                                 <el-table-column label="操作" width="">
                                                 <template slot-scope="scope">
                                                 <button class="btn-caozuo"  @click="getCauseTypeInfo(scope.row.Id,scope.row.type)">编辑</button>
-                                                <button class="btn-caozuo" @click="deleteCauseType(scope.row.Id,scope.row.sign)">删除</button>
+                                                <button class="btn-caozuo" @click="deleteCauseType(scope.row.Id,scope.row.type)">删除</button>
                                                 </template>
                                                 </el-table-column>    
                                             </el-table>
@@ -105,7 +105,7 @@
                           </div>
                               <div class="flex row margin_t">
                             <p class="flex_title">一级案由类型</p>
-                             <el-select v-model="update_oneValue" placeholder="请选择" v-show="sign ==1">
+                             <el-select v-model="update_oneValue" placeholder="请选择" v-show="sign ==1" disabled>
                                     <el-option
                                       v-for="item in oneResonArr"
                                       :key="item.Id"
@@ -303,7 +303,7 @@ export default {
       },
       //删除案件编号
       deleteCauseType(id,sign){
-            this.$http.get('/yongxu/Install/Del_Cause',{params:{Id:id,sign:sign}}).then((res)=>{
+            this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  console.log(res)
                  if(res.data == 1){
                      this.$message({
@@ -341,9 +341,16 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           this.$http.get('/yongxu/Install/Del_Cause_Action',{params:{Id:id,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+           this.$http.get('/yongxu/Install/Del_Cause',{params:{Id:id,sign:sign}}).then((res)=>{
              console.log(res)
-              if(res.data == 1 ){
+              if(res.data == 4 ){
+              this.$message({
+                      type: 'warning',
+                      message: '案由占用无法删除！'
+                 });
+                  return false
+              }
+               if(res.data == 1 ){
               this.$message({
                       type: 'warning',
                       message: '案由占用无法删除！'
@@ -379,7 +386,6 @@ export default {
       //修改案件类型
         updataCauseType(id,sign){
           console.log(this.update_name)
-          return false
         if(this.update_name == '' || this.update_name == null){
              this.$message({
                 message:'案由名称不能为空',

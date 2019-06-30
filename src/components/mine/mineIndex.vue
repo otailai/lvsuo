@@ -3,7 +3,7 @@
       <div class="flex save"><span @click="goToEdit()"><i class="el-icon-edit"></i></span></div>
         <div class="mine-top flex">
             <div class="pic" style="border: 1px solid #999999;">
-                   <img :src="'http://java.gzbigbang.cn'+pic" alt="">
+                   <img :src="'http://192.168.0.104:8080'+pic" alt="">
             </div>     
             <div class="mine-top-form flex">
                

@@ -324,7 +324,7 @@ import { constants } from 'fs';
           },
             beforeFile(file){
                var type =file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase()
-             console.log(type)
+            // console.log(type)
             if(type == 'bat' || type == 'exe'){
                 this.$message({
                     message:'文件格式不正确',

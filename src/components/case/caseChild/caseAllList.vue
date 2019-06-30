@@ -115,6 +115,7 @@
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
+                    ref='upload'
                     class="upload-demo"
                     drag
                     action="/yongxu/Base/uploadRawFile"
@@ -123,6 +124,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
+                    :on-exceed="overLimit"
                     :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
@@ -494,8 +496,13 @@ export default {
                       this.$router.push('/')
                      return false
                  }else{
-                     this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
+                      this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
                       this.Case_Id = id
+                      this.fileName = ''
+                      this.fileName1=''
+                      this.size=''
+                      this.Suffix_Name=''
+                      this.nameData.File_Name=''
                       this.dialogFormVisible =true
                       })
                  }
@@ -521,6 +528,7 @@ export default {
                 });  
             } 
           },
+          
           errorFile:function(){
               this.$message({
                     message:'上传失败',
@@ -569,7 +577,8 @@ export default {
                         type:'success'
                     });
                     this.dialogFormVisible = false
-                    this.reload()
+                    //this.reload()
+                     this.$refs['upload'].clearFiles();
                     this.changeState(2)
                     }
                     else{
@@ -640,6 +649,9 @@ export default {
               })
                  }
               })
+            },
+            overLimit(files, fileList){
+              console.log(files)
             },
               //作废合同
             deleteCase:function(id){
@@ -741,9 +753,20 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
     },
+     activated() {
+        this.getAllDataList()
+        this.getSelectMenu()
+        this.getCaseList()
+    },
     watch:{
     Casevalue1:function(newV,oldV){
         this.changeTowValue(newV)
+    },
+    dialogFormVisible:function(newData){
+      console.log(newData)
+      if(newData == false){
+          this.$refs['upload'].clearFiles();
+      }
     }
   }
 }

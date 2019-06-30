@@ -155,7 +155,7 @@ export default {
                                         trigger: 'axis'
                                     },
                                     legend: {
-                                        data:['a','b']
+                                        data:this.arr1
                                     },
                                     toolbox: {
                                         show : true,

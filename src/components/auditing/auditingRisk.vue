@@ -87,8 +87,6 @@
                             <span v-show="scope.row.state == 1" @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
                             <span v-show="scope.row.state == 1" @click="open1(scope.row.Id)" style="cursor:pointer"><i class="el-icon-check" style="font-size: 20px;font-weight: 600;"></i></span>
                               <span v-show="scope.row.state != 1">已审核</span>
-                           
-                       
                           </template>
                         </el-table-column>
   </el-table>
@@ -376,7 +374,7 @@ export default {
                 });
                 this.getRiskArr()
                 this.AuditLog(id,2,2)
-                this.reload()
+                // this.reload()
              }else{
                 this.$message({
                   type: 'warning',
@@ -398,7 +396,7 @@ export default {
          // 对话框,审核通过
        open1:function(id) {
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                // console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -447,7 +445,7 @@ export default {
 
                 this.getRiskArr()
                 this.AuditLog(id,2,1)
-                this.reload()
+                // this.reload()
               }else{
                  this.$message({
                   type: 'warning',
@@ -468,7 +466,7 @@ export default {
          //添加日志
       AuditLog:function(id,type,Findings_Audit,){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-         
+         // console.log('写入日志1级')
             if(res.data == true){
                    //console.log(res)
             }else{
@@ -481,11 +479,16 @@ export default {
     //提交备注
     addRemark(id){
       this.$http.get('/yongxu/Toexamine/Add_Risk_Remarks',{params:{Remarks:this.remark,Identification:id}}).then((res)=>{
-        console.log(res)
+        //console.log(res)
       })
     }   
     },
     mounted:function(){
+        this.getRiskArr()
+        this.getSelectMenu()
+        this.expandRowKeys.push(this.riskArr.Id)
+    },
+    activated(){
         this.getRiskArr()
         this.getSelectMenu()
         this.expandRowKeys.push(this.riskArr.Id)

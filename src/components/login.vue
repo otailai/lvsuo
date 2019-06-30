@@ -204,7 +204,7 @@ export default {
             var data = qs.stringify({
                 str:encrypted
             });
-        console.log(data)
+      //  console.log(data)
         //decrypt
        this.$http.post('/yongxu/Login/Judging_Landing',data).then((res)=>{
                 var str = res.data; 
@@ -236,7 +236,7 @@ export default {
                        type: 'warning'
                      }).then(() => {
                          this.$http.post('/yongxu/Login/Occupancy_Landing',data).then((res)=>{
-                           console.log(res)
+                         //  console.log(res)
                               localStorage.setItem('userId',res.data.User_Id)
                               localStorage.setItem('sessionId',res.data.sessionId)
                               localStorage.setItem('Rule_Id',res.data.Rule_Id)
@@ -359,7 +359,7 @@ export default {
                         this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                         //console.log(res)
                         var path = res.data[0].Item_Path
-                        console.log(path)
+                       // console.log(path)
                         this.$router.push('/index/'+path) 
                         })
                          return false

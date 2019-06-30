@@ -168,7 +168,7 @@ export default {
         })
       },
        sortChange(column){
-        console.log(column.order)
+     //   console.log(column.order)
         if(column.order !== null && column.prop === 'Date_Created'){
             var data = []
             for(let i = 0;i<this.riskBrandArr.length;i++){
@@ -180,7 +180,7 @@ export default {
                 }
             }
             this.riskBrandArr = data
-            console.log(data)
+         //   console.log(data)
         }
         if(column.order === null){
           this.riskBrandArr = this.riskBrandArr
@@ -305,7 +305,7 @@ export default {
                     message:'操作成功，此案件审核通过',
                     type:'success'
                 });
-                this.reload()
+                // this.reload()
                 return false
               }
           })
@@ -320,7 +320,7 @@ export default {
       // 对话框,审核不通过
        open:function(id) {
              this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+               //  console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -358,14 +358,16 @@ export default {
           // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
           // inputErrorMessage: '邮箱格式不正确'
         }).then(({ value }) => {
+           this.remark =  value
+         //  console.log(value)
           this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:4}}).then((res)=>{
              if(res.data == true){
                 this.$message({
                   type: 'success',
                   message: '操作成功!'
                 });
+                this.AuditLog(id,3,2)
                 this.getRiskBrandArr()
-                   this.AuditLog(id,3,2)
              }else{
                 this.$message({
                   type: 'warning',
@@ -385,7 +387,7 @@ export default {
          // 对话框,审核通过
        open1:function(id) {
              this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 console.log(res)
+                // console.log(res)
                  if(res.data == 1){
                      this.$message({
                          message:'账号异地登陆 强制退出',
@@ -423,6 +425,7 @@ export default {
           // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
           // inputErrorMessage: '邮箱格式不正确'
         }).then(({ value }) => {
+          console.log(value)
           this.remark =  value
           this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:3}}).then((res)=>{
             //console.log(res)
@@ -454,7 +457,7 @@ export default {
        //添加日志
       AuditLog:function(id,type,Findings_Audit){
         this.$http.get('/yongxu/Toexamine/Add_Audit_Log',{params:{Identification:id,Audit_Type:type,Findings_Audit:Findings_Audit,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-         
+           console.log('写入日志二级')
             if(res.data == true){
                    //console.log(res)
             }else{
@@ -462,18 +465,23 @@ export default {
             }
         }).then((res)=>{
            this.addRemark(id)
+            this.remark=""
         })
       },
        //提交备注
     addRemark(id){
-      console.log(this.remark)
+    //  console.log(this.remark)
       this.$http.get('/yongxu/Toexamine/Two_Risk_Remarks',{params:{Remarks:this.remark,Identification:id}}).then((res)=>{
-        console.log(res)
+//console.log(res)
       })
     }   
     },
     mounted:function(){
         this.getRiskBrandArr()
+        this.getSelectMenu()
+    },
+    activated(){
+         this.getRiskBrandArr()
         this.getSelectMenu()
     },
      filters:{

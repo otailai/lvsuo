@@ -21,7 +21,7 @@
           
               <li class="showTab-li">
         
-                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
+                 <el-table :data="tableData"  style="width: 100%"  @row-click="lineCilck">
                     <el-table-column prop="Staff_No" label="编号" width=""></el-table-column>
                     <el-table-column prop="Staff_Name" label="姓名" width=""></el-table-column>
                     <el-table-column prop="Position_Name" label="职务" width=""> </el-table-column>
@@ -318,7 +318,7 @@ import { fail } from 'assert';
           this.$http.get('/yongxu/Install/Get_Department',{params:{
             Parent_Id:id
           }}).then((res)=>{
-            console.log(res)
+           // console.log(res)
             this.partyArr = res.data
         })
       },
@@ -342,7 +342,7 @@ import { fail } from 'assert';
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-         console.log(res)
+         //console.log(res)
           this.tableData = res.data.Show_Organization
           this.total = res.data.PageCount
         })
@@ -697,7 +697,7 @@ import { fail } from 'assert';
     }
   };
 </script>
-<style>
+<style scoped>
 @import '../../assets/sass/main.css';
 .title-case{
   flex-direction: row;

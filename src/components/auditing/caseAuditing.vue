@@ -615,6 +615,10 @@ export default {
         this.getCaseArr()
         this.getSelectMenu()
     },
+    activated(){
+       this.getCaseArr()
+        this.getSelectMenu()
+    },
      filters:{
           getTime:function(time){
         if(time==''||time==null){

@@ -66,7 +66,6 @@ router.beforeEach((to, from, next) => {
       })
     }
   }else{
-    console.log('11111111')
       next()
   }
 });

@@ -99,7 +99,6 @@ import store from '../../vuex/store'
         })
       },
       getSeachList1(){
-        console.log('123')
         if(this.SearchInput == ""||this.SearchInput==null ){
           this.$message({
             message:"输入为空",
@@ -160,11 +159,10 @@ import store from '../../vuex/store'
    
     },
     watch:{
-     
       SearchInput:function(newData,old){
          this.currentPage = 1
           if(newData == "" || newData==null){
-            // console.log('2222222')
+            console.log('2222222')
               this.searchList = []
               this.total = 0
           }else{

@@ -259,6 +259,7 @@
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
+                    ref='upload'
                     class="upload-demo"
                     drag
                     action="/yongxu/Base/uploadRawFile"
@@ -267,6 +268,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
+                    :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -292,6 +294,7 @@
           </div>
            <div class="dialogFormVisivleFile flex">
                   <el-upload
+                    ref="upload1"
                     class="upload-demo"
                     drag
                     action="/yongxu/Base/uploadRawFile"
@@ -300,7 +303,7 @@
                     :on-progress="progressFile"
                     :before-upload="beforeFile"
                     :on-error="errorFile"
-                     :limit="1"
+                    :limit="1"
                     multiple>
                     <i class="el-icon-upload"></i>
                     <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -466,6 +469,11 @@ export default {
                 })
                 return false
             }else{
+             this.fileName = ''
+             this.fileName1=''
+             this.size=''
+             this.Suffix_Name=''
+             this.nameData.File_Name=''
             this.dialogFormVisible=true
 
             }
@@ -561,7 +569,7 @@ export default {
           },
          beforeFile(file){
              var type =file.name.substring(file.name.lastIndexOf(".")+1).toLowerCase()
-             console.log(type)
+            // console.log(type)
             if(type == 'bat' || type == 'exe'){
                 this.$message({
                     message:'文件格式不正确',
@@ -651,6 +659,11 @@ export default {
             //更新文档
             openNewDoc(Id){
                 this.updateId = Id
+                   this.fileName = ''
+                    this.fileName1=''
+                    this.size=''
+                    this.Suffix_Name=''
+                    this.nameData.File_Name=''
                 this.dialogFormVisibleUpdate = true
             },
             updateDoc(){
@@ -740,6 +753,18 @@ export default {
         'caseWord3':caseWord3,
         'caseWord4':caseWord4,
     },
+    watch:{
+        dialogFormVisible:function(newdata){
+            if(newdata == false){
+                this.$refs['upload'].clearFiles();
+            }
+        },
+        dialogFormVisibleUpdate:function(newdata){
+            if(newdata == false){
+                this.$refs['upload1'].clearFiles();
+            }
+        }
+    }
 }
 </script>
 

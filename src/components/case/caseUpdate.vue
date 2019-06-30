@@ -1029,6 +1029,7 @@ export default {
                 return false
             }
             var arr=[]
+            
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Lawyer_Id)
             }

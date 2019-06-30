@@ -116,8 +116,9 @@
            <div class="dialogFormVisivleFile flex">
                   <el-upload
                     class="upload-demo"
-                    drag
-                    action="/yongxu/Base/uploadRawFile"
+                     drag
+                     ref='upload'
+                     action="/yongxu/Base/uploadRawFile"
                     :data='nameData'
                     :on-success="successFile"
                     :on-progress="progressFile"
@@ -463,6 +464,11 @@ export default {
                  }else{
                      this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
                       this.Case_Id = id
+                       this.fileName = ''
+                      this.fileName1=''
+                      this.size=''
+                      this.Suffix_Name=''
+                      this.nameData.File_Name=''
                       this.dialogFormVisible =true
                       })
                  }
@@ -532,7 +538,7 @@ export default {
                         type:'success'
                     });
                      this.dialogFormVisible = false
-                     this.reload()
+                     //this.reload()
                     this.changeState()
                     }
                     else{
@@ -743,9 +749,20 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
     },
+    activated(){
+       this.getAllDataList()
+        this.getSelectMenu()
+        this.getCaseList()
+    },
     watch:{
     Casevalue1:function(newV,oldV){
         this.changeTowValue(newV)
+    },
+     dialogFormVisible:function(newData){
+      console.log(newData)
+      if(newData == false){
+          this.$refs['upload'].clearFiles();
+      }
     }
   }
 }
