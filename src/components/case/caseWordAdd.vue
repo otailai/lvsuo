@@ -253,15 +253,6 @@ export default {
         }
     },
        props:['dataWord'],
-        methods:{ 
-              pdfDom(){
-            this.$print(this.$refs.div) // 使用
-        },
-            getDoc(){
-                $('#pdfDom').wordExport('生成文档')
-            }
-        
-    },
     created(){
   
     },
@@ -271,6 +262,9 @@ export default {
         
     },
     methods:{
+          getDoc(){
+                $('#pdfDom').wordExport('生成文档')
+            },
         pdfDom(){
             this.$print(this.$refs.div) // 使用
         },

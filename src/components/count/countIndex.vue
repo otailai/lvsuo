@@ -20,8 +20,8 @@
         </div>
 
         <div class="countCase">
-            <div class="flex row">
-                 <p class="countCase_title" style="margin-right:20px;">案件</p>
+            <div class="flex row row_center">
+            <p class="countCase_title" style="margin-right:20px;">案件</p>
             <el-date-picker
                 @change="changeTime"
                 v-model="value2"
@@ -38,13 +38,76 @@
             <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart"></div>
         </div>
 
-          <div class="countCase">
-            <p class="countCase_title">客户</p>
-            <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart1"></div>
+         <div class="countCase">
+            <div class="flex row row_center">
+            <p class="countCase_title" style="margin-right:20px;">案件</p>
+            <el-date-picker
+                @change="changeTime4"
+                v-model="value6"
+                type="monthrange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始月份"
+                end-placeholder="结束月份"
+                :picker-options="pickerOptions4">
+                </el-date-picker>
+            </div>
+           
+            <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart4"></div>
         </div>
 
           <div class="countCase">
-            <p class="countCase_title">客户</p>
+            <div class="flex row row_center">
+            <p class="countCase_title" style="margin-right:20px;">客户</p>
+            <el-date-picker
+                @change="changeTime1"
+                v-model="value3"
+                type="monthrange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始月份"
+                end-placeholder="结束月份"
+                :picker-options="pickerOptions1">
+                </el-date-picker>
+            </div>
+            <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart1"></div>
+        </div>
+
+           <div class="countCase">
+            <div class="flex row row_center">
+            <p class="countCase_title" style="margin-right:20px;">客户</p>
+            <el-date-picker
+                @change="changeTime3"
+                v-model="value5"
+                type="monthrange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始月份"
+                end-placeholder="结束月份"
+                :picker-options="pickerOptions3">
+                </el-date-picker>
+            </div>
+            <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart3"></div>
+        </div>
+
+          <div class="countCase">
+            <div class="flex row row_center">
+            <p class="countCase_title" style="margin-right:20px;">客户</p>
+            <el-date-picker
+                @change="changeTime2"
+                v-model="value4"
+                type="monthrange"
+                align="right"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始月份"
+                end-placeholder="结束月份"
+                :picker-options="pickerOptions2">
+                </el-date-picker>
+            </div>
             <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart2"></div>
         </div>
     </div>
@@ -76,10 +139,36 @@ export default {
             chart: null,
             chart1: null,
             chart2: null,
-            arr:[ {date:"1999-03",value:[500,100,200],name:"类型1"},{date:"1998-03",value:[400,105,200],name:"类型2"},{date:"1997-03",value:[250,150,20],name:"类型3"}],
+             chart3: null,
+              chart4: null,
+            arr:[ 
+                ],
             arr1:[],
             arr2:[],
             arr3:[],
+
+            
+            caseArr:[ 
+                ],
+            caseArr1:[],
+            caseArr2:[],
+            caseArr3:[],
+
+            customerArr:[],
+            customerArr1:[],
+            customerArr2:[],
+            customerArr3:[],
+            
+            jobArr:[],
+            jobArr1:[],
+            jobArr2:[],
+            jobArr3:[],
+
+            bingArr:[],
+            bingArr1:[],
+            bingArr2:[],
+            bingArr3:[],
+
              pickerOptions: {
           shortcuts: [{
             text: '本月',
@@ -101,17 +190,125 @@ export default {
               start.setMonth(start.getMonth() - 6);
               picker.$emit('pick', [start, end]);
             }
-          }]
+          }],
+        },
+        pickerOptions1: {
+          shortcuts: [{
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [new Date(), new Date()]);
+            }
+          }, {
+            text: '今年至今',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(new Date().getFullYear(), 0);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近六个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setMonth(start.getMonth() - 6);
+              picker.$emit('pick', [start, end]);
+            }
+          }],
+        },
+          pickerOptions2: {
+          shortcuts: [{
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [new Date(), new Date()]);
+            }
+          }, {
+            text: '今年至今',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(new Date().getFullYear(), 0);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近六个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setMonth(start.getMonth() - 6);
+              picker.$emit('pick', [start, end]);
+            }
+          }],
+        },
+         pickerOptions3: {
+          shortcuts: [{
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [new Date(), new Date()]);
+            }
+          }, {
+            text: '今年至今',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(new Date().getFullYear(), 0);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近六个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setMonth(start.getMonth() - 6);
+              picker.$emit('pick', [start, end]);
+            }
+          }],
+        },
+         pickerOptions4: {
+          shortcuts: [{
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [new Date(), new Date()]);
+            }
+          }, {
+            text: '今年至今',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(new Date().getFullYear(), 0);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近六个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setMonth(start.getMonth() - 6);
+              picker.$emit('pick', [start, end]);
+            }
+          }],
         },
         value1: '',
-        value2: ''
+        value2: '',
+        value3:'',
+        value4:'',
+        value5:'',
+        value6:'',
+        MinTime:'',
+        MaxTime:'',
+        MinTime1:'',
+        MaxTime1:'',
+        MinTime2:'',
+        MaxTime2:'',
+        MinTime3:'',
+        MaxTime3:'',
+          MinTime4:'',
+        MaxTime4:'',
         }
     },
     mounted(){
-         this.initChart();
-        this.initChart1();
-        this.initChart2();
-          
+       
+        this.getMounthDate();
+        this.getMounthDate1();
+        this.getMounthDate2()
+        this.getMounthDate3()
+         this.getMounthDate4()
     },
      beforeDestroy() {
             // if (!this.chart) {
@@ -134,18 +331,274 @@ export default {
     },
     methods:{
         changeTime(v){
+          
+             if(v == null){
+                this.getMounthDate()
+                return false
+             }
              var start = new Date(v[0]);  
-            console.log(start.getFullYear()+'-'+(start.getMonth()+1))
-
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime = end.getFullYear()+'-'+end1+'-30'
+            
+             this.initChart()
         },
-          initChart() {
+        changeTime1(v){
+             
+             if(v == null){
+                this.getMounthDate1()
+                return false
+             }
+             var start = new Date(v[0]);  
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime1 = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime1 = end.getFullYear()+'-'+end1+'-30'
+             this.initChart1()
+        },
+          changeTime2(v){
+           
+             if(v == null){
+                this.getMounthDate2()
+                return false
+             }
+             var start = new Date(v[0]);  
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime2 = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime2 = end.getFullYear()+'-'+end1+'-30'
+             this.initChart2()
+        },
+           changeTime3(v){
+            
+             if(v == null){
+                this.getMounthDate3()
+                return false
+             }
+             var start = new Date(v[0]);  
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime3 = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime3 = end.getFullYear()+'-'+end1+'-30'
+             this.initChart3()
+        },
+          changeTime4(v){
+            
+             if(v == null){
+                this.getMounthDate4()
+                return false
+             }
+             var start = new Date(v[0]);  
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime4 = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime4 = end.getFullYear()+'-'+end1+'-30'
+             this.initChart4()
+        },
+        //最近六个月
+        getMounthDate(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+                }
+                this.MinTime = arry[5]+'-01'
+                this.MaxTime = arry[0]+'-30';
+                this.value2 = [this.MinTime,this.MaxTime]
+                this.initChart();
+
+				// console.log(arry)
+				// return arry;
+        },
+          //最近六个月
+        getMounthDate1(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+                }
+                this.MinTime1 = arry[5]+'-01'
+                this.MaxTime1 = arry[0]+'-30';
+                this.value3 = [this.MinTime1,this.MaxTime1]
+                this.initChart1();
+				// console.log(arry)
+				// return arry;
+        },
+          //最近六个月
+        getMounthDate2(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+                }
+                this.MinTime2 = arry[5]+'-01'
+                this.MaxTime2 = arry[0]+'-30';
+                this.value4 = [this.MinTime2,this.MaxTime2]
+                this.initChart2();
+				// console.log(arry)
+				// return arry;
+        },
+             //最近六个月
+        getMounthDate3(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+                }
+                this.MinTime3 = arry[5]+'-01'
+                this.MaxTime3 = arry[0]+'-30';
+                this.value5 = [this.MinTime1,this.MaxTime1]
+                this.initChart3();
+				// console.log(arry)
+				// return arry;
+        },
+           //最近六个月
+        getMounthDate4(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+                }
+                this.MinTime4 = arry[5]+'-01'
+                this.MaxTime4 = arry[0]+'-30';
+                this.value6 = [this.MinTime4,this.MaxTime4]
+                this.initChart4();
+				// console.log(arry)
+				// return arry;
+        },
+          initChart(){
               var _self =this
+              this.$http.get('/yongxu/Statistics/weekNumber',{params:{MinTime:this.MinTime,MaxTime:this.MaxTime,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 
+                  this.arr = res.data
                 for(var i = 0;i<this.arr.length;i++){
-                this.arr1[i] = this.arr[i].name 
-                this.arr2[i] =this.arr[i].date
-                this.arr3[i] =this.arr[i].value
-            }
-            this.chart = echarts.init(this.$refs.myEchart);
+                    this.arr1[i] = this.arr[i].name.replace(/\r\n/g,"")
+                    this.arr2 =this.arr[0].date
+                    this.arr3[i] =this.arr[i].data
+                 }
+              }).then(()=>{
+      this.chart = echarts.init(this.$refs.myEchart);
                                         this.chart.setOption({
                                         title : {
                                         text: '案件类型统计',
@@ -155,7 +608,9 @@ export default {
                                         trigger: 'axis'
                                     },
                                     legend: {
-                                        data:this.arr1
+                                        data:this.arr1,
+                                            type: 'scroll',
+                                        bottom: 'bottom', 
                                     },
                                     toolbox: {
                                         show : true,
@@ -183,56 +638,25 @@ export default {
                                             }
                                         }
                                     ],
-                                    series : [
-                                       {
-                                            name:'a',
-                                            data: [820, 932, 901, 934, 1290, 1330, 1320],
-                                            type: 'line'
-                                       },
-                                       {
-                                            name:'b',
-                                            data: [8, 92, 520, 111, 1245, 888, 333],
-                                            type: 'line'
-                                       }
-                                        // {
-                                        //     name:'最高气温',
-                                        //     type:'line',
-                                        //     data:[11, 11, 15, 13, 12, 13, 10],
-                                        //     markPoint : {
-                                        //         data : [
-                                        //             {type : 'max', name: '最大值'},
-                                        //             {type : 'min', name: '最小值'}
-                                        //         ]
-                                        //     },
-                                        //     markLine : {
-                                        //         data : [
-                                        //             {type : 'average', name: '平均值'}
-                                        //         ]
-                                        //     }
-                                        // },
-                                        // {
-                                        //     name:'最低气温',
-                                        //     type:'line',
-                                        //     data:[1, -2, 2, 5, 3, 2, 0],
-                                        //     markPoint : {
-                                        //         data : [
-                                        //             {name : '周最低', value : -2, xAxis: 1, yAxis: -1.5}
-                                        //         ]
-                                        //     },
-                                        //     markLine : {
-                                        //         data : [
-                                        //             {type : 'average', name : '平均值'}
-                                        //         ]
-                                        //     }
-                                        // }
-                                    ]
+                                    series :this.arr   
                                 })
-          
+                             })
         },
 
         initChart1(){
-            this.chart1 = echarts.init(this.$refs.myEchart1);
-            this.chart1.setOption({
+              var _self =this
+              this.$http.get('/yongxu/Statistics/Customer_Number',{params:{MinTime:this.MinTime1,MaxTime:this.MaxTime1,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+               
+                  _self.customerArr = res.data
+                for(var i = 0;i<this.customerArr.length;i++){
+                    _self.customerArr1[i] = _self.customerArr[i].name.replace(/\r\n/g,"") 
+                    _self.customerArr2 =_self.customerArr[0].date
+                    _self.customerArr3[i] =_self.customerArr[i].data
+                 }
+                
+              }).then(()=>{
+            _self.chart1 = echarts.init(_self.$refs.myEchart1);
+            _self.chart1.setOption({
                 title : {
                     text: '新增客户数量',
                     subtext: '数量'
@@ -241,7 +665,8 @@ export default {
                        trigger: 'axis'
                    },
                    legend: {
-                       data:['客户类型一','客户类型二']
+                       data:_self.customerArr1
+                  
                    },
                    toolbox: {
                        show : true,
@@ -257,7 +682,7 @@ export default {
                    xAxis : [
                        {
                            type : 'category',
-                           data : ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                           data : _self.customerArr2
                        }
                    ],
                    yAxis : [
@@ -265,22 +690,82 @@ export default {
                            type : 'value'
                        }
                    ],
-                   series : [
-                                        {
-                                           name:'客户类型一',
-                                           data: [820, 932, 901, 934, 1290, 1330, 1320],
-                                           type: 'line'
-                                       },
-                                       {
-                                            name:'客户类型二',
-                                            data: [8, 92, 520, 111, 1245, 888, 333],
-                                            type: 'line'
-                                       }
-                      ]
+                   series :_self.customerArr
+                  })
                   })
             },
+                initChart3(){
+              var _self =this
+              this.$http.get('/yongxu/Statistics/Industry_Number',{params:{MinTime:this.MinTime3,MaxTime:this.MaxTime3,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 // console.log(res)
+                  var jobArr = res.data
+                for(var i = 0;i<jobArr.length;i++){ 
+                    this.jobArr1[i] = jobArr[i].name.replace(/[\r\n]/g, "")
+                    this.jobArr2 =jobArr[0].date
+                    this.jobArr3[i] =jobArr[i].data
+                    this.jobArr.push({name:jobArr[i].name.replace(/[\r\n]/g,""),date:jobArr[i].date,data:jobArr[i].data,type:jobArr[i].type})
+                 }
+                 console.log(this.jobArr)
+              }).then(()=>{
+      this.chart3 = echarts.init(this.$refs.myEchart3);
+                                        this.chart3.setOption({
+                                        title : {
+                                        text: '客户行业类型统计',
+                                        subtext: '数量',
+                                     
+                                    },
+                                    tooltip : {
+                                        trigger: 'axis'
+                                    },
+                                    legend: {
+                                         
+                                           type: 'scroll',
+                                        bottom: 'bottom', 
+                                        data:this.jobArr1
+                                    },
+                                    toolbox: {
+                                        show : true,
+                                        feature : {
+                                            mark : {show: true},
+                                            dataView : {show: true, readOnly: false},
+                                            magicType : {show: true, type: ['line', 'bar']},
+                                            restore : {show: true},
+                                            saveAsImage : {show: true}
+                                        }
+                                    },
+                                    calculable : true,
+                                    xAxis : [
+                                        {
+                                            type : 'category',
+                                            boundaryGap : false,
+                                            data : _self.jobArr2
+                                        }
+                                    ],
+                                    yAxis : [
+                                        {
+                                            type : 'value',
+                                            axisLabel : {
+                                                formatter: '{value}'
+                                            }
+                                        }
+                                    ],
+                                    series :this.jobArr   
+                                })
+                             })
+        },
+
     initChart2(){
-    this.chart2 = echarts.init(this.$refs.myEchart2);
+      this.$http.get('/yongxu/Statistics/Sel_Industry_Type',{params:{MinTime:this.MinTime2,MaxTime:this.MaxTime2,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+            var _self =this
+                
+                var bingArr = res.data
+                for(var i = 0;i<bingArr.length;i++){
+                    _self.bingArr1[i] = bingArr[i].name.replace(/[\r\n]/g,"")
+                    _self.bingArr3[i] = bingArr[i].value
+                    _self.bingArr.push({name:bingArr[i].name.replace(/[\r\n]/g,""),value:bingArr[i].value})
+                 }
+      }).then(()=>{
+          this.chart2 = echarts.init(this.$refs.myEchart2);
     this.chart2.setOption({
             title : {
         text: '客户行业类型统计',
@@ -294,7 +779,8 @@ export default {
     legend: {
         orient : 'vertical',
         x : 'left',
-        data:['互联网','金融','房地产','餐饮','内容运营']
+        data:this.bingArr1,
+        type: 'scroll',
     },
     toolbox: {
         show : true,
@@ -320,21 +806,79 @@ export default {
     calculable : true,
     series : [
         {
-            name:'访问来源',
+            name:'系统统计',
             type:'pie',
             radius : '55%',
             center: ['50%', '60%'],
-            data:[
-                {value:335, name:'互联网'},
-                {value:310, name:'金融'},
-                {value:234, name:'房地产'},
-                {value:135, name:'餐饮'},
-                {value:1548, name:'内容运营'}
-            ]
+            data:this.bingArr
         }
     ]
-                                            })
-                                       }
+            })
+                                       
+      })
+    },
+     initChart4(){
+      this.$http.get('/yongxu/Statistics/Sel_Cases_Pie',{params:{MinTime:this.MinTime2,MaxTime:this.MaxTime2,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+            var _self =this
+                _self.caseArr = res.data
+                for(var i = 0;i<_self.caseArr.length;i++){
+                    _self.caseArr1[i] = _self.caseArr[i].name.replace(/[\r\n]/g, "")
+                    _self.caseArr2[i] = _self.caseArr[i].value
+                 }  
+      }).then(()=>{
+          this.chart4 = echarts.init(this.$refs.myEchart4);
+    this.chart4.setOption({
+            title : {
+        text: '案件类型统计',
+        subtext: '数量',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient : 'vertical',
+        x : 'left',
+        data:this.caseArr1,
+          type: 'scroll',
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            magicType : {
+                show: true, 
+                type: ['pie', 'funnel'],
+                option: {
+                    funnel: {
+                        x: '25%',
+                        width: '50%',
+                        funnelAlign: 'left',
+                        max: 1548
+                    }
+                }
+            },
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    series : [
+        {
+            name:'系统统计',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:this.caseArr
+        }
+    ]
+            })
+                                       
+      })
+    }
+    
     
     
     
@@ -403,7 +947,10 @@ export default {
 .echartDiv{
     margin: 0 auto;
 }
-
+.row_center{
+    /* justify-content: center; */
+    align-items: center;
+}
 </style>
 
 

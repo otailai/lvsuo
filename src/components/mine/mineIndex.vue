@@ -3,7 +3,7 @@
       <div class="flex save"><span @click="goToEdit()"><i class="el-icon-edit"></i></span></div>
         <div class="mine-top flex">
             <div class="pic" style="border: 1px solid #999999;">
-                   <img :src="'http://192.168.0.104:8080'+pic" alt="">
+                   <img :src="api+pic" alt="">
             </div>     
             <div class="mine-top-form flex">
                
@@ -89,10 +89,14 @@ export default {
           honor:'',
           grade:'',
           Id:'',
-          pic:''
+          pic:'',
+          api:'',
+          touxiang:'',
 
        }
      
+    },
+    created(){
     },
     methods:{
          handleRemove(file, fileList) {
@@ -140,6 +144,7 @@ export default {
     },
   
     mounted(){
+          this.api = this.$api
         this.getMineList()
         
     }

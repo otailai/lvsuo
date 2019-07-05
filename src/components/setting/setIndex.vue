@@ -6,7 +6,6 @@
                 <p><i class="el-icon-arrow-right"></i></p>
                 <p>组织架构</p>
             </div>
-
             <div>
               <div class="flex title-case"></div>
             <div class="flex case-child" >  
@@ -15,8 +14,16 @@
                       <el-button type="danger" round @click="newMmber()"><i class="el-icon-plus"></i>添加成员</el-button>
                 </div>
             </div>
-            
             <div class="showTab">
+              <div class="flex zuzhiBox">
+                 <div class="input flex" style="margin-left:75px;">
+                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
+                          
+                      <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
+                 </div>
+                      <button class="dingzhi" style="margin-top:5px;" @click="clear()">清空</button>
+              </div>
+            
             <ul class="showTab-ul">
           
               <li class="showTab-li">
@@ -194,12 +201,13 @@
            </div>
           </div>
              <el-dialog
-              width="20%"
+              width="31%"
               top="25%"
               :visible.sync="innerVisible"
               append-to-body>
               <div class="img-div">
-                <img src="../../assets/img/erweima.png" alt="">
+                <!-- <img src="../../assets/img/erweima.png" alt=""> -->
+                   <wxlogin appid="wx0b5e209ee6a56c2f" id='img_box' scope="snsapi_login"  :redirect_uri="url"></wxlogin>
               </div>
             </el-dialog>
         </el-dialog>
@@ -241,10 +249,13 @@
 </template>
 <script>
 import store from '../../vuex/store'
+import wxlogin from 'vue-wxlogin';
 import { fail } from 'assert';
   export default {
     data() {
       return {
+        url:'http://192.168.0.110:8081/index/setIndex', 
+        SearchInput:'',
         innerVisible:false,
         activeName: 'name0',
         currentPage: 1,
@@ -339,10 +350,10 @@ import { fail } from 'assert';
      },
       getList(){
         this.$http.get('/yongxu/Install/Show_Organization',{params:{
+          sarg:this.SearchInput,
           Display_Page_Number:this.pageNum,
           PageNumber:this.currentPage
         }}).then((res)=>{
-         //console.log(res)
           this.tableData = res.data.Show_Organization
           this.total = res.data.PageCount
         })
@@ -674,6 +685,14 @@ import { fail } from 'assert';
  
       searchData(){
         this.child = 1
+      },
+      searchContent(){
+        this.getList()
+      },
+      clear(){
+        this.SearchInput = ''
+        this.getList()
+        
       }
     },
     mounted(){
@@ -681,8 +700,8 @@ import { fail } from 'assert';
       this.getBranchList()
       this.getSelectList()
     },
-    components:{
-      
+   components:{
+        wxlogin
     },
     filters:{
        getTime:function(time){
@@ -760,6 +779,59 @@ import { fail } from 'assert';
 }
 .el-select2{
   width: 500px;
+}
+.zuzhiBox{
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.input{
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 250px;
+    margin-right: 20px;
+    border-radius: 45px;
+    border: 1px solid #DDDDDD;
+    
+}
+.case-input{
+      width:  200px;
+    height: 36px;
+    /* border: 1px solid #DDDDDD; */
+    border-top-left-radius: 45px;
+    border-bottom-left-radius: 45px;
+   
+    padding-left: 21px;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    color: #4a4a4a;
+    background-color: transparent;
+}
+.case-button{
+    outline: none;
+    width: 48px;
+    height: 28px;
+    border: none;
+    border-radius: 36px 36px 36px 36px;
+    background-color: #fefeff;
+    margin-right: 4px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+ .input:hover{
+    border: 1px solid #7E2C2E;
+}
+.case-button:hover{
+    background: #7E2C2E;
+    color: #ffffff;
+}
+.case-child-end{
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.selectMenu{
+    margin-top: 20px;
 }
 </style>
 

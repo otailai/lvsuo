@@ -21,6 +21,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css' 
+import returnCitySN from 'returnCitySN' // 新浪 获取设备IP
 // import Print from 'vue-print-nb'
 // Vue.use(Print); //注册
 import Print from '@/plugs/print'
@@ -33,13 +34,16 @@ Vue.prototype.$toExcel = toExcel
 Vue.use(VueParticles)  
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$http = axios
+
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.config.productionTip = false
 
-
-
-
+if(returnCitySN["cip"]=="113.108.197.50" || returnCitySN["cip"]=="113.119.110.96"){
+  Vue.prototype.$api = 'http://192.168.2.201:8081'
+}else{
+  Vue.prototype.$api = 'http://cms.kingpound.com:8081' 
+}
 const router = new VueRouter({
   mode: 'history',
   routes,

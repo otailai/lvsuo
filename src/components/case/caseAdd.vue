@@ -1235,7 +1235,17 @@ export default {
                 });
                 return false
             }
-            
+           var nary1=arrJob1.sort();
+            for(var i=0;i<arrJob1.length;i++){
+                if (nary1[i]==nary1[i+1]){  
+           
+                    this.$message({
+                    message:'最多一位主办律师',
+                    type:'warning'
+                });
+                 return false
+                }
+            }
             //服务内容
               if(this.Service_Content==""||this.Service_Content==null){
                 this.$message({

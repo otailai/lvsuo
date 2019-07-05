@@ -18,7 +18,7 @@
                      accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.JPG,.JPEG,.PBG,.GIF,.BMP,.PDF"
                     >
                     <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                      <img  v-else :src="'http://192.168.0.104:8080'+pic" class="avatar">
+                      <img  v-else :src="api+pic" class="avatar">
                     <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
                     </el-upload>
                   
@@ -129,10 +129,14 @@ export default {
                 theme:'snow'
             },
             pic:'',
-            imageUrl: ''
+            imageUrl: '',
+            api:'',
+            touxiang:'',
         }    
     },
      inject:['reload'],
+     created(){
+     },
     methods:{
         handleRemove(file, fileList) {
             //console.log(file, fileList);
@@ -314,6 +318,7 @@ export default {
       }
     },
     mounted(){
+        this.api = this.$api
         this.getMineList()
         this.getJobList()
         

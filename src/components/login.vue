@@ -59,7 +59,8 @@ var loginInit  = true
 export default {
     data(){
         return{
-                url:encodeURIComponent('http://b2j276.natappfree.cc/index'),
+                // url:encodeURIComponent('http://cms.kingpound.com:8082'),
+                url:'http://192.168.0.110:8081', 
                 checked: false,
                 checkedState:false,
                 cur:0,
@@ -76,7 +77,9 @@ export default {
         
     },
     created(){
+    
        var _self = this
+
         _self.GetCodeDemo()
         document.onkeydown = function(e) {
           var key = window.event.keyCode
@@ -139,8 +142,9 @@ export default {
           GetCodeDemo(){
           var code = this.getQueryString('code')
           if(code!=null){
-            this.openId=localStorage.setItem('openId',code)
-            this.$router.push({path:'/index'})
+            console.log(code)
+            // this.openId=localStorage.setItem('openId',code)
+            // this.$router.push({path:'/index'})
           }
         //   if(code != null){
         //     var parameters = {};

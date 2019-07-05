@@ -152,7 +152,7 @@
                            <p class="input-icon"></p>
                     </div>
                 
-                <div class="flex"> 
+                <div class="flex" style="height:50px"> 
                    <el-popover placement="bottom-start" width="200" trigger="click" v-model="inputArr[0].visible">
                         <input type="text" slot="reference" class="common-input lawyer-input" placeholder="*必填" v-model="inputArr[0].laywerName"  readonly="readonly">                      
                            <el-autocomplete
@@ -174,7 +174,7 @@
                     </div>
 
 
-                      <div class="flex" v-for="(v,i) in userInfo" :key="i">
+                      <div class="flex" v-for="(v,i) in userInfo" :key="i" style="height:50px">
                         <el-popover placement="bottom-start" width="200" trigger="click" v-model="inputArr[i+1].visible" >
                         <input type="text" slot="reference" class="common-input lawyer-input" placeholder="*必填" v-model="inputArr[i+1].laywerName"  readonly="readonly">
                            <el-autocomplete
@@ -855,9 +855,9 @@ export default {
             }
             }
         addJson = JSON.stringify(addJson)
-        //console.log(addJson)
+        console.log(addJson)
         //console.log(JSON.stringify(addJson))
-        //return false
+      //  return false
         this.$http.post('/yongxu/Index/Upd_Cases',{
                 map:addJson
             }).then((res)=>{
@@ -1079,7 +1079,17 @@ export default {
                 });
                 return false
             }
-            
+              var nary1=arrJob1.sort();
+            for(var i=0;i<arrJob1.length;i++){
+                if (nary1[i]==nary1[i+1]){  
+           
+                    this.$message({
+                    message:'最多一位主办律师',
+                    type:'warning'
+                });
+                 return false
+                }
+            }
                 //服务内容
               if(this.Service_Content==""||this.Service_Content==null){
                 this.$message({

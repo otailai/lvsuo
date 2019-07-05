@@ -27,11 +27,22 @@ export default {
             this.isRouterAlive=true
         })
     },
+    _isMobile(){
+      let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
+     console.log(flag)
+     var ismobile = flag ? 1 : 0
+     if (ismobile == 1) {
+          window.location.href = 'http://192.168.0.108:8080'
+        }
+        },
   },
   mounted(){
     
     
    
+  },
+  created(){
+    this._isMobile()
   },
   watch:{
 

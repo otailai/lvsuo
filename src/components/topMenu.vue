@@ -16,9 +16,9 @@
                     <div class="username flex" @click="goTOMine()">
                      
                              <img src="../assets/img/lol.jpg" alt="" class="username-hello" v-if="pic == '' || pic == undefined">
-                             <img :src="'http://192.168.0.104:8080'+pic" alt="" class="username-hello" v-if="pic != undefined">
+                             <img :src="api+pic" alt="" class="username-hello" v-if="pic != undefined">
                            
- 
+  
                       
                         <span class="username-name">{{name}}</span>
                     </div>
@@ -121,6 +121,7 @@
 </template>
 <script>
 import { constants } from 'fs';
+import returnCitySN from 'returnCitySN' // 新浪 获取设备IP
 export default {
     data(){
         return{
@@ -138,6 +139,7 @@ export default {
             // {Item_Name:'基础数据',Item_Path:'/index/setBase',Icon:'icon-bumenzhinenggongzuoshenhe'},
             // ],
             arr1:[],
+            api:'',
             cur:0,
             name:'',
             pic:'',
@@ -146,9 +148,13 @@ export default {
             checKNewPwd:'',
             dialogFormVisible:false,
             arr1Show:false,
+            touxiang:'',
         }
     },
+    created(){    
+    },
     methods:{
+      
         changeLi:function(i){
             this.cur=i;
         },
@@ -336,10 +342,11 @@ export default {
                         message:'服务器异常'
                     })
             })
-        }
+        },
        
     },
     mounted(){
+        this.api = this.$api
         this.getTopMenu()
         this.getSetTopMenu()
         this.getUserInfo()
