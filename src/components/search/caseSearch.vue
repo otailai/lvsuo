@@ -2,8 +2,6 @@
     <div id="case" class="case"> 
       <div class="flex">
                 <p>所在位置：</p>
-                <p>案件管理</p>
-                <p><i class="el-icon-arrow-right"></i></p>
                 <p>检索</p>
                  
             </div>

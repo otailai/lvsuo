@@ -40,12 +40,12 @@
                             <input type="text" class="this_input" v-model="name">
                          
                           </div>
-                           <div class="flex row margin_t">
+                           <!-- <div class="flex row margin_t">
                             <p class="flex_title">职务描述</p>
                          
                             <input type="text" class="this_input" v-model="Describe">
                          
-                          </div>
+                          </div> -->
                           
                          </div>
                    
@@ -54,7 +54,7 @@
                           <el-button type="primary" @click="addJobType()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex">添加职务名称</div>
+                     <div class="dialogFormVisivleHeader_left flex">添加职务</div>
                     </div>
                       </el-dialog>
 
@@ -80,7 +80,7 @@
                           <el-button type="primary" @click="updataJobType()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex">修改职务名称</div>
+                     <div class="dialogFormVisivleHeader_left flex">修改职务</div>
                     </div>
                       </el-dialog>
     </div>

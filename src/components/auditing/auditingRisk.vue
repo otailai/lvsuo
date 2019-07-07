@@ -169,7 +169,7 @@ export default {
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
         }}).then((res)=>{
-            //console.log(res) 
+            console.log(res) 
             this.riskArr = res.data.Noe_Risk
             this.total = res.data.PageCount
         })

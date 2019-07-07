@@ -77,7 +77,7 @@
                           <el-button type="primary" @click="addCauseType()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex">添加案由名称</div>
+                     <div class="dialogFormVisivleHeader_left flex">添加案由</div>
                     </div>
                       </el-dialog>
 
@@ -136,7 +136,7 @@
                           <el-button type="primary" @click="updataCauseType()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex">修改案由名称</div>
+                     <div class="dialogFormVisivleHeader_left flex">修改案由</div>
                     </div>
                       </el-dialog>
     </div>

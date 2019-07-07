@@ -122,6 +122,7 @@
 <script>
 import { constants } from 'fs';
 import returnCitySN from 'returnCitySN' // 新浪 获取设备IP
+import md5 from 'js-md5';
 export default {
     data(){
         return{
@@ -309,8 +310,8 @@ export default {
                     return false
             }
             this.$http.get('/yongxu/Personal/Upd_Pwd',{params:{
-                Original_Pwd:this.oldPwd,
-                New_Pwd:this.newPwd,
+                Original_Pwd:md5(this.oldPwd),
+                New_Pwd:md5(this.newPwd),
                 User_Id:localStorage.getItem('userId')
             }}).then((res)=>{
                 console.log(res)

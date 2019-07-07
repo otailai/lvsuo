@@ -42,7 +42,9 @@ Vue.config.productionTip = false
 if(returnCitySN["cip"]=="113.108.197.50" || returnCitySN["cip"]=="113.119.110.96"){
   Vue.prototype.$api = 'http://192.168.2.201:8081'
 }else{
-  Vue.prototype.$api = 'http://cms.kingpound.com:8081' 
+ // Vue.prototype.$api = 'http://113.108.197.50:8081' 
+ Vue.prototype.$api = 'http://java.gzbigbang.cn'
+
 }
 const router = new VueRouter({
   mode: 'history',
@@ -54,7 +56,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if(to.meta.requireAuth){
     // console.log(localStorage.getItem('openId'))
-    if(localStorage.getItem('userId')||localStorage.getItem('openId')){
+    if(localStorage.getItem('userId')){
             if(to.path == '/'){
               next({
                 path:'/index',

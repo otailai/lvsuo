@@ -61,7 +61,7 @@
                       </el-table-column>
                         <el-table-column  label="操作"> 
                           <template  slot-scope="scope">
-                             <button  style="cursor:pointer" class="btn-caozuo" @click="closeCase(scope.row.Id)" v-if="scope.row.Status == 4">结案</button>
+                             <button  style="cursor:pointer" class="btn-caozuo" @click.stop="closeCase(scope.row.Id)" v-if="scope.row.Status == 4">结案</button>
                            <span v-if="scope.row.Status != 4">已结案</span>
 
                           </template>

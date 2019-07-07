@@ -29,20 +29,20 @@
                              <input name="remember" type="checkbox" value="" :checked="checkedState" class="login-box" ref="remember" @change="changeCheck()"/><span>记住密码</span> 
                         </div>
                         <button class="login-btn" @click="denglu()" @keyup.enter="denglu()">登陆</button> 
-                        <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>微信扫码登陆</p></div>
+                        <div class="weixin1 weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>微信扫码登陆</p></div>
                  </div>     
                  
                   <div class="login-right-form flex" v-show="cur===1">
                         <div class="title"></div>
                             <div class="pic flex">
                             <wxlogin appid="wx0b5e209ee6a56c2f" id='img_box' scope="snsapi_login"  :redirect_uri="url"></wxlogin>
-                            <div class="img_box" id="img_box">
-                                <img src="../assets/img/yx.png" alt="">
-                            </div>
+                            <!-- <div class="img_box" id="img_box">
+                                <img src="../assets/img/wx.png" alt="">
+                            </div> -->
                             
-                                <span>微信扫一扫</span> 
+                                  <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登陆</p></div>
                             </div>
-                        <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登陆</p></div>
+                      
                  </div>      
              </div>
            
@@ -55,12 +55,14 @@ import { fail } from 'assert';
 import wxlogin from 'vue-wxlogin';
 import MsgBus from './vueEvent';
 import { setInterval, clearTimeout } from 'timers';
+import md5 from 'js-md5';
 var loginInit  = true
 export default {
     data(){
         return{
                 // url:encodeURIComponent('http://cms.kingpound.com:8082'),
-                url:'http://192.168.0.110:8081', 
+               // url:'http://192.168.0.110:8081/weixin', 
+                url:'http://dist.gzbigbang.cn/weixin',
                 checked: false,
                 checkedState:false,
                 cur:0,
@@ -89,14 +91,14 @@ export default {
         }
     },
      beforeDestroy() {
-      var _self =this
-      loginInit = true
-    clearTimeout(_self.timer)
-      document.onkeydown = function(e) {
-        var key = window.event.keyCode
-        if (key === 13) {
-        }
-      }
+    //   var _self =this
+    //   loginInit = true
+    // clearTimeout(_self.timer)
+    //   document.onkeydown = function(e) {
+    //     var key = window.event.keyCode
+    //     if (key === 13) {
+    //     }
+    //   }
        
   },
     methods:{
@@ -168,16 +170,16 @@ export default {
       },
         denglu:function(){
             //this.checckIsHas()
-            if(loginInit == false){
-                 this.$message({
-                    message:'操作频繁，请稍等',
-                    type:'warning'
-                });
-              this.timer =  setTimeout(function(){
-                    loginInit = true
-                },3000)
-                return false
-            }
+            // if(loginInit == false){
+            //      this.$message({
+            //         message:'操作频繁，请稍等',
+            //         type:'warning'
+            //     });
+            //   this.timer =  setTimeout(function(){
+            //         loginInit = true
+            //     },3000)
+            //     return false
+            // }
             if(this.username==""||this.username==null){
                 this.$message({
                     message:'用户名不能为空',
@@ -199,14 +201,15 @@ export default {
                 });
                 return false
             }
+          
             loginInit = false
-            var encrypt = new JSEncrypt()
-            encrypt.setPublicKey(this.pub)
-            var str = this.username+'&&'+this.password
-            var encrypted = encrypt.encrypt(str);
+            // var encrypt = new JSEncrypt()
+            // encrypt.setPublicKey(this.pub)
+            var str = this.username+'&&'+md5(this.password)
+            // var encrypted = encrypt.encrypt(str);
           // 加密后的密文  
             var data = qs.stringify({
-                str:encrypted
+                str:str
             });
       //  console.log(data)
         //decrypt
@@ -310,7 +313,7 @@ export default {
                 //             message:'服务器出错,请重试',
                 //             type:'warning'
                 //         }); 
-                        this.getPublicKey()
+                        //this.getPublicKey()
               })   
         },
          //设置cookie
@@ -343,17 +346,17 @@ export default {
                     this.checkedState = true
                 }    
             },
-            getPublicKey(){
-                  this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
-                      //  console.log(res)
-                        this.pub = res.data.PublicKey
-                         }).catch((err)=>{
-                        this.$message({
-                        message:'服务器异常',
-                        type:'warning'
-                        })
-                    })
-            },
+            // getPublicKey(){
+            //       this.$http.post('/yongxu/Login/PublicKey').then((res)=>{
+            //           //  console.log(res)
+            //             this.pub = res.data.PublicKey
+            //              }).catch((err)=>{
+            //             this.$message({
+            //             message:'服务器异常',
+            //             type:'warning'
+            //             })
+            //         })
+            // },
             checkIsLogin(){
                 this.checckIsHas()
             },
@@ -373,8 +376,9 @@ export default {
           
     },
     mounted(){
+    
       this.checckIsHas()
-      this.getPublicKey()
+      // this.getPublicKey()
       this.getUserPas()
     },
     watch:{
@@ -400,7 +404,7 @@ export default {
 </style>
 <style>
 .impowerBox .qrcode{
-    width: 135px;
+  width: 240px !important;
 }
 </style>
 

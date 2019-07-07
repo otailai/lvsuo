@@ -61,7 +61,7 @@
             </div>
             </div>
 
-          <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="100px">
+          <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
           <div slot="title" class="dialog-title">
             <p>添加成员</p>
           </div>
@@ -95,9 +95,9 @@
                           <el-input v-model="form.tel" autocomplete="off" class="el-select1" maxlength="11" show-word-limit type="text"></el-input>
                         </el-form-item>
                         
-                        <el-form-item label="微信" :label-width="formLabelWidth">
+                        <!-- <el-form-item label="微信" :label-width="formLabelWidth">
                          <a href="#" style="color:red" @click="innerVisible = true">扫码绑定</a>
-                        </el-form-item>
+                        </el-form-item> -->
 
                           <el-form-item label="状态" :label-width="formLabelWidth">
                         <el-select v-model="form.state" placeholder="请选择状态" class="el-select1">
@@ -133,7 +133,7 @@
             </el-dialog>
         </el-dialog>
 
-         <el-dialog  :visible.sync="dialogFormVisible3" :modal-append-to-body='false' :modal='false' top="100px">
+         <el-dialog  :visible.sync="dialogFormVisible3" :modal-append-to-body='false' :modal='false' top="300px" width="600px">
           <div slot="title" class="dialog-title">
             <p>修改成员</p>
           </div>
@@ -173,9 +173,9 @@
                           <el-input v-model="form.update_tel" autocomplete="off" class="el-select1" maxlength="11" show-word-limit type="text"></el-input>
                         </el-form-item>
                         
-                        <el-form-item label="微信" :label-width="formLabelWidth">
+                        <!-- <el-form-item label="微信" :label-width="formLabelWidth">
                          <a href="#" style="color:red" @click="innerVisible = true">扫码绑定</a>
-                        </el-form-item>
+                        </el-form-item> -->
 
                           <el-form-item label="状态" :label-width="formLabelWidth">
                         <el-select v-model="form.update_state" placeholder="请选择状态" class="el-select1">
@@ -240,7 +240,7 @@
                           <el-button type="primary" @click="addpartyName()">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
-                     <div class="dialogFormVisivleHeader_left flex">添加案件类型</div>
+                     <div class="dialogFormVisivleHeader_left flex">添加部门</div>
                     </div>
                       </el-dialog>
 
@@ -530,6 +530,7 @@ import { fail } from 'assert';
           Rule_Id:this.form.role,
           Orgid:this.form.branch,
           Contact_Information:this.form.tel,
+          Password:'e10adc3949ba59abbe56e057f20f883e',
         }).then((res)=>{
             //console.log(res)
             if(res.data == true){

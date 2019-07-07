@@ -7,7 +7,7 @@
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案例</el-button>
+                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案件</el-button>
                         <!-- <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button> -->
                 </div>
              <div class="selectMenu flex">

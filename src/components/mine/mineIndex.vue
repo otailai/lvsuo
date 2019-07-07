@@ -14,7 +14,16 @@
                     <p class="mine-p">职业证号: </p><span class="mine-span">{{number}}</span>
                </div>
                <div class="mine-div flex">
-                    <p class="mine-p">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务: </p><span class="mine-span">{{job}}</span>
+                    <p class="mine-p">职&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务: </p> 
+                    <el-select v-model="value" placeholder="请选择您的职位" style="width:200px" disabled>
+                    <el-option
+                    
+                    v-for="item in options"
+                    :key="item.Id"
+                    :label="item.Position_Name"
+                    :value="item.Id">
+                    </el-option>
+                    </el-select>
                </div>
                <div class="mine-div flex">
                     <p class="mine-p">联系方式: </p><span class="mine-span">{{tel}}</span>
@@ -92,6 +101,7 @@ export default {
           pic:'',
           api:'',
           touxiang:'',
+          options:[],
 
        }
      
@@ -133,12 +143,7 @@ export default {
       },
         getJobList(){
               this.$http.get('/yongxu/Personal/Position').then((res)=>{
-                 
-                  if(res.data[this.value].Position_Name == undefined || res.data[this.value].Position_Name == ''){
-                      this.job = ''
-                  }else{
-                      this.job =  this.job = res.data[this.value].Position_Name
-                  }
+                 this.options = res.data
               })
         },
     },
