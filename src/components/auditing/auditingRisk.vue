@@ -42,16 +42,18 @@
               <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Audit_Time}}</span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
           </el-form-item>
-          <el-form-item label="备注">
-             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Remarks}}</span>
-              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
-          </el-form-item>
+       
           <el-form-item label="结果">
             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Findings_Audit}}</span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
           </el-form-item>
           <el-form-item label="审核人">
             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Staff_Name}}</span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
+             
+             <el-form-item label="备注">
+             <span v-if="props.row.Obtain_Audit_Notes" v-html="props.row.Obtain_Audit_Notes.Remarks"></span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
           </el-form-item>
         </el-form>
@@ -127,6 +129,27 @@
                 </li>
                 </ul>
             </div>
+  <el-dialog title="此操作将不通过一级风控审核, 是否继续?" :visible.sync="dialogVisible"  :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+  <span>备注信息</span>
+  <div style="margin-top:20px;">
+     <quill-editor v-model="remark" ref="myQuillEditor" :options="editorOption" style="width:550px;"></quill-editor>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addRemarkButton">确 定</el-button>
+  </span>
+</el-dialog>
+
+   <el-dialog title="此操作将通过一级风控审核, 是否继续?" :visible.sync="dialogVisible1"  :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+  <span>备注信息</span>
+  <div style="margin-top:20px;">
+     <quill-editor v-model="remark" ref="myQuillEditor" :options="editorOption" style="width:550px;"></quill-editor>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible1 = false">取 消</el-button>
+    <el-button type="primary" @click="addRemarOk()">确 定</el-button>
+  </span>
+</el-dialog>
     </div>
 </template>
 <script>
@@ -153,6 +176,18 @@ export default {
                 ],
                 remark:'',
                 expandRowKeys:[],
+                dialogVisible:false,
+                dialogVisible1:false,
+                       //富文本
+            editorOption:{
+                modules:{
+                  
+                },
+                placeholder:'选填',
+                theme:'snow'
+            },
+            info:'',
+            caseReMarkId:'',
               
         }
     },
@@ -324,6 +359,25 @@ export default {
         });
          
       },
+      addRemarkButton(){
+        this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:this.caseReMarkId,state:4}}).then((res)=>{
+             if(res.data == true){
+                this.$message({
+                  type: 'success',
+                  message: '操作成功!'
+                });
+                this.getRiskArr()
+                this.AuditLog(this.caseReMarkId,2,2)
+                this.dialogVisible =false
+                // this.reload()
+             }else{
+                this.$message({
+                  type: 'warning',
+                  message: '操作失败!'
+                });
+             }
+          })
+      },
       // 对话框,审核不通过
        open:function(id) {
           this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -359,40 +413,65 @@ export default {
                           done();
                         return false
                 }
-          this.$prompt('此操作将不通过风控审核, 是否继续?', '备注', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          // inputErrorMessage: '邮箱格式不正确'
-        }).then(({ value }) => {
-          this.remark =  value
-          this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:4}}).then((res)=>{
-             if(res.data == true){
-                this.$message({
-                  type: 'success',
-                  message: '操作成功!'
-                });
-                this.getRiskArr()
-                this.AuditLog(id,2,2)
-                // this.reload()
-             }else{
-                this.$message({
-                  type: 'warning',
-                  message: '操作失败!'
-                });
-             }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
-          });          
-        });
+        this.caseReMarkId = id
+        this.remark = ''
+        this.dialogVisible = true
+        return false
+        //   this.$prompt('此操作将不通过风控审核, 是否继续?', '备注', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        //   // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        //   // inputErrorMessage: '邮箱格式不正确'
+        // }).then(({ value }) => {
+        //   this.remark =  value
+        //   this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:4}}).then((res)=>{
+        //      if(res.data == true){
+        //         this.$message({
+        //           type: 'success',
+        //           message: '操作成功!'
+        //         });
+        //         this.getRiskArr()
+        //         this.AuditLog(id,2,2)
+        //         // this.reload()
+        //      }else{
+        //         this.$message({
+        //           type: 'warning',
+        //           message: '操作失败!'
+        //         });
+        //      }
+        //   })
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消操作'
+        //   });          
+        // });
                  }
           })
 
      
       },
+      addRemarOk(){
+            this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:this.caseReMarkId,state:3}}).then((res)=>{
+            //console.log(res)
+              if(res.data == true){
+                 this.$message({
+                type: 'success',
+                message: '操作成功!'
+              });
+                this.getRiskArr()
+                this.AuditLog(this.caseReMarkId,2,1)
+                this.dialogVisible1=false
+                // this.reload()
+              }else{
+                 this.$message({
+                  type: 'warning',
+                  message: '操作失败!'
+                 });
+              }
+            })
+      },
+
          // 对话框,审核通过
        open1:function(id) {
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -428,37 +507,40 @@ export default {
                           done();
                         return false
                 }
-          this.$prompt('此操作将通过风控审核, 是否继续?', '备注', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          // inputErrorMessage: '邮箱格式不正确'
-        }).then(({ value }) => {
-          this.remark =  value
-           this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:3}}).then((res)=>{
-            //console.log(res)
-              if(res.data == true){
-                 this.$message({
-                type: 'success',
-                message: '操作成功!'
-              });
+         this.caseReMarkId = id
+          this.remark = ''
+          this.dialogVisible1 = true
+      // this.$prompt('此操作将通过风控审核, 是否继续?', '备注', {
+      // confirmButtonText: '确定',
+      // cancelButtonText: '取消',
+      //     // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+      //     // inputErrorMessage: '邮箱格式不正确'
+      //   }).then(({ value }) => {
+      //     this.remark =  value
+      //      this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:id,state:3}}).then((res)=>{
+      //       //console.log(res)
+      //         if(res.data == true){
+      //            this.$message({
+      //           type: 'success',
+      //           message: '操作成功!'
+      //         });
 
-                this.getRiskArr()
-                this.AuditLog(id,2,1)
-                // this.reload()
-              }else{
-                 this.$message({
-                  type: 'warning',
-                  message: '操作失败!'
-                 });
-              }
-            })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });       
-        });
+      //           this.getRiskArr()
+      //           this.AuditLog(id,2,1)
+      //           // this.reload()
+      //         }else{
+      //            this.$message({
+      //             type: 'warning',
+      //             message: '操作失败!'
+      //            });
+      //         }
+      //       })
+      //   }).catch(() => {
+      //     this.$message({
+      //       type: 'info',
+      //       message: '取消输入'
+      //     });       
+      //   });
           }
          })
 

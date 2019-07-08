@@ -125,7 +125,7 @@ import store from '../../vuex/store'
       },
      //进入详情
        lineCilck(row, event, column){
-          this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+          //this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
            //this.$router.push({name:'caseEdit',params:{id:row.Id,typeId:row.Charging_Method}})  
       },
       changeLi(i,url){

@@ -25,12 +25,12 @@
                                 <table style="width:100%;">
                                     <thead>
                                         <th >客户名称</th>  
-                                           <th >联系方式</th>  
+                                           <!-- <th >联系方式</th>   -->
                                     </thead> 
                                     <tbody>
                                         <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
                                              <td>{{item.Customer_Name_Zh}}</td> 
-                                              <td>{{item.Contact_Party}}</td> 
+                                              <!-- <td>{{item.Contact_Party}}</td>  -->
                                            
                                         </tr>
                                     </tbody>
@@ -1539,7 +1539,7 @@ export default {
                     this.selectedOptions = [a,b,c]
                  
                   this.address = res.data.Detailed_Address
-                  this.tel=res.data.Contact_Party
+                  //this.tel=res.data.Contact_Party
                   this.suoshuValue = res.data.TradeId
                   this.value2 = res.data.Position
                   this.customValue = res.data.CustomerId

@@ -43,10 +43,6 @@
               <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Audit_Time}}</span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
           </el-form-item>
-          <el-form-item label="备注">
-             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Remarks}}</span>
-              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
-          </el-form-item>
           <el-form-item label="结果">
             <span v-if="props.row.Obtain_Audit_Notes"> {{props.row.Obtain_Audit_Notes.Findings_Audit}}</span>
               <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
@@ -58,6 +54,10 @@
            <el-form-item label="审核类型">
              <span>部门风控(一级风控)</span>
           </el-form-item>
+             <el-form-item label="备注">
+             <span v-if="props.row.Obtain_Audit_Notes" v-html="props.row.Obtain_Audit_Notes.Remarks"></span>
+              <span v-if="!props.row.Obtain_Audit_Notes">暂无</span>
+          </el-form-item>
         </el-form>
 
           <el-form label-position="left" inline class="demo-table-expand" v-if='props.row.Two_Level_Remarks'> 
@@ -65,10 +65,7 @@
               <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Audit_Time}}</span>
               <span v-if="!props.row.Two_Level_Remarks">暂无</span>
           </el-form-item>
-          <el-form-item label="备注">
-             <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Remarks}}</span>
-              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
-          </el-form-item>
+         
           <el-form-item label="结果">
             <span v-if="props.row.Two_Level_Remarks"> {{props.row.Two_Level_Remarks.Findings_Audit}}</span>
               <span v-if="!props.row.Two_Level_Remarks">暂无</span>
@@ -79,6 +76,10 @@
           </el-form-item>
           <el-form-item label="审核类型">
              <span>分所风控(二级风控)</span>
+          </el-form-item>
+           <el-form-item label="备注">
+             <span v-if="props.row.Two_Level_Remarks" v-html="props.row.Two_Level_Remarks.Remarks"></span>
+              <span v-if="!props.row.Two_Level_Remarks">暂无</span>
           </el-form-item>
         </el-form>
       </template>
@@ -122,6 +123,27 @@
                 </li>
                 </ul>
             </div>
+  <el-dialog title="此操作将不通过二级风控审核, 是否继续?" :visible.sync="dialogVisible"  :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+  <span>备注信息</span>
+  <div style="margin-top:20px;">
+     <quill-editor v-model="remark" ref="myQuillEditor" :options="editorOption" style="width:550px;"></quill-editor>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="addRemarkButton">确 定</el-button>
+  </span>
+</el-dialog>
+
+   <el-dialog title="此操作将通过二级风控审核, 是否继续?" :visible.sync="dialogVisible1"  :modal-append-to-body='false' :modal='false' top="300px" width="600px">
+  <span>备注信息</span>
+  <div style="margin-top:20px;">
+     <quill-editor v-model="remark" ref="myQuillEditor" :options="editorOption" style="width:550px;"></quill-editor>
+  </div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible1 = false">取 消</el-button>
+    <el-button type="primary" @click="addRemarkOk()">确 定</el-button>
+  </span>
+</el-dialog>
     </div>
 </template>
 <script>
@@ -148,6 +170,18 @@ export default {
                 {value:0,label:'制订中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'}
                 ],
                 remark:'',
+                     dialogVisible:false,
+                     dialogVisible1:false,
+                       //富文本
+            editorOption:{
+                modules:{
+                  
+                },
+                placeholder:'选填',
+                theme:'snow'
+            },
+            info:'',
+            caseReMarkId:'',
         }
     },
     inject:["reload"],
@@ -317,6 +351,45 @@ export default {
         });
          
       },
+      handleClose(){
+
+      },
+      addRemarkButton(){
+          this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:this.caseReMarkId,state:4}}).then((res)=>{
+             if(res.data == true){
+                this.$message({
+                  type: 'success',
+                  message: '操作成功!'
+                });
+                this.AuditLog(this.caseReMarkId,3,2)
+                this.getRiskBrandArr()
+                this.dialogVisible = false
+             }else{
+                this.$message({
+                  type: 'warning',
+                  message: '操作失败!'
+                });
+             }
+          })
+      },
+      addRemarOk(){
+      this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:this.caseReMarkId,state:3}}).then((res)=>{
+             if(res.data == true){
+                this.$message({
+                  type: 'success',
+                  message: '操作成功!'
+                });
+               this.getRiskBrandArr()
+               this.AuditLog(this.caseReMarkId,3,1)
+               this.dialogVisible1 =false
+             }else{
+                this.$message({
+                  type: 'warning',
+                  message: '操作失败!'
+                });
+             }
+          })
+      },
       // 对话框,审核不通过
        open:function(id) {
              this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -352,37 +425,39 @@ export default {
                           done();
                         return false
                 }
-       this.$prompt('此操作将不通过二级风控审核, 是否继续?', '备注', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          // inputErrorMessage: '邮箱格式不正确'
-        }).then(({ value }) => {
-           this.remark =  value
-         //  console.log(value)
-          this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:4}}).then((res)=>{
-             if(res.data == true){
-                this.$message({
-                  type: 'success',
-                  message: '操作成功!'
-                });
-                this.AuditLog(id,3,2)
-                this.getRiskBrandArr()
-             }else{
-                this.$message({
-                  type: 'warning',
-                  message: '操作失败!'
-                });
-             }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
-          });          
-        });
-          }
-             })
+        this.caseReMarkId = id
+        this.remark = ''
+        this.dialogVisible = true
+        return false
+      //  this.$prompt('此操作将不通过二级风控审核, 是否继续?', '备注', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消',
+      //   }).then(({ value }) => {
+      //      this.remark =  value
+      //    //  console.log(value)
+      //     this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:4}}).then((res)=>{
+      //        if(res.data == true){
+      //           this.$message({
+      //             type: 'success',
+      //             message: '操作成功!'
+      //           });
+      //           this.AuditLog(id,3,2)
+      //           this.getRiskBrandArr()
+      //        }else{
+      //           this.$message({
+      //             type: 'warning',
+      //             message: '操作失败!'
+      //           });
+      //        }
+      //     })
+      //  }).catch(() => {
+      //     this.$message({
+      //       type: 'info',
+      //       message: '已取消操作'
+      //     });          
+      //  });
+         }
+            })
       },
          // 对话框,审核通过
        open1:function(id) {
@@ -419,38 +494,39 @@ export default {
                           done();
                         return false
                 }
-         this.$prompt('此操作将通过二级风控审核, 是否继续?', '备注', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          // inputErrorMessage: '邮箱格式不正确'
-        }).then(({ value }) => {
-          console.log(value)
-          this.remark =  value
-          this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:3}}).then((res)=>{
-            //console.log(res)
-              if(res.data == true){
-                 this.$message({
-            type: 'success',
-            message: '操作成功!'
-          });
-            this.getRiskBrandArr()
-            this.AuditLog(id,3,1)
-              }else{
-                 this.$message({
-            type: 'warning',
-            message: '操作失败!'
-          });
-              }
-            }
-          )
+          this.caseReMarkId = id
+              this.remark = ''
+          this.dialogVisible1 = true
+        //  this.$prompt('此操作将通过二级风控审核, 是否继续?', '备注', {
+        //   confirmButtonText: '确定',
+        //   cancelButtonText: '取消',
+        // }).then(({ value }) => {
+        //   console.log(value)
+        //   this.remark =  value
+        //   this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:id,state:3}}).then((res)=>{
+        //     //console.log(res)
+        //       if(res.data == true){
+        //          this.$message({
+        //     type: 'success',
+        //     message: '操作成功!'
+        //   });
+        //     this.getRiskBrandArr()
+        //     this.AuditLog(id,3,1)
+        //       }else{
+        //          this.$message({
+        //     type: 'warning',
+        //     message: '操作失败!'
+        //   });
+        //       }
+        //     }
+        //   )
         
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消操作'
-          });          
-        });
+        // }).catch(() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消操作'
+        //   });          
+        // });
           }
           })
       },
@@ -492,6 +568,9 @@ export default {
           return time.substring(0,10)
         }
           },
+        showText:function(text){
+          return text.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
+        }
     },
      watch:{
     Casevalue1:function(newV,oldV){

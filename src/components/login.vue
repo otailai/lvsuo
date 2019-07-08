@@ -94,11 +94,11 @@ export default {
     //   var _self =this
     //   loginInit = true
     // clearTimeout(_self.timer)
-    //   document.onkeydown = function(e) {
-    //     var key = window.event.keyCode
-    //     if (key === 13) {
-    //     }
-    //   }
+      document.onkeydown = function(e) {
+        var key = window.event.keyCode
+        if (key === 13) {
+        }
+      }
        
   },
     methods:{
