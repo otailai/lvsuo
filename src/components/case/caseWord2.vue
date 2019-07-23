@@ -4,7 +4,7 @@
       <button @click="getDoc()">doc</button>
       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first" style="text-align: right;color:#000000;">({{todayTime}}[1])穗金鹏民字第[2]号</div>
+        <div class="flex first" style="text-align: right;color:#000000;">{{dataWord.Get_Case_Information.Case_No}}</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">聘 请 常 年 法 律 顾 问</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">合</strong></p>
@@ -76,8 +76,7 @@ lang=EN-US><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></u>律师担任甲方与<u><span lang=EN-US><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></u>事务的专项法律顾问，甲方同意上述律师指派其他律师助理配合完成前述法律事务工作。<span
-style='color:red'>在合同履行期间，若前述委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。<span
+</span></span></u>事务的专项法律顾问，甲方同意上述律师指派其他律师助理配合完成前述法律事务工作。<span>在合同履行期间，若前述委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。<span
 lang=EN-US></span></span></span></p>
 
 <p class=MsoNormal style='text-indent:28.5pt;line-height:25.0pt;mso-line-height-rule:
@@ -346,6 +345,7 @@ export default {
             tocaseWhy:'',
             tocaseCompony:'',
             shejibiaode:'',
+            Case_No:'',
         }
     },
        props:['dataWord'],
@@ -375,7 +375,8 @@ export default {
                     //     var day = date.getDate()  
                     //     document.getElementById('text7').innerText =  year
                     //     document.getElementById('text8').innerText = month 
-                    //     document.getElementById('text9').innerText = day    
+                    //     document.getElementById('text9').innerText = day   
+                     this.Case_No = this.dataWord.Get_Case_Information.Case_No 
                          var arr1 = []; 
                         for(var i =0;i< this.dataWord.Get_Lawyer_Information.length;i++){
                             arr1.push(this.dataWord.Get_Lawyer_Information[i].Rule_Name)

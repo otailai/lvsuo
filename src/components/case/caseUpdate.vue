@@ -37,8 +37,8 @@
                            </div>
                         </el-popover> -->
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="*必填" v-model="userNameE"/></div> -->
-                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="18"/></div>
-                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="18"/></div>
+                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
+                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
                     <div class="flex"><p class="title">省/市地区</p> 
                     <!-- <input type="text" class="common-input" placeholder="*必填" v-model="province"/> -->
                      <el-cascader
@@ -57,7 +57,7 @@
                   <el-select v-model="suoshuValue" placeholder="*请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                         <div class="flex" v-show="customValue == 4"><p class="title">职务</p>
-                        <input type="text" class="common-input" placeholder="*必填" v-model="value2"/>
+                        <input type="text" class="common-input" placeholder="选填" v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="*请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
                     <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" v-model="tel"  maxlength="11"/></div>
@@ -133,7 +133,7 @@
                              
                         </div> -->
                     <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div>
-                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="*必填" v-model="biaodie"/></div>
+                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
                     </div>
                     </div>
                  </div>
@@ -240,8 +240,8 @@
                     <div class="flex">
                          <el-date-picker
                         v-model="timeArr[0].Payment_Time"
-                        type="datetime"
-                         value-format="yyyy-MM-dd HH:mm:ss"
+                        type="date"
+                         value-format="yyyy-MM-dd"
                         placeholder="选择日期时间">
                         </el-date-picker>
                         
@@ -255,8 +255,8 @@
                           <el-date-picker
                           class="time_input"
                           v-model="timeArr[i+1].Payment_Time"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
+                          value-format="yyyy-MM-dd"
+                            type="date"
                             placeholder="选择日期时间">
                         </el-date-picker>
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[i+1].Payment_Time"/> -->
@@ -723,6 +723,9 @@ export default {
                 });
                 return false
             }
+             if(this.value2===''){
+                    this.value2='无'
+              }
             if(this.costValue == 8){
             addJson = {
               'User_Id':localStorage.getItem('userId'),//登录人Id
@@ -891,11 +894,11 @@ export default {
                 return false
             }
             if(this.customValue ==3 ){
-                 var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
-                if(reg.test(this.cardNo) === false) 
+              
+                if(this.cardNo == '' || this.cardNo == null) 
                 { 
                      this.$message({
-                        message:'身份证输入不合法',
+                        message:'身份证信息不能为空',
                          type:'warning'
                      });
                        return false  
@@ -905,10 +908,10 @@ export default {
                  }
             }
             if(this.customValue ==4 ){
-                if(this.cardNo.length <6) 
+               if(this.cardNo == '' || this.cardNo == null) 
                 { 
                      this.$message({
-                        message:'纳税人编号不合法',
+                        message:'纳税人编号不能为空',
                          type:'warning'
                      });
                        return false  
@@ -922,13 +925,13 @@ export default {
                 return false
                         }
 
-                 if(this.value2==""||this.value2==null){
-                this.$message({
-                    message:'职务不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //      if(this.value2==""||this.value2==null){
+            //     this.$message({
+            //         message:'职务不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
 
             }
               if(this.search==""||this.search==null){
@@ -964,7 +967,7 @@ export default {
             //   var isMob=  new RegExp(/^(0?\d{2,3}\-)?[1-9]\d{6,7}(\-\d{1,4})?$/);
                   var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
                   console.log(myreg.test(this.tel))
-            if (!myreg.test(this.tel)) {
+            if (this.tel.length<7||this.tel.length>20) {
                   this.$message({
                     message:'联系电话格式不正确',
                     type:'warning'
@@ -978,7 +981,6 @@ export default {
                 });
                 return false
             }
-
             if(this.caseValue==""||this.caseValue==null || this.caseValue2==""||this.caseValue2 ==null ){
                 this.$message({
                     message:'*请选择案件类型',
@@ -1007,20 +1009,20 @@ export default {
                 });
                 return false
             }
-               if(this.biaodie==""||this.biaodie==null){
-                this.$message({
-                    message:'标的额不能为空',
-                    type:'warning'
-                });
-                return false
-            }
-             if(this.textarea==""||this.textarea==null){
-                this.$message({
-                    message:'请填写案情简介',
-                    type:'warning'
-                });
-                return false
-            }
+            //    if(this.biaodie==""||this.biaodie==null){
+            //     this.$message({
+            //         message:'标的额不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
+            //  if(this.textarea==""||this.textarea==null){
+            //     this.$message({
+            //         message:'请填写案情简介',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
                if(this.oppositeParty==""||this.oppositeParty==null){
                 this.$message({
                     message:'对方当事人不能为空',
@@ -1091,13 +1093,13 @@ export default {
                 }
             }
                 //服务内容
-              if(this.Service_Content==""||this.Service_Content==null){
-                this.$message({
-                    message:'服务内容不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //   if(this.Service_Content==""||this.Service_Content==null){
+            //     this.$message({
+            //         message:'服务内容不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             // var arrParty=[]
             // for(var i in this.input1Arr){
             //     arrParty.push(this.input1Arr[i].Party_Name)
@@ -1268,6 +1270,12 @@ export default {
                 this.list = JSON.parse(JSON.stringify(res.data.Name))
             })
         },
+        getCustomFilter(){
+             this.$http.get('/yongxu/Index/Get_Name_Customer',{params:{name:this.search}}).then((res) => {
+                 this.list = res.data
+                 console.log(this.list)
+            })
+        },
         /**获取客户类型下拉 */
         getCustomType(){
               this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
@@ -1367,11 +1375,17 @@ export default {
                  //console.log(res)
                   this.userNameE=res.data.Customer_Name_En
                   this.province=res.data.City
-                    //console.log(res.data.City.split('-')[0])
-                  var a = TextToCode[res.data.City.split('-')[0]].code
+                  if(res.data.City ==undefined || res.data.City=="" || res.data.City=="无"){
+                            res.data.City == ""
+                            this.selectedOptions = []
+                  }else{
+                     var a = TextToCode[res.data.City.split('-')[0]].code
                   var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
                   var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
                   this.selectedOptions = [a,b,c]
+                  }
+
+               
                   this.address = res.data.Detailed_Address
                   this.tel=res.data.Contact_Party
                   this.suoshuValue = res.data.TradeId
@@ -1503,8 +1517,7 @@ export default {
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
-                console.log(res)
-                // return false
+                console.log(res) 
                 // 客户信息
                 let arr=res.data.Get_Customer_Information
                 this.custom_Id = arr.Id
@@ -1518,11 +1531,16 @@ export default {
                 this.industry= arr.industry
                 this.Customer_Name_Zh=arr.Customer_Name_Zh
                 this.City=arr.City
+                         if(this.City == "" ||this.City==null){
+                            this.selectedOptions = []
+                  }else{
+                        var a = TextToCode[arr.City.split('-')[0]].code
+                        var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                        var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
+                        this.selectedOptions = [a,b,c]
+                  }
                   //console.log(arr.City.split('-')[0])
-                   var a = TextToCode[arr.City.split('-')[0]].code
-                   var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
-                   var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
-                   this.selectedOptions = [a,b,c]
+                  
               
                 //案件信息
                 let caseInfo = res.data.Get_Case_Information
@@ -1555,38 +1573,22 @@ export default {
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
                 var _self =this
                 for(var i in _self.layWerInfoArr){
-                   //console.log( _self.layWerInfoArr[i].Staff_Name)
         _self.inputArr.push({laywerName:_self.layWerInfoArr[i].Staff_Name,visible:false,laywerJob:_self.layWerInfoArr[i].Case_Rule_Id,laywerName1:'',Case_Rule_Id:_self.layWerInfoArr[i].Case_Rule_Id,Lawyer_Id:_self.layWerInfoArr[i].Id})
-                  
                 }    
-                //console.log(this.layWerInfoArr)
-               
                 this.newInputArr = _self.inputArr 
-                 //console.log(this.newInputArr)
                 _self.userInfo = this.newInputArr.slice(1)
-                 //console.log(_self.userInfo)
-                //当事人信息
-                // this.partyInfoArr = res.data.Get_Party
-                //   for(var i in this.partyInfoArr){
-                //     this.input1Arr.push({partyName:this.partyInfoArr[i].Party_Name,Party_Name:this.partyInfoArr[i].Party_Name,visible:false,partyJob:this.partyInfoArr[i].Party_Category_Id,Party_Category:this.partyInfoArr[i].Party_Category_Id})
-                // }
-                // //console.log(this.input1Arr)
-                //  _self.PartyInfo = _self.input1Arr.slice(1)
-                //  //console.log(_self.PartyInfo)
+              
                 //收费方式
                 this.way = res.data.Value
                 this.cur = res.data.Id
                 this.costValue = res.data.Id
                 this.costId  = this.costValue
-                //console.log( this.costId)
                 if(this.costId == 8){
                 //小时收费
                 this.ChargeInfoArr = res.data.Charge
-                //console.log(this.ChargeInfoArr)
                   for(var i in this.ChargeInfoArr){
                     this.nameJobArr.push({nameJobRate:this.ChargeInfoArr[i].Rate,Rate:this.ChargeInfoArr[i].Rate,visible:false,nameJobName1:'',nameJobName:this.ChargeInfoArr[i].Staff_Name,nameJobJob:this.ChargeInfoArr[i].Staff_Id,Lawyer_Id:this.ChargeInfoArr[i].Staff_Id,Rule_Id:this.ChargeInfoArr[i].Rule_Id})
                 }
-                 //console.log(this.nameJobArr)
                 this.timeArr=[{describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''}]
                 this.riskArr=[{riskCondition:'',Risk_Achievement:''}]
 
@@ -1791,12 +1793,12 @@ export default {
         this.customValue=3
     },
     mounted(){
-       this.getCustomSelect()
-    //    this.getDroplist()
-       this.getCustomType()
-     //  this.getSuoShuHangYeType()
-       this.getJobList()
-       this.getSelectMenu()
+       //this.getCustomSelect()
+
+       //this.getCustomType()
+ 
+       //this.getJobList()
+       //this.getSelectMenu()
 
        this.getUpdateInfo()
        

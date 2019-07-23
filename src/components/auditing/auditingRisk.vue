@@ -265,8 +265,12 @@ export default {
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
           this.optionChildMenu = res.data  
-          this.Casevalue1 =res.data[0].Id
-           //this.Casevalue1 = res.data
+          if(res.data.length===0){
+                        this.Casevalue1 = ''
+                }else{
+                    this.Casevalue1 =res.data[0].Id  
+                    }
+          this.changeTowValue(this.Casevalue1)
         })
       },
         clear:function(){
@@ -588,8 +592,8 @@ export default {
           },
     },
      watch:{
-    Casevalue1:function(newV,oldV){
-        this.changeTowValue(newV)
+    Casevalue:function(newV,oldV){
+       this.getSelectChildeMenu(newV)
     }
      }
 }

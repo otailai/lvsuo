@@ -33,7 +33,7 @@
                 <el-date-picker
                 @change="changeTime"
                 v-model="dateValue"
-                type="datetimerange"
+                type="daterange"
                 :picker-options="pickerOptions2"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -47,7 +47,11 @@
                 <button class="dingzhi" @click="clear()">清空</button>
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle">
-                    <el-table-column prop="Case_No" label="案件编号" width="110" sortable :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column  label="案件编号" width="110" sortable  :show-overflow-tooltip="true" prop="Case_No" style="height:100%;width:100%" @click.stop>
+                          <template slot-scope="scope">
+                                  <span @click="copy" >{{scope.row.Case_No}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
@@ -146,6 +150,7 @@
     </div>
 </template>
 <script>
+import ClipboardJS from 'clipboard'
 export default {
     data(){
         return{
@@ -224,6 +229,10 @@ export default {
     },
     inject:["reload"],
     methods:{
+   copy(event) {   
+         event.preventDefault(); 
+         event.stopPropagation()
+        },
        cellStyle() {
         return 'border-right: 1px solid #ebeef5'
      },
@@ -241,6 +250,8 @@ export default {
        * currentPage 当前页
       */     
         getCaseList:function(){ 
+        //  console.log(this.Casevalue)
+        // console.log(this.Casevalue2)
         var statusValue;
           if(this.value === '' || this.value === null){
                 statusValue = -3;
@@ -288,20 +299,21 @@ export default {
       //清空
         clear:function(){
         this.Casevalue = ''
-         this.Casevalue2 = 0
+        this.Casevalue2 = 0
         this.value = ''
         this.end=''
         this.start=''
         this.dateValue=''
         this.SearchInput=''
         this.Casevalue1 = ''
-       
        // console.log(this.Casevalue2)
         this.getCaseList() 
       },
     //进入详情
        lineCilck:function(row, event, column){
+        var timeRouter = true
         this.$router.push({path:`/index/caseEdit/${row.Id}/${row.Charging_Method}`})
+       
       },
       //编辑操作
         updateData:function(id,type_id){
@@ -371,7 +383,7 @@ export default {
                       const th = ['案件编号', '案件名称', '客户名称', '案件类别','承办律师','合同起止日期','立案日期','立案状态']
                       const filterVal = ['Case_No', 'Case_Name', 'Customer_Name_Zh','Value','Case_Lawyer_Name','Contract_Date_From','Creattime','Status']
                       const data = this.tableData.map(v => filterVal.map(k => v[k]))
-                      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
+                      const [fileName, fileType, sheetName] = ['律所案件', 'xlsx', '律所案件']
                       this.$toExcel({th, data, fileName, fileType, sheetName})
                  }
               })
@@ -406,22 +418,31 @@ export default {
                      return false
                  }
                  else{
-                      const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
+                      this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
+                          this.allData = res.data
+                      }).then(()=>{
+                       const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
                       const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
                       const data = this.allData.map(v => filterVal.map(k => v[k]))
-                      const [fileName, fileType, sheetName] = ['测试下载', 'xlsx', '测试页']
+                      const [fileName, fileType, sheetName] = ['律所案件', 'xlsx', '律所案件']
                       this.$toExcel({th, data, fileName, fileType, sheetName})
+                      })
+                   
+                      
+                    
                  }
               })
       },
     //获取二级菜单下拉
         changeTowValue:function(id){
+         // console.log(id)
             if(id == '' || id ==null){
-          this.Casevalue2 = 0
-      }else{
-        this.Casevalue2 = id
-      }
-         this.getCaseList()
+                this.Casevalue2 = 0
+            }else{
+              this.Casevalue2 = id
+            }
+           // console.log(this.Casevalue2)
+              this.getCaseList()
       },
       //状态查询
       changeStatus:function(id){
@@ -439,13 +460,18 @@ export default {
       },
       //下拉二级下拉查询
        getSelectChildeMenu:function(id){
-        
                     this.optionChildMenu = ''
                     this.Casevalue1 =''
                     this.selectOneId = id
                     this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
+                      //console.log(res)
                     this.optionChildMenu = res.data  
+                    if(res.data.length===0){
+                        this.Casevalue1 = ''
+                    }else{
                     this.Casevalue1 =res.data[0].Id  
+                    }
+                    this.changeTowValue(this.Casevalue1)
          })
       },
       sortChange(column){
@@ -721,10 +747,7 @@ export default {
               })
             },
             getAllDataList(){
-              this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
-               // console.log(JSON.stringify(res.data))
-                this.allData = res.data
-              })
+             
             }
     },
     components:{
@@ -749,18 +772,19 @@ export default {
      
     },
     mounted:function(){
-      this.getAllDataList()
+  
         this.getSelectMenu()
         this.getCaseList()
     },
-     activated() {
-        this.getAllDataList()
+    activated() {
+       // this.getAllDataList()
         this.getSelectMenu()
         this.getCaseList()
     },
     watch:{
-    Casevalue1:function(newV,oldV){
-        this.changeTowValue(newV)
+    Casevalue:function(newV,oldV){
+  
+        this.getSelectChildeMenu(newV)
     },
     dialogFormVisible:function(newData){
       console.log(newData)

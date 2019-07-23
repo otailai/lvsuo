@@ -13,13 +13,6 @@
               <li class="showTab-li">
                        <div>
             <div class="case-child-end flex">
-                    <!-- <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
-                          
-                      <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
-                    
-                    </div> -->
-                     
                 </div>
              <div class="selectMenu1 flex" style="margin-bottom:30px;">
                <div class="case-state flex">
@@ -33,7 +26,7 @@
                 <el-date-picker
                 @change="changeTime"
                 v-model="dateValue"
-                type="datetimerange"
+                type="daterange"
                 :picker-options="pickerOptions2"
                 range-separator="至"
                 start-placeholder="开始日期"

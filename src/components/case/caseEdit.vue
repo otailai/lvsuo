@@ -329,10 +329,11 @@ import caseWord1 from './caseWord1'
 import caseWord2 from './caseWord2'
 import caseWord3 from './caseWord3'
 import caseWord4 from './caseWord4'
+import { setTimeout } from 'timers';
 export default {
     data(){
         return{
-
+            time:false,
             code:'',
             Case_Id:'',
             fileName:'',
@@ -484,9 +485,7 @@ export default {
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
-               // console.log(res)
                 // 客户信息
-                
                 let arr=res.data.Get_Customer_Information
                 this.Customer_Name_Zh = arr.Customer_Name_Zh
                 this.Customer_Type_Id = arr.Customer_Type_Id
@@ -500,7 +499,6 @@ export default {
                 this.City=arr.City
                 this.Customer_Number =arr.Customer_Number
                 //案件信息
-                
                 let caseInfo = res.data.Get_Case_Information
                 this.Cause_Action = caseInfo.Cause_Action,
                 this.Case_Name=caseInfo.Case_Name
@@ -513,16 +511,19 @@ export default {
                 this.contact_status = caseInfo.Status
                 this.biaodie = caseInfo.Target
                 this.One_Type_Id = caseInfo.One_Type_Id
-                this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
+                if(this.Service_Content == ""){
+                this.Service_Content = ""
+                }else{
+                this.Service_Content = caseInfo.Service_Content.replace(/\r\n/g,'<br/>').replace(/\n/g,'<br/>').replace(/\s/g,'&nbsp;');
+                }
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
                 }else{
                      this.Source_Contract ='客户合同'
                 }
-                
                 //案件律师信息
+               
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
-              
                 //当事人信息
                 this.partyInfoArr = res.data.Get_Party
                 //收费方式
@@ -541,6 +542,8 @@ export default {
               
             }).then((res)=>{
                  this.getTableData()
+            }).then((e)=>{
+                 this.time = true
             })
         },
           successFile(res){
@@ -583,13 +586,11 @@ export default {
              this.nameData.File_Name = this.fileName
           },
           getTableData(){
-            //  console.log(this.Case_Id)
+
               this.$http.get('/yongxu//Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                //  console.log(res)
                   this.tableData = res.data
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                       // console.log(res)
                             if(this.contact_status === 0){
                                 this.ifClick = false
                             }else{
@@ -739,12 +740,29 @@ export default {
                
             },
             closeBox(){
+                var _self = this
+                if(this.time == true){
+                    _self.$router.go(-1);//返回上一层
+                }else{
+                    this.$message({
+                        message:'数据正在加载，请稍后关闭',
+                        type:'warning'
+                        
+                    })
+                }
+                 
                 //this.$router.push('/index/caseIndex')
-                this.$router.go(-1);//返回上一层
+            //    this.time  = setTimeout(function(){
+                    
+            //     },1500)
+               
             }
     },
     mounted(){
         this.getCaseEdit()
+    },
+    beforeDestroy(){
+        // clearTimeout(this.time)
     },
     components:{
         'caseWord':caseWord,

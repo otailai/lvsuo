@@ -8,17 +8,14 @@
                                                 <li class="showTab-li">
                                                 <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
                                                 <el-table-column prop="Id" label="ID" width="150"></el-table-column>
-                                                <el-table-column prop="Category_Name" label="名称" width="160" :show-overflow-tooltip="true"> </el-table-column>
-                                                <el-table-column prop="type" label="级别" width=""> 
-                                                    <template slot-scope="scope">
-                                                          <p v-if="scope.row.type==1">行业类型</p>
-                                                           <p v-if="scope.row.type==2">行业</p>
-                                                    </template>
+                                                <el-table-column prop="Value" label="名称" width="160" :show-overflow-tooltip="true"> </el-table-column>
+                                                <el-table-column  label="" width="300"> 
+                                                  
                                                 </el-table-column>
                                                 <el-table-column label="操作" width="150">
                                                 <template slot-scope="scope">
-                                                <button class="btn-caozuo"  @click="getIndustryTypeInfo(scope.row.Id,scope.row.type)">编辑</button>
-                                                <button class="btn-caozuo" @click="deleteIndustryType(scope.row.Id,scope.row.type)">删除</button>
+                                                <button class="btn-caozuo"  @click="getIndustryTypeInfo(scope.row.Id)">编辑</button>
+                                                <button class="btn-caozuo" @click="deleteIndustryType(scope.row.Id)">删除</button>
                                                 </template>
                                                 </el-table-column>    
                                             </el-table>
@@ -32,20 +29,6 @@
                                         </div>
                         <el-dialog  :visible.sync="dialogFormVisible" :append-to-body='true' top="300px" width="800px"> 
                          <div class="dialogFormVisible_box">
-                        
-                            <div class="flex row">
-                            <p class="flex_title">行业类型</p>
-                         
-                             <el-select v-model="value" placeholder="请选择">
-                                    <el-option
-                                      v-for="item in options"
-                                      :key="item.Id"
-                                      :label="item.Category_Name"
-                                      :value="item.Id">
-                                    </el-option>
-                                    </el-select>
-                         
-                          </div>
                           <div class="flex row margin_t">
                             <p class="flex_title">行业</p>
                          
@@ -65,26 +48,7 @@
 
                          <el-dialog  :visible.sync="dialogFormVisible1" :append-to-body='true' top="300px" width="800px"> 
                          <div class="dialogFormVisible_box">
-                            <div class="flex row">
-                            <p class="flex_title">父级类型</p>
-
-                            <el-select v-model="update_value" placeholder="请选择" v-show="isReadonly==true" disabled>
-                                    <el-option
-                                      v-for="item in update_options"
-                                      :key="item.Id"
-                                      :label="item.Category_Name"
-                                      :value="item.Id">
-                                    </el-option>
-                                    </el-select>
-                             <el-select v-model="update_value" placeholder="请选择" v-show="isReadonly==false">
-                                    <el-option
-                                      v-for="item in update_options"
-                                      :key="item.Id"
-                                      :label="item.Category_Name"
-                                      :value="item.Id">
-                                    </el-option>
-                                    </el-select>
-                          </div>
+                           
                           <div class="flex row margin_t">
                             <p class="flex_title">行业类型</p>
                          
@@ -140,21 +104,19 @@ export default {
       },
       toAdd(){
         this.name = '',
-        this.value = 0
         this.dialogFormVisible= true
       },
       lineCilck(row, event, column){
             //console.log(row, event, column)
       },
       getIndustryTypeList(){ 
-
          this.$http.get('/yongxu/Install/Show_Customer_Industry',{params:{
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
          }}).then((res)=>{
            this.tableData = res.data.Customer_Industry
            this.total = res.data.PageCount
-           //console.log(res)
+           console.log(res)
         })
       },
          handleClick(tab, event) {
@@ -173,22 +135,13 @@ export default {
                 }); 
                 return false
         }
-         if(this.value.length == 0){
-             this.$message({
-                message:'行业类型不能为空',
-                type:'warning'
-                }); 
-                return false
-        }
-        this.$http.get('/yongxu/Install/Add_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Value:this.name,Category_Id:this.value}}).then((res)=>{
-            //console.log(res)
+        this.$http.get('/yongxu/Install/Add_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Value:this.name}}).then((res)=>{
             if(res.data == true){
                this.$message({
                             message:'添加成功',
                             type:'success'
                         }); 
                         this.getIndustryTypeList()
-                        this.getOneIndustryType()
                         this.dialogFormVisible = false
                          return false
             }else{
@@ -202,7 +155,7 @@ export default {
         })
       },
       //删除
-      deleteIndustryType(id,type){
+      deleteIndustryType(id){
             this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  console.log(res)
                  if(res.data == 1){
@@ -241,11 +194,10 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           this.$http.get('/yongxu/Install/Del_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Id:id,Type_Label:type}}).then((res)=>{
+           this.$http.get('/yongxu/Install/Del_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Id:id}}).then((res)=>{
              //console.log(res)
                 if(res.data == 2 ){
                      this.getIndustryTypeList()
-                     this.getOneIndustryType()
                       this.$message({
                       type: 'success',
                       message: '删除成功!'
@@ -256,14 +208,6 @@ export default {
                           this.$message({
                           type: 'warning',
                           message: '此行业已被占用无法删除!'
-                    });
-                    return false
-                  }
-                if(res.data == 0 ){
-                      this.getIndustryTypeList()
-                          this.$message({
-                          type: 'warning',
-                          message: '删除失败,此类型含有类型，请先删除子类型!'
                     });
                     return false
                   }
@@ -310,20 +254,10 @@ export default {
                 }); 
                 return false
         }
-        if(this.update_value.length == 0){
-             this.$message({
-                message:'行业类型不能为空',
-                type:'warning'
-                }); 
-                return false
-        }
-           if(this.type == 1){
-       
-       
-           this.$http.get('/yongxu/Install/Upd_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Id:this.Id,Value:this.update_name,Category_Id:0}}).then((res)=>{         
+         
+           this.$http.get('/yongxu/Install/Upd_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Id:this.Id,Value:this.update_name}}).then((res)=>{         
                 if(res.data == true){
                      this.getIndustryTypeList()
-                     this.getOneIndustryType()
                       this.$message({
                       type: 'success',
                       message: '修改成功!'
@@ -337,52 +271,21 @@ export default {
                  this.dialogFormVisible1 = false
                 }
             })
-        }else{
-           
-       
-
-   this.$http.get('/yongxu/Install/Upd_Customer_Industry',{params:{User_Id:localStorage.getItem('userId'),Id:this.Id,Value:this.update_name,Category_Id:this.update_value}}).then((res)=>{
-               if(res.data == true){
-                     this.getIndustryTypeList()
-                     this.getOneIndustryType()
-                      this.$message({
-                      type: 'success',
-                      message: '修改成功!'
-                 });
-                 this.dialogFormVisible1 = false
-                }else{
-                   this.$message({
-                    type: 'warning',
-                    message: '修改失败'
-                  });          
-                  this.dialogFormVisible1 = false
-                }
-            })
-        }
-        
         },
         //查询案件类型详情
-         getIndustryTypeInfo(id,type){
+         getIndustryTypeInfo(id){
            this.Id = id
-           this.type = type
            this.dialogFormVisible1 = true
-             this.$http.get('/yongxu/Install/Upd_Sel_Customer_Industry',{params:{Id:id,Type_Label:type}}).then((res)=>{
-              if(type == 1){
-                   this.isReadonly =true
-                   this.update_value = 0
-                   this.update_name = res.data.Category_Name
-              }else{
-                 this.isReadonly = false
-                  this.update_name = res.data.Value
-                  this.update_value = res.data.Category_Id
-              } 
+             this.$http.get('/yongxu/Install/Upd_Sel_Customer_Industry',{params:{Id:id}}).then((res)=>{
+               console.log(res)
+                   this.update_name = res.data.Value
+              
             })
         },
        
     },
     mounted(){
         this.getIndustryTypeList()
-        this.getOneIndustryType()
 
     }
 }

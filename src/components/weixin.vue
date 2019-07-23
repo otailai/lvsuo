@@ -44,6 +44,7 @@ export default {
             username:'',
             password:'',
             openId:'',
+            unionid:'',
         }
 
     },
@@ -73,8 +74,7 @@ export default {
                      return false
                 }else{
                         this.openID()
-                }
-               
+                } 
         }
         },
         openID(){
@@ -83,12 +83,13 @@ export default {
                 AppID:'wx0b5e209ee6a56c2f',
                 AppSecret:'73a3137fca1d7e15366b0ede8485bbaf',
             }}).then((res)=>{ 
+                console.log(res)
                 if(res.data.sign == 1){
                      this.$message({
                          message:'检测到您尚未绑定微信，请先绑定',
                          type:'warning'
                      })
-                    this.openId = res.data.openid
+                    this.unionid = res.data.unionid
                 }else{
                     this.password=res.data.Password
                     this.username = res.data.Username
@@ -200,7 +201,7 @@ export default {
                 return false
             }
                var str = this.username+'&&'+md5(this.password)
-               this.$http.get('/yongxu/Login/Wechat_Binding',{params:{str:str,openid:this.openId}}).then((res)=>{
+               this.$http.get('/yongxu/Login/Wechat_Binding',{params:{str:str,unionid:this.unionid}}).then((res)=>{
                    if(res.data == 2){
                      this.$message({
                     message:'绑定成功',

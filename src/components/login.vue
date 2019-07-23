@@ -60,9 +60,9 @@ var loginInit  = true
 export default {
     data(){
         return{
-                // url:encodeURIComponent('http://cms.kingpound.com:8082'),
-               // url:'http://192.168.0.110:8081/weixin', 
-                url:'http://dist.gzbigbang.cn/weixin',
+                url:encodeURIComponent('http://cms.kingpound.com:8082/weixin'),
+                //url:'http://192.168.0.107:8081/weixin', 
+                //url:'http://dist.gzbigbang.cn/weixin',
                 checked: false,
                 checkedState:false,
                 cur:0,

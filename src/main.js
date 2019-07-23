@@ -25,6 +25,8 @@ import returnCitySN from 'returnCitySN' // 新浪 获取设备IP
 // import Print from 'vue-print-nb'
 // Vue.use(Print); //注册
 import Print from '@/plugs/print'
+import Clipboard from 'clipboard';  
+Vue.prototype.Clipboard=Clipboard; 
 Vue.use(Print) // 注册
 Vue.use(VueQuillEditor)
 Vue.prototype.common = global
@@ -42,8 +44,8 @@ Vue.config.productionTip = false
 if(returnCitySN["cip"]=="113.108.197.50" || returnCitySN["cip"]=="113.119.110.96"){
   Vue.prototype.$api = 'http://192.168.2.201:8081'
 }else{
-  //Vue.prototype.$api = 'http://113.108.197.50:8081' 
-  Vue.prototype.$api = 'http://java.gzbigbang.cn'
+  Vue.prototype.$api = 'http://113.108.197.50:8081' 
+  //Vue.prototype.$api = 'http://java.gzbigbang.cn'
 
 }
 const router = new VueRouter({

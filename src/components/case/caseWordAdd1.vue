@@ -4,7 +4,7 @@
       <button @click="getDoc()">导出doc</button>
        <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first" style="text-align: right;color:#000000;">(<span id="todayTime"></span>[1])穗金鹏民字第[2]号</div>
+        <div class="flex first" style="text-align: right;color:#000000;"></div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">刑 事 辩 护 委 托</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">协</strong></p>
@@ -272,9 +272,9 @@ lang=EN-US></span></span></p>
 
 <p class=MsoNormal style='text-indent:29.25pt;line-height:23.0pt;mso-line-height-rule:
 exactly'><span lang=EN-US style='font-size:14.0pt;font-family:仿宋_GB2312;
-mso-hansi-font-family:宋体;color:red'>10</span><span style='font-size:14.0pt;
-font-family:仿宋_GB2312;mso-hansi-font-family:宋体;color:red'>、</span><span
-style='font-size:14.0pt;font-family:仿宋_GB2312;color:red'>在合同履行期间，若当前委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。<span
+mso-hansi-font-family:宋体;'>10</span><span style='font-size:14.0pt;
+font-family:仿宋_GB2312;mso-hansi-font-family:宋体;'>、</span><span
+style='font-size:14.0pt;font-family:仿宋_GB2312;'>在合同履行期间，若当前委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。<span
 lang=EN-US></span></span></p>
 
 <p class=MsoNormal style='text-indent:26.3pt;mso-char-indent-count:2.0;

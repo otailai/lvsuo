@@ -20,7 +20,7 @@
                   <el-select v-model="customValue" placeholder="*请选择" @change="changeCustomType()"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
                         </div>
                       <el-popover placement="bottom"  trigger="click" v-model="visible">
-                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="*必填" v-model="search" @change="changeId()" maxlength="11"/></div>
+                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="*必填" v-model="search" @change="changeId()" maxlength="30"/></div>
                             <div>
                                 <table style="width:100%;">
                                     <thead>
@@ -28,7 +28,7 @@
                                            <!-- <th >联系方式</th>   -->
                                     </thead> 
                                     <tbody>
-                                        <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
+                                        <tr v-for="(item,index) in list" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
                                              <td>{{item.Customer_Name_Zh}}</td> 
                                               <!-- <td>{{item.Contact_Party}}</td>  -->
                                            
@@ -38,8 +38,8 @@
                            </div>
                         </el-popover>
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div> -->
-                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="18"/></div>
-                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="18"/></div>
+                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
+                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
                     <div class="flex"><p class="title">省/市地区</p> 
                     <!-- <input type="text" class="common-input" placeholder="请输入" v-model="province"/> -->
                     <el-cascader
@@ -60,7 +60,7 @@
                   <el-select v-model="suoshuValue" placeholder="*请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                         <div class="flex" v-show="customValue==4"><p class="title">职务</p>
-                        <input type="text" class="common-input" placeholder="*必填"  v-model="value2"/>
+                        <input type="text" class="common-input" placeholder="选填"  v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="*请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
                     <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" v-model="tel"  maxlength="11"/></div>
@@ -133,7 +133,7 @@
                              
                         </div> -->
                     <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div>
-                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="*必填" v-model="biaodie"/></div>
+                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
 
                     </div>
                     </div>
@@ -280,8 +280,8 @@
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[0].dateName"/> -->
                        <el-date-picker
                         v-model="timeArr[0].dateName"
-                        type="datetime"
-                         value-format="yyyy-MM-dd HH:mm:ss"
+                        type="date"
+                         value-format="yyyy-MM-dd"
                         placeholder="选择日期时间">
                         </el-date-picker>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].payCount"/>
@@ -293,8 +293,8 @@
                       <el-date-picker
                           class="time_input"
                           v-model="timeArr[i+1].dateName"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                            type="datetime"
+                          value-format="yyyy-MM-dd"
+                            type="date"
                             placeholder="选择日期时间">
                         </el-date-picker>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[i+1].payCount"/>
@@ -339,7 +339,7 @@
                    <div class="add-Pay-index-child">
                     <div class="flex">
                         <p class="title">姓名</p>
-                        <p class="title">职务</p>
+                        <p class="title">职务</p> 
                         <p class="title">费率</p>
                         <p class="input-icon"></p>
                     </div>
@@ -495,6 +495,7 @@ import caseWordAdd from './caseWordAdd'
 import caseWordAdd1 from './caseWordAdd1'
 import { constants } from 'zlib';
 import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
+import { connect } from 'net';
 export default {
     data(){
         return{
@@ -514,7 +515,6 @@ export default {
             isValueArr:[
                 {Id:1,Value:'是'},{Id:2,Value:'否'},
             ],
-            isValue:'',
             isValue:'',
             /**获取案由下拉 */
             CaseResonArr:[],
@@ -687,22 +687,18 @@ export default {
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
-            this.$store.dispatch('addParty')
             this.input1Arr.push({partyName:'',partyJob:''})  
         },
         addPayDate(){
             this.payDate.push(1)
-            this.$store.dispatch('addDate')
             this.timeArr.push({dateName:'',payCount:'',describe:''})  
         },
          addRiskAcount(){
             this.riskAcount.push(1)
-            this.$store.dispatch('addRisk')
             this.riskArr.push({riskName:'',riskCount:'',riskCondition:''})  
         },
          addNameJob(){
             this.nameJob.push(1)
-            this.$store.dispatch('addNameJob')
             this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:'',visible:false,nameJobName1:'',Id:''})  
         },
         closeBox(){
@@ -891,6 +887,9 @@ export default {
             if(this.customValue == 3){
                 this.suoshuValue = 0
             }
+            if(this.value2===''){
+                    this.value2='无'
+              }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
@@ -1070,39 +1069,39 @@ export default {
                 return false
             }
             if(this.customValue ==3 ){
-                var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
-                if(reg.test(this.cardNo) === false) 
+                // var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
+                if(this.cardNo == '' || this.cardNo==null) 
                 { 
                      this.$message({
-                        message:'身份证输入不合法',
+                        message:'身份证信息不能为空',
                          type:'warning'
                      });
                        return false  
                 }
             }  
             if(this.customValue ==4 ){
-                if(this.cardNo.length <6) 
+                if(this.cardNo == '' || this.cardNo == null) 
                 { 
                      this.$message({
-                        message:'纳税人编号不合法',
+                        message:'纳税人编号不能为空',
                          type:'warning'
                      });
                        return false  
                 }
-                 if(this.suoshuValue==""||this.suoshuValue==null){
+            if(this.suoshuValue===""||this.suoshuValue===null){
                 this.$message({
                     message:'*请选择所属行业',
                     type:'warning'
                 });
                 return false
             }
-               if(this.value2==""||this.value2==null){
-                this.$message({
-                    message:'职务不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //    if(this.value2==""||this.value2==null){
+            //     this.$message({
+            //         message:'职务不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             }
             
             if(this.province==""||this.province==null){
@@ -1171,13 +1170,13 @@ export default {
                 });
                 return false
             }
-             if(this.textarea==""||this.textarea==null){
-                this.$message({
-                    message:'请填写案情简介',
-                    type:'warning'
-                });
-                return false
-            }
+            //  if(this.textarea==""||this.textarea==null){
+            //     this.$message({
+            //         message:'请填写案情简介',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
                if(this.oppositeParty==""||this.oppositeParty==null){
                 this.$message({
                     message:'对方当事人不能为空',
@@ -1247,21 +1246,21 @@ export default {
                 }
             }
             //服务内容
-              if(this.Service_Content==""||this.Service_Content==null){
-                this.$message({
-                    message:'服务内容不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //   if(this.Service_Content==""||this.Service_Content==null){
+            //     this.$message({
+            //         message:'服务内容不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
              //标的额
-                if(this.biaodie ==""||this.biaodie==null){
-                this.$message({
-                    message:'服务内容不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //     if(this.biaodie ==""||this.biaodie==null){
+            //     this.$message({
+            //         message:'服务内容不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             
             // var arrParty=[]
             // for(var i in this.input1Arr){
@@ -1422,6 +1421,7 @@ export default {
                 id =0
             }
             this.customId = id
+            console.log(id)
             this.getCustomInfo()
             this.visible = false
         },
@@ -1437,8 +1437,18 @@ export default {
         /*获取已存在客户列表*/ 
         getCustomSelect(){
             this.$http.get('/yongxu/Index/Get_All_Customers').then((res) => {
-                console.log(res)
-                this.list = JSON.parse(JSON.stringify(res.data.Name))
+               
+                //  this.list = JSON.parse(JSON.stringify(res.data.Name))
+                //  console.log(this.list)
+            })
+        },
+        /**
+         * 获取匹配客户
+         */
+        getCustomFilter(){
+             this.$http.get('/yongxu/Index/Get_Name_Customer',{params:{name:this.search}}).then((res) => {
+                 this.list = res.data
+                 console.log(this.list)
             })
         },
         /**获取客户类型下拉 */
@@ -1447,7 +1457,7 @@ export default {
                    /**获取客户类型下拉 */
                 //  this.customTypeArr = res.data.Types
                    /**获取所属行业下拉 */
-                   console.log(res)
+                console.log(res)
                  this.suoshuhangyeArr = res.data.Industry
              })
         },
@@ -1501,6 +1511,8 @@ export default {
          this.caseValue2= ''
          this.optionChildMenu = ''
          this.Casevalue1 =''
+         this.caseWhy=''
+         this.caseWhy1=''
         //  console.log(id)
          this.selectOneId = id
          this.getCaseResonList(id)
@@ -1513,7 +1525,6 @@ export default {
             this.costId = id
         },
         changeId(){
-                 
                   this.customId = 0
                   this.userNameE=''
                   this.province=''
@@ -1521,7 +1532,6 @@ export default {
                   this.tel=''
                   this.suoshuValue = ''
                   this.value2 = ''
-                //   this.customValue = ''
                   this.cardNo=''
                   this.isValue=''
         },
@@ -1529,14 +1539,18 @@ export default {
         getCustomInfo(){
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.customId}}).then((res)=>{ 
                   console.log(res)
+                  if(res.data.City ==undefined || res.data.City=="" || res.data.City=="无"){
+                      res.data.City = ''
+                  }else{
+                     this.province=res.data.City
+                     console.log(res.data.City.split('-')[0])
+                        var a = TextToCode[res.data.City.split('-')[0]].code
+                        var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
+                        var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
+                        this.selectedOptions = [a,b,c]
+                  }
                   this.userNameE=res.data.Customer_Name_En
-                  
-                 this.province=res.data.City
-                  console.log(res.data.City.split('-')[0])
-                   var a = TextToCode[res.data.City.split('-')[0]].code
-                   var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
-                   var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
-                    this.selectedOptions = [a,b,c]
+                
                  
                   this.address = res.data.Detailed_Address
                   //this.tel=res.data.Contact_Party
@@ -1757,7 +1771,8 @@ export default {
         this.customValue=3
     },
     mounted(){
-       this.getCustomSelect()
+       //this.getCustomSelect()
+      
     //    this.getDroplist()
        this.getCustomType()
      //  this.getSuoShuHangYeType()
@@ -1772,8 +1787,6 @@ export default {
             if (_search) {
                 //不区分大小写处理
                 var reg = new RegExp(_search, 'ig')
-                // console.log(reg)
-                // console.log(this.list)
                 //es6 filter过滤匹配，有则返回当前，无则返回所有
                 return this.list.filter(function(e) {
                     //匹配所有字段
@@ -1781,10 +1794,11 @@ export default {
                     //     return e[key].match(reg);
                     // })
                     //匹配某个字段
+                      console.log(e.Customer_Name_Zh.match(reg))
                       return e.Customer_Name_Zh.match(reg);
                 })
-            };
-            return this.list;
+            }
+            return [];
         },
 
     },
@@ -1792,6 +1806,11 @@ export default {
         'caseWordAdd':caseWordAdd,
           'caseWordAdd1':caseWordAdd1,
     },
+    watch:{
+        search(newData){
+            this.getCustomFilter()
+        }
+    }
 }
 </script>
 
@@ -1997,7 +2016,8 @@ export default {
 .el-popover{
     max-height: 300px;
     overflow: auto;
-    min-width:310px;
+    max-width:500px;
+    left:155px;
 }
 .el-autocomplete{
     width: 100%;

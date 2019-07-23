@@ -76,7 +76,7 @@
                           <span></span>
                       </template>
                     </el-table-column>
-                      <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
+                      <!-- <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column> -->
                       <el-table-column prop="Value" label="行业" width="" :show-overflow-tooltip="true"> </el-table-column>
                        <el-table-column prop="Customer_Type" label="客户类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                    
@@ -122,17 +122,17 @@
                   <el-table :data="tableData1" border style="width: 100%">
                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true" sortable> </el-table-column>
-                     <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column>
+                     <!-- <el-table-column prop="Category_Name" label="行业类型" width="" :show-overflow-tooltip="true"> </el-table-column> -->
                      
                       <el-table-column prop="Value" label="行业" width=""> </el-table-column>
                        <el-table-column prop="Customer_Type" label="客户类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                        <!-- <el-table-column prop="is" label="是否常年客户" width=""> </el-table-column> -->
                          
-                </el-table>
+                </el-table> 
               </div>
 
                  <div class="block flex">
-                  <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange1" :current-page="currentPage1"
+                  <el-pagination background @size-change="handleSizeChange1" @current-change="handleCurrentChange1" :current-page="currentPage1"
                  :page-sizes="[20,50,100]" :page-size="pageNum1"  layout="total, sizes, prev, pager, next, jumper" :total="PageCount1">
                    </el-pagination>
                 </div>
@@ -297,7 +297,7 @@ var _this = this
       },
       handleCurrentChange1(val) {
         this.currentPage1 = val
-          this.getComponyList()
+        this.getComponyList()
       },
       toAdd(){
         this.$router.push({path:'/index/caseAdd'})
@@ -348,6 +348,7 @@ var _this = this
           Display_Page_Number:this.pageNum1,
           PageNumber:this.currentPage1
         }}).then((res)=>{
+          console.log(res)
             this.tableData1= res.data.list
             this.PageCount1 = res.data.PageCount
         })

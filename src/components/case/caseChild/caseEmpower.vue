@@ -45,7 +45,11 @@
                 <button class="dingzhi"><i class="el-icon-download"></i>不顶置</button> -->
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle">
-                    <el-table-column prop="Case_No" label="案件编号" width="110" sortable :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="Case_No" label="案件编号" width="110" sortable :show-overflow-tooltip="true">
+                         <template slot-scope="scope">
+                                  <span @click="copy" >{{scope.row.Case_No}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="180" > </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100"> </el-table-column>
                       <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
@@ -233,6 +237,10 @@ export default {
     },
     inject:["reload"],
     methods:{
+        copy(event) {   
+         event.preventDefault(); 
+         event.stopPropagation()
+        },
         // 获取案件列表
         getCaseList(){ 
          var userId = localStorage.getItem('userId')
@@ -243,7 +251,7 @@ export default {
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
          }}).then((res)=>{
-        //   console.log(res)
+           console.log(res)
            this.tableData = res.data.Get_Authorized
            this.total = res.data.PageCount
             

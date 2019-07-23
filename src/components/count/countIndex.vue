@@ -2,19 +2,19 @@
     <div>
         <div class="countHeader">
                 <div class="child_count">
-                    <div class="count_num">8</div>
+                    <div class="count_num">{{Case_Number}}</div>
                     <p class="count_title">案件合计</p>
                 </div>
                 <div class="child_count">
-                    <div class="count_num">8</div>
+                    <div class="count_num">{{Closingcase_Number}}</div>
                     <p class="count_title">已结案</p>
                 </div>
                 <div class="child_count">
-                    <div class="count_num">8</div>
+                    <div class="count_num">{{Customer_Number}}</div>
                     <p class="count_title">客户</p>
                 </div>
                 <div class="child_count">
-                    <div class="count_num">{{200000|formatMoney}}</div>
+                    <div class="count_num">{{Total_Amount|formatMoney}}</div>
                     <p class="count_title">金额合计</p>
                 </div>
         </div>
@@ -300,6 +300,10 @@ export default {
         MaxTime3:'',
           MinTime4:'',
         MaxTime4:'',
+    Total_Amount: '',
+    Case_Number: '',
+    Customer_Number:'' ,
+    Closingcase_Number: '',
         }
     },
     mounted(){
@@ -309,6 +313,7 @@ export default {
         this.getMounthDate2()
         this.getMounthDate3()
          this.getMounthDate4()
+         this.getInfo()
     },
      beforeDestroy() {
             // if (!this.chart) {
@@ -330,6 +335,15 @@ export default {
             // this.chart1 = null;
     },
     methods:{
+       getInfo(){
+          this.$http.get('/yongxu/Statistics/Amount_Number',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                  console.log(res)
+                  this.Total_Amount = res.data.Total_Amount
+                  this.Case_Number = res.data.Case_Number
+                  this.Customer_Number = res.data.Customer_Number
+                  this.Closingcase_Number = res.data.Closingcase_Number
+          })
+      },
         changeTime(v){
           
              if(v == null){
@@ -555,7 +569,7 @@ export default {
                 }
                 this.MinTime3 = arry[5]+'-01'
                 this.MaxTime3 = arry[0]+'-30';
-                this.value5 = [this.MinTime1,this.MaxTime1]
+                this.value5 = [this.MinTime3,this.MinTime3] 
                 this.initChart3();
 				// console.log(arry)
 				// return arry;
@@ -697,7 +711,9 @@ export default {
                 initChart3(){
               var _self =this
               this.$http.get('/yongxu/Statistics/Industry_Number',{params:{MinTime:this.MinTime3,MaxTime:this.MaxTime3,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 // console.log(res)
+                   console.log(res)
+                  
+                  this.jobArr = []
                   var jobArr = res.data
                 for(var i = 0;i<jobArr.length;i++){ 
                     this.jobArr1[i] = jobArr[i].name.replace(/[\r\n]/g, "")
@@ -757,8 +773,11 @@ export default {
     initChart2(){
       this.$http.get('/yongxu/Statistics/Sel_Industry_Type',{params:{MinTime:this.MinTime2,MaxTime:this.MaxTime2,User_Id:localStorage.getItem('userId')}}).then((res)=>{
             var _self =this
-                
+                // console.log(this.MinTime2)
+                //  console.log(this.MaxTime2)
                 var bingArr = res.data
+                // console.log(res)
+                 _self.bingArr = []
                 for(var i = 0;i<bingArr.length;i++){
                     _self.bingArr1[i] = bingArr[i].name.replace(/[\r\n]/g,"")
                     _self.bingArr3[i] = bingArr[i].value
@@ -818,8 +837,9 @@ export default {
       })
     },
      initChart4(){
-      this.$http.get('/yongxu/Statistics/Sel_Cases_Pie',{params:{MinTime:this.MinTime2,MaxTime:this.MaxTime2,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-            var _self =this
+      this.$http.get('/yongxu/Statistics/Sel_Cases_Pie',{params:{MinTime:this.MinTime4,MaxTime:this.MaxTime4,User_Id:localStorage.getItem('userId')}}).then((res)=>{
+           console.log(res.data)
+           var _self =this
                 _self.caseArr = res.data
                 for(var i = 0;i<_self.caseArr.length;i++){
                     _self.caseArr1[i] = _self.caseArr[i].name.replace(/[\r\n]/g, "")

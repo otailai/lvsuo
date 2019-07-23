@@ -11,7 +11,7 @@
                   <el-select v-model="Casevalue1" placeholder="请选择" clearable  style="margin-left: 10px;" @change="changeTowValue(Casevalue1)">
                   <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
                  </el-select>
-              </div>
+              </div> 
 
                <div class="case-state flex" style="margin-left:10px;">
                <p>案件状态：</p> 
@@ -422,8 +422,12 @@ export default {
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
           this.optionChildMenu = res.data  
-          this.Casevalue1 =res.data[0].Id
-           //this.Casevalue1 = res.data
+           if(res.data.length===0){
+                        this.Casevalue1 = ''
+                }else{
+                    this.Casevalue1 =res.data[0].Id  
+                    }
+          this.changeTowValue(this.Casevalue1)
         })
       },
         clear:function(){
@@ -629,8 +633,8 @@ export default {
           },
     },
      watch:{
-    Casevalue1:function(newV,oldV){
-        this.changeTowValue(newV)
+    Casevalue:function(newV,oldV){
+       this.getSelectChildeMenu(newV)
     }
      },
        components:{

@@ -5,7 +5,7 @@
        <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
        
-        <div class="flex first" style="text-align: right;color:#000000;">(<span id="todayTime"></span>[1])穗金鹏民字第[2]号</div>
+        <div class="flex first" style="text-align: right;color:#000000;"></div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">民 事 委 托 代 理</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">合</strong></p>
@@ -72,7 +72,7 @@
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">一般代理，包括：进行调解或者和解；提起上诉；参加二审庭审<span lang="EN-US">;</span>签署、送达、接受法律文书。</span></p>
 <p class="MsoNormal" style="text-indent: 28.4pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; mso-hansi-font-family: 宋体;">全权代理，包括：<span lang="EN-US">1</span>、调查取证；<span lang="EN-US">2</span>、提起诉讼；<span lang="EN-US">3</span>、提出答辩；<span lang="EN-US">4</span>、代为变更或者放弃诉讼请求；<span lang="EN-US">5</span>、代为承认诉讼请求；<span lang="EN-US">6</span>、提起反诉；<span lang="EN-US">7</span>、进行调解或者和解；<span lang="EN-US">8</span>、提起上诉；<span lang="EN-US">9</span>、申请执行；<span lang="EN-US">10</span>、收取或者收转执行标的；<span lang="EN-US">11</span>、签署、送达、接受法律文书。）</span></p>
 <p class="MsoNormal" style="text-indent: 28.45pt; mso-char-indent-count: 2.0; line-height: 23.0pt; mso-line-height-rule: exactly;"><strong><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">第三条<span lang="EN-US"><span style="mso-spacerun: yes;">&nbsp; </span></span>乙方的义务</span></strong></p>
-<p class="MsoNormal" style="text-indent: 29.25pt; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（一）乙方委派<u> <strong style="mso-bidi-font-weight: normal;"><span lang="EN-US">&nbsp;&nbsp;<span style="mso-spacerun: yes;" id="text1"></span>&nbsp;&nbsp;</span></strong><span lang="EN-US"></span></u>律师作为上述案件中甲方的委托代理人，甲方同意上述律师指派其他律师助理配合完成辅助工作，</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; color: red;">在合同履行期间，若前述委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。</span></p>
+<p class="MsoNormal" style="text-indent: 29.25pt; line-height: 23.0pt; mso-line-height-rule: exactly;"><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（一）乙方委派<u> <strong style="mso-bidi-font-weight: normal;"><span lang="EN-US">&nbsp;&nbsp;<span style="mso-spacerun: yes;" id="text1"></span>&nbsp;&nbsp;</span></strong><span lang="EN-US"></span></u>律师作为上述案件中甲方的委托代理人，甲方同意上述律师指派其他律师助理配合完成辅助工作，</span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312;">在合同履行期间，若前述委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。</span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span></span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（二）乙方律师应当充分运用自己的专业知识和技能，尽心尽职地根据法律、法规的规定完成本合同约定的被委托事项，最大限度地维护委托人的合法权益；</span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span></span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（三）乙方律师应当遵循诚实守信的原则，依据法律、法规的规定做出专业判断，客观地告知甲方所委托事项可能出现的法律风险；</span></p>
 <p class="MsoNormal" style="line-height: 23.0pt; mso-line-height-rule: exactly;"><span lang="EN-US" style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;"><span style="mso-spacerun: yes;">&nbsp;&nbsp;&nbsp; </span></span><span style="font-size: 14.0pt; font-family: 仿宋_GB2312; letter-spacing: .1pt;">（四）乙方律师应当根据法律规定的时限、时效以及审理机关的要求，及时提交证据，按时出庭，及时办理受委托的事务；</span></p>
@@ -271,7 +271,7 @@ export default {
         getData(){
    this.dataWordArr= JSON.parse(this.dataWord)
         this.laywerName = '广州金鹏律师事务所' 
-        console.log(this.dataWordArr.caseValue)
+        console.log(this.dataWordArr)
         var date=new Date;
         var year=date.getFullYear(); 
         this.todayTime=  year      
@@ -309,7 +309,11 @@ export default {
              document.getElementById('text3').innerText = ''
             document.getElementById('text4').innerText = ''
             document.getElementById('text5').innerText = ''
+            if(this.dataWordArr.Service_Content=='' || this.dataWordArr.Service_Content==null){
+                    document.getElementById('fuwuneirong').innerText = ''
+            }else{
              document.getElementById('fuwuneirong').innerText = this.dataWordArr.Service_Content.replace(/<[^>]+>|&[^>]+;/g,"").trim();
+            }
              console.log(this.dataWordArr.Service_Content)
               document.getElementById('text6').innerText = ''
 // 逾期多少日

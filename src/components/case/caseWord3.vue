@@ -88,7 +88,8 @@ font-family:仿宋_GB2312;mso-hansi-font-family:宋体'>邮政编码：<span lan
 
  </div>
       </div>      
-</div>
+
+
 </template>
 <script>
 import { setTimeout } from 'timers';
