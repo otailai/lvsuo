@@ -8,8 +8,6 @@
                  <p><i class="el-icon-arrow-right"></i></p>
                 
                         <p v-show="child_cur == i" v-for="(v,i) in arr" :key="i">{{v.Item_Name}}</p>
-                
-            
               </div>
                         <div style="margin-top:30px;">
                              <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
@@ -18,7 +16,6 @@
                               </el-tab-pane>
                             </el-tabs>  
                          </div>
-                     
             </div>
 
 </template>
@@ -29,6 +26,7 @@ import customeCaseType from './setBase/customeCaseType'
 import industryCaseType from './setBase/industryCaseType'
 import causesCase from './setBase/causesCase'
 import jobCase from './setBase/jobCase'
+import setTRee from './setBase/setTRee'
   export default {
     data() {
       return {
@@ -58,7 +56,7 @@ import jobCase from './setBase/jobCase'
       getmenu(){
         this.child_cur = this.$store.state.base.child_id
         this.$http.get('/yongxu/Base/Get_Basics',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
-        //  console.log(res)
+          console.log(res)
           this.arr = res.data
           this.$router.push('/index/setBase/'+this.arr[this.$store.state.base.child_id].Item_Path)
            this.getActiveMenu()
@@ -96,7 +94,8 @@ import jobCase from './setBase/jobCase'
       customeCaseType,
       industryCaseType,
       causesCase,
-      jobCase
+      jobCase,
+      setTRee
     },
    　filters:{
       getTime(time){

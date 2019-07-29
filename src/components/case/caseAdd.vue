@@ -46,7 +46,7 @@
                          size="large"
                          :options="options"
                          v-model="selectedOptions"
-                         placeholder="*请选择"
+                         placeholder="选填"
                          style="outline:none;"
                          @change="handleChange">
                     </el-cascader>
@@ -63,7 +63,7 @@
                         <input type="text" class="common-input" placeholder="选填"  v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="*请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
-                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" v-model="tel"  maxlength="11"/></div>
+                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" v-model="tel"  maxlength="30"/></div>
                     <div class="flex"><p class="title">是否常年客户</p>
                   <el-select v-model="isValue" placeholder="*请选择"><el-option v-for="item in isValueArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
@@ -72,7 +72,7 @@
                     </div>
                     </div>
                    <div class="address">
-                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " class="common-input long-width" placeholder="*必填" v-model="address"/></div>
+                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " class="common-input long-width" placeholder="*必填" v-model="address" maxlength="30"/></div>
                        </div> 
                  </div>
                  <div class="add-caseinfo add-userinfo flex">
@@ -90,7 +90,7 @@
                   <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
                  </el-select>
                     </div>
-                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="*必填" v-model="caseName"/></div>
+                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="*必填" v-model="caseName" maxlength="50"/></div>
                    
                            <div class="flex selectInput1" id="selectInput1">
                         <p class="title">案由</p> 
@@ -98,7 +98,7 @@
                              <el-option v-for="item in CaseResonArr" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
                          </el-select>
                     <!-- <el-select  v-model="caseValue2" placeholder="*请选择"><el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option></el-select> -->
-                            <el-select v-model="caseWhy1" placeholder="*请选择" style="overflow-x:hidden;width:150px"> 
+                            <el-select v-model="caseWhy1" placeholder="*请选择" style="overflow-x:hidden;width:150px" @change="changeCaseReson2(caseWhy1)"> 
                            <el-option v-for="item in CaseResonArr1" :key="item.Id" :label="item.Value"  :value="item.Id"> </el-option>
                         </el-select>
                           
@@ -108,14 +108,14 @@
                     </div>
                    
                    
-                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="*必填" v-model="compony"/></div>
+                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="*必填" v-model="compony" maxlength="30"/></div>
                     <!-- <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty"/></div> -->
                    
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div> -->
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
-                        <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填"></textarea>
+                        <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填" maxlength="300"></textarea>
                         </div>
                         <!-- <div class="flex" style=" justify-content: flex-start;align-items: center;">
                              
@@ -132,7 +132,7 @@
                                  <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
                              
                         </div> -->
-                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div>
+                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
 
                     </div>
@@ -283,7 +283,7 @@
                         type="date"
                          value-format="yyyy-MM-dd"
                         placeholder="选择日期时间">
-                        </el-date-picker>
+                        </el-date-picker> 
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].describe"/>
                        <div class="input-icon"></div>
@@ -292,7 +292,7 @@
                     <!-- <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="timeArr[i+1].dateName"/> -->
                       <el-date-picker
                           class="time_input"
-                          v-model="timeArr[i+1].dateName"
+                          v-model="timeArr[i+1].dateName" 
                           value-format="yyyy-MM-dd"
                             type="date"
                             placeholder="选择日期时间">
@@ -407,7 +407,7 @@
                      <div class="add-method-index flex">
                     <p>选择合同类型</p>
                      <div class="select-input">
-                     <el-select v-model="fileType" placeholder="*请选择" @change="changeCostWay(costValue)">
+                     <el-select v-model="fileType" placeholder="*请选择" @change="changeCostWay(costValue)" :disabled="disabled">
                          <el-option v-for="item in fileTypeArr" :key="item.Id" :label="item.value" :value="item.Id"></el-option>
                     </el-select>                           
                      </div>
@@ -422,8 +422,10 @@
 
 
                 <div class="end-btn flex">
-                    <button class="btn btn1" @click="lookContract()">预览合同</button> 
-                    <button class="btn btn2" @click="addAll()">提交审核</button>
+                    <button class="btn btn1" @click="lookContract()" v-show="fileType == 1">预览合同</button> 
+                    <button class="btn btn2" @click="addAll()" v-if="addTime">提交审核</button>
+                    <button class="btn btn2" v-else disabled>已提交审核</button>
+                    
                 </div>
                 
                   
@@ -637,7 +639,7 @@ export default {
             //服务内容
             Service_Content:'',
             //合同类型
-            fileTypeArr:[{value:'律所合同',Id:1},{value:'客户合同',Id:2}],
+            fileTypeArr:[{value:'律所合同',Id:1},{value:'其他合同',Id:2}],
             fileType:1,
             //合同上传
             dialogFormVisible1:false,
@@ -668,6 +670,11 @@ export default {
             dataWord:{},
             //标的额
             biaodie:'',
+            disabled:false,
+            //
+            caseWhy11:'',
+            caseWhy22:'',
+            addTime:true,
         }
     },
           
@@ -706,7 +713,6 @@ export default {
         },
         lookContract(data){
               this.checkData()
-            // console.log(this.checkData())
             if(this.checkData() == false){
                 return false
             }
@@ -721,6 +727,12 @@ export default {
             if(this.customValue == 3){
                 this.suoshuValue = 0
             }
+             if(this.value2===''){
+                    this.value2='无'
+              }
+            if(this.oppositeParty===''){
+                this.oppositeParty='无'
+              }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
@@ -737,7 +749,7 @@ export default {
               'cardNo':this.cardNo,
               'compony':this.compony,
               'oppositePart':this.oppositeParty,
-              'caseWhy':this.caseWhy1,
+              'caseWhy':this.caseWhy22,
                     //服务内容
               'Service_Content':this.Service_Content,
                 //标的额
@@ -784,7 +796,7 @@ export default {
                 'cardNo':this.cardNo,
                 'compony':this.compony,
                 'oppositePart':this.oppositeParty,
-                'caseWhy':this.caseWhy1,
+                'caseWhy':this.caseWhy22,
 
 
                 'caseValue':this.caseValue,
@@ -827,7 +839,7 @@ export default {
                 'cardNo':this.cardNo,
                 'compony':this.compony,
                 'oppositePart':this.oppositeParty,
-                'caseWhy':this.caseWhy1,
+                'caseWhy':this.caseWhy22,
                 'Source_Contract':this.fileType,
                 'caseValue':this.caseValue,
                 'caseValue2':this.caseValue2,
@@ -871,8 +883,10 @@ export default {
 
         },
         addAll(){
+            if(!this.addTime){
+                return false
+            }
             this.checkData()
-            // console.log(this.checkData())
             if(this.checkData() == false){
                 return false
             }
@@ -890,6 +904,12 @@ export default {
             if(this.value2===''){
                     this.value2='无'
               }
+            if(this.oppositeParty ===''){
+                this.oppositeParty='无'
+              }
+            if(this.province === ''){
+                 this.province = '无'
+            }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
@@ -1005,8 +1025,6 @@ export default {
                 'caseName':this.caseName,
                 'caseWay':this.caseWay,
                 'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
-
-
               'laywerArr':this.inputArr,
             //   'partyArr':this.input1Arr,
                 'File_Name':this.File_Name,
@@ -1026,13 +1044,14 @@ export default {
         this.$http.post('/yongxu/Index/AddCases',{
                 map:addJson
             }).then((res)=>{
-                //  console.log(res)
+                console.log(res)
                 if(res.data == true){
                 this.$message({
                     message:'添加成功',
                     type:'success'
                 });
-                 this.$router.push('/index/caseIndex')
+                this.addTime = false;
+                this.$router.push('/index/caseIndex')
                 return false
                 }else{
                     this.$message({
@@ -1104,13 +1123,13 @@ export default {
             // }
             }
             
-            if(this.province==""||this.province==null){
-                this.$message({
-                    message:'省市区信息不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            // if(this.province==""||this.province==null){
+            //     this.$message({
+            //         message:'省市区信息不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
              if(this.address==""||this.address==null){
                 this.$message({
                     message:'详细地址不能为空',
@@ -1126,8 +1145,8 @@ export default {
                 });
                 return false
             }
-             var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
-            if (!myreg.test(this.tel)) {
+            //var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+            if (this.tel.length<2||this.tel.length>30) {
                   this.$message({
                     message:'联系电话格式不正确',
                     type:'warning'
@@ -1177,13 +1196,13 @@ export default {
             //     });
             //     return false
             // }
-               if(this.oppositeParty==""||this.oppositeParty==null){
-                this.$message({
-                    message:'对方当事人不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //    if(this.oppositeParty==""||this.oppositeParty==null){
+            //     this.$message({
+            //         message:'对方当事人不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             var arr=[]
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Id)
@@ -1235,8 +1254,9 @@ export default {
                 return false
             }
            var nary1=arrJob1.sort();
+           console.log(nary1)
             for(var i=0;i<arrJob1.length;i++){
-                if (nary1[i]==nary1[i+1]){  
+                if (nary1[i]==nary1[i+1] && nary1[i]==18 && nary1[i+1]==18){  
            
                     this.$message({
                     message:'最多一位主办律师',
@@ -1358,6 +1378,7 @@ export default {
             }
 
             var arrMoney=[]
+            var reg1 = /^\d+$|^\d*\.\d+$/g;
             for(var i in this.timeArr){
                 arrMoney.push(this.timeArr[i].payCount)
             }
@@ -1368,6 +1389,18 @@ export default {
                 });
                 return false
             }
+            for(var i = 0;i<arrMoney.length;i++){
+                if(!reg1.test(arrMoney[i])){
+                    this.$message({
+                        message:'付款金额格式为数字加小数点格式',
+                        type:'warning'
+                    });
+                    return false
+                    }
+            }
+             
+         
+
         
 
              var arrdescribe=[]
@@ -1448,7 +1481,6 @@ export default {
         getCustomFilter(){
              this.$http.get('/yongxu/Index/Get_Name_Customer',{params:{name:this.search}}).then((res) => {
                  this.list = res.data
-                 console.log(this.list)
             })
         },
         /**获取客户类型下拉 */
@@ -1457,7 +1489,6 @@ export default {
                    /**获取客户类型下拉 */
                 //  this.customTypeArr = res.data.Types
                    /**获取所属行业下拉 */
-                console.log(res)
                  this.suoshuhangyeArr = res.data.Industry
              })
         },
@@ -1484,13 +1515,17 @@ export default {
         },
         /**更改一级案由 */
         changeCaseReson(id){
+            this.getCaseWhyValue(id,1)
             this.getCaseResonList1(id)
+        },
+        changeCaseReson2(id){
+            this.getCaseWhyValue2(id,2)
         },
         /**获取案由根据一级案件类型 */
         getCaseResonList(id){
              this.$http.get('/yongxu/Index/Get_Cause_Case',{params:{Id:id}}).then((res) => {
                   this.CaseResonArr=[]
-                 this.CaseResonArr = res.data
+                  this.CaseResonArr = res.data
              })
         },
              /**获取案由根据一级案由获取二级案由 */
@@ -1534,13 +1569,15 @@ export default {
                   this.value2 = ''
                   this.cardNo=''
                   this.isValue=''
+                  this.selectedOptions = []
         },
 
         getCustomInfo(){
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.customId}}).then((res)=>{ 
                   console.log(res)
                   if(res.data.City ==undefined || res.data.City=="" || res.data.City=="无"){
-                      res.data.City = ''
+                      this.selectedOptions = []
+                      this.province= '无'
                   }else{
                      this.province=res.data.City
                      console.log(res.data.City.split('-')[0])
@@ -1550,8 +1587,6 @@ export default {
                         this.selectedOptions = [a,b,c]
                   }
                   this.userNameE=res.data.Customer_Name_En
-                
-                 
                   this.address = res.data.Detailed_Address
                   //this.tel=res.data.Contact_Party
                   this.suoshuValue = res.data.TradeId
@@ -1765,7 +1800,28 @@ export default {
         //   this.selectedOptions = CodeToText[value[0]]+'/'+CodeToText[value[1]]+'/'+CodeToText[value[2]]
             //   this.province = CodeToText[value[0]]+'-'+CodeToText[value[1]]+'-'+CodeToText[value[2]]
           //    console.log(this.province)
-            }
+            },
+            getCaseWhyValue(id,sign){
+                  this.$http.get('/yongxu/Install/Get_Cause',{
+                  params:{ Id:id,
+                   sign:sign}
+                }).then((res)=>{
+                   
+                    this.caseWhy11 = res.data
+                     console.log(this.caseWhy11)
+                })
+            },
+             getCaseWhyValue2(id,sign){
+                  this.$http.get('/yongxu/Install/Get_Cause',{
+                  params:{ Id:id,
+                   sign:sign}
+                }).then((res)=>{
+                   
+                    this.caseWhy22 = res.data 
+                    
+                })
+            },
+          
     },
     created(){
         this.customValue=3
@@ -1809,6 +1865,15 @@ export default {
     watch:{
         search(newData){
             this.getCustomFilter()
+        },
+        caseValue(newData){
+            if(newData==1||newData==4){
+                this.fileType = 1
+                this.disabled = false
+            }else{
+                this.fileType = 2
+                 this.disabled =true
+            }
         }
     }
 }

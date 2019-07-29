@@ -182,6 +182,7 @@ export default {
             },
             info:'',
             caseReMarkId:'',
+            Category_Id:0, 
         }
     },
     inject:["reload"],
@@ -195,6 +196,7 @@ export default {
           PageNumber:this.currentPage,
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
+           Category_Id:this.Category_Id,
         }}).then((res)=>{
             //console.log(res)
             this.riskBrandArr = res.data.Two_Risk
@@ -257,10 +259,12 @@ export default {
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
           this.optionChildMenu = res.data  
+          this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+          this.Category_Id = this.Casevalue 
            if(res.data.length===0){
                         this.Casevalue1 = ''
                 }else{
-                    this.Casevalue1 =res.data[0].Id  
+                    this.Casevalue1 = 0 
                     }
           this.changeTowValue(this.Casevalue1)
         })
@@ -576,11 +580,11 @@ export default {
           return text.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
         }
     },
-     watch:{
-    Casevalue:function(newV,oldV){
-       this.getSelectChildeMenu(newV)
-    }
-     }
+    //  watch:{
+    // Casevalue:function(newV,oldV){
+    //    this.getSelectChildeMenu(newV)
+    // }
+    //  }
 }
 </script>
 <style>

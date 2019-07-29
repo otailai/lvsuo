@@ -51,16 +51,19 @@
                                   <span @click="copy" >{{scope.row.Case_No}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
+                      <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
+                        <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
+                          <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
                                 {{scope.row.Category_Name}}一{{scope.row.Value}}
                             </span>
                         </template>
                       </el-table-column>
-                       <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
+                   
+                    
+                     
                           <!-- <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
@@ -161,6 +164,7 @@ export default {
             tableData:[],
             //一级下拉
             Casevalue1:'',
+            Casevalue12:0,
             //二级下拉
             Casevalue2:0,
             //时间
@@ -222,7 +226,7 @@ export default {
         optionChildMenu:[],
         dialogFormVisible:false,
         allData:[],
-           
+        Category_Id:0, 
         }
     },
     inject:["reload"],
@@ -240,7 +244,6 @@ export default {
              statusValue = this.value
           }
          var userId = localStorage.getItem('userId')
-        
          this.$http.get('/yongxu/Index/Show_All_Case',{params:{
         //    sessionId:localStorage.getItem('sessionId'),
            UserId:userId,
@@ -249,8 +252,9 @@ export default {
            MaxTime:this.end,
            MinTime:this.start,
            VagueName:this.SearchInput,
-           Display_Page_Number:this.numPage,
+           Display_Page_Number:this.numPage, 
            PageNumber:this.currentPage,
+           Category_Id:this.Category_Id,
          }}).then((res)=>{
            this.tableData = res.data.All_Case
            this.tableData1 = res.data
@@ -291,6 +295,8 @@ export default {
         this.dateValue=''
         this.SearchInput=''
         this.Casevalue1 = ''
+        this.Casevalue12 = 0
+        this.Category_Id = 0
         console.log(this.Casevalue2)
         this.getCaseList() 
         
@@ -409,12 +415,12 @@ export default {
         this.sortRule.prop = column.prop
       },
     //获取二级菜单下拉
-        changeTowValue(id){
-           if(id == '' || id ==null){
+      changeTowValue(id){
+          if(id == '' || id ==null){
           this.Casevalue2 = 0
-      }else{
-        this.Casevalue2 = id
-      }
+          }else{
+          this.Casevalue2 = id
+          }
          this.getCaseList()
       },
       //状态查询
@@ -438,12 +444,16 @@ export default {
          this.Casevalue1 =''
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
+         console.log(res)
          this.optionChildMenu = res.data  
+         this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+         this.Category_Id = this.Casevalue
           if(res.data.length===0){
-                        this.Casevalue1 = ''
-                    }else{
-                    this.Casevalue1 =res.data[0].Id  
-                    }
+              this.Casevalue1 = ''
+              }else{
+              this.Casevalue12 = 0  
+              this.Casevalue1 = this.Casevalue12
+            }
          this.changeTowValue(this.Casevalue1)
 
         })
@@ -767,9 +777,9 @@ export default {
         this.getCaseList()
     },
     watch:{
-    Casevalue:function(newV,oldV){
-       this.getSelectChildeMenu(newV)
-    },
+    // Casevalue:function(newV,oldV){
+    //    this.getSelectChildeMenu(newV)
+    // },
      dialogFormVisible:function(newData){
       console.log(newData)
       if(newData == false){

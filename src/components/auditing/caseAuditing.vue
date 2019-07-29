@@ -45,7 +45,6 @@
                           <el-table-column prop="date" label="合同" width="50"> 
                                 <template slot-scope="scope"> 
                                <span style="color:red"   @click.stop="open3(scope.row.Id,scope.row.Charging_Method,scope.row.Category_Id)" v-if="scope.row.Source_Contract == 1">
-                                
                                  预览
                                </span>
                                  <span style="color:red"  @click.stop="look(scope.row.Id)" v-if="scope.row.Source_Contract == 2">
@@ -95,10 +94,12 @@
                 </li>
                 </ul>
             </div>
-              <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
-                          <iframe :src="'https://view.officeapps.live.com/op/view.aspx?src=http://java.gzbigbang.cn'+fileUrl"  width='100%' height='1000px' frameborder='1'>
-
-                          </iframe>
+              <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px"> 
+                          <!-- <iframe :src="'https://view.officeapps.live.com/op/view.aspx?src='+fileUrl"  width='100%' height='1000px' frameborder='1'>
+                          </iframe>  -->
+                           <iframe :src="'http://file.keking.cn/onlinePreview?url='+fileUrl"  width='100%' height='1000px' frameborder='1'>
+                          </iframe> 
+                         
               </el-dialog>
                <el-dialog  :visible.sync="dialogFormVisible"  :append-to-body='true'  top="300px" width="800px">
       <div class="dialogFormVisible flex">
@@ -193,7 +194,10 @@
                         <div v-if="Category_Id == 4">
                             <caseWord :dataWord='dataWord'></caseWord>
                         </div>
-                            <div v-if="Category_Id == 1">
+                        <div v-if="Category_Id == 1">
+                            <caseWord4 :dataWord='dataWord'></caseWord4>
+                        </div>
+                        <div v-if="Category_Id == 8">
                             <caseWord4 :dataWord='dataWord'></caseWord4>
                         </div>
                       
@@ -240,16 +244,24 @@ export default {
                 makeCollectionsArr10:[],//风险
                 // sortRule:{prop:'Creattime',order:null},
                 //一级案件类型id
-                Category_Id:'',
+                Category_Id:0,
+
                 
         }
     },
     inject:["reload"],
+    created(){
+      
+    },
     methods:{
       updateData:function(){
         this.getCaseArr()
       },
           jiansuo:function(partyname,Id,Staff_Name,type){
+            console.log(Id)
+            if(partyname == ''){
+                partyname = '无'
+            }
             this.$router.push({path:`/index/search1/${partyname}/${Id}/${Staff_Name}/${type}`})
           },
           openDialog:function(id,Charging_Method){
@@ -343,9 +355,10 @@ export default {
           Dic_Id:this.Casevalue2,
           Status:statusValue,
           VagueName:this.SearchInput,
+          User_Id:localStorage.getItem('userId'),
+          Category_Id:this.Category_Id,
         }}).then((res)=>{
            //console.log(res)
-
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
              
@@ -374,9 +387,10 @@ export default {
       },
       //预览html合同
       open3:function(id,type,Category_Id){
+        console.log(Category_Id)
         this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
              this.dataWord = res.data
-            this.Category_Id = Category_Id
+             this.Category_Id = Category_Id
              this.dialogFormVisibleWord1 = true
         }).catch((err)=>{
           this.$message({
@@ -417,15 +431,17 @@ export default {
        getSelectChildeMenu:function(id){ 
          this.optionChildMenu = ''
          this.Casevalue1 =''
-         //console.log(id)
+         //console.log(id) 
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
-          this.optionChildMenu = res.data  
+          this.optionChildMenu = res.data
+          this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+          this.Category_Id = this.Casevalue
            if(res.data.length===0){
                         this.Casevalue1 = ''
                 }else{
-                    this.Casevalue1 =res.data[0].Id  
+                    this.Casevalue1 =0
                     }
           this.changeTowValue(this.Casevalue1)
         })
@@ -531,7 +547,8 @@ export default {
         this.$http.get('/yongxu/Toexamine/Sel_Url',{params:{
           Case_Id:id
         }}).then((res)=>{
-            this.fileUrl = res.data 
+          console.log(res.data)
+            this.fileUrl = 'http://cms.kingpound.com:8081'+res.data
         }).then((res)=>{
           this.dialogFormVisibleWord = true
         }).catch((err)=>{
@@ -633,9 +650,9 @@ export default {
           },
     },
      watch:{
-    Casevalue:function(newV,oldV){
-       this.getSelectChildeMenu(newV)
-    }
+    // Casevalue:function(newV,oldV){
+    //    this.getSelectChildeMenu(newV)
+    // }
      },
        components:{
         'caseWord':caseWord,

@@ -28,9 +28,9 @@ module.exports = {
       '/yongxu': {
         changeOrigin: true,// 如果接口跨域，需要进行这个参数配置
         //target: 'http://113.108.197.50:8081/lsmsManager',// 正式服外网接口的域名 
-        //target: 'http://192.168.2.201:8081/lsmsManager',//  正式服内网接口的域名（zhengchang） 
+        target: 'http://192.168.2.201:8081/lsmsManager',//  正式服内网接口的域名（zhengchang） 
         //target: 'http://java.gzbigbang.cn/lsmsManager',// 测试服接口的域名 
-        target: 'http://192.168.0.106:8080',// 测试服接口的域名
+         //target: 'http://192.168.0.106:8080',// 测试服接口的域名
         pathRewrite: { 
           '^/yongxu': ''//后面可以使重写的新路径，一般不做更改
         }

@@ -34,8 +34,7 @@
               <li class="showTab-li" v-show="cur==0">
 
                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Id" label="序号" width="" ></el-table-column>
-                    <el-table-column prop="File_Name" label="文档名称" width="" :show-overflow-tooltip="true"> </el-table-column>
+                    <el-table-column prop="File_Name" label="文档名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Postfix" label="文档类型" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column prop="Staff_Name" label="更新人员" width="" :show-overflow-tooltip="true"> </el-table-column>
                        <el-table-column  label="创建日期" width="" sortable prop="Date_Created">
@@ -54,6 +53,7 @@
                         <el-table-column label="操作"> 
                               <template slot-scope="scope">   
                              <a :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
+                             <span @click="deleteDoc(scope.row.Id,scope.row.File_Path)" v-show="scope.row.User_Id == userId" style="cursor:pointer">删除</span>
                               </template>
                         </el-table-column>
                 </el-table>
@@ -123,6 +123,7 @@ import { constants } from 'fs';
   export default {
     data() {
       return {
+        userId:'',
         //分页
         PageCount:0,
         currentPage:1,
@@ -238,6 +239,40 @@ import { constants } from 'fs';
         this.$http.get('/api/data').then((res)=>{
         this.arr = res.data[0].children
         })
+      },
+      /**
+       * 删除
+       */
+      deleteDoc(id,path){
+          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+            this.$http.get('/yongxu/Document/Del_Papers',{params:{
+              File_Path:path,
+              Id:id
+            }}).then((res)=>{
+              if(res.data == true){
+                  this.$message({
+                      type: 'success',
+                      message: '删除成功!'
+                    });
+                    this.getTableData()
+              }else{
+                this.$message({
+                      type: 'warning',
+                      message: '删除失败!'
+                    });
+                    return false
+              }
+            })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
       },
       openNew(){
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -357,6 +392,7 @@ import { constants } from 'fs';
               PageNumber:this.currentPage
               }
             }).then((res)=>{
+              console.log(res)
                  this.tableData = res.data.Document
                  this.PageCount = res.data.PageCount
                
@@ -444,6 +480,7 @@ import { constants } from 'fs';
     mounted(){
      // this.getChildMenu()
       this.getTableData()
+      this.userId = localStorage.getItem('userId')
     },
       filters:{
           getTime:function(time){

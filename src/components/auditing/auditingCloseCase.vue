@@ -105,6 +105,7 @@ export default {
                 ],
                 dialogFormVisibleWord1:false,
                  dataWord:{},
+                 Category_Id:0, 
         }
     },
     inject:["reload"],
@@ -117,7 +118,9 @@ export default {
           PageNumber:this.currentPage,
           Display_Page_Number:this.pageNum,
           Dic_Id:this.Casevalue2,
-          VagueName:this.SearchInput
+          VagueName:this.SearchInput,
+           User_Id:localStorage.getItem('userId'),
+          Category_Id:this.Category_Id,
         }}).then((res)=>{
       
             this.closeCasekArr = res.data.Closing_Audit
@@ -181,10 +184,12 @@ export default {
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
           this.optionChildMenu = res.data  
+           this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+          this.Category_Id = this.Casevalue 
           if(res.data.length===0){
                         this.Casevalue1 = ''
                 }else{
-                    this.Casevalue1 =res.data[0].Id  
+                    this.Casevalue1 =0  
                     }
           this.changeTowValue(this.Casevalue1)
         })
@@ -195,6 +200,7 @@ export default {
         this.value = ''
         this.Casevalue = ''
         this.Casevalue1 = ''
+        this.Category_Id=0
         this.getCloseCasekArr()
         
       },
@@ -335,11 +341,11 @@ export default {
         }
           },
     },
-        watch:{
-    Casevalue:function(newV,oldV){
-         this.getSelectChildeMenu(newV)
-    }
-     },
+    //     watch:{
+    // Casevalue:function(newV,oldV){
+    //      this.getSelectChildeMenu(newV)
+    // }
+    //  },
       components:{
         'caseWord':caseWord,
     },

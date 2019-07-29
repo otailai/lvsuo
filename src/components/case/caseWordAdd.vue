@@ -305,7 +305,7 @@ export default {
             document.getElementById('shejibiaode').innerText = this.dataWordArr.Target
 
             document.getElementById('text1').innerText = text1
-            document.getElementById('text2').innerText = this.dataWordArr.oppositePart
+            document.getElementById('text2').innerText = ''
              document.getElementById('text3').innerText = ''
             document.getElementById('text4').innerText = ''
             document.getElementById('text5').innerText = ''
@@ -314,7 +314,6 @@ export default {
             }else{
              document.getElementById('fuwuneirong').innerText = this.dataWordArr.Service_Content.replace(/<[^>]+>|&[^>]+;/g,"").trim();
             }
-             console.log(this.dataWordArr.Service_Content)
               document.getElementById('text6').innerText = ''
 // 逾期多少日
                document.getElementById('text10').innerText = ''
@@ -323,7 +322,7 @@ export default {
                 var year=date.getFullYear(); 
                var month =date.getMonth()+1;
                var day =date.getDate()    
-                document.getElementById('todayTime').innerText = year
+                // document.getElementById('todayTime').innerText = year
                 document.getElementById('text7').innerText = year
                     document.getElementById('text8').innerText = month
                     document.getElementById('text9').innerText = day

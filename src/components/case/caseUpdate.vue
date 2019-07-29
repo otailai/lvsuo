@@ -132,7 +132,7 @@
                                  <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
                              
                         </div> -->
-                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div>
+                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty"/></div>
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
                     </div>
                     </div>
@@ -382,7 +382,7 @@
                      <button class="btn btn2" @click="updateAddAll()">提交审核</button>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
-                        <iframe src='https://view.officeapps.live.com/op/view.aspx?src=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
+                        <iframe src='http://file.keking.cn/onlinePreview?url=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
                         </iframe>
                 </el-dialog>
              </div>
@@ -632,7 +632,7 @@ export default {
             Case_Id:'',//案件Id
             newInputArr:{},
             Service_Content:'',
-            fileTypeArr:[{value:'律所合同',Id:1},{value:'客户合同',Id:2}],
+            fileTypeArr:[{value:'律所合同',Id:1},{value:'其他合同',Id:2}],
             fileType:1,
             Source_Contract:'',
             firstSource_Contract:'',
@@ -726,6 +726,12 @@ export default {
              if(this.value2===''){
                     this.value2='无'
               }
+            if(this.oppositeParty ===''){
+                this.oppositeParty='无'
+              }
+            if(this.province===''|| this.province=='无'){
+                this.province = '无'
+            }
             if(this.costValue == 8){
             addJson = {
               'User_Id':localStorage.getItem('userId'),//登录人Id
@@ -941,13 +947,13 @@ export default {
                 });
                 return false
             }
-            if(this.province==""||this.province==null){
-                this.$message({
-                    message:'省市区信息不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            // if(this.province==""||this.province==null){
+            //     this.$message({
+            //         message:'省市区信息不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
              if(this.address==""||this.address==null){
                 this.$message({
                     message:'详细地址不能为空',
@@ -965,15 +971,15 @@ export default {
             }
             //    var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
             //   var isMob=  new RegExp(/^(0?\d{2,3}\-)?[1-9]\d{6,7}(\-\d{1,4})?$/);
-                  var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
-                  console.log(myreg.test(this.tel))
-            if (this.tel.length<7||this.tel.length>20) {
-                  this.$message({
-                    message:'联系电话格式不正确',
-                    type:'warning'
-                });
-                return false;
-            } 
+            //       var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+            //       console.log(myreg.test(this.tel))
+            // if (this.tel.length<7||this.tel.length>20) {
+            //       this.$message({
+            //         message:'联系电话格式不正确',
+            //         type:'warning'
+            //     });
+            //     return false;
+            // } 
                if(this.isValue==""||this.isValue==null){
                 this.$message({
                     message:'*请选择是否常年客户',
@@ -1002,6 +1008,13 @@ export default {
                 });
                 return false
             }
+              if(this.caseWhy1==""||this.caseWhy1==null){
+                this.$message({
+                    message:'*请选择案由',
+                    type:'warning'
+                });
+                return false
+            }
              if(this.compony==""||this.compony==null){
                 this.$message({
                     message:'请填写受理机关',
@@ -1023,13 +1036,13 @@ export default {
             //     });
             //     return false
             // }
-               if(this.oppositeParty==""||this.oppositeParty==null){
-                this.$message({
-                    message:'对方当事人不能为空',
-                    type:'warning'
-                });
-                return false
-            }
+            //    if(this.oppositeParty==""||this.oppositeParty==null){
+            //     this.$message({
+            //         message:'对方当事人不能为空',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             var arr=[]
             
             for(var i in this.inputArr){
@@ -1083,7 +1096,7 @@ export default {
             }
               var nary1=arrJob1.sort();
             for(var i=0;i<arrJob1.length;i++){
-                if (nary1[i]==nary1[i+1]){  
+                if (nary1[i]==nary1[i+1] && nary1[i]==18 && nary1[i+1]==18){  
            
                     this.$message({
                     message:'最多一位主办律师',
@@ -1188,6 +1201,7 @@ export default {
             }
 
             var arrMoney=[]
+             var reg1 = /^\d+$|^\d*\.\d+$/g;
             for(var i in this.timeArr){
                 arrMoney.push(this.timeArr[i].Charge_Amount)
             }
@@ -1197,6 +1211,15 @@ export default {
                     type:'warning'
                 });
                 return false
+            }
+              for(var i = 0;i<arrMoney.length;i++){
+                if(!reg1.test(arrMoney[i])){
+                    this.$message({
+                        message:'付款金额格式为数字加小数点格式',
+                        type:'warning'
+                    });
+                    return false
+                    }
             }
         
 

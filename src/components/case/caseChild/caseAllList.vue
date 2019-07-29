@@ -1,19 +1,28 @@
 <template>
     <div>
-            <div class="case-child-end flex">
+            <div class="case-child-end2 flex">
+                    <div class="case-state flex">
+                    <p>分所查询：</p>
+                  <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
+                    <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
+                  </el-select>
+                    </div>          
+
+                    <div class="flex row">
                     <div class="input flex">
                       <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
                           
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
-                    
                     </div>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案件</el-button>
+                    </div>
+                  
                         <!-- <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button> -->
                 </div>
              <div class="selectMenu flex">
               <div class="case-type flex">
                  <p>案件类型：</p>
-                  <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)">
+                  <el-select v-model="Casevalue" placeholder="请选择" @change="getSelectChildeMenu(Casevalue)"> 
                     <el-option v-for="item in optionMenu" :key="item.Id" :label="item.Category_Name"  :value="item.Id"> </el-option>
                   </el-select>
 
@@ -52,8 +61,10 @@
                                   <span @click="copy" >{{scope.row.Case_No}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
+                    <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
+                  
+                    
                       <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
@@ -61,15 +72,8 @@
                             </span>
                         </template>
                       </el-table-column>
-                       <el-table-column prop="Staff_Name" label="主办律师" width=""> </el-table-column>
-                          <!-- <el-table-column  label="合同起止日期" width="120">
-                                <template slot-scope="scope">
-                                    <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
-                                    <p v-else>{{scope.row.Contract_Date_From | getTime}}</p>
-                                    
-                                </template>
-                            
-                             </el-table-column> -->
+                         <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
+                        
                              <el-table-column  label="立案日期" width="110" sortable prop="Filing_Date">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
@@ -204,9 +208,9 @@ export default {
          {value:0,label:'审核中'},{value:1,label:'已审核'},{value:2,label:'已签合同'},{value:3,label:'已结案'},{value:-2,label:'返回修改'},{value:4,label:'待结案'}
         ],
         //1下拉菜单
-        optionMenu:[],
+        optionMenu:{},
         //2下拉菜单
-        optionChildMenu:[],
+        optionChildMenu:{},
            //案件ID
             Case_Id:'',
              //案件状态
@@ -225,6 +229,10 @@ export default {
             dialogFormVisible:false,
             fileStatus:'',
             allData:[],
+            branchList:[],
+            branchValue:'',
+            Orgid:0,
+            Category_Id:0,
         }
     },
     inject:["reload"],
@@ -269,6 +277,8 @@ export default {
            VagueName:this.SearchInput,
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
+           Orgid:this.Orgid,
+           Category_Id:this.Category_Id,
          }}).then((res)=>{
            this.tableData = res.data.All_Cases
            this.total1 = res.data.PageCount
@@ -306,8 +316,11 @@ export default {
         this.dateValue=''
         this.SearchInput=''
         this.Casevalue1 = ''
+        this.Orgid=0
+        this.branchValue=''
+        this.Category_Id=0
        // console.log(this.Casevalue2)
-        this.getCaseList() 
+        this.getCaseList()  
       },
     //进入详情
        lineCilck:function(row, event, column){
@@ -349,6 +362,22 @@ export default {
       handleCurrentChange:function(val) {
         this.currentPage = val
         this.getCaseList()
+      },
+      /**
+       * 获取分所下拉
+       */
+      getBranchList(){
+         this.$http.get('/yongxu/Index/Get_Branch').then((res)=>{
+           this.branchList = res.data
+           console.log(res)
+         })
+      },
+      /**
+       * 选择分所下拉
+       */
+      changeBranch(id){
+          this.Orgid = id
+          this.getCaseList() 
       },
       //下载excel
      downExcel:function() {
@@ -466,10 +495,12 @@ export default {
                     this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
                       //console.log(res)
                     this.optionChildMenu = res.data  
+                    this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+                    this.Category_Id = this.Casevalue
                     if(res.data.length===0){
                         this.Casevalue1 = ''
                     }else{
-                    this.Casevalue1 =res.data[0].Id  
+                        this.Casevalue1 = 0
                     }
                     this.changeTowValue(this.Casevalue1)
          })
@@ -772,7 +803,7 @@ export default {
      
     },
     mounted:function(){
-  
+        this.getBranchList()
         this.getSelectMenu()
         this.getCaseList()
     },
@@ -782,10 +813,10 @@ export default {
         this.getCaseList()
     },
     watch:{
-    Casevalue:function(newV,oldV){
+    // Casevalue:function(newV,oldV){
   
-        this.getSelectChildeMenu(newV)
-    },
+    //     this.getSelectChildeMenu(newV)
+    // },
     dialogFormVisible:function(newData){
       console.log(newData)
       if(newData == false){
@@ -839,9 +870,9 @@ export default {
     background: #7E2C2E;
     color: #ffffff;
 }
-.case-child-end{
+.case-child-end2{
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content:space-between;
 }
 .selectMenu{
     margin-top: 20px;

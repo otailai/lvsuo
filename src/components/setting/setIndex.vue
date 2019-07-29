@@ -407,16 +407,17 @@ import { fail } from 'assert';
             Parent_Id:this.value,
             Org_Name:this.partyName
           }}).then((res)=>{
-              if(res.data == true){
+            console.log(res)
+              if(res.data.sign == 1){
                   this.$message({
-                    message:'添加成功',
+                    message:res.data.str,
                     type:'success'
                   })
                   this.getList()
                   this.dialogFormVisible1 =false
               }else{
                  this.$message({
-                    message:'添加失败',
+                    message:res.data.str,
                     type:'warning'
                   })
               }
@@ -484,22 +485,22 @@ import { fail } from 'assert';
             })
             return false
         }
-         if(this.form.tel == ''||this.form.tel==null){
-            this.$message({
-              message:'联系方式不可为空',
-              type:'warning'
-            })
-            return false
-        }
+        //  if(this.form.tel == ''||this.form.tel==null){
+        //     this.$message({
+        //       message:'联系方式不可为空',
+        //       type:'warning'
+        //     })
+        //     return false
+        // }
          var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
-            if (!myreg.test(this.form.tel)) {
+            if (!myreg.test(this.form.tel) && this.form.tel!='') {
                   this.$message({
                     message:'请填写正确的手机号',
                     type:'warning'
                 });
                 return false;
             } 
-         if(this.form.state == ''||this.form.state==null){
+         if(this.form.state === ''||this.form.state===null){
             this.$message({
               message:'状态不可为空',
               type:'warning'
@@ -617,15 +618,15 @@ import { fail } from 'assert';
             })
             return false
         }
-         if(this.form.update_tel == ''||this.form.update_tel==null){
-            this.$message({
-              message:'联系方式不可为空',
-              type:'warning'
-            })
-            return false
-        }
+        //  if(this.form.update_tel == ''||this.form.update_tel==null){
+        //     this.$message({
+        //       message:'联系方式不可为空',
+        //       type:'warning'
+        //     })
+        //     return false
+        // }
            var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
-           if(!myreg.test(this.form.update_tel)){
+           if(!myreg.test(this.form.update_tel)  && this.form.update_tel!=''){
               this.$message({
                   message:'请填写正确的手机号',
                   type:'warning'
@@ -717,7 +718,7 @@ import { fail } from 'assert';
     }
   };
 </script>
-<style scoped>
+<style>
 @import '../../assets/sass/main.css';
 .title-case{
   flex-direction: row;
@@ -779,7 +780,7 @@ import { fail } from 'assert';
     width: 500px;
 }
 .el-select2{
-  width: 500px;
+  width: 500px !important;
 }
 .zuzhiBox{
   flex-direction: row;
@@ -792,7 +793,6 @@ import { fail } from 'assert';
     margin-right: 20px;
     border-radius: 45px;
     border: 1px solid #DDDDDD;
-    
 }
 .case-input{
       width:  200px;

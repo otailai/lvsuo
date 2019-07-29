@@ -188,7 +188,7 @@ export default {
             },
             info:'',
             caseReMarkId:'',
-              
+             Category_Id:0, 
         }
     },
     inject:["reload"],
@@ -203,6 +203,7 @@ export default {
           PageNumber:this.currentPage,
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
+          Category_Id:this.Category_Id,
         }}).then((res)=>{
             console.log(res) 
             this.riskArr = res.data.Noe_Risk
@@ -264,11 +265,13 @@ export default {
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           //console.log(res)
-          this.optionChildMenu = res.data  
+          this.optionChildMenu = res.data 
+           this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+              this.Category_Id = this.Casevalue 
           if(res.data.length===0){
                         this.Casevalue1 = ''
                 }else{
-                    this.Casevalue1 =res.data[0].Id  
+                    this.Casevalue1 =0
                     }
           this.changeTowValue(this.Casevalue1)
         })
@@ -279,6 +282,7 @@ export default {
         this.value = ''
         this.Casevalue = ''
         this.Casevalue1 = ''
+        this.Category_Id=0
         this.getRiskArr()
         
       },
@@ -365,6 +369,7 @@ export default {
       },
       addRemarkButton(){
         this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:this.caseReMarkId,state:4}}).then((res)=>{
+          console.log(res)
              if(res.data == true){
                 this.$message({
                   type: 'success',
@@ -377,7 +382,7 @@ export default {
              }else{
                 this.$message({
                   type: 'warning',
-                  message: '操作失败!'
+                  message: '日志操作失败!'
                 });
              }
           })
@@ -591,11 +596,11 @@ export default {
         }
           },
     },
-     watch:{
-    Casevalue:function(newV,oldV){
-       this.getSelectChildeMenu(newV)
-    }
-     }
+    //  watch:{
+    // Casevalue:function(newV,oldV){
+    //    this.getSelectChildeMenu(newV)
+    // }
+     //}
 }
 </script>
 <style>

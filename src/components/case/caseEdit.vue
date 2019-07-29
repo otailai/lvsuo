@@ -373,7 +373,6 @@ export default {
               Case_type: "",
              introduce:'',
              Receiving_Organ:'',
-             Receiving_Organ:'',
              Type_Id:'',
             //律师信息
                 layWerInfoArr:[],
@@ -486,6 +485,7 @@ export default {
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
                 // 客户信息
+                console.log(res)
                 let arr=res.data.Get_Customer_Information
                 this.Customer_Name_Zh = arr.Customer_Name_Zh
                 this.Customer_Type_Id = arr.Customer_Type_Id
@@ -505,7 +505,12 @@ export default {
                 this.Case_type=caseInfo.Case_type
                 this.introduce = caseInfo.Case_Introduction
                 this.Case_Id = caseInfo.Id
-                this.Receiving_Organ=caseInfo.Receiving_Organ
+              
+                if(caseInfo.Receiving_Organ===undefined){
+                      this.Receiving_Organ=''
+                }else{
+                    this.Receiving_Organ=caseInfo.Receiving_Organ
+                }
                 this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
                 this.contact_status = caseInfo.Status

@@ -51,7 +51,8 @@
                                   <span @click="copy" >{{scope.row.Case_No}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
+                     <el-table-column prop="Staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
+                   
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
@@ -60,7 +61,7 @@
                             </span>
                         </template>
                       </el-table-column>
-                       <el-table-column prop="Staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
+                       <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
                           <!-- <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Contract_Date_From" style="color:#ccc">暂无</p>
@@ -222,6 +223,7 @@ export default {
             size:'',
             dialogFormVisible:false,
             allData:[],
+            Category_Id:0,
         }
     },
     inject:["reload"],
@@ -250,6 +252,7 @@ export default {
            VagueName:this.SearchInput,
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
+           Category_Id:this.Category_Id,
          }}).then((res)=>{
            this.tableData = res.data.Department_Case
            this.tableData1 = res.data
@@ -290,6 +293,7 @@ export default {
         this.dateValue=''
         this.SearchInput=''
         this.Casevalue1 = ''
+        this.Category_Id=0
         console.log(this.Casevalue2)
         this.getCaseList() 
         
@@ -436,10 +440,12 @@ export default {
          this.selectOneId = id
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{
           this.optionChildMenu = res.data  
+           this.optionChildMenu.push({Id:0,Value:'全部',Category_Id:0})
+         this.Category_Id = this.Casevalue
          if(res.data.length===0){
                         this.Casevalue1 = ''
                     }else{
-                    this.Casevalue1 =res.data[0].Id  
+                    this.Casevalue1 =0 
                     }
            //this.Casevalue1 = res.data
             this.changeTowValue(this.Casevalue1)
@@ -765,9 +771,9 @@ export default {
         this.getCaseList()
     },
     watch:{
-    Casevalue:function(newV,oldV){
-      this.getSelectChildeMenu(newV)
-    },
+    // Casevalue:function(newV,oldV){
+    //   this.getSelectChildeMenu(newV)
+    // },
      dialogFormVisible:function(newData){
       console.log(newData)
       if(newData == false){

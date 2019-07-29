@@ -12,7 +12,13 @@
           
               <li class="showTab-li">
                        <div>
-            <div class="case-child-end flex">
+            <div class="case-child-end3 flex">
+               <div class="case-state flex">
+               <p>审核类型：</p> 
+               <el-select v-model="stateValue" placeholder="请选择" style="margin-left: 10px;" @change="changeStateId()"> 
+               <el-option v-for="item in stateList"  :key="item.id"  :label="item.name" :value="item.id"></el-option>
+               </el-select>
+               </div>          
                 </div>
              <div class="selectMenu1 flex" style="margin-bottom:30px;">
                <div class="case-state flex">
@@ -116,6 +122,9 @@
 export default {
     data(){
         return{
+            stateList:[{id:1,name:'案件审核'},{id:2,name:'部门风控'},{id:3,name:'律所风控'},{id:4,name:'结案审核'},{id:5,name:'财务审核'}],
+            stateId:0,
+            stateValue:'',
             Casevalue:[],
             currentPage:1,
             total1:0,
@@ -198,6 +207,11 @@ export default {
           }else{
              statusValue = this.value
           }
+          if(this.stateValue == '' || this.stateValue==null){
+              this.stateId = 0
+          }else{
+            this.stateId = this.stateValue
+          }
          this.$http.get('/yongxu/Toexamine/Show_Audit_Log',{params:{
            Findings_Audit:statusValue,
            MaxTime:this.end,
@@ -205,6 +219,7 @@ export default {
            VagueName:this.SearchInput,
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
+           Audit_Type:this.stateId,
          }}).then((res)=>{
            //console.log(res)
            //console.log('1231')
@@ -217,6 +232,12 @@ export default {
         }).catch((err)=>{
           //console.log(err)
         })
+      },
+      /**
+       * 选择下拉
+       */
+      changeStateId(){
+        this.getCaseList()
       },
       sortChange(column){
        // console.log(column.order)
@@ -245,6 +266,7 @@ export default {
         this.SearchInput=''
         this.value = ''
         this.dateValue=''
+        this.stateValue=''
         this.getCaseList()
         
       },
@@ -615,9 +637,9 @@ export default {
     background: #7E2C2E;
     color: #ffffff;
 }
-.case-child-end{
+.case-child-end3{
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 .selectMenu{
     margin-top: 20px;

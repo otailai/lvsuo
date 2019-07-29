@@ -50,16 +50,7 @@
                                   <span @click="copy" >{{scope.row.Case_No}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="Case_Name" label="案件名称" width="180" > </el-table-column>
-                     <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100"> </el-table-column>
-                      <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
-                        <template slot-scope="scope">
-                            <span>
-                                {{scope.row.Value}}
-                            </span>
-                        </template>
-                      </el-table-column>
-                       <el-table-column  label="承办律师" width=""> 
+                     <el-table-column  label="承办律师" width=""> 
 
                             <template slot-scope="scope">
                             <el-popover trigger="hover" placement="top" popper-class="back_color">
@@ -71,6 +62,17 @@
                             </template>
 
                        </el-table-column>
+                          <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100"> </el-table-column>
+                      <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
+                        <template slot-scope="scope">
+                            <span>
+                                {{scope.row.Value}}
+                            </span>
+                        </template>
+                      </el-table-column>
+                    <el-table-column prop="Case_Name" label="案件名称" width="180" > </el-table-column>
+                  
+                      
                           <!-- <el-table-column  label="合同起止日期" width="120">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Creattime" style="color:#ccc">暂无</p>
@@ -457,6 +459,7 @@ export default {
       
       },
         successFile(res){
+          console.log(res)
             if(res.code == 200){
                     this.code = 200
                     this.File_Name = res.File_Name
@@ -661,9 +664,10 @@ export default {
             //获取律师列表
     showLaywer(id){
       var _this =this
-       this.$http.get('/yongxu/Customer/Show_All_Lawyers',{params:{
-         Id:1,
+       this.$http.get('/yongxu/Customer/Get_All_Lawyers',{params:{
+         Case_Id:id,
        }}).then((res)=>{
+         console.log(res)
         this.laywerNameArr = res.data
        })
     },

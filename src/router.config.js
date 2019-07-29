@@ -41,6 +41,7 @@ import customeCaseType from './components/setting/setBase/customeCaseType'
 import industryCaseType from './components/setting/setBase/industryCaseType'
 import causesCase from './components/setting/setBase/causesCase'
 import jobCase from './components/setting/setBase/jobCase'
+import setTRee from './components/setting/setBase/setTRee'
 
 import web404 from './components/web404'
 import weixin from './components/weixin'
@@ -85,6 +86,8 @@ children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepA
                 {path:'/index/setBase/industryCaseType',component:industryCaseType,name:'industryCaseType'},
                 {path:'/index/setBase/causesCase',component:causesCase,name:'causesCase'},
                 {path:'/index/setBase/jobCase',component:jobCase,name:'jobCase'},
+                {path:'/index/setBase/setTRee',component:setTRee,name:'setTRee'},
+                
     ]},
 {path:'/index/mineIndex',component:mineIndex,name:'mineIndex',meta:{requireAuth:true}},
 {path:'/index/mineEdit/:id',component:mineEdit,name:'mineEdit',meta:{requireAuth:true}},

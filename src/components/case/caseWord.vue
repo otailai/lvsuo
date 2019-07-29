@@ -267,13 +267,10 @@ export default {
                  $('#pdfDom').wordExport('生成文档')
             },
         getData(){
-             this.$http.get('/yongxu/Index/Contract_Template').then((res)=>{
-                      console.log(res)
-                        // this.$refs.div.innerHTML=res.data.Content
-                        this.data = res.data.Content  
+           
                         console.log(this.dataWord)
                         this.Case_No = this.dataWord.Get_Case_Information.Case_No 
-                         var date=new Date;
+                         var date=new Date; 
                         var year=date.getFullYear(); 
                         this.todayTime=  year    
                         var month = date.getMonth()+1
@@ -299,9 +296,14 @@ export default {
                          document.getElementById('Bcode').innerText = '510623'
 
 
-                        document.getElementById('toName').innerText = this.dataWord.Get_Case_Information.Party_Name
+                        document.getElementById('toName').innerText = ''
                         document.getElementById('tocasWhy').innerText = this.dataWord.Get_Case_Information.Cause_Action
+                       
+                        if(this.dataWord.Get_Case_Information.Receiving_Organ===undefined){
+                            document.getElementById('toCompony').innerText = ''
+                        }else{
                         document.getElementById('toCompony').innerText = this.dataWord.Get_Case_Information.Receiving_Organ
+                        }
                         document.getElementById('shejibiaode').innerText = this.dataWord.Get_Case_Information.Target
                       
 
@@ -319,7 +321,7 @@ export default {
                          }else{
                          document.getElementById('fuwuneirong').innerText = this.dataWord.Get_Case_Information.Service_Content.replace(/<[^>]+>|&[^>]+;/g,"").trim();
                          }
-         })
+       
                        
         },
     },
