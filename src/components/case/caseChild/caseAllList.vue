@@ -470,7 +470,6 @@ export default {
             }else{
               this.Casevalue2 = id
             }
-           // console.log(this.Casevalue2)
               this.getCaseList()
       },
       //状态查询
@@ -620,7 +619,7 @@ export default {
                   param.append('fileName',this.fileName1)
                   param.append('size',this.size)
                   param.append('Suffix_Name',this.Suffix_Name)
-                this.$http.post('/yongxu/Document/Add_Document',{
+                this.$http.post('/yongxu/Document/Add_List_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
                     File_Name:this.fileName,
@@ -818,7 +817,6 @@ export default {
     //     this.getSelectChildeMenu(newV)
     // },
     dialogFormVisible:function(newData){
-      console.log(newData)
       if(newData == false){
           this.$refs['upload'].clearFiles();
       }

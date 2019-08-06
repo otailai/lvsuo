@@ -275,6 +275,7 @@ export default {
         this.value = ''
         this.Casevalue = ''
         this.Casevalue1 = ''
+        this.Category_Id=0
         this.getRiskBrandArr()
         
       },

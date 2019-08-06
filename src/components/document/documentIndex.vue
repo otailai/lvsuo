@@ -369,6 +369,13 @@ import { constants } from 'fs';
             }
              var json = file.name.split(".")
              var file_name =json[0];
+            //  if(file_name.length>70){
+            //     this.$message({
+            //         message:'文件名称过长',
+            //         type:'warning'
+            //         })
+            //         return false
+            //  }
             this.fileName = file_name
             this.nameData.File_Name = this.fileName
           },

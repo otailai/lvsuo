@@ -202,25 +202,39 @@
                             <el-table-column  label="状态" width="">
                             
                                 <template slot-scope="scope"> 
-                                    <p v-if="scope.row.type == -1">查看合同</p>
-                                     <p v-else>{{scope.row.state}}</p>
+                                    <p v-if="scope.row.type == -1 && scope.row.Customer_contract == -1">查看合同</p>
+                                    <p v-else-if="scope.row.Customer_contract == 1">无</p>
+                                    <p v-else>{{scope.row.state}}</p>
                                 </template>
                             
                              </el-table-column>
                              <el-table-column  label="操作" width="150">
                                 <template slot-scope="scope">
-                                    <p  v-if="scope.row.type == 1">一级审核</p>
-                                     <p v-if="scope.row.type == 2">二级审核</p>
-                                     <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4" style="cursor: pointer">更新</p>
-                                      <a  v-if="scope.row.type == 3" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
-                                      <p  v-if="scope.row.type == -1" @click="lookWord(`${{Type_Id }}`)">查看</p>
-                                       <p  v-if="scope.row.type == 0"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">一级风控</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">二级风控</span> </p>
+                                     <!-- <p  v-if="scope.row.type == 1 && scope.row.Customer_contract == 2 ">一级审核</p>
+                                     <p v-if="scope.row.type == 2 && scope.row.Customer_contract == 2">二级审核</p> --> 
+                                     <p v-if="scope.row.Customer_contract == 1"><a @click.stop="lookWordIframe(scope.row.File_Path)">预览</a><a :href="'/yongxu/Base/download?filename='+scope.row.File_Path" style="cursor: pointer;margin-left:5px;color:blue;">下载</a></p>
+                                     <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4 && scope.row.Customer_contract ==2" style="cursor: pointer">更新</p>
+                                      <a  v-if="scope.row.type == 3 && scope.row.Customer_contract == 2" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
+                                      <p  v-if="scope.row.type == -1 && scope.row.Customer_contract == -1" @click="lookWord(`${{Type_Id }}`)">查看</p>
+                                       <p  v-if="scope.row.type == 0 && scope.row.Customer_contract == 2"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">一级风控</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">二级风控</span> </p>
                                 </template>
                                
                                 </el-table-column>
                        
                 </el-table>
                 </div>
+                   
+                    <el-dialog  :visible.sync="word" :modal-append-to-body='false' :modal='false' width="1000px">
+                      <!-- <iframe :src="word_path"   width='100%' height='1000px' frameborder='1'>
+                                        This browser does not support PDFs. Please download the PDF to view it: <a :href="word_path">Download PDF</a>
+                     </iframe> -->
+                     <!-- <object  :src="word_path"  width="100%" height="100%">
+                     This browser does not support PDFs. Please download the PDF to view it: <a :href="word_path">Download PDF</a>
+                     </object> --> 
+                          <iframe :src="'http://file.keking.cn/onlinePreview?url='+word_path" target="_blank" rel="nofollow" width='100%' height='1000px' frameborder='1'></iframe>                    
+                     <!-- <iframe src="http://www.xdocin.com/xdoc?_func=to&amp;_format=html&amp;_cache=1&amp;_xdoc=http://www.xdocin.com/demo/demo.docx" target="_blank" rel="nofollow" width='100%' height='1000px' frameborder='1'></iframe> -->
+               
+                </el-dialog>                  
                  <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
                         <caseWord :dataWord='dataWord'></caseWord>
                         <!-- <caseWord1 :dataWord='dataWord'></caseWord1> -->
@@ -410,11 +424,21 @@ export default {
             //标的额
             biaodie:'',
             One_Type_Id:'',
-        
+            word_path:'',
+            word:false,
         }
     },
     inject:["reload"],
     methods:{
+        /**
+         * 预览word
+         */
+        lookWordIframe(path){
+           this.word_path = 'http://cms.kingpound.com:8081'+path
+            
+
+            this.word = true
+        },
         //风控传
         toRisk(id,level){
         this.$confirm('此操作将提交'+level+'级审核, 是否继续?', '提示', {
@@ -524,7 +548,7 @@ export default {
                 if(caseInfo.Source_Contract == 1){
                         this.Source_Contract ='律所合同'
                 }else{
-                     this.Source_Contract ='客户合同'
+                     this.Source_Contract ='其他合同'
                 }
                 //案件律师信息
                
@@ -592,16 +616,22 @@ export default {
           },
           getTableData(){
 
-              this.$http.get('/yongxu//Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
+              this.$http.get('/yongxu/Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
+                  console.log(res)
                   this.tableData = res.data
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                            if(this.contact_status === 0){
+                        console.log(res)
+                            if(this.contact_status === 0){ 
                                 this.ifClick = false
                             }else{
                                 this.ifClick = true
                             }
+                            if(res.data===''){
+                                    return false
+                            }else{
                              this.tableData.unshift(res.data)
+                            }
                         })
               })
           },

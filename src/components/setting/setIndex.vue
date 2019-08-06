@@ -194,6 +194,9 @@
                  
                          </el-form-item>
                    
+                        <el-form-item label="重置密码" :label-width="formLabelWidth"> 
+                         <el-button type="primary" @click="resetPass()">重置密码</el-button>
+                        </el-form-item>
                   </el-form>
           <div slot="footer" class="dialog-footer">
            <div class="flex dialogFormVisivleFooter">
@@ -333,7 +336,37 @@ import { fail } from 'assert';
             this.partyArr = res.data
         })
       },
-
+      /**
+       * 重置密码
+       */
+      resetPass(){
+         this.$confirm('此操作将重置此用户密码, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.get('/yongxu/Personal/Reset_Pwd',{params:{Id:this.form.update_User_Id}}).then((res)=>{
+              if(res.data=true){
+                this.$message({
+                  message:'重置成功',
+                  type:'success'
+                })
+                  this.dialogFormVisible3 = false
+              }else{
+                 this.$message({
+                  message:'重置失败',
+                  type:'warning'
+                }) 
+                return false
+              }
+         })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消重置'
+          });          
+        }); 
+      },
        getBranchList(){
          this.$http.get('/yongxu/Install/Get_Law_Firm').then((res)=>{
            let arr = res.data
@@ -565,9 +598,15 @@ import { fail } from 'assert';
       lineCilck(row, event, column){
           //console.log(row.Id)
           this.$http.get('/yongxu/Install/Upd_Sel_Member',{params:{Id:row.Id}}).then((res)=>{
+          console.log(res)
           this.form.update_name = res.data.Staff_Name
           this.form.update_job = res.data.Position
-          this.form.update_tel = res.data.Contact_Information
+         
+          if(res.data.Contact_Information==undefined){
+            this.form.update_tel = ''
+          }else{
+            this.form.update_tel = res.data.Contact_Information
+          }
           this.form.update_state = res.data.Status
           this.form.update_remark = res.data.Remarks
           this.form.update_role = res.data.Rule_Id

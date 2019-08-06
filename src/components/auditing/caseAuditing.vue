@@ -97,7 +97,7 @@
               <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px"> 
                           <!-- <iframe :src="'https://view.officeapps.live.com/op/view.aspx?src='+fileUrl"  width='100%' height='1000px' frameborder='1'>
                           </iframe>  -->
-                           <iframe :src="'http://file.keking.cn/onlinePreview?url='+fileUrl"  width='100%' height='1000px' frameborder='1'>
+                           <iframe :src="'http://192.168.0.109:8012/onlinePreview?url='+fileUrl"  width='100%' height='1000px' frameborder='1'>
                           </iframe> 
                          
               </el-dialog>

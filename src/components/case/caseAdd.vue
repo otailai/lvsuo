@@ -101,17 +101,12 @@
                             <el-select v-model="caseWhy1" placeholder="*请选择" style="overflow-x:hidden;width:150px" @change="changeCaseReson2(caseWhy1)"> 
                            <el-option v-for="item in CaseResonArr1" :key="item.Id" :label="item.Value"  :value="item.Id"> </el-option>
                         </el-select>
-                          
-                         <!-- <el-select v-model="caseWhy" placeholder="*请选择">
-                         <el-option v-for="(item,index) in CaseResonArr" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
-                         </el-select> -->
+                        
                     </div>
                    
                    
-                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="*必填" v-model="compony" maxlength="30"/></div>
-                    <!-- <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty"/></div> -->
-                   
-                    <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="请输入"/></div> -->
+                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="选填" v-model="compony" maxlength="30"/></div>
+
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
@@ -132,7 +127,9 @@
                                  <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
                              
                         </div> -->
-                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>
+                    <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
+                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>                   
+                
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
 
                     </div>
@@ -284,7 +281,7 @@
                          value-format="yyyy-MM-dd"
                         placeholder="选择日期时间">
                         </el-date-picker> 
-                    <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[0].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].describe"/>
                        <div class="input-icon"></div>
                     </div>
@@ -297,7 +294,7 @@
                             type="date"
                             placeholder="选择日期时间">
                         </el-date-picker>
-                    <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[i+1].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[i+1].payCount"/>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[i+1].describe"/>
                        <div class="input-icon" @click="deleteLine(i,payDate,timeArr)"><i class="el-icon-remove"></i></div>
                     </div>
@@ -679,6 +676,9 @@ export default {
     },
           
     methods:{
+        changeInput(e){
+            e.target.value = e.target.value.replace(/\-/g,""); 
+        },
         openEditor(){
             this.dialogFormVisible2 = true
         },
@@ -712,7 +712,7 @@ export default {
            this.$router.go(-1)
         },
         lookContract(data){
-              this.checkData()
+            //this.checkData()
             if(this.checkData() == false){
                 return false
             }
@@ -733,6 +733,12 @@ export default {
             if(this.oppositeParty===''){
                 this.oppositeParty='无'
               }
+         if(this.province === ''){
+                 this.province = '无'
+            }
+            if(this.compony === ''){
+                this.compony = '无'
+            }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
@@ -886,7 +892,7 @@ export default {
             if(!this.addTime){
                 return false
             }
-            this.checkData()
+           // this.checkData()
             if(this.checkData() == false){
                 return false
             }
@@ -909,6 +915,9 @@ export default {
               }
             if(this.province === ''){
                  this.province = '无'
+            }
+            if(this.compony === ''){
+                this.compony = '无'
             }
             if(this.costValue == 8){
             addJson = {
@@ -1073,17 +1082,26 @@ export default {
         },
         /**验证提交表单 */
         checkData(){
-              if(this.search==""||this.search==null){
+              if(this.search===""||this.search==null){
+               
                 this.$message({
                     message:'客户名称不能为空',
                     type:'warning'
                 });
+               this.$notify.error({
+                title: '错误',
+                message: '您尚未输入客户名称，请输入后重试'
+                });
                 return false
             }
-             if(this.customValue==""||this.customValue==null){
+             if(this.customValue===""||this.customValue==null){
                 this.$message({
                     message:'客户类型不能为空',
                     type:'warning'
+                });
+                this.$notify.error({
+                title: '错误',
+                message: '您尚未选择客户类型，请选择后重试'
                 });
                 return false
             }
@@ -1095,22 +1113,34 @@ export default {
                         message:'身份证信息不能为空',
                          type:'warning'
                      });
+                     this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入身份证信息，请输入后重试'
+                        });
                        return false  
                 }
             }  
             if(this.customValue ==4 ){
-                if(this.cardNo == '' || this.cardNo == null) 
+                if(this.cardNo === '' || this.cardNo == null) 
                 { 
                      this.$message({
                         message:'纳税人编号不能为空',
                          type:'warning'
                      });
+                     this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入纳税人编号，请输入后重试'
+                        });
                        return false  
                 }
             if(this.suoshuValue===""||this.suoshuValue===null){
                 this.$message({
                     message:'*请选择所属行业',
                     type:'warning'
+                });
+                this.$notify.error({
+                title: '错误',
+                message: '您尚未选择所属行业，请选择后重试'
                 });
                 return false
             }
@@ -1130,19 +1160,27 @@ export default {
             //     });
             //     return false
             // }
-             if(this.address==""||this.address==null){
+             if(this.address===""||this.address==null){
                 this.$message({
                     message:'详细地址不能为空',
                     type:'warning'
                 });
+                this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入详细地址，请输入后重试'
+                        });
                 return false
             }
           
-             if(this.tel==""||this.tel==null){
+             if(this.tel===""||this.tel==null){
                 this.$message({
                     message:'联系电话不能为空',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入联系电话，请输入后重试'
+                        });
                 return false
             }
             //var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
@@ -1151,44 +1189,64 @@ export default {
                     message:'联系电话格式不正确',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您输入的联系电话格式不正确，请重新输入后重试'
+                        });
                 return false;
             } 
-               if(this.isValue==""||this.isValue==null){
+               if(this.isValue===""||this.isValue==null){
                 this.$message({
                     message:'*请选择是否常年客户',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择是否是常年客户，请选择后重试'
+                        });
                 return false
             }
 
-            if(this.caseValue==""||this.caseValue==null || this.caseValue2==""||this.caseValue2 ==null ){
+            if(this.caseValue===""||this.caseValue==null || this.caseValue2==""||this.caseValue2 ==null ){
                 this.$message({
                     message:'*请选择案件类型',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择案件类型，请选择后重试'
+                        });
                 return false
             }
-            if(this.caseName==""||this.caseName==null){
+            if(this.caseName===""||this.caseName==null){
                 this.$message({
                     message:'案件名称不能为空',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入案件名称，请输入后重试'
+                        });
                 return false
             }
-           if(this.caseWhy1==""||this.caseWhy1==null){
+           if(this.caseWhy1===""||this.caseWhy1==null){
                 this.$message({
                     message:'*请选择案由',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择案由类型，请选择后重试'
+                        });
                 return false
             }
-             if(this.compony==""||this.compony==null){
-                this.$message({
-                    message:'请填写受理机关',
-                    type:'warning'
-                });
-                return false
-            }
+            //  if(this.compony==""||this.compony==null){
+            //     this.$message({
+            //         message:'请填写受理机关',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             //  if(this.textarea==""||this.textarea==null){
             //     this.$message({
             //         message:'请填写案情简介',
@@ -1196,13 +1254,19 @@ export default {
             //     });
             //     return false
             // }
-            //    if(this.oppositeParty==""||this.oppositeParty==null){
-            //     this.$message({
-            //         message:'对方当事人不能为空',
-            //         type:'warning'
-            //     });
-            //     return false
-            // }
+              if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
+                   if(this.oppositeParty==""||this.oppositeParty==null){
+                        this.$message({
+                            message:'对方当事人不能为空',
+                            type:'warning'
+                        });
+                         this.$notify.error({
+                        title: '错误',
+                        message: '按键类型为民事、仲裁、行政时，对方当事人必填'
+                        });
+                        return false
+                    }
+              }  
             var arr=[]
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Id)
@@ -1214,6 +1278,10 @@ export default {
                     message:'*请选择律师姓名',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择律师姓名，请选择后重试'
+                        });
                 return false
             }
             var nary=arr.sort();
@@ -1224,6 +1292,10 @@ export default {
                     message:'律师数据重复请重新选择',
                     type:'warning'
                     });
+                     this.$notify.error({
+                        title: '错误',
+                        message: '您选择的律师信息重复，请重新选择后重试'
+                        });
                     return false
                 }
             }
@@ -1238,6 +1310,10 @@ export default {
                     message:'*请选择律师职务',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择律师职务，请选择后重试'
+                        });
                 return false
             }
          
@@ -1251,6 +1327,10 @@ export default {
                     message:'请至少填写一位主办律师',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您选择的律师职务中不含主办律师，请选择一位为主办律师后重试'
+                        });
                 return false
             }
            var nary1=arrJob1.sort();
@@ -1262,6 +1342,10 @@ export default {
                     message:'最多一位主办律师',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您选择的律师职务中含多位主办律师，请只选择一位为主办律师后重试'
+                        });
                  return false
                 }
             }
@@ -1306,11 +1390,15 @@ export default {
             //     return false
             // }
 
-              if(this.costValue==""||this.costValue==null){
+              if(this.costValue===""||this.costValue==null){
                 this.$message({
                     message:'*请选择收费方式',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择收费方式，请选择后重试'
+                        });
                 return false
             }
            
@@ -1320,11 +1408,16 @@ export default {
             for(var i in this.nameJobArr){
                 arrJobArr8.push(this.nameJobArr[i].nameJobName)
             }
+            console.log(arrJobArr8)
             if (arrJobArr8.indexOf('') != -1){
                  this.$message({
                     message:'姓名不能为空',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择按时收费下的律师姓名，请选择后重试'
+                        });
                 return false
             }
             var nary=arrJobArr8.sort();
@@ -1334,9 +1427,15 @@ export default {
                     message:'律师数据重复请重新选择',
                     type:'warning'
                     });
+                     this.$notify.error({
+                        title: '错误',
+                        message: '您选择的按时收费下的律师姓名重复，请重新选择后重试'
+                        });
                     return false
                 }
             }
+        
+
 
             var arrJobArrJob8=[]
             for(var i in this.nameJobArr){
@@ -1347,9 +1446,39 @@ export default {
                     message:'职务不能为空',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择按时收费下的律师职务，请选择后重试'
+                        });
                 return false
             }
-        
+             if(arrJobArrJob8.indexOf(18) == -1){
+                 this.$message({
+                    message:'请至少填写一位主办律师',
+                    type:'warning'
+                });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您选择的按时收费下的律师职务中不含主办律师，请选择一位为主办律师后重试'
+                        });
+                return false
+            }
+            //
+             var nary22 =arrJobArrJob8.sort();
+            for(var i=0;i<arrJobArrJob8.length;i++){
+                if (nary22[i]==nary22[i+1] && nary22[i]==18 && nary22[i+1]==18){  
+                    this.$message({
+                    message:'最多一位主办律师',
+                    type:'warning'
+                });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您选择的按时收费下的律师职务中含多位主办律师，请只选择一位为主办律师后重试'
+                        });
+                 return false
+                }
+            }
+            //
 
              var arrJobJobRate8=[]
             for(var i in this.nameJobArr){
@@ -1360,6 +1489,10 @@ export default {
                     message:'费率不能为空',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入按时收费下的费率，请输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        });
                 return false
             }
         }
@@ -1374,11 +1507,16 @@ export default {
                     message:'*请选择付款日期',
                     type:'warning'
                 });
+                   this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择定额收费下的付款日期，请选择后重试'
+                        });
                 return false
             }
 
             var arrMoney=[]
             var reg1 = /^\d+$|^\d*\.\d+$/g;
+            var re=/^\d*\.{0,2}\d{0,2}$/;
             for(var i in this.timeArr){
                 arrMoney.push(this.timeArr[i].payCount)
             }
@@ -1387,17 +1525,31 @@ export default {
                     message:'付款金额不能为空',
                     type:'warning'
                 });
+                  this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入定额收费下的付款金额，请输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        });
                 return false
             }
+            console.log(arrMoney)
             for(var i = 0;i<arrMoney.length;i++){
-                if(!reg1.test(arrMoney[i])){
+                console.log(i)
+                console.log(re.test(arrMoney[i]))
+              
+                if(!re.test(arrMoney[i])){
                     this.$message({
-                        message:'付款金额格式为数字加小数点格式',
+                        message:'付款金额格式为数字或加小数点后一位',
                         type:'warning'
                     });
+                     this.$notify.error({
+                        title: '错误',
+                        message: '您输入的定额收费下的付款金额格式不正确，请重新输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        });
                     return false
                     }
-            }
+                }
+              
+            
              
          
 
@@ -1412,6 +1564,10 @@ export default {
                     message:'请输入描述',
                     type:'warning'
                 });
+                 this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入定额收费下的的描述，请输入后重试'
+                        });
                 return false
             }
         }
@@ -1426,6 +1582,10 @@ export default {
                     message:'请填写描述',
                     type:'warning'
                 });
+                  this.$notify.error({
+                        title: '错误',
+                        message: '您尚未输入风险收费下的的描述，请输入后重试'
+                        });
                 return false
             }
         }
@@ -1435,6 +1595,10 @@ export default {
                     message:'*请选择合同类型',
                     type:'warning'
                 });
+                this.$notify.error({
+                        title: '错误',
+                        message: '您尚未选择合同类型，请选择后重试'
+                        });
                 return false
             }
           if(this.fileType==2){
@@ -1443,6 +1607,10 @@ export default {
                     message:'请先上传文件',
                     type:'warning'
                 });
+                  this.$notify.error({
+                        title: '错误',
+                        message: '您尚未上传文件合同，请上传后后重试'
+                        });
                 return false  
                 }
             }
@@ -1548,7 +1716,7 @@ export default {
          this.Casevalue1 =''
          this.caseWhy=''
          this.caseWhy1=''
-        //  console.log(id)
+         //console.log(id)
          this.selectOneId = id
          this.getCaseResonList(id)
          this.$http.get('/yongxu/Index/GetBoxTwo',{params:{Id:this.selectOneId}}).then((res)=>{

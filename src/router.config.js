@@ -96,7 +96,7 @@ children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepA
 
     ]},
     {path:'/topMenu',component:topMenu,name:'topMenu',meta:{requireAuth:true}},
-    {path:'*',redirect: '/web404', meta:{requireAuth:true},component:web404,name:'web404'},
+   // {path:'*',redirect: '/web404', meta:{requireAuth:true},component:web404,name:'web404'},
    
 ]
     

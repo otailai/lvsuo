@@ -106,7 +106,7 @@
                     </div> -->
                    
                    
-                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="*必填" v-model="compony"/></div>
+                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="选填" v-model="compony"/></div>
                    
                  
                     <!-- <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div> -->
@@ -132,7 +132,8 @@
                                  <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
                              
                         </div> -->
-                    <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty"/></div>
+                    <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
+                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty"/></div>
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
                     </div>
                     </div>
@@ -682,27 +683,19 @@ export default {
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
-            this.$store.dispatch('addParty')
-            //this.input1Arr.push({partyName:'',partyJob:''})  
-            //this.input1Arr.push({partyName:'',partyJob:''})  
             this.input1Arr.push({partyName:'',Party_Name:'',visible:false,partyJob:'',Party_Category:''})
 
         },
         addPayDate(){
             this.payDate.push(1)
-            this.$store.dispatch('addDate')
             this.timeArr.push({describe:'',payCount:'',dateName:'',Payment_Time:'',Charge_Amount:'',Describe:''})  
         },
          addRiskAcount(){
             this.riskAcount.push(1)
-            this.$store.dispatch('addRisk')
-           // this.riskArr.push({riskName:'',riskCount:'',riskCondition:''})  
             this.riskArr.push({riskCondition:'',Risk_Achievement:''})
         },
          addNameJob(){
             this.nameJob.push(1)
-            this.$store.dispatch('addNameJob')
-            //this.nameJobArr.push({nameJobName:'',nameJobJob:'',nameJobRate:'',visible:false,nameJobName1:'',Id:''})  
             this.nameJobArr.push({nameJobRate:'',Rate:'',visible:false,nameJobName1:'',nameJobName:'',nameJobJob:'',Lawyer_Id:'',Rule_Id:''})
 
         },
@@ -731,6 +724,9 @@ export default {
               }
             if(this.province===''|| this.province=='无'){
                 this.province = '无'
+            }
+             if(this.compony === ''){
+                this.compony = '无'
             }
             if(this.costValue == 8){
             addJson = {
@@ -875,7 +871,7 @@ export default {
                 
                 this.$message({
                     message:'更新成功',
-                    type:'warning'
+                    type:'success'
                 });
                 this.$router.push('/index/caseIndex')
                 return false
@@ -923,7 +919,7 @@ export default {
                        return false  
                 }
 
-                   if(this.suoshuValue==""||this.suoshuValue==null){
+                   if(this.suoshuValue===""||this.suoshuValue==null){
                 this.$message({
                     message:'*请选择所属行业',
                     type:'warning'
@@ -1015,13 +1011,13 @@ export default {
                 });
                 return false
             }
-             if(this.compony==""||this.compony==null){
-                this.$message({
-                    message:'请填写受理机关',
-                    type:'warning'
-                });
-                return false
-            }
+            //  if(this.compony==""||this.compony==null){
+            //     this.$message({
+            //         message:'请填写受理机关',
+            //         type:'warning'
+            //     });
+            //     return false
+            // }
             //    if(this.biaodie==""||this.biaodie==null){
             //     this.$message({
             //         message:'标的额不能为空',
@@ -1036,13 +1032,19 @@ export default {
             //     });
             //     return false
             // }
-            //    if(this.oppositeParty==""||this.oppositeParty==null){
-            //     this.$message({
-            //         message:'对方当事人不能为空',
-            //         type:'warning'
-            //     });
-            //     return false
-            // }
+           if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
+                   if(this.oppositeParty==""||this.oppositeParty==null){
+                        this.$message({
+                            message:'对方当事人不能为空',
+                            type:'warning'
+                        });
+                        this.$notify.error({
+                        title: '错误',
+                        message: '按键类型为民事、仲裁、行政时，对方当事人必填'
+                        });
+                        return false
+                    }
+              }  
             var arr=[]
             
             for(var i in this.inputArr){
@@ -1202,6 +1204,7 @@ export default {
 
             var arrMoney=[]
              var reg1 = /^\d+$|^\d*\.\d+$/g;
+             var re=/^\d*\.{0,2}\d{0,2}$/;
             for(var i in this.timeArr){
                 arrMoney.push(this.timeArr[i].Charge_Amount)
             }
@@ -1213,9 +1216,9 @@ export default {
                 return false
             }
               for(var i = 0;i<arrMoney.length;i++){
-                if(!reg1.test(arrMoney[i])){
+                if(!re.test(arrMoney[i])){
                     this.$message({
-                        message:'付款金额格式为数字加小数点格式',
+                         message:'付款金额格式为数字或加小数点后两位',
                         type:'warning'
                     });
                     return false
@@ -1402,7 +1405,7 @@ export default {
                             res.data.City == ""
                             this.selectedOptions = []
                   }else{
-                     var a = TextToCode[res.data.City.split('-')[0]].code
+                  var a = TextToCode[res.data.City.split('-')[0]].code
                   var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
                   var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
                   this.selectedOptions = [a,b,c]
@@ -1554,7 +1557,7 @@ export default {
                 this.industry= arr.industry
                 this.Customer_Name_Zh=arr.Customer_Name_Zh
                 this.City=arr.City
-                         if(this.City == "" ||this.City==null){
+                    if(this.City == "" ||this.City==null || this.City=='无'){
                             this.selectedOptions = []
                   }else{
                         var a = TextToCode[arr.City.split('-')[0]].code
@@ -1816,12 +1819,12 @@ export default {
         this.customValue=3
     },
     mounted(){
-       //this.getCustomSelect()
+       this.getCustomSelect()
 
-       //this.getCustomType()
+       this.getCustomType()
  
-       //this.getJobList()
-       //this.getSelectMenu()
+       this.getJobList()
+       this.getSelectMenu()
 
        this.getUpdateInfo()
        
