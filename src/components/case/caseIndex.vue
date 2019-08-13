@@ -14,25 +14,25 @@
                    <p v-show="child_cur == 3">个人案件</p>
                    <p v-show="child_cur == 4">授权案件</p> -->
             </div>
-       <el-tabs v-model="activeName" @tab-click="handleClick">
-           <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
+       <!-- <el-tabs v-model="activeName" @tab-click="handleClick"> -->
+            <ul class="flex_ul">
+            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/caseIndex/'+v.Item_Path" class="flex_li">
+            <p>{{v.Item_Name}}</p>
+           
+            </router-link>
+           </ul>
             <div class="flex case-child" >  
             </div>
             <div class="showTab">
             <ul class="showTab-ul">
-          
-              <li class="showTab-li">
-                 
-                   <router-view></router-view>
-              </li>
-
-                </ul>
+              
+              <li class="showTab-li"><router-view></router-view> </li>
+              </ul>
             </div>
-        </el-tab-pane>
-      
-     
-                
-        </el-tabs> 
+           
+        
+          
+        <!-- </el-tabs>  -->
     </div>
 
 </template>
@@ -47,11 +47,11 @@ import caseBranch from './caseChild/caseBranch'
     data() {
       return {
         //授权案件搜索
+          path:'',
         SearchInput1:'',
         numPage1:1,
         currentPage1:1,
         total1:0,       
-         //
         total:0,
         dateValue:[],
         Casevalue:'',
@@ -121,24 +121,19 @@ import caseBranch from './caseChild/caseBranch'
           sex: '女',
           age: 27
         }
-      ]
+      ],
+    
 
 
       };
     },
     methods: {
       handleClick(tab, event) {
-       // console.log(tab.index)
-       
-        // this.child_cur = tab.index
-        // this.getActiveMenu()
-      
-        this.$router.push('/index/caseIndex/'+this.arr[tab.index].Item_Path)
+        console.log('/index/caseIndex/'+this.arr[tab.index].Item_Path)
+        this.$router.push({path:'/index/caseIndex/'+this.arr[tab.index].Item_Path})
         this.$store.commit('changeCaseChild',tab.index)
         this.child_cur = this.$store.state.case.child_id
        // console.log(this.$store.state.case.child_id)
-
-       
         //this.getActiveMenu()
       },
       changeLi(i,url){
@@ -161,12 +156,12 @@ import caseBranch from './caseChild/caseBranch'
           User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
           this.arr = res.data
+          console.log(this.arr)
            var menuArr = []
           for(var i =0 ;i<this.arr.length;i++){
             menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
           }
-           var path = this.$route.path
-           this.$router.push('/index/caseIndex/'+this.arr[this.$store.state.case.child_id].Item_Path)
+           this.$router.push({path:'/index/caseIndex/'+this.arr[this.$store.state.case.child_id].Item_Path})
            this.getActiveMenu()
         })
       },
@@ -177,6 +172,8 @@ import caseBranch from './caseChild/caseBranch'
         }
         var i =menuArr.indexOf(this.$route.path)
         this.activeName = 'name'+i
+        console.log(this.activeName)
+      
      },
       searchData(){
         this.child = 1
@@ -187,22 +184,10 @@ import caseBranch from './caseChild/caseBranch'
          
     },
     activated() {
-      this.getChildMenu()
+     // this.getChildMenu()
     },
     watch:{
-        $route(to,from){
-          //  var menuArr = []
-          //   for(var i =0 ;i<this.arr.length;i++){
-          //   menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
-          //    }
-          // if(to.path == '/index/caseIndex'){
-          //     this.$router.push(menuArr[0])
-          //      var i =menuArr.indexOf(this.$route.path)
-          //      this.activeName = 'name'+i
-          //      this.$store.commit('changeCaseChild',i)
-          //      this.child_cur = this.$store.state.case.child_id
-          // }
-        }
+        
     },
     components:{
       caseAllList,
@@ -215,6 +200,25 @@ import caseBranch from './caseChild/caseBranch'
 </script>
 <style>
 @import '../../assets/sass/main.css';
+.flex_ul{
+  width: 100%;
+  display: flex;
+  flex: row;
+  justify-content: center;
+}
+.flex_li{
+  color: #333333;
+  font-size: 14px;
+  width:90px;
+  justify-content: center;
+  align-items: center;
+}
+.flex_li p{
+   cursor: pointer;
+}
+.linkClass{
+      color: #7E2C2E;
+}
 </style>
 
 

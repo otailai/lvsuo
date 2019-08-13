@@ -32,12 +32,14 @@
             <div class="showTab">
             <ul class="showTab-ul">
               <li class="showTab-li" v-show="cur==0">
-                 <el-table :data="caseArr" border style="width: 100%"  @row-click="lineCilck">
+                 <el-table :data="caseArr" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle">
+                   
+                    <el-table-column prop="Case_No" label="案件编号" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"> </el-table-column>
                       <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                       <el-table-column prop="Creattime" label="申请日期" width="100" :show-overflow-tooltip="true" sortable>
+                       <el-table-column prop="Creattime" label="申请日期" width="110" :show-overflow-tooltip="true" sortable>
                         <template slot-scope="scope">
                              <span>{{scope.row.Creattime | getTime}}</span>    
                         </template>   
@@ -97,7 +99,7 @@
               <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px"> 
                           <!-- <iframe :src="'https://view.officeapps.live.com/op/view.aspx?src='+fileUrl"  width='100%' height='1000px' frameborder='1'>
                           </iframe>  -->
-                           <iframe :src="'http://192.168.0.109:8012/onlinePreview?url='+fileUrl"  width='100%' height='1000px' frameborder='1'>
+                           <iframe :src="'http://file.keking.cn/onlinePreview?url='+fileUrl"  width='100%' height='1000px' frameborder='1'>
                           </iframe> 
                          
               </el-dialog>
@@ -254,6 +256,9 @@ export default {
       
     },
     methods:{
+        cellStyle() {
+        return 'border-right: 1px solid #ebeef5'
+     },
       updateData:function(){
         this.getCaseArr()
       },
@@ -358,7 +363,7 @@ export default {
           User_Id:localStorage.getItem('userId'),
           Category_Id:this.Category_Id,
         }}).then((res)=>{
-           //console.log(res)
+           console.log(res)
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
              

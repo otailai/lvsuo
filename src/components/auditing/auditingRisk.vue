@@ -83,7 +83,13 @@
                                </a>
                               </template>
                           </el-table-column>
-                            
+
+                          <el-table-column  label="审核人" width="" :show-overflow-tooltip="true"> 
+                              <template slot-scope="scope"> 
+                               <span>{{scope.row.Obtain_Audit_Notes | ifnull}}</span>
+                              </template>
+                          </el-table-column>  
+
                         <el-table-column  label="操作" width="180"> 
                           <template  slot-scope="scope">
                             <span v-show="scope.row.state == 1" @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
@@ -594,7 +600,14 @@ export default {
         }else{
           return time.substring(0,10)
         }
-          },
+        },
+         ifnull:function(res){
+          if(res == undefined || res == null || res == ''){
+              return ''
+          }else{
+            return res.Staff_Name
+          }
+        }
     },
     //  watch:{
     // Casevalue:function(newV,oldV){

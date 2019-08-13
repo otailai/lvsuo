@@ -20,6 +20,7 @@ import mineEdit from './components/mine/mineEdit'
 import setDemo from './components/setting/setDemo'
 import caseWord from './components/case/caseWord'
 import caseUpdate from './components/case/caseUpdate'
+import caseUpdate1 from './components/case/caseUpdate1'
 
 import caseSearch from './components/search/caseSearch'
 import caseSearch1 from './components/search/caseSearch1'
@@ -62,6 +63,7 @@ export default[
 ]},
 {path:'/index/caseAdd',component:caseAdd,name:'caseAdd',meta:{requireAuth:true}},
 {path:'/index/caseUpdate/:id/:typeId',component:caseUpdate,name:'caseUpdate',meta:{requireAuth:true}},
+{path:'/index/caseUpdate1/:id/:typeId',component:caseUpdate1,name:'caseUpdate1',meta:{requireAuth:true}},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:'caseEdit',meta:{requireAuth:true,keepAlive:false}},
 {path:'/index/customerIndex',component:customerIndex,name:'customerIndex',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/customerEdit/:id',component:customerEdit,name:'customerEdit',meta:{requireAuth:true}},

@@ -1,12 +1,22 @@
 <template>
     <div>
             <div class="case-child-end2 flex">
+               <div class="flex row">
                     <div class="case-state flex">
                     <p>分所查询：</p>
-                  <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
-                    <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
-                  </el-select>
-                    </div>          
+                    <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
+                      <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
+                    </el-select>
+                    </div>     
+
+                    <div class="case-state1 flex">
+                    <p>客户行业查询：</p>
+                    <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
+                      <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
+                    </el-select>
+                    </div>      
+              </div>
+
 
                     <div class="flex row">
                     <div class="input flex">
@@ -104,7 +114,8 @@
                                 <p v-if="scope.row.type == 0" @click.stop> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 1" style="cursor:pointer;color:blue" @click.stop="shangchun(scope.row.Id)">上传合同</p>
                                 <p v-if="scope.row.type == 2" style="cursor:pointer;color:blue"  @click.stop="finishCase(scope.row.Id)">申请结案</p>
-                                 <p v-if="scope.row.type == 3">已结案</p>
+                                 <p v-if="scope.row.type == 3" @click.stop="gotoUpdateAllReady(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">修改</p>
+  
                                 <p v-if="scope.row.type == 4" @click.stop> {{scope.row.Status}}</p>
 
                             </template>
@@ -233,6 +244,7 @@ export default {
             branchValue:'',
             Orgid:0,
             Category_Id:0,
+            rule_id:'',
         }
     },
     inject:["reload"],
@@ -280,6 +292,7 @@ export default {
            Orgid:this.Orgid,
            Category_Id:this.Category_Id,
          }}).then((res)=>{
+           console.log(res)
            this.tableData = res.data.All_Cases
            this.total1 = res.data.PageCount
         }).catch((err)=>{
@@ -335,6 +348,12 @@ export default {
         //       this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
         //  })
       },
+      /**
+       * 已结案编辑操作
+       */
+        updateData1:function(id,type_id){
+                     this.$router.push({path:`/index/caseUpdate1/${id}/${type_id}`})
+      },
       //时间查询
          changeTime:function(value){
              if(value==null){
@@ -369,7 +388,6 @@ export default {
       getBranchList(){
          this.$http.get('/yongxu/Index/Get_Branch').then((res)=>{
            this.branchList = res.data
-           console.log(res)
          })
       },
       /**
@@ -450,7 +468,7 @@ export default {
                       this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
                           this.allData = res.data
                       }).then(()=>{
-                       const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
+                      const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
                       const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
                       const data = this.allData.map(v => filterVal.map(k => v[k]))
                       const [fileName, fileType, sheetName] = ['律所案件', 'xlsx', '律所案件']
@@ -502,6 +520,28 @@ export default {
                         this.Casevalue1 = 0
                     }
                     this.changeTowValue(this.Casevalue1)
+         })
+      },
+      /**
+       * 修改已结案案件权限验证
+       */
+      gotoUpdateAllReady(id,Charging_Method){
+         this.common.checkAuth({params:{url:'index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
+            if(res.data == false){
+             this.$message({
+                message:'没有权限',
+                type:'warning'
+                });     
+              return false
+          }else{
+              this.updateData1(id,Charging_Method)
+          }
+         }).catch((err)=>{
+            this.$message({
+                message:'服务器异常',
+                type:'warning'
+                });     
+              return false
          })
       },
       sortChange(column){
@@ -807,9 +847,9 @@ export default {
         this.getCaseList()
     },
     activated() {
-       // this.getAllDataList()
-        this.getSelectMenu()
-        this.getCaseList()
+        // this.getAllDataList()
+        // this.getSelectMenu()
+        // this.getCaseList()
     },
     watch:{
     // Casevalue:function(newV,oldV){

@@ -8,31 +8,18 @@
                     {{v.Item_Name}}
                 </P>
             </div>
-       <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
+
+           <ul class="flex_ul">
+            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/auditingIndex/'+v.Item_Path" class="flex_li">
+            <p>{{v.Item_Name}}</p>
+            </router-link>
+           </ul>
+             <router-view></router-view>
+        <!-- <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
            <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
            <router-view></router-view>
-            <!-- <div v-show="child_cur==0">
-              <caseAditing></caseAditing>
-        
-            </div>
-            
-       
-          <div v-show="child_cur==1">
-            <auditingRisk></auditingRisk>
-          </div>
-        
-          <div v-show="child_cur==2">
-              <financialAuditing></financialAuditing>
-          </div>
-          
-            <div v-show="child_cur==3">
-              <auditingCloseCase></auditingCloseCase>
-            </div> -->
-        </el-tab-pane>
-      
-        <!-- <el-tab-pane label="利益检索" name="second">配置管理</el-tab-pane>-->
-                
-        </el-tabs> 
+        </el-tab-pane>   
+        </el-tabs>  -->
     </div>
 </template>
 <script>
@@ -275,6 +262,22 @@ import auditingCloseCase from './auditingCloseCase'
   height: 25px;
   margin-left: 2px;
 
+}
+.flex_ul{
+  width: 100%;
+  display: flex;
+  flex: row;
+  justify-content: center;
+}
+.flex_li{
+  color: #333333;
+  font-size: 14px;
+  width:90px;
+  justify-content: center;
+  align-items: center;
+}
+.flex_li p{
+   cursor: pointer;
 }
 </style>
 

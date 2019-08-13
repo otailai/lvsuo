@@ -256,6 +256,7 @@ export default {
            PageNumber:this.currentPage,
            Category_Id:this.Category_Id,
          }}).then((res)=>{
+           console.log(res)
            this.tableData = res.data.All_Case
            this.tableData1 = res.data
            this.total = res.data.PageCount
@@ -772,10 +773,10 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
     },
-    activated(){
-        this.getSelectMenu()
-        this.getCaseList()
-    },
+    // activated(){
+    //     this.getSelectMenu()
+    //     this.getCaseList()
+    // },
     watch:{
     // Casevalue:function(newV,oldV){
     //    this.getSelectChildeMenu(newV)

@@ -173,7 +173,12 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
+}
+.case-state1{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 12px;
 }
 .case-time{
     flex-direction: row;

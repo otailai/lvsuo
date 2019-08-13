@@ -389,6 +389,7 @@ export default {
                        menuArr.push('caseAdd')
                        menuArr.push('caseEdit')
                        menuArr.push('caseUpdate')
+                        menuArr.push('caseUpdate1')
                        menuArr.push('customerEdit')
                        menuArr.push('search1')
                       // menuArr.push('LSMSFolder')

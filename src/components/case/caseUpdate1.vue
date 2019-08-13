@@ -380,7 +380,7 @@
                      </div> 
                 
                 <div class="end-btn flex">
-                     <button class="btn btn2" @click="updateAddAll()">提交审核</button>
+                     <button class="btn btn2" @click="updateAddAll()">提交修改</button>
                 </div>
                  <el-dialog  :visible.sync="dialogFormVisible" :modal-append-to-body='false' :modal='false' width="1000px">
                         <iframe src='http://file.keking.cn/onlinePreview?url=http://haoren.gzbigbang.cn/cyx.docx' width='100%' height='1000px' frameborder='1'>
@@ -732,7 +732,7 @@ export default {
               'Customer_Id':this.custom_Id,//客户Id
               'Case_Id':this.Case_Id,//案件Id
               'Chinese_Name':this.search,//客户名称
-            
+             
               'City':this.province,//省市
               'Detailed_Address':this.address,//详细地址
               'Contact_Party':this.tel,//联系方式
@@ -768,7 +768,8 @@ export default {
 
               "Charging_Method":this.costValue,//收费方式id
               'Time_Arr':this.nameJobArr,//费率数组
-              'sign':2
+              'sign':1
+              
                 }
           }
             
@@ -813,7 +814,7 @@ export default {
 
               "Charging_Method":this.costValue,//收费方式id
               'Fixed_Arr':this.timeArr,//定额
-              'sign':2
+              'sign':1
             }
             }
             if(this.costValue == 10){
@@ -854,9 +855,9 @@ export default {
               'Laywer_Arr':this.inputArr,//律师数组
             //   'Party_Arr':this.input1Arr,//当事人数组
 
-              "Charging_Method":this.costValue,//收费方式id
+              "Charging_Method":this.costValue,//收费方式id 
               'Risk_Arr':this.riskArr, //风险
-              'sign':2
+              'sign':1
             }
             }
         addJson = JSON.stringify(addJson)
@@ -865,9 +866,10 @@ export default {
         //return false
         this.$http.post('/yongxu/Index/Upd_Cases',{
                 map:addJson
-            }).then((res)=>{ 
+            }).then((res)=>{
                  //console.log(res)
                 if(res.data == true){
+                
                 this.$message({
                     message:'更新成功',
                     type:'success'
@@ -1234,7 +1236,7 @@ export default {
             for(var i =0; i< this.timeArr.length;i++){
                 arrdescribe.push(this.timeArr[i].Describe)
             }
-            //console.log(arrdescribe)
+           // console.log(arrdescribe)
             if (arrdescribe.indexOf('') != -1 || arrdescribe.indexOf(undefined) !=-1){
                  this.$message({
                     message:'*必填描述',
@@ -1342,7 +1344,7 @@ export default {
         /**获取案由根据一级案件类型 */
         getCaseResonList(id){
              this.$http.get('/yongxu/Index/Get_Cause_Case',{params:{Id:id}}).then((res) => {
-                // console.log(res)
+                 //console.log(res)
                  this.CaseResonArr=[]
                  this.CaseResonArr = res.data
                  this.getCaseResonList1(this.caseWhy)

@@ -766,10 +766,10 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
     },
-    activated(){
-        this.getSelectMenu()
-        this.getCaseList()
-    },
+    // activated(){
+    //     this.getSelectMenu()
+    //     this.getCaseList()
+    // },
     watch:{
     // Casevalue:function(newV,oldV){
     //   this.getSelectChildeMenu(newV)

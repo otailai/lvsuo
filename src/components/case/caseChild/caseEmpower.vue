@@ -399,6 +399,7 @@ export default {
         getSelectMenu(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
            this.optionMenu = res.data
+           console.log(res)
         })
       },
       //下拉二级下拉查询
@@ -696,10 +697,10 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
     },
-    activated(){
-       this.getSelectMenu()
-        this.getCaseList()
-    },
+    // activated(){
+    //    this.getSelectMenu()
+    //     this.getCaseList()
+    // },
     watch:{
     Casevalue1:function(newV,oldV){
         this.changeTowValue(newV)

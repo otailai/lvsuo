@@ -305,16 +305,6 @@ export default {
          updateData(id,type_id){
          this.common.checkAuth({params:{url:'index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
             this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-          //     if(res.data ==false){
-          //    this.$message({
-          //       message:'没有权限',
-          //       type:'warning'
-          //       }); 
-          //    return false
-          // }else{
-              
-          //     this.$router.push({path:`/index/caseUpdate/${id}/${type_id}`})
-          // }
          })
          },
       //时间查询

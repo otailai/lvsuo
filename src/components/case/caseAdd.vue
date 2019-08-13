@@ -1491,7 +1491,7 @@ export default {
                 });
                  this.$notify.error({
                         title: '错误',
-                        message: '您尚未输入按时收费下的费率，请输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        message: '您尚未输入按时收费下的费率，请输入后重试(格式为阿拉伯数字或加小数点后两位)'
                         });
                 return false
             }
@@ -1527,7 +1527,7 @@ export default {
                 });
                   this.$notify.error({
                         title: '错误',
-                        message: '您尚未输入定额收费下的付款金额，请输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        message: '您尚未输入定额收费下的付款金额，请输入后重试(格式为阿拉伯数字或加小数点后两位)'
                         });
                 return false
             }
@@ -1543,7 +1543,7 @@ export default {
                     });
                      this.$notify.error({
                         title: '错误',
-                        message: '您输入的定额收费下的付款金额格式不正确，请重新输入后重试(格式为阿拉伯数字或加小数点后一位)'
+                        message: '您输入的定额收费下的付款金额格式不正确，请重新输入后重试(格式为阿拉伯数字或加小数点后两位)'
                         });
                     return false
                     }

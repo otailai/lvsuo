@@ -10,11 +10,17 @@
                         <p v-show="child_cur == i" v-for="(v,i) in arr" :key="i">{{v.Item_Name}}</p>
               </div>
                         <div style="margin-top:30px;">
-                             <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
+                             <!-- <el-tabs v-model="activeName" @tab-click="handleClick" class="nav-tab">
                               <el-tab-pane :label="v.Item_Name" :name="'name'+i" v-for="(v,i) in arr" :key="i">
                                    <router-view></router-view>
                               </el-tab-pane>
-                            </el-tabs>  
+                            </el-tabs>   -->
+                            <ul class="flex_ul">
+            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/setBase/'+v.Item_Path" class="flex_li">
+            <p>{{v.Item_Name}}</p>
+            </router-link>
+           </ul>
+             <router-view></router-view>
                          </div>
             </div>
 
@@ -121,11 +127,26 @@ import setTRee from './setBase/setTRee'
                   height: 40px;
                     margin-top: 20px;
         }
-        .el-tabs__nav-wrap{
+.el-tabs__nav-wrap{
               /* border-bottom: 1px solid #ccc; */
 
         }
-     
+.flex_ul{
+  width: 100%;
+  display: flex;
+  flex: row;
+  justify-content: center;
+}
+.flex_li{
+  color: #333333;
+  font-size: 14px;
+  width:90px;
+  justify-content: center;
+  align-items: center;
+}
+.flex_li p{
+   cursor: pointer;
+}  
 </style>
 
 

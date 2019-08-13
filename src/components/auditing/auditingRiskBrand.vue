@@ -20,12 +20,13 @@
                </el-select>
                </div>        -->
 
-                 <div class="input flex" style="margin-left: 200px;">
+                 <div class="input flex" style="margin-left: 145px;">
                       <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
                           
                       <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
                     
                     </div>   
+                <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button>
                  <button class="dingzhi" @click="clear()">清空</button>
                    <img src="../../assets/img/shuaxin.png" alt="" @click="updateData()" class="shuaxin_btn" style="cursor: pointer;">
 
@@ -100,7 +101,11 @@
                                </a>
                               </template>
                           </el-table-column>
-                            
+                              <el-table-column  label="审核人" width="" :show-overflow-tooltip="true"> 
+                              <template slot-scope="scope"> 
+                               <span>{{scope.row.Obtain_Audit_Notes | ifnull}},{{scope.row.Two_Level_Remarks | ifnull}}</span>
+                              </template>
+                          </el-table-column>
                         <el-table-column  label="操作" width="180"> 
                           <template  slot-scope="scope">
                             <span v-show="scope.row.state != 3 && scope.row.state != 4"  @click="open(scope.row.Id)" style="cursor:pointer"><i class="el-icon-close" style="font-size: 20px;font-weight: 600;"></i></span>
@@ -198,7 +203,7 @@ export default {
           VagueName:this.SearchInput,
            Category_Id:this.Category_Id,
         }}).then((res)=>{
-            //console.log(res)
+            console.log(res)
             this.riskBrandArr = res.data.Two_Risk
             this.total = res.data.PageCount
         })
@@ -579,6 +584,13 @@ export default {
           },
         showText:function(text){
           return text.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;');
+        },
+        ifnull:function(res){
+          if(res == undefined || res == null || res == ''){
+              return ''
+          }else{
+            return res.Staff_Name
+          }
         }
     },
     //  watch:{
