@@ -86,6 +86,7 @@
       </template>
     </el-table-column>
    
+      <el-table-column prop="Case_No" label="案件编号" width="" :show-overflow-tooltip="true"></el-table-column>
      <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
@@ -156,6 +157,7 @@ import { constants } from 'fs';
 export default {
     data(){
         return{
+                allData:[],
                 cur:0,
                 riskBrandArr:[],
                 //当前页
@@ -194,6 +196,70 @@ export default {
     methods:{
          updateData(){
         this.getRiskBrandArr()
+      },
+         //下载excel
+     downExcel1:function() { 
+     this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 else{
+                      this.$http.post('/yongxu/Toexamine/Two_Export_Risk').then((res)=>{
+                          this.allData = res.data
+                          for(var i =0;i<this.allData.length;i++){
+                              if(this.allData[i].Two_Staff_Name==undefined || this.allData[i].Two_Findings_Audit==undefined){
+                                  this.allData[i].Two_Staff_Name = ''
+                                  this.allData[i].Two_Findings_Audit = '未审核'
+                              }
+                          } 
+                          console.log(this.allData)
+                      }).then(()=>{
+                      const th = ['案件名称', '主办律师','案件类别','申请日期','文件名称','部门审核人','部门审核结果','风控委审核人','风控委审核结果']
+                      const filterVal = ['Case_Name', 'Staff_Name','Value','Date_Created','File_Name','One_Staff_Name','One_Findings_Audit','Two_Staff_Name','Two_Findings_Audit']
+                      const data = this.allData.map(v => filterVal.map(k => v[k]))
+                      const [fileName, fileType, sheetName] = ['风控审核', 'xlsx', '风控审核']
+                      this.$toExcel({th, data, fileName, fileType, sheetName})
+                      })
+Case_Name: "法律意见书"
+Date_Created: "2019-07-22 11:30:50"
+File_Name: "中国法律意见书-模板-0717-1(1)"
+One_Audit_Time: "2019-07-23 09:58:03"
+One_Findings_Audit: "通过"
+One_Remarks: ""
+One_Staff_Name: "李纲"
+Staff_Name: "陈全"
+Two_Audit_Time: "2019-07-23 16:15:11"
+Two_Findings_Audit: "通过"
+Two_Remarks: ""
+Two_Staff_Name: "李皓"
+Value: "其他"
+                      
+                    
+                 }
+              })
       },
          getRiskBrandArr:function(){
         this.$http.get('/yongxu/Toexamine/Show_Two_Risk',{params:{

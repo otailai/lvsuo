@@ -15,18 +15,25 @@
                    <p v-show="child_cur == 4">授权案件</p> -->
             </div>
        <!-- <el-tabs v-model="activeName" @tab-click="handleClick"> -->
-            <ul class="flex_ul">
-            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/caseIndex/'+v.Item_Path" class="flex_li">
-            <p>{{v.Item_Name}}</p>
            
+            <!-- <transition-group tag="ul" name="slide" class="flex_ul"> -->
+              <ul class="flex_ul">
+            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/caseIndex/'+v.Item_Path" class="flex_li" active-class="linkClass" @click.native="handleClick(i)">
+            <p>{{v.Item_Name}}</p>
+            <span></span>
             </router-link>
-           </ul>
+            </ul>
+          <!-- </transition-group> -->
             <div class="flex case-child" >  
             </div>
             <div class="showTab">
             <ul class="showTab-ul">
               
-              <li class="showTab-li"><router-view></router-view> </li>
+              <li class="showTab-li">
+                <!-- <transition mode="out-in"> -->
+                <router-view></router-view>
+                <!-- </transition> -->
+                 </li>
               </ul>
             </div>
            
@@ -73,6 +80,7 @@ import caseBranch from './caseChild/caseBranch'
         tableData: [],
         tableDataShouQuan:[],
         value: '',
+        menu_i:0,
         pickerOptions2: {
           shortcuts: [{
             text: '最近一周',
@@ -128,13 +136,8 @@ import caseBranch from './caseChild/caseBranch'
       };
     },
     methods: {
-      handleClick(tab, event) {
-        console.log('/index/caseIndex/'+this.arr[tab.index].Item_Path)
-        this.$router.push({path:'/index/caseIndex/'+this.arr[tab.index].Item_Path})
-        this.$store.commit('changeCaseChild',tab.index)
-        this.child_cur = this.$store.state.case.child_id
-       // console.log(this.$store.state.case.child_id)
-        //this.getActiveMenu()
+      handleClick(tab) {
+        this.$store.commit('changeCaseChild',tab)
       },
       changeLi(i,url){
         this.$http.get('/yongxu/Base/getUserJudge',{params:{userid:localStorage.getItem('userId'),url:url}}).then((res)=>{
@@ -171,8 +174,8 @@ import caseBranch from './caseChild/caseBranch'
             menuArr[i] ='/index/caseIndex/'+this.arr[i].Item_Path
         }
         var i =menuArr.indexOf(this.$route.path)
+        this.menu_i = i
         this.activeName = 'name'+i
-        console.log(this.activeName)
       
      },
       searchData(){
@@ -205,20 +208,58 @@ import caseBranch from './caseChild/caseBranch'
   display: flex;
   flex: row;
   justify-content: center;
+  height: 40px;
+  line-height: 40px;
 }
 .flex_li{
+  display: flex;
   color: #333333;
   font-size: 14px;
   width:90px;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  position: relative;
 }
+
 .flex_li p{
    cursor: pointer;
 }
+
 .linkClass{
       color: #7E2C2E;
 }
+.linkClass p {
+      color: #7E2C2E;
+      display: flex;
+}
+.linkClass  span{
+  display: block;
+  width: 70px;
+  text-align: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background: #7E2C2E;
+}
+   .v-enter,.v-leave-to{
+            opacity:  0;/*透明度*/
+            transform: translateX(150px);
+        }
+         /*入场(离场)动画的时间段   */
+        .v-enter-active,.v-leave-active{
+            transition: all 0.8s ease;
+
+        }
+        .my-enter,.my-leave-to{
+            opacity:  0;/*透明度*/
+            transform: translateY(70px);
+        }
+        .my-enter-active,.my-leave-active{
+            transition: all 0.8s ease;
+
+        }
 </style>
 
 

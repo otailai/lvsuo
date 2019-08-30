@@ -11,6 +11,9 @@ const store = new Vuex.Store({
         case:{
           child_id:0,
         },
+        customer:{
+          child_id:0,
+        },
         audit:{
           child_id:0,
         },
@@ -21,6 +24,7 @@ const store = new Vuex.Store({
           searchInput:'',
         },
         openid:'',
+        codeList:'',
       },
       mutations: {
         changeChild(state,num){
@@ -28,6 +32,9 @@ const store = new Vuex.Store({
         },
         changeCaseChild(state,num){
           state.case.child_id = num
+        },
+        changeCustomerChild(state,num){
+          state.customer.child_id = num
         },
         changeAuditChild(state,num){
           state.audit.child_id = num

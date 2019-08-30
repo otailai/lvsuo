@@ -81,7 +81,6 @@ export default {
     created(){
     
        var _self = this
-
         _self.GetCodeDemo()
         document.onkeydown = function(e) {
           var key = window.event.keyCode

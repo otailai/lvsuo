@@ -34,14 +34,14 @@
                      
                       <el-table-column  label="案件名称" width="" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <!-- <span v-if="scope.row.Case_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Case_Name}}</span> -->
-                            <span>{{scope.row.Case_Name}}</span>
+                            <span v-if="scope.row.Case_Name.indexOf($route.params.Customer_Name_Zh) != -1 || scope.row.Case_Name.indexOf($route.params.partyname) != -1" style="color:red">{{scope.row.Case_Name}}</span>
+                            <span v-else>{{scope.row.Case_Name}}</span>
                         </template>
                       </el-table-column>
                     <el-table-column  label="经办律师" width="" :show-overflow-tooltip="true"> 
                        <template slot-scope="scope">
-                            <span v-if="scope.row.Staff_Name.indexOf($route.params.Staff_Name) != -1" style="color:red">{{scope.row.Staff_Name}}</span>
-                            <span v-else>{{scope.row.Staff_Name}}</span>
+                            <!-- <span v-if="scope.row.Staff_Name.indexOf($route.params.Staff_Name) != -1" style="color:red">{{scope.row.Staff_Name}}</span> -->
+                            <span>{{scope.row.Staff_Name}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Staff_No" label="律师编号" width="" :show-overflow-tooltip="true">
@@ -49,14 +49,14 @@
                     </el-table-column>
                     <el-table-column  label="对方当事人姓名" width="130" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.Party_Name.indexOf($route.params.partyname) != -1" style="color:red">{{scope.row.Party_Name}}</span>
+                            <span v-if="(scope.row.Party_Name.indexOf($route.params.Customer_Name_Zh) != -1 || scope.row.Party_Name.indexOf($route.params.partyname)!= -1) && scope.row.Party_Name!='无'" style="color:red">{{scope.row.Party_Name}}</span>
                             <span v-else>{{scope.row.Party_Name}}</span>
                         </template>
                        </el-table-column>
                     <el-table-column  label="客户名称" width="" :show-overflow-tooltip="true"> 
                         <template slot-scope="scope">
-                            <!-- <span v-if="scope.row.Customer_Name_Zh.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Customer_Name_Zh}}</span> -->
-                            <span>{{scope.row.Customer_Name_Zh}}</span>
+                            <span v-if="scope.row.Customer_Name_Zh.indexOf($route.params.Customer_Name_Zh) != -1 || scope.row.Customer_Name_Zh.indexOf($route.params.partyname) != -1 " style="color:red">{{scope.row.Customer_Name_Zh}}</span>
+                            <span v-else>{{scope.row.Customer_Name_Zh}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="" :show-overflow-tooltip="true"> </el-table-column>
@@ -94,11 +94,12 @@ import store from '../../vuex/store'
     methods: {
       getSeachList(){
         // this.SearchInput = this.$store.state.search.searchInput
+        console.log(this.$route.params.Customer_Name_Zh)
         this.$http.get('/yongxu/Retrieval/Show_Interest',{params:{
            Id:this.$route.params.Id, 
            Display_Page_Number:this.pageNum,
            PageNumber:this.currentPage,
-           Staff_Name:this.$route.params.Staff_Name,
+           Customer_Name:this.$route.params.Customer_Name_Zh,
            Party_Name:this.$route.params.partyname,
         }}).then((res)=>{
             console.log(res)

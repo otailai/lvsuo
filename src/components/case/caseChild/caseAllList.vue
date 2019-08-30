@@ -9,10 +9,10 @@
                     </el-select>
                     </div>     
 
-                    <div class="case-state1 flex">
+                    <div class="case-state1 flex"> 
                     <p>客户行业查询：</p>
-                    <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
-                      <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
+                    <el-select v-model="Trade_Type" placeholder="请选择" @change="changeCustom(Trade_Type)"> 
+                      <el-option v-for="item in customList" :key="item.Id" :label="item.Value"  :value="item.Id"> </el-option>
                     </el-select>
                     </div>      
               </div>
@@ -20,9 +20,9 @@
 
                     <div class="flex row">
                     <div class="input flex">
-                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input"/>
+                      <input placeholder="请输入关键词搜索"  v-model="SearchInput" class="case-input" @keyup.enter="searchContent"/>
                           
-                      <button class="case-button" @click="searchContent()"><i class="el-icon-search"></i></button>
+                      <button class="case-button" @click="searchContent()" ><i class="el-icon-search"></i></button>
                     </div>
                       <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建案件</el-button>
                     </div>
@@ -60,12 +60,32 @@
                 align="right">
                 </el-date-picker>
                 </div>
+                 <el-tooltip class="item" effect="dark" content="导出excel" placement="bottom">
+                   <a class="export" @click="downExcel1()"><i class="el-icon-download"></i></a>
+                </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="清空" placement="bottom">
+                  <a class="export" @click="clear()"><i class="el-icon-refresh"></i></a>
+                </el-tooltip>
+                  <el-tooltip class="item" effect="dark" content="条形码" placement="bottom">
+                   <a class="export" @click="tiaoxingma1()"><i class="iconfont icon-tiaoxingma"></i></a> 
+                </el-tooltip>
+                 <el-tooltip class="item" effect="dark" content="删除" placement="bottom">
+                    <a class="export" @click="deleteAll()"><i class="el-icon-delete"></i></a>  
+                </el-tooltip>
               
-                <button class="dingzhi" @click="downExcel1()"><i class="el-icon-download"></i>导出</button>
-                <!-- <button class="dingzhi"><i class="el-icon-download"></i>顶置</button> -->
-                <button class="dingzhi" @click="clear()">清空</button>
+
+          
+                <!-- <button class="dingzhi" ><i class="el-icon-download"></i>导出</button> -->
+                <!-- <button class="dingzhi" @click="clear()">清空</button>
+                <button class="dingzhi" @click="tiaoxingma1">条形码</button> -->
               </div>
-                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle">
+                  <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle" @selection-change="handleSelectionChange" ref="multipleTable" :row-key="getRowKeys">
+                     <el-table-column
+                      type="selection"
+                      width="35"
+                     :reserve-selection="true"
+                      >
+                    </el-table-column>
                     <el-table-column  label="案件编号" width="110" sortable  :show-overflow-tooltip="true" prop="Case_No" style="height:100%;width:100%" @click.stop>
                           <template slot-scope="scope">
                                   <span @click="copy" >{{scope.row.Case_No}}</span>
@@ -75,16 +95,16 @@
                      <el-table-column prop="Customer_Name_Zh" label="客户名称" width="100" :show-overflow-tooltip="true"> </el-table-column>
                   
                     
-                      <el-table-column  label="案件类别" width="150" :show-overflow-tooltip="true">
+                      <el-table-column  label="案件类别" width="130" :show-overflow-tooltip="true">
                         <template slot-scope="scope">
                             <span>
                                 {{scope.row.Category_Name}}一{{scope.row.Value}}
                             </span>
                         </template>
                       </el-table-column>
-                         <el-table-column prop="Case_Name" label="案件名称" width="180" :show-overflow-tooltip="true"> </el-table-column>
+                         <el-table-column prop="Case_Name" label="案件名称" width="150" :show-overflow-tooltip="true"> </el-table-column>
                         
-                             <el-table-column  label="立案日期" width="110" sortable prop="Filing_Date">
+                             <el-table-column  label="立案日期" width="100" sortable prop="Filing_Date">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
@@ -99,25 +119,25 @@
                             </template>
                            </el-table-column>
 
-                            <el-table-column  label="操作">
+                            <el-table-column  label="操作" width="110">
                             <template slot-scope="scope">
-                              <div v-if="scope.row.type == -2" style="justify-content: space-between;display: flex;">
-                                <p  @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">
-                                  修改
-                                </p>
-                                 <p  style="cursor:pointer;color:#333333;" @click.stop="deleteCase(scope.row.Id)">
-                                  作废
-                                </p>
-                              </div>
-                                
+                              <div class="flex row" style="justify-content: space-between;display: flex;">
+                                <div v-if="scope.row.type == -2" style="justify-content: space-between;display: flex;"> 
+                                  <p  style="cursor:pointer;color:#333333;" @click.stop="deleteCase(scope.row.Id)">
+                                    作废
+                                  </p>
+                                   <p  @click.stop="updateData(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red;margin-left:15px;">
+                                    修改
+                                  </p>
+                                </div>
+                                <p  v-if="scope.row.type != -2" @click.stop="gotoUpdateAllReady(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">修改</p>                                
                                 <p v-if="scope.row.type == -1" @click.stop style="color:#999999;"> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 0" @click.stop> {{scope.row.Status}}</p>
                                 <p v-if="scope.row.type == 1" style="cursor:pointer;color:blue" @click.stop="shangchun(scope.row.Id)">上传合同</p>
                                 <p v-if="scope.row.type == 2" style="cursor:pointer;color:blue"  @click.stop="finishCase(scope.row.Id)">申请结案</p>
-                                 <p v-if="scope.row.type == 3" @click.stop="gotoUpdateAllReady(scope.row.Id,scope.row.Charging_Method)" style="cursor:pointer;color:red">修改</p>
   
                                 <p v-if="scope.row.type == 4" @click.stop> {{scope.row.Status}}</p>
-
+                                </div>
                             </template>
                            </el-table-column>
 
@@ -158,14 +178,22 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
+    <el-button type="warning"  @click="noUpload()">不上传合同</el-button>
     <el-button type="primary"  @click="saveDoc()">保存</el-button>
     </div>
   </div>
+</el-dialog>
+<!-- 条形码 -->
+<el-dialog  :visible.sync="tiaoxingma" :modal-append-to-body='false' :modal='false' top="250px" width="775px">
+          <caseCode :codeList='codeList'></caseCode>
 </el-dialog>
     </div>
 </template>
 <script>
 import ClipboardJS from 'clipboard'
+import caseCode from './caseCode'
+import qs from 'qs';
+import 'jsbarcode'
 export default {
     data(){
         return{
@@ -245,10 +273,91 @@ export default {
             Orgid:0,
             Category_Id:0,
             rule_id:'',
+            customList:[],
+            Trade_Type:'',
+             multipleSelection: [],
+             tiaoxingma:false,
+             codeList:[],
+             deleteList:[],
+             getRowKeys(row) {
+            return row.Case_No;
+            },
         }
     },
     inject:["reload"],
     methods:{
+      //批量删除
+      deleteAll(){
+          if(this.deleteList==[]||this.deleteList==''){
+            this.$message({
+              message:'请选择要删除的案件',
+              type:'warning'
+            })
+            return false
+          }
+            this.$confirm('此操作将删除已选文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            if(localStorage.getItem('Rule_Id') == 1){
+                  this.$http.post('/yongxu/Index/Upd_Cases_State',this.deleteList).then((res)=>{
+                    if(res.data == true){
+                         this.$message({
+                          type: 'success',
+                          message: '删除成功!'
+                        });
+                        this.getCaseList()
+                    }else{
+                      this.$message({
+                          type: 'warning',
+                          message: '删除失败!'
+                        });
+                    }
+                    console.log(res)
+                })
+            }else{
+               this.$message({
+                      type: 'warning',
+                      message: '暂无权限，请联系管理员'
+                    });
+            }
+            
+         
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+        
+        
+       
+      },
+      //条形码
+      tiaoxingma1(){
+        this.tiaoxingma = true
+      },
+       toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+      handleSelectionChange(val) {
+       
+         this.codeList=[]
+         this.deleteList = []
+        this.multipleSelection = val;
+        for(var i =0;i<this.multipleSelection.length;i++){
+         this.codeList[i] = this.multipleSelection[i].Case_No
+         this.deleteList[i] = this.multipleSelection[i].Id
+        }
+        console.log(this.deleteList)
+      },
    copy(event) {   
          event.preventDefault(); 
          event.stopPropagation()
@@ -273,10 +382,16 @@ export default {
         //  console.log(this.Casevalue)
         // console.log(this.Casevalue2)
         var statusValue;
+        var Trade_Type
           if(this.value === '' || this.value === null){
                 statusValue = -3;
           }else{
-             statusValue = this.value
+                statusValue = this.value
+          }
+          if(this.Trade_Type===''||this.Trade_Type===null){
+              Trade_Type = -1
+          }else{
+            Trade_Type = this.Trade_Type
           }
          var userId = localStorage.getItem('userId')
          this.$http.get('/yongxu/Index/Show_All_Cases',{params:{
@@ -291,6 +406,7 @@ export default {
            PageNumber:this.currentPage,
            Orgid:this.Orgid,
            Category_Id:this.Category_Id,
+           Trade_Type:Trade_Type,
          }}).then((res)=>{
            console.log(res)
            this.tableData = res.data.All_Cases
@@ -332,6 +448,8 @@ export default {
         this.Orgid=0
         this.branchValue=''
         this.Category_Id=0
+        this.Trade_Type=''
+        this.$refs.multipleTable.clearSelection();
        // console.log(this.Casevalue2)
         this.getCaseList()  
       },
@@ -396,6 +514,10 @@ export default {
       changeBranch(id){
           this.Orgid = id
           this.getCaseList() 
+      },
+      changeCustom(id){
+        this.Trade_Type = id
+        this.getCaseList()
       },
       //下载excel
      downExcel:function() {
@@ -498,6 +620,13 @@ export default {
       searchContent:function(){
        this.getCaseList()
       },
+      //获取客户行业下拉
+      getCustomList(){
+         this.$http.get('/yongxu/Index/Get_Industry_Type',{params:{Trade_Type:this.Trade_Type}}).then((res)=>{
+           console.log(res)
+           this.customList = res.data
+        })
+      },
       //获取一级下拉
         getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
@@ -526,23 +655,15 @@ export default {
        * 修改已结案案件权限验证
        */
       gotoUpdateAllReady(id,Charging_Method){
-         this.common.checkAuth({params:{url:'index/caseUpdate',userid:localStorage.getItem('userId')}}).then((res)=>{
-            if(res.data == false){
-             this.$message({
-                message:'没有权限',
-                type:'warning'
-                });     
-              return false
-          }else{
+         if(localStorage.getItem('Rule_Id') == 1){
               this.updateData1(id,Charging_Method)
-          }
-         }).catch((err)=>{
+         }else{
             this.$message({
-                message:'服务器异常',
+                message:'暂无权限，请联系管理员',
                 type:'warning'
                 });     
               return false
-         })
+         }
       },
       sortChange(column){
         if(column.order !== null && column.prop === 'Filing_Date'){
@@ -593,13 +714,21 @@ export default {
                      return false
                  }else{
                       this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
-                      this.Case_Id = id
-                      this.fileName = ''
-                      this.fileName1=''
-                      this.size=''
-                      this.Suffix_Name=''
-                      this.nameData.File_Name=''
-                      this.dialogFormVisible =true
+                        if(localStorage.getItem('Rule_Id')==1){
+                            this.Case_Id = id
+                            this.fileName = ''
+                            this.fileName1=''
+                            this.size=''
+                            this.Suffix_Name=''
+                            this.nameData.File_Name=''
+                            this.dialogFormVisible =true
+                        }else{
+                          this.$message({
+                            message:'暂无权限，请联系管理员',
+                            type:'warning'
+                          })
+                          return false
+                        }    
                       })
                  }
               })          
@@ -659,13 +788,14 @@ export default {
                   param.append('fileName',this.fileName1)
                   param.append('size',this.size)
                   param.append('Suffix_Name',this.Suffix_Name)
-                this.$http.post('/yongxu/Document/Add_List_Document',{
+                this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
                     File_Name:this.fileName,
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
+                    Customer_contract:3,
                 }).then((res)=>{
                     if(res.data == true){
                           this.$message({
@@ -690,6 +820,24 @@ export default {
                         type:'warning'
                         });
                 })
+            },
+            //不上传合同，直接修改状态（案件状态）
+            noUpload(){
+                  this.$http.get('/yongxu/Index/Upd_Case_State',{params:{Id:this.Case_Id}}).then((res)=>{
+                    console.log(res)
+                    if(res.data==true){
+                      this.$message({
+                         message:'操作成功',
+                         type:'warning'
+                     })
+                     this.getCaseList()
+                    }else{
+                      this.$message({
+                          message:'操作失败',
+                          type:'warning'
+                      })
+                    }
+                  })
             },
               //申请结案
             finishCase:function(id){
@@ -724,16 +872,24 @@ export default {
                   this.$confirm('此操作将申请结案, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
-                  type: 'success'
+                  type: 'info'
             }).then(() => {
-           this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
-                        Case_Id:id,
-                        Status_Id:4
+           this.$http.get('/yongxu/Index/Upd_Closing',{params:{
+                        Case_Id:id
                     }}).then((res)=>{
-                      this.$message({
+                      if(res.data.code==200){
+                          this.$message({
                           message:'操作成功',
                           type:'success'
                           }); 
+                      }else{
+                           this.$message({
+                          message:res.data.sign,
+                          type:'warning'
+                          }); 
+                          return false
+                      }
+                    
                       this.getCaseList()  
                     })
               }).catch(() => {
@@ -822,6 +978,7 @@ export default {
     },
     components:{
          JsonExcel:'downloadExcel',
+         caseCode
     },
     　filters:{
       getStatus:function(Status){
@@ -845,6 +1002,7 @@ export default {
         this.getBranchList()
         this.getSelectMenu()
         this.getCaseList()
+        this.getCustomList()
     },
     activated() {
         // this.getAllDataList()
@@ -914,6 +1072,19 @@ export default {
 }
 .selectMenu{
     margin-top: 20px;
+}
+.export{
+  width: 25px;
+  height: 25px;
+  background: #7E2C2E;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
 }
 </style>
 

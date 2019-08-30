@@ -5,7 +5,13 @@ import topMenu from './components/topMenu'
 import caseIndex from './components/case/caseIndex'
 import caseAdd from './components/case/caseAdd'
 import caseEdit from './components/case/caseEdit'
+
+
 import customerIndex from './components/customer/customerIndex'
+import mycustomer from './components/customer/mycustomer'
+import componycustomer from './components/customer/componycustomer'
+import customerUpdate from './components/customer/customerUpdate'
+
 import customerEdit from './components/customer/customerEdit'
 import documentIndex from './components/document/documentIndex'
 import auditingIndex from './components/auditing/auditingIndex'
@@ -65,10 +71,16 @@ export default[
 {path:'/index/caseUpdate/:id/:typeId',component:caseUpdate,name:'caseUpdate',meta:{requireAuth:true}},
 {path:'/index/caseUpdate1/:id/:typeId',component:caseUpdate1,name:'caseUpdate1',meta:{requireAuth:true}},
 {path:'/index/caseEdit/:id/:typeId',component:caseEdit,name:'caseEdit',meta:{requireAuth:true,keepAlive:false}},
-{path:'/index/customerIndex',component:customerIndex,name:'customerIndex',meta:{requireAuth:true,keepAlive:true}},
+
+{path:'/index/customerIndex',component:customerIndex,name:'customerIndex',meta:{requireAuth:true,keepAlive:false},children:[
+    {path:'/index/customerIndex/mycustomer',component:mycustomer,name:'mycustomer',meta:{requireAuth:true,keepAlive:true}},
+    {path:'/index/customerIndex/componycustomer',component:componycustomer,name:'componycustomer',meta:{requireAuth:true,keepAlive:true}},
+]},
+
 {path:'/index/customerEdit/:id',component:customerEdit,name:'customerEdit',meta:{requireAuth:true}},
+{path:'/index/customerUpdate/:id',component:customerUpdate,name:'customerUpdate',meta:{requireAuth:true}},
 {path:'/index/search',component:caseSearch,name:'caseSearch',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/search1/:partyname/:Id/:Staff_Name/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
+{path:'/index/search1/:partyname/:Id/:Customer_Name_Zh/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
 {path:'/index/documentIndex',component:documentIndex,name:'documentIndex',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',meta:{requireAuth:true,keepAlive:false}, 
 children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:true},component:caseAuditing,name:'caseAuditing'},
@@ -83,12 +95,14 @@ children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepA
 {path:'/index/setContract',component:setContract,name:'setContract'},
 {path:'/index/setPower',component:setPower,name:'setPower'},
 {path:'/index/setLog',component:setLog,name:'setLog',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/setBase',component:setBase,name:'setBase',meta:{requireAuth:true,keepAlive:true},children:[{path:'/index/setBase/setBaseCaseType',meta:{requireAuth:true},component:setBaseCaseType,name:'setBaseCaseType'}, 
-                {path:'/index/setBase/customeCaseType',component:customeCaseType,name:'customeCaseType'},
-                {path:'/index/setBase/industryCaseType',component:industryCaseType,name:'industryCaseType'},
-                {path:'/index/setBase/causesCase',component:causesCase,name:'causesCase'},
-                {path:'/index/setBase/jobCase',component:jobCase,name:'jobCase'},
-                {path:'/index/setBase/setTRee',component:setTRee,name:'setTRee'},
+
+{path:'/index/setBase',component:setBase,name:'setBase',meta:{requireAuth:true,keepAlive:false},children:[
+                {path:'/index/setBase/setBaseCaseType',meta:{requireAuth:true,keepAlive:true},component:setBaseCaseType,name:'setBaseCaseType'}, 
+                {path:'/index/setBase/customeCaseType',meta:{requireAuth:true,keepAlive:true},component:customeCaseType,name:'customeCaseType'},
+                {path:'/index/setBase/industryCaseType',meta:{requireAuth:true,keepAlive:true},component:industryCaseType,name:'industryCaseType'},
+                {path:'/index/setBase/causesCase',meta:{requireAuth:true,keepAlive:true},component:causesCase,name:'causesCase'},
+                {path:'/index/setBase/jobCase',meta:{requireAuth:true,keepAlive:true},component:jobCase,name:'jobCase'},
+                {path:'/index/setBase/setTRee',meta:{requireAuth:true,keepAlive:true},component:setTRee,name:'setTRee'},
                 
     ]},
 {path:'/index/mineIndex',component:mineIndex,name:'mineIndex',meta:{requireAuth:true}},

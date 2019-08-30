@@ -19,6 +19,8 @@
                 </div>
         </div>
 
+
+
         <div class="countCase">
             <div class="flex row row_center">
             <p class="countCase_title" style="margin-right:20px;">案件</p>
@@ -29,10 +31,13 @@
                 align="right"
                 unlink-panels
                 range-separator="至"
-                start-placeholder="开始月份"
+                start-placeholder="开始月份" 
                 end-placeholder="结束月份"
                 :picker-options="pickerOptions">
                 </el-date-picker>
+              <button class="dingzhi" style="margin-left:30px" v-for="(v,i) in twoMenu" :key="i" v-show="v.Path=='6_2'"><i class="el-icon-download"></i>
+              <a :href="'/yongxu/Statistics/Export_Cases_Types?MinTime='+MinTime+'&MaxTime='+MaxTime" @click="downExcel1()">导出</a>              
+              </button>
             </div>
            
             <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart"></div>
@@ -284,12 +289,36 @@ export default {
             }
           }],
         },
+          pickerOptions_excel: {
+          shortcuts: [{
+            text: '本月',
+            onClick(picker) {
+              picker.$emit('pick', [new Date(), new Date()]);
+            }
+          }, {
+            text: '今年至今',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date(new Date().getFullYear(), 0);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近六个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setMonth(start.getMonth() - 6);
+              picker.$emit('pick', [start, end]);
+            }
+          }],
+        },
         value1: '',
         value2: '',
         value3:'',
         value4:'',
         value5:'',
         value6:'',
+        value_excel:'',
         MinTime:'',
         MaxTime:'',
         MinTime1:'',
@@ -298,18 +327,22 @@ export default {
         MaxTime2:'',
         MinTime3:'',
         MaxTime3:'',
-          MinTime4:'',
+        MinTime4:'',
         MaxTime4:'',
-    Total_Amount: '',
-    Case_Number: '',
-    Customer_Number:'' ,
-    Closingcase_Number: '',
+        MinTime_excel:'',
+        MaxTime_excel:'',
+        Total_Amount: '',
+        Case_Number: '',
+        Customer_Number:'' ,
+        Closingcase_Number: '',
+        twoMenu:[],
         }
     },
     mounted(){
-       
-        this.getMounthDate();
-        this.getMounthDate1();
+      this.getExportButton()
+       this.getMounthDateExcel()
+        this.getMounthDate()
+        this.getMounthDate1()
         this.getMounthDate2()
         this.getMounthDate3()
          this.getMounthDate4()
@@ -335,6 +368,18 @@ export default {
             // this.chart1 = null;
     },
     methods:{
+      /**
+       * 获取二级按钮
+       */
+      getExportButton(){
+         this.$http.get('/yongxu/Base/User_Two_Menu',{params:{
+          Menu_Id:6,
+          User_Id:localStorage.getItem('userId')
+        }}).then((res)=>{
+          this.twoMenu = res.data
+          console.log(res)
+        })
+      },
        getInfo(){
           this.$http.get('/yongxu/Statistics/Amount_Number',{params:{User_Id:localStorage.getItem('userId')}}).then((res)=>{
                   console.log(res)
@@ -344,6 +389,35 @@ export default {
                   this.Closingcase_Number = res.data.Closingcase_Number
           })
       },
+      //导出
+      changeTimeExcel(v){
+             console.log(v)
+             if(v == null){
+               this.getMounthDateExcel()
+                return false
+             }
+             var start = new Date(v[0]);  
+             var end = new Date(v[1])
+             var strat1 = (start.getMonth()+1)
+             var end1 = (end.getMonth()+1)
+             if(strat1<10){
+                 strat1 = '0'+strat1
+             }else{
+                 strat1 = strat1
+             }
+             if(end1<10){
+                    end1 = '0'+end1
+             }else{
+                 end1 = end1
+             }
+             this.MinTime_excel = start.getFullYear()+'-'+strat1+'-01'
+             this.MaxTime_excel = end.getFullYear()+'-'+end1+'-30'
+             console.log(this.MinTime_excel)
+      },
+      downExcel1(){
+        console.log('111111111')
+           window.location = '/yongxu/'
+      },                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
         changeTime(v){
           
              if(v == null){
@@ -601,11 +675,36 @@ export default {
 				// console.log(arry)
 				// return arry;
         },
+         //最近六个月
+        getMounthDateExcel(){
+				//创建现在的时间
+				var data=new Date();
+				//获取年
+				var year=data.getFullYear();
+				//获取月
+				var mon=data.getMonth()+1;
+				var arry=new Array();
+				for(var i=0;i<6;i++){
+					mon=mon-1;
+					if(mon<=0){
+						year=year-1;
+						mon=mon+12;
+					}
+					if(mon<10){
+						mon="0"+mon;
+					}
+					arry[i]=year+"-"+mon;
+          }
+                this.MinTime_excel = arry[5]+'-01'
+                this.MaxTime_excel = arry[0]+'-30';
+                this.value_excel = [this.MinTime_excel,this.MaxTime_excel]
+        },
           initChart(){
               var _self =this
               this.$http.get('/yongxu/Statistics/weekNumber',{params:{MinTime:this.MinTime,MaxTime:this.MaxTime,User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  
                   this.arr = res.data
+                  console.log(res)
                 for(var i = 0;i<this.arr.length;i++){
                     this.arr1[i] = this.arr[i].name.replace(/\r\n/g,"")
                     this.arr2 =this.arr[0].date
@@ -679,7 +778,9 @@ export default {
                        trigger: 'axis'
                    },
                    legend: {
-                       data:_self.customerArr1
+                       data:_self.customerArr1,
+                        bottom: 'bottom', 
+                         type: 'scroll',
                   
                    },
                    toolbox: {
@@ -970,6 +1071,16 @@ export default {
 .row_center{
     /* justify-content: center; */
     align-items: center;
+}
+.dingzhi{
+    width:75px;
+    height:30px;
+    background:rgba(255,255,255,1);
+    border:2px solid rgba(126,44,46,1);
+    cursor: pointer;
+    font-weight: 600;
+    color: #7E2C2E;
+    outline: none;
 }
 </style>
 

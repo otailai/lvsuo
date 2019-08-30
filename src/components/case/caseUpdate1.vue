@@ -4,7 +4,7 @@
                 <p>所在位置：</p>
                 <router-link to='/index/caseIndex' tag="a">案件管理</router-link>
                 <p><i class="el-icon-arrow-right"></i></p>
-                <p>案件添加</p>
+                <p>案件修改</p>
             </div>
              <div class="add-content flex">
                 <div class="add-p flex">
@@ -14,38 +14,24 @@
                     </div>
                 <div class="add-userinfo flex">
                     
-                <p class="add-userinfo-p">客户基本信息</p>
+                <p class="add-userinfo-p">客户基本信息<span style="font-size:14px;">(此模块不可修改)</span></p>
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex sselct">
                 <div class="flex"><p class="title">客户类型</p> 
-                  <el-select v-model="customValue" placeholder="*请选择" @change="changeCustomType()"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
+                  <el-select v-model="customValue" placeholder="*请选择" @change="changeCustomType()" disabled="disabled"><el-option v-for="item in customTypeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>
                         </div>
-                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="*必填" v-model="search"  maxlength="11"/></div>
-
-                      <!-- <el-popover placement="bottom" width="200" trigger="click" v-model="visible">
-                            <div>
-                                <table style="width:100%">
-                                    <thead>
-                                        <th >客户名称</th>  
-                                    </thead> 
-                                    <tbody>
-                                        <tr v-for="(item,index) in items" :key="index" @click="getAlreadyName(item.Id,item.Customer_Name_Zh)" class="tr">
-                                             <td>{{item.Customer_Name_Zh}}</td> 
-                                        </tr>
-                                    </tbody>
-                                </table>
-                           </div>
-                        </el-popover> -->
-                    <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="*必填" v-model="userNameE"/></div> -->
-                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
-                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
+                        <div class="flex" slot="reference"><p class="title">客户名称(中)</p><input type="text" class="common-input" placeholder="*必填" v-model="search"  maxlength="30" disabled="disabled"/></div>
+                     <div class="flex" v-show="customValue==3||customValue==14"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30" disabled="disabled"/></div>
+                    <div class="flex" v-show="customValue!=3&&customValue!=14"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30" disabled="disabled"/></div>
                     <div class="flex"><p class="title">省/市地区</p> 
                     <!-- <input type="text" class="common-input" placeholder="*必填" v-model="province"/> -->
                      <el-cascader
                          size="large"
                          :options="options"
                          v-model="selectedOptions"
-                         @change="handleChange">
+                         @change="handleChange"
+                         disabled="disabled"
+                         >
                     </el-cascader>
                     </div>
                     <!-- <div class="flex"><p class="title">详细地址</p> <input type="text" class="common-input" placeholder="*必填" v-model="address"/></div> -->
@@ -53,23 +39,23 @@
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first sselct">
                         
-                        <div class="flex" v-show="customValue == 4"><p class="title">所属行业</p>
-                  <el-select v-model="suoshuValue" placeholder="*请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
+                        <div class="flex" v-show="customValue!=3&&customValue!=14"><p class="title">所属行业</p>
+                  <el-select v-model="suoshuValue" placeholder="*请选择" disabled="disabled"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
-                        <div class="flex" v-show="customValue == 4"><p class="title">职务</p>
-                        <input type="text" class="common-input" placeholder="选填" v-model="value2"/>
+                        <div class="flex" v-show="customValue!=3&&customValue!=14"><p class="title">职务</p>
+                        <input type="text" class="common-input" placeholder="选填" v-model="value2" disabled="disabled"/>
                   <!-- <el-select v-model="JobListValue" placeholder="*请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
-                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" v-model="tel"  maxlength="11"/></div>
+                    <div class="flex"><p class="title">联系电话</p> <input type="text" class="common-input" placeholder="*必填" disabled="disabled" v-model="tel"  maxlength="11"/></div>
                     <div class="flex"><p class="title">是否常年客户</p>
-                  <el-select v-model="isValue" placeholder="*请选择"><el-option v-for="item in isValueArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
+                  <el-select v-model="isValue" placeholder="*请选择" disabled="disabled"><el-option v-for="item in isValueArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
                    
 
                     </div>
                     </div>
                    <div class="address">
-                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " class="common-input long-width" placeholder="*必填" v-model="address"/></div>
+                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " disabled="disabled" class="common-input long-width" placeholder="*必填" v-model="address" maxlength="50"/></div>
                        </div> 
                  </div>
                  <div class="add-caseinfo add-userinfo flex">
@@ -87,7 +73,7 @@
                   <el-option v-for="(item,index) in optionChildMenu" :key="index" :label="item.Value"  :value="item.Id"> </el-option>
                  </el-select>
                     </div>
-                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="*必填" v-model="caseName"/></div>
+                    <div class="flex"><p class="title">案件名称</p><input type="text" class="common-input" placeholder="*必填" v-model="caseName" maxlength="50"/></div>
                   <div class="flex selectInput1" id="selectInput1">
                         <p class="title">案由</p> 
                           <el-select v-model="caseWhy" placeholder="*请选择" @change="changeCaseReson(caseWhy)">
@@ -106,7 +92,7 @@
                     </div> -->
                    
                    
-                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="选填" v-model="compony"/></div>
+                    <div class="flex"><p class="title">受理机关</p> <input type="text" class="common-input" placeholder="选填" v-model="compony" maxlength="30"/></div>
                    
                  
                     <!-- <div class="flex"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty"/></div> -->
@@ -115,7 +101,7 @@
                 </div>
                   <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title f-f">案情简介</p> 
-                        <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填"></textarea>
+                        <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填" maxlength="300"></textarea>
                         </div>
                         <!-- <div class="flex" style=" justify-content: flex-start;align-items: center;">
                              
@@ -133,7 +119,7 @@
                              
                         </div> -->
                     <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
-                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty"/></div>
+                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
                     </div>
                     </div>
@@ -667,6 +653,12 @@ export default {
     },
     inject:["reload"],
     methods:{
+         getCustomerList(){
+            this.$http.get('/yongxu/Customer/Set_Dropdown').then((res)=>{
+               // console.log(res)
+                    this.customTypeArr = res.data.category
+            })
+        },
            openEditor(){
             this.dialogFormVisible3 = true
         },
@@ -864,7 +856,7 @@ export default {
         //console.log(addJson)
         //console.log(JSON.stringify(addJson))
         //return false
-        this.$http.post('/yongxu/Index/Upd_Cases',{
+        this.$http.post('/yongxu/Index/Administrator_Upd_Case',{
                 map:addJson
             }).then((res)=>{
                  //console.log(res)
@@ -1826,6 +1818,7 @@ export default {
         this.customValue=3
     },
     mounted(){
+           this.getCustomerList()
        this.getCustomSelect()
 
        this.getCustomType()

@@ -19,7 +19,7 @@
                 <div class="flex add-userinfo-index">
                 <div class="add-userinfo-left flex">
                         <div class="flex"><p class="title">客户编号</p>
-                        <p>{{Customer_Number}}</p>
+                        <p>{{Customer_Number | hideData}}</p>
                          </div>
                     <div class="flex"><p class="title">客户名称(中)</p><p>{{Customer_Name_Zh}}</p></div>
                     <div class="flex"><p class="title">省/市地区</p><p>{{City}}</p></div>
@@ -29,10 +29,10 @@
                         <div class="flex"><p class="title">客户类型</p> 
                         <p>{{Customer_Type}}</p>
                         </div>
-                        <div class="flex" v-show="Customer_Type_Id == 4"><p class="title">所属行业</p>
+                        <div class="flex" v-show="Customer_Type_Id !=3 && Customer_Type_Id !=14 "><p class="title">所属行业</p>
                         <p>{{industry}}</p>
                         </div>
-                        <div class="flex" v-show="Customer_Type_Id == 4"><p class="title">职务</p>
+                        <div class="flex" v-show="Customer_Type_Id !=3 && Customer_Type_Id !=14 "><p class="title">职务</p>
                         <p>{{Position}}</p>
                          </div>
                            <div class="flex"><p class="title">联系方式</p>
@@ -190,7 +190,10 @@
               <div class="edit">
                     <div class="edit-table flex">
                      <div class="edit-title-line flex"> <p class="edit-title">案件文书</p>
-                      <el-button type="danger" round @click="toAdd()"><i class="el-icon-plus"></i>新建文档</el-button>
+                      <div>
+                      <el-button type="danger" round @click.stop="finishCase()" v-if="Case_Status!=4 && Case_Status!=3 && Case_Status!=-2 && Case_Status!=-1">申请结案</el-button>
+                      <el-button type="danger" round @click="toAdd(2)"><i class="el-icon-plus"></i>风控文档</el-button>
+                      </div>
                       </div>
 
                        <el-table :data="tableData" border style="width: 100%;margin:auto"  @row-click="lineCilck">
@@ -203,27 +206,39 @@
                             
                                 <template slot-scope="scope"> 
                                     <p v-if="scope.row.type == -1 && scope.row.Customer_contract == -1">查看合同</p>
+                                    <p v-else-if="scope.row.Customer_contract==3">合同扫描件</p>
+                                    <p v-else-if="scope.row.Customer_contract==4">判决书</p>
+                                    <p v-else-if="scope.row.Customer_contract==5">发票</p>
+                                     <p v-else-if="scope.row.Customer_contract==6">业务档案</p>
                                     <p v-else-if="scope.row.Customer_contract == 1">无</p>
+                                    <p v-else-if="scope.row.Customer_contract == 7">其他文件</p>
                                     <p v-else>{{scope.row.state}}</p>
                                 </template>
                             
                              </el-table-column>
-                             <el-table-column  label="操作" width="150">
+                             <el-table-column  label="操作" width="160">
                                 <template slot-scope="scope">
                                      <!-- <p  v-if="scope.row.type == 1 && scope.row.Customer_contract == 2 ">一级审核</p>
                                      <p v-if="scope.row.type == 2 && scope.row.Customer_contract == 2">二级审核</p> --> 
-                                     <p v-if="scope.row.Customer_contract == 1"><a @click.stop="lookWordIframe(scope.row.File_Path)">预览</a><a :href="'/yongxu/Base/download?filename='+scope.row.File_Path" style="cursor: pointer;margin-left:5px;color:blue;">下载</a></p>
+                                     <p v-if="scope.row.Customer_contract == 1 || scope.row.Customer_contract == 3 ||scope.row.Customer_contract == 4 ||scope.row.Customer_contract == 5 || scope.row.Customer_contract ==7 || scope.row.Customer_contract ==6"><a @click.stop="lookWordIframe(scope.row.File_Path)">预览</a><a :href="'/yongxu/Base/download?filename='+scope.row.File_Path" style="cursor: pointer;margin-left:5px;color:blue;">下载</a></p>
                                      <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4 && scope.row.Customer_contract ==2" style="cursor: pointer">更新</p>
                                       <a  v-if="scope.row.type == 3 && scope.row.Customer_contract == 2" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
                                       <p  v-if="scope.row.type == -1 && scope.row.Customer_contract == -1" @click="lookWord(`${{Type_Id }}`)">查看</p>
-                                       <p  v-if="scope.row.type == 0 && scope.row.Customer_contract == 2"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">一级风控</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">二级风控</span> </p>
+                                       <p  v-if="scope.row.type == 0 && scope.row.Customer_contract == 2"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">部门审核</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">风控委审核</span> </p>
                                 </template>
-                               
+                                
                                 </el-table-column>
                        
                 </el-table>
                 </div>
-                   
+                <div class="flex btn_box_edit">
+                    <el-button type="warning" @click.stop="toAdd(3)" v-show="Customer_contract_3==2">合同扫描件</el-button>
+                    <el-button type="success" @click.stop="toAdd(4)" v-show="Customer_contract_4==2">判决书</el-button>
+                     <el-button type="primary" @click.stop="toAdd(5)" v-show="Customer_contract_5==2">发票</el-button>
+                     <el-button  @click.stop="toAdd(6)" type="info" v-show="Customer_contract_6==2">业务档案</el-button>   
+                     <el-button  @click.stop="toAdd(7)">其他合同</el-button>   
+ 
+                </div>    
                     <el-dialog  :visible.sync="word" :modal-append-to-body='false' :modal='false' width="1000px">
                       <!-- <iframe :src="word_path"   width='100%' height='1000px' frameborder='1'>
                                         This browser does not support PDFs. Please download the PDF to view it: <a :href="word_path">Download PDF</a>
@@ -292,7 +307,7 @@
       </div>
   
    <div slot="title" class="dialog-title">
-        <div class="dialogFormVisivleHeader_left flex"><p>案件文书</p>/<p>我的文档</p>/<p>新建文档</p></div>
+        <div class="dialogFormVisivleHeader_left flex"></div>
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
@@ -426,6 +441,11 @@ export default {
             One_Type_Id:'',
             word_path:'',
             word:false,
+            Customer_contract_5:2,
+            Customer_contract_4:2,
+            Customer_contract_3:2,
+            Customer_contract_6:2,
+            Case_Status:'',
         }
     },
     inject:["reload"],
@@ -485,7 +505,7 @@ export default {
         lineCilck(row){
             //console.log(row.File_Path)
         },
-        toAdd(){
+        toAdd(num){
             if(this.ifClick == false){
                this.$message({
                     type:'warning',
@@ -498,7 +518,8 @@ export default {
              this.size=''
              this.Suffix_Name=''
              this.nameData.File_Name=''
-            this.dialogFormVisible=true
+             this.num = num
+             this.dialogFormVisible=true
 
             }
         },
@@ -526,6 +547,8 @@ export default {
                 let caseInfo = res.data.Get_Case_Information
                 this.Cause_Action = caseInfo.Cause_Action,
                 this.Case_Name=caseInfo.Case_Name
+                this.Case_Status= caseInfo.Status
+                console.log(this.Case_Status)
                 this.Case_type=caseInfo.Case_type
                 this.introduce = caseInfo.Case_Introduction
                 this.Case_Id = caseInfo.Id
@@ -614,11 +637,98 @@ export default {
              this.fileName = file_name
              this.nameData.File_Name = this.fileName
           },
+            //申请结案
+            finishCase:function(id){
+                if(this.ifClick == false){
+                    this.$message({
+                            type:'warning',
+                            message:'案件审核暂无通过，无法进行操作',
+                        })
+                    return false
+                }
+                this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
+                 if(res.data == 1){
+                     this.$message({
+                         message:'账号异地登陆 强制退出',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }
+                 if(res.data == 3){
+                     this.$message({
+                         message:'登录已过期',
+                         type:'warning'
+                     })
+                      localStorage.removeItem('userId')
+                      localStorage.removeItem('sessionId')
+                      localStorage.removeItem('Rule_Id')
+                      localStorage.removeItem('Expiration_Date')
+                      localStorage.removeItem('Username')
+                      this.$router.push('/')
+                     return false
+                 }else{
+                  this.common.checkAuth({params:{url:'Index/Upd_Case_Status4',userid:localStorage.getItem('userId')}}).then((res)=>{
+                  this.$confirm('此操作将申请结案, 是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'info'
+            }).then(() => {
+           this.$http.get('/yongxu/Index/Upd_Closing',{params:{
+                        Case_Id:this.Case_Id
+                    }}).then((res)=>{
+                       if(res.data.code==200){
+                          this.$message({
+                          message:'操作成功',
+                          type:'success'
+                          }); 
+                      }else{
+                           this.$message({
+                          message:res.data.sign,
+                          type:'warning'
+                          }); 
+                          return false
+                      }
+                      this.getTableData()  
+                    })
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消操作'
+                });          
+              });
+              })
+                 }
+              })
+            },
           getTableData(){
 
               this.$http.get('/yongxu/Document/Display_Document',{params:{Case_Id:this.Case_Id}}).then((res)=>{
-                  console.log(res)
+                  
                   this.tableData = res.data
+                 console.log(this.tableData)
+                 var arr =[]
+                  for(var i = 0;i<this.tableData.length;i++){
+                     arr[i]=this.tableData[i].Customer_contract
+                  }
+                console.log(arr)
+                if(arr.indexOf(3)!=-1){
+                    this.Customer_contract_3 = 1
+                }
+                if(arr.indexOf(4)!=-1){
+                    this.Customer_contract_4 = 1
+                }
+                if(arr.indexOf(5)!=-1){
+                    this.Customer_contract_5 = 1
+                }
+                if(arr.indexOf(6)!=-1){
+                    this.Customer_contract_6 = 1
+                }
               }).then(()=>{
                     this.$http.get('/yongxu/Index/Get_Case_Contract',{params:{Case_Id:this.Case_Id}}).then((res)=>{
                         console.log(res)
@@ -654,14 +764,6 @@ export default {
                 });
                 return false  
                 }
-                
-                // let param  = new URLSearchParams()
-                //   param.append('User_Id',localStorage.getItem('userId'))
-                //   param.append('Case_Id',this.Case_Id)
-                //   param.append('File_Name',this.File_Name)
-                //   param.append('fileName',this.fileName1)
-                //   param.append('size',this.size)
-                //   param.append('Suffix_Name',this.Suffix_Name)
                 this.$http.post('/yongxu/Document/Add_Document',{
                     User_Id: localStorage.getItem('userId'),
                     Case_Id:this.Case_Id,
@@ -669,16 +771,15 @@ export default {
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
+                    Customer_contract:this.num,
                 }).then((res)=>{
-                //    console.log(res)
                     if(res.data == true){
                           this.$message({
                         message:'保存成功',
                         type:'success'
                     });
-
-                     this.dialogFormVisible = false
-                     this.reload()
+                    this.dialogFormVisible = false
+                    this.reload()
                     this.getTableData()
                     }
                     else{
@@ -817,6 +918,12 @@ export default {
                 this.$refs['upload1'].clearFiles();
             }
         }
+    },
+    filters:{
+        hideData(data){
+            console.log(data)
+            return data.replace(data.slice(data.length-6,data.length),"******")
+        }
     }
 }
 </script>
@@ -906,6 +1013,10 @@ export default {
     // width: 240;
     // min-height: 150px;
     // border: 1px solid #ccc;
+}
+.btn_box_edit{
+    width: 92%;
+    margin: 15px auto;
 }
 </style>
 

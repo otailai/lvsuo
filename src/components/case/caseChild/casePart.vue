@@ -143,6 +143,7 @@
   </div>
   <div slot="footer" class="dialog-footer">
     <div class="dialogFormVisivleFooter flex">
+        <el-button type="warning"  @click="noUpload()">不上传合同</el-button>
     <el-button type="primary"  @click="saveDoc()">保存</el-button>
     </div>
   </div>
@@ -253,6 +254,7 @@ export default {
            Display_Page_Number:this.numPage,
            PageNumber:this.currentPage,
            Category_Id:this.Category_Id,
+            Trade_Type:-1,
          }}).then((res)=>{
            this.tableData = res.data.Department_Case
            this.tableData1 = res.data
@@ -410,8 +412,8 @@ export default {
         this.sortRule.prop = column.prop
       },
     //获取二级菜单下拉
-        changeTowValue(id){
-             if(id == '' || id ==null){
+      changeTowValue(id){
+      if(id == '' || id ==null){
           this.Casevalue2 = 0
       }else{
         this.Casevalue2 = id
@@ -482,13 +484,21 @@ export default {
                      return false
                  }else{
                      this.common.checkAuth({params:{url:'Index/Upd_Case_Status2',userid:localStorage.getItem('userId')}}).then((res)=>{
-                      this.Case_Id = id
-                       this.fileName = ''
-                      this.fileName1=''
-                      this.size=''
-                      this.Suffix_Name=''
-                      this.nameData.File_Name=''
-                      this.dialogFormVisible =true
+                     if(localStorage.getItem('Rule_Id')==1){
+                            this.Case_Id = id
+                            this.fileName = ''
+                            this.fileName1=''
+                            this.size=''
+                            this.Suffix_Name=''
+                            this.nameData.File_Name=''
+                            this.dialogFormVisible =true
+                        }else{
+                          this.$message({
+                            message:'暂无权限，请联系管理员',
+                            type:'warning'
+                          })
+                          return false
+                        }    
                       })
                  }
               })          
@@ -550,6 +560,7 @@ export default {
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
+                    Customer_contract:3,
                 }).then((res)=>{
                     if(res.data == true){
                           this.$message({
@@ -573,6 +584,24 @@ export default {
                         type:'warning'
                     });
                 })
+            },
+             //不上传合同，直接修改状态（案件状态）
+            noUpload(){
+                  this.$http.get('/yongxu/Index/Upd_Case_State',{params:{Id:this.Case_Id}}).then((res)=>{
+                    console.log(res)
+                    if(res.data==true){
+                      this.$message({
+                         message:'操作成功',
+                         type:'warning'
+                     })
+                     this.getCaseList()
+                    }else{
+                      this.$message({
+                          message:'操作失败',
+                          type:'warning'
+                      })
+                    }
+                  })
             },
               //申请结案
             finishCase(id){
@@ -608,16 +637,23 @@ export default {
                   this.$confirm('此操作将申请结案, 是否继续?', '提示', {
                   confirmButtonText: '确定',
                   cancelButtonText: '取消',
-                  type: 'success'
+                  type: 'info'
             }).then(() => {
-           this.$http.get('/yongxu/Index/Upd_Case_Status',{params:{
+           this.$http.get('/yongxu/Index/Upd_Closing',{params:{
                         Case_Id:id,
-                        Status_Id:4
                     }}).then((res)=>{
-                      this.$message({
+                       if(res.data.code==200){
+                          this.$message({
                           message:'操作成功',
                           type:'success'
                           }); 
+                      }else{
+                         this.$message({
+                          message:res.data.sign,
+                          type:'warning'
+                          }); 
+                          return false
+                      }
                       this.getCaseList()  
                     })
               }).catch(() => {

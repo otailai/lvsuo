@@ -4,14 +4,15 @@
                 <p>所在位置：</p>
                 <p>审核</p>
                 <p><i class="el-icon-arrow-right"></i></p>
-                 <P v-for="(v,i) in arr" :key="i+'a'" v-show="$store.state.audit.child_id  == i">
+                 <P v-for="(v,i) in arr" :key="i+'a'" v-show="$store.state.audit.child_id == i">
                     {{v.Item_Name}}
                 </P>
             </div>
 
            <ul class="flex_ul">
-            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/auditingIndex/'+v.Item_Path" class="flex_li">
+            <router-link  tag='li'   v-for="(v,i) in arr" :key="i"  :to="'/index/auditingIndex/'+v.Item_Path" class="flex_li" active-class="linkClass" @click.native="handleClick(i)">
             <p>{{v.Item_Name}}</p>
+             <span></span>
             </router-link>
            </ul>
              <router-view></router-view>
@@ -53,10 +54,8 @@ import auditingCloseCase from './auditingCloseCase'
       };
     },
     methods: {
-      handleClick:function(tab, event) { 
-        this.$router.push('/index/auditingIndex/'+this.arr[tab.index].Item_Path)
-         this.$store.commit('changeAuditChild',tab.index)
-         this.child_cur = this.$store.state.audit.child_id
+      handleClick:function(tab) { 
+         this.$store.commit('changeAuditChild',tab)
       },
       changeLi:function(i){
           this.cur = i
@@ -112,8 +111,7 @@ import auditingCloseCase from './auditingCloseCase'
             menuArr[i] = '/index/auditingIndex/'+this.arr[i].Item_Path
         }
         var i =menuArr.indexOf(this.$route.path)
-        this.activeName = 'name'+i
-        
+        this.activeName = 'name'+i    
      },
      
       
@@ -268,16 +266,40 @@ import auditingCloseCase from './auditingCloseCase'
   display: flex;
   flex: row;
   justify-content: center;
+  height: 40px;
+  line-height: 40px;
 }
 .flex_li{
+  display: flex;
   color: #333333;
   font-size: 14px;
   width:90px;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  position: relative;
 }
+
 .flex_li p{
    cursor: pointer;
+}
+
+.linkClass{
+      color: #7E2C2E;
+}
+.linkClass p {
+      color: #7E2C2E;
+      display: flex;
+}
+.linkClass  span{
+  display: block; 
+  width: 70px;
+  text-align: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background: #7E2C2E;
 }
 </style>
 

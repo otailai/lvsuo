@@ -38,8 +38,8 @@
                            </div>
                         </el-popover>
                     <!-- <div class="flex"><p class="title">客户名称(英)</p><input type="text" class="common-input" placeholder="请输入" v-model="userNameE"/></div> -->
-                     <div class="flex" v-show="customValue==3"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
-                    <div class="flex" v-show="customValue==4"><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
+                     <div class="flex" v-if="customValue==3 || customValue==14"><p class="title">身份证号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
+                    <div class="flex" v-else><p class="title">纳税人编号</p> <input type="text" class="common-input" placeholder="*必填" v-model="cardNo" maxlength="30"/></div>
                     <div class="flex"><p class="title">省/市地区</p> 
                     <!-- <input type="text" class="common-input" placeholder="请输入" v-model="province"/> -->
                     <el-cascader
@@ -56,10 +56,10 @@
                 </div>
                   <div class="add-userinfo-left selectInput flex userInfo-first sselct">
                         
-                        <div class="flex" v-show="customValue==4"><p class="title">所属行业</p>
+                        <div class="flex" v-show="customValue!=3&&customValue!=14"><p class="title">所属行业</p>
                   <el-select v-model="suoshuValue" placeholder="*请选择"><el-option v-for="item in suoshuhangyeArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                        
                         </div>
-                        <div class="flex" v-show="customValue==4"><p class="title">职务</p>
+                        <div class="flex" v-show="customValue!=3&&customValue!=14"><p class="title">职务</p>
                         <input type="text" class="common-input" placeholder="选填"  v-model="value2"/>
                   <!-- <el-select v-model="JobListValue" placeholder="*请选择"><el-option v-for="item in JobListArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option></el-select>                         -->
                          </div> 
@@ -72,7 +72,7 @@
                     </div>
                     </div>
                    <div class="address">
-                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " class="common-input long-width" placeholder="*必填" v-model="address" maxlength="30"/></div>
+                       <div class="flex"><p class="address-title">详细地址</p> <input type="text " class="common-input long-width" placeholder="*必填" v-model="address" maxlength="50"/></div>
                        </div> 
                  </div>
                  <div class="add-caseinfo add-userinfo flex">
@@ -130,7 +130,7 @@
                     <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
                     <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>                   
                 
-                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
+                    <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie" maxlength="20"/></div>
 
                     </div>
                     </div>
@@ -676,6 +676,12 @@ export default {
     },
           
     methods:{
+        getCustomerList(){
+            this.$http.get('/yongxu/Customer/Set_Dropdown').then((res)=>{
+                console.log(res)
+                    this.customTypeArr = res.data.category
+            })
+        },
         changeInput(e){
             e.target.value = e.target.value.replace(/\-/g,""); 
         },
@@ -1996,7 +2002,7 @@ export default {
     },
     mounted(){
        //this.getCustomSelect()
-      
+      this.getCustomerList()
     //    this.getDroplist()
        this.getCustomType()
      //  this.getSuoShuHangYeType()

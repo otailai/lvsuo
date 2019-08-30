@@ -104,7 +104,7 @@ export default {
                  })
             },
             closeBox(){
-                this.$router.push('/index/customerIndex')
+                this.$router.go(-1);//返回上一层
             }
     },
     mounted(){

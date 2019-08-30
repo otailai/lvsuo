@@ -1,6 +1,6 @@
 <template>
     <div>
-     <button @click="getPdf()">pdf</button>
+      <button @click="getPdf()">pdf</button>
       <button @click="getDoc()">doc</button>
       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">

@@ -37,8 +37,8 @@
                       </el-table-column>
                     <el-table-column  label="经办律师" width="" :show-overflow-tooltip="true"> 
                        <template slot-scope="scope">
-                            <span v-if="scope.row.Staff_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Staff_Name}}</span>
-                            <span v-else>{{scope.row.Staff_Name}}</span>
+                            <!-- <span v-if="scope.row.Staff_Name.indexOf(SearchInput) != -1" style="color:red">{{scope.row.Staff_Name}}</span> -->
+                            <span>{{scope.row.Staff_Name}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="Staff_No" label="律师编号" width="" :show-overflow-tooltip="true">

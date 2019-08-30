@@ -389,9 +389,10 @@ export default {
                        menuArr.push('caseAdd')
                        menuArr.push('caseEdit')
                        menuArr.push('caseUpdate')
-                        menuArr.push('caseUpdate1')
+                       menuArr.push('caseUpdate1')
                        menuArr.push('customerEdit')
                        menuArr.push('search1')
+                        menuArr.push('customerUpdate')
                       // menuArr.push('LSMSFolder')
                       if(menuArr.indexOf(path) == -1){
                         //    this.$router.push('/web404')
