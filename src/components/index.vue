@@ -11,8 +11,8 @@
         </div>
        <div class="footer">
            <div class="container">
-            Copyright 2006 广州金鹏律师事务所 版权所有 粤ICP备14003815号
-           </div>
+            Copyright 2006 广州金鹏律师事务所 版权所有 <a href='http://www.beian.miit.gov.cn' style="color:#ffffff">粤ICP备14003815号</a> 
+           </div> 
             
            
        </div>

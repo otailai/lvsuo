@@ -222,7 +222,7 @@
                                      <p v-if="scope.row.type == 2 && scope.row.Customer_contract == 2">二级审核</p> --> 
                                      <p v-if="scope.row.Customer_contract == 1 || scope.row.Customer_contract == 3 ||scope.row.Customer_contract == 4 ||scope.row.Customer_contract == 5 || scope.row.Customer_contract ==7 || scope.row.Customer_contract ==6"><a @click.stop="lookWordIframe(scope.row.File_Path)">预览</a><a :href="'/yongxu/Base/download?filename='+scope.row.File_Path" style="cursor: pointer;margin-left:5px;color:blue;">下载</a></p>
                                      <p  @click="openNewDoc(scope.row.Id)" v-if="scope.row.type == 4 && scope.row.Customer_contract ==2" style="cursor: pointer">更新</p>
-                                      <a  v-if="scope.row.type == 3 && scope.row.Customer_contract == 2" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
+                                      <a  target="_blank" v-if="scope.row.type == 3 && scope.row.Customer_contract == 2" :href="'/yongxu/Base/download?filename='+encodeURI(scope.row.File_Path)">下载</a>
                                       <p  v-if="scope.row.type == -1 && scope.row.Customer_contract == -1" @click="lookWord(`${{Type_Id }}`)">查看</p>
                                        <p  v-if="scope.row.type == 0 && scope.row.Customer_contract == 2"><span @click.stop="toRisk(scope.row.Id,1)" style="color:red;cursor: pointer">部门审核</span><span @click.stop="toRisk(scope.row.Id,2)" style="color:blue;cursor: pointer;margin-left:5px;">风控委审核</span> </p>
                                 </template>

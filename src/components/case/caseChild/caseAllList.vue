@@ -3,16 +3,23 @@
             <div class="case-child-end2 flex">
                <div class="flex row">
                     <div class="case-state flex">
-                    <p>分所查询：</p>
+                    <p>分所：</p>
                     <el-select v-model="branchValue" placeholder="请选择" @change="changeBranch(branchValue)"> 
                       <el-option v-for="item in branchList" :key="item.Id" :label="item.Org_Name"  :value="item.Id"> </el-option>
                     </el-select>
                     </div>     
 
                     <div class="case-state1 flex"> 
-                    <p>客户行业查询：</p>
+                    <p>客户行业：</p>
                     <el-select v-model="Trade_Type" placeholder="请选择" @change="changeCustom(Trade_Type)"> 
                       <el-option v-for="item in customList" :key="item.Id" :label="item.Value"  :value="item.Id"> </el-option>
+                    </el-select>
+                    </div>      
+
+                    <div class="case-state1 flex"> 
+                    <p>客户类型：</p>
+                    <el-select v-model="Custom_Type" placeholder="请选择" @change="changeCustomType(Custom_Type)"> 
+                      <el-option v-for="item in customTypeList" :key="item.Id" :label="item.Value"  :value="item.Id"> </el-option>
                     </el-select>
                     </div>      
               </div>
@@ -102,9 +109,9 @@
                             </span>
                         </template>
                       </el-table-column>
-                         <el-table-column prop="Case_Name" label="案件名称" width="150" :show-overflow-tooltip="true"> </el-table-column>
+                         <el-table-column prop="Case_Name" label="案件名称" width="140" :show-overflow-tooltip="true"> </el-table-column>
                         
-                             <el-table-column  label="立案日期" width="100" sortable prop="Filing_Date">
+                             <el-table-column  label="立案日期" width="110" sortable prop="Filing_Date">
                                 <template slot-scope="scope">
                                     <p  v-if="!scope.row.Filing_Date" style="color:#ccc">暂无</p>
                                     <p v-else>{{scope.row.Filing_Date | getTime}}</p>
@@ -279,6 +286,8 @@ export default {
              tiaoxingma:false,
              codeList:[],
              deleteList:[],
+             customTypeList:[],
+             Custom_Type:'',
              getRowKeys(row) {
             return row.Case_No;
             },
@@ -286,6 +295,15 @@ export default {
     },
     inject:["reload"],
     methods:{
+      /**
+       * 获取客户类型
+       */
+      getCustomTypeList(){
+         this.$http.get('/yongxu/Customer/Set_Dropdown').then((res)=>{
+                console.log(res)
+                this.customTypeList = res.data.category
+            })
+      },
       //批量删除
       deleteAll(){
           if(this.deleteList==[]||this.deleteList==''){
@@ -379,10 +397,14 @@ export default {
        * currentPage 当前页
       */     
         getCaseList:function(){ 
-        //  console.log(this.Casevalue)
-        // console.log(this.Casevalue2)
-        var statusValue;
+        var statusValue
         var Trade_Type
+        var Customer_Type
+          if(this.Custom_Type == ''){
+                          Customer_Type = 0
+                        }else{
+                          Customer_Type = this.Custom_Type
+                        }
           if(this.value === '' || this.value === null){
                 statusValue = -3;
           }else{
@@ -395,7 +417,6 @@ export default {
           }
          var userId = localStorage.getItem('userId')
          this.$http.get('/yongxu/Index/Show_All_Cases',{params:{
-         //sessionId:localStorage.getItem('sessionId'),
            UserId:userId,
            Dic_Id:this.Casevalue2,
            Status:statusValue,
@@ -407,6 +428,7 @@ export default {
            Orgid:this.Orgid,
            Category_Id:this.Category_Id,
            Trade_Type:Trade_Type,
+           Customer_Type:Customer_Type
          }}).then((res)=>{
            console.log(res)
            this.tableData = res.data.All_Cases
@@ -449,6 +471,7 @@ export default {
         this.branchValue=''
         this.Category_Id=0
         this.Trade_Type=''
+        this.Custom_Type=''
         this.$refs.multipleTable.clearSelection();
        // console.log(this.Casevalue2)
         this.getCaseList()  
@@ -519,6 +542,10 @@ export default {
         this.Trade_Type = id
         this.getCaseList()
       },
+      changeCustomType(id){
+        this.Custom_Type = id
+        this.getCaseList()
+      },
       //下载excel
      downExcel:function() {
      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -587,7 +614,58 @@ export default {
                      return false
                  }
                  else{
-                      this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
+                      // this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:1}).then((res)=>{
+                      //     this.allData = res.data
+                      // }).then(()=>{
+                      // const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
+                      // const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
+                      // const data = this.allData.map(v => filterVal.map(k => v[k]))
+                      // const [fileName, fileType, sheetName] = ['律所案件', 'xlsx', '律所案件']
+                      // this.$toExcel({th, data, fileName, fileType, sheetName})
+                      // })
+                      var statusValue
+                      var Trade_Type
+                      var str
+                      var Customer_Type 
+                        if(this.Custom_Type === '' || this.Custom_Type===null){
+                          Customer_Type = 0
+                        }else{
+                          Customer_Type = this.Custom_Type
+                        }
+                        if(this.deleteList == ''){
+                          str = ''
+                        }else{
+                          str = this.deleteList.join(',')
+                        }
+                        if(this.value === '' || this.value === null){
+                              statusValue = -3;
+                        }else{
+                              statusValue = this.value
+                        }
+                        if(this.Trade_Type===''||this.Trade_Type===null){
+                            Trade_Type = -1
+                        }else{
+                          Trade_Type = this.Trade_Type
+                        }
+                       console.log(str)
+                       var userId = localStorage.getItem('userId')
+                       this.$http.get('/yongxu/Index/Law_Export_Data',{
+                       params:{
+                        UserId:userId,
+                        Dic_Id:this.Casevalue2,
+                        Status:statusValue,
+                        MaxTime:this.end,
+                        MinTime:this.start,
+                        VagueName:this.SearchInput,
+                        Orgid:this.Orgid,
+                        Category_Id:this.Category_Id,
+                        Trade_Type:Trade_Type,
+                        str:str,
+                        Customer_Type:Customer_Type
+                       }
+                       }).then((res)=>{
+                         console.log(res)
+
                           this.allData = res.data
                       }).then(()=>{
                       const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
@@ -1003,6 +1081,7 @@ export default {
         this.getSelectMenu()
         this.getCaseList()
         this.getCustomList()
+        this.getCustomTypeList()
     },
     activated() {
         // this.getAllDataList()

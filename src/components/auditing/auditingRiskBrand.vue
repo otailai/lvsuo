@@ -90,14 +90,14 @@
      <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
+                      <el-table-column  label="申请日期" width="120" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
                            <template slot-scope="scope" >
                                     <p>{{scope.row.Date_Created | getTime}}</p> 
                                 </template>
                       </el-table-column>
                           <el-table-column  label="文件" width="" :show-overflow-tooltip="true"> 
                                 <template slot-scope="scope"> 
-                               <a style="color:red" :href="'/yongxu//Base/download?filename='+scope.row.File_Path">
+                               <a style="color:red" target="_blank" :href="'/yongxu//Base/download?filename='+encodeURI(scope.row.File_Path)">
                                    {{scope.row.File_Name}}
                                </a>
                               </template>
@@ -243,21 +243,6 @@ export default {
                       const [fileName, fileType, sheetName] = ['风控审核', 'xlsx', '风控审核']
                       this.$toExcel({th, data, fileName, fileType, sheetName})
                       })
-Case_Name: "法律意见书"
-Date_Created: "2019-07-22 11:30:50"
-File_Name: "中国法律意见书-模板-0717-1(1)"
-One_Audit_Time: "2019-07-23 09:58:03"
-One_Findings_Audit: "通过"
-One_Remarks: ""
-One_Staff_Name: "李纲"
-Staff_Name: "陈全"
-Two_Audit_Time: "2019-07-23 16:15:11"
-Two_Findings_Audit: "通过"
-Two_Remarks: ""
-Two_Staff_Name: "李皓"
-Value: "其他"
-                      
-                    
                  }
               })
       },

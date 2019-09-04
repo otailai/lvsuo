@@ -72,14 +72,14 @@
                     <el-table-column prop="Case_Name" label="案件名称" width="" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="staff_Name" label="主办律师" width="" :show-overflow-tooltip="true"> </el-table-column>
                      <el-table-column prop="Value" label="案件类别" width="" :show-overflow-tooltip="true"> </el-table-column>
-                      <el-table-column  label="申请日期" width="" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
+                      <el-table-column  label="申请日期" width="120" :show-overflow-tooltip="true" prop="Date_Created" sortable> 
                            <template slot-scope="scope" >
                                     <p>{{scope.row.Date_Created | getTime}}</p> 
                                 </template>
                       </el-table-column>
                           <el-table-column  label="文件" width="" :show-overflow-tooltip="true"> 
                                 <template slot-scope="scope"> 
-                               <a style="color:red" :href="'/yongxu/Base/download?filename='+scope.row.File_Path">
+                               <a style="color:red" target="_blank" :href="'/yongxu/Base/download?filename='+encodeURI(scope.row.File_Path)">
                                    {{scope.row.File_Name}}
                                </a>
                               </template>

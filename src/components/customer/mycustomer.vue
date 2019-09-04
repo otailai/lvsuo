@@ -238,8 +238,12 @@ var _this = this
       
     },
     filters: {
-        hideMiddle(val) {
-                  return `${val.substring(0,3)}****${val.substring(val.length-3)}`
+        hideMiddle(val) { 
+                    if(val =='无'){
+                      return val
+                    }else{
+                      return `${val.substring(0,3)}****${val.substring(val.length-3)}`
+                    }
                 }
             }
   };

@@ -500,7 +500,7 @@ export default {
         return{
             /**客户类型 */
             customTypeArr:[
-                {Id:3,Value:'个人'},
+                {Id:3,Value:'个人'}, 
                  {Id:4,Value:'企业'}
             ],
             restaurants: [],

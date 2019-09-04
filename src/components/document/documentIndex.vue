@@ -52,7 +52,7 @@
                              <el-table-column prop="Size" label="文件大小" width=""> </el-table-column>
                         <el-table-column label="操作"> 
                               <template slot-scope="scope">   
-                             <a :href="'/yongxu/Base/download?filename='+scope.row.File_Path">下载</a>
+                             <a :href="'/yongxu/Base/download?filename='+encodeURI(scope.row.File_Path)" target="_blank">下载</a>
                              <span @click="deleteDoc(scope.row.Id,scope.row.File_Path)" v-show="scope.row.User_Id == userId" style="cursor:pointer">删除</span>
                               </template>
                         </el-table-column>

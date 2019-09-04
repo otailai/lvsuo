@@ -40,7 +40,7 @@ export default {
    
   },
   created(){
-    this._isMobile()
+    //this._isMobile()
   },
   watch:{
 

@@ -740,7 +740,7 @@ export default {
                 this.dialogFormVisible = false
               })
             },
-                      //下载excel
+   //下载excel
      downExcel1:function() {
      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  if(res.data == 1){
@@ -769,19 +769,35 @@ export default {
                       this.$router.push('/')
                      return false
                  }
-                 else{
-                    this.$http.post('/yongxu/Index/Export_Data',{User_Id:localStorage.getItem('userId'),sign:4}).then((res)=>{
-                         this.allData = res.data
-                      }).then(()=>{
+                 else{ 
+                        var statusValue;
+                    if(this.value === '' || this.value === null){
+                          statusValue = -3;
+                    }else{
+                      statusValue = this.value
+                    }
+                  var userId = localStorage.getItem('userId')
+                      this.$http.get('/yongxu/Index/Get_Export_Id',{params:{
+                        UserId:userId,
+                        Dic_Id:this.Casevalue2,
+                        Status:statusValue,
+                        MaxTime:this.end,
+                        MinTime:this.start,
+                        VagueName:this.SearchInput,
+                        Category_Id:this.Category_Id, 
+                        sign:3
+                      }}).then((res)=>{
+                        console.log(res)
+                        this.allData = res.data
+                    }).then(()=>{
                       const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
                       const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
                       const data = this.allData.map(v => filterVal.map(k => v[k]))
-                      const [fileName, fileType, sheetName] = ['我的案件', 'xlsx', '我的案件']
+                      const [fileName, fileType, sheetName] = ['个人案件', 'xlsx', '个人案件']
                       this.$toExcel({th, data, fileName, fileType, sheetName})
-                      })
-                    
+                    })
                  }
-              })
+          })
       },
     },
     components:{
