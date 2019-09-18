@@ -21,7 +21,7 @@ const middlewares = jsonServer.defaults()
 apiServer.use(middlewares)
 apiServer.use(apiRouter)
 /*监听端口*/
-apiServer.listen(3001, () => {
+apiServer.listen(3002, () => {
   console.log('JSON Server is running')
 })
 

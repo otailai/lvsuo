@@ -87,11 +87,7 @@
                 <button class="dingzhi" @click="tiaoxingma1">条形码</button> -->
               </div>
                   <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck" :header-cell-style="cellStyle" @selection-change="handleSelectionChange" ref="multipleTable" :row-key="getRowKeys">
-                     <el-table-column
-                      type="selection"
-                      width="35"
-                     :reserve-selection="true"
-                      >
+                     <el-table-column type="selection" width="35" :reserve-selection="true">
                     </el-table-column>
                     <el-table-column  label="案件编号" width="110" sortable  :show-overflow-tooltip="true" prop="Case_No" style="height:100%;width:100%" @click.stop>
                           <template slot-scope="scope">
@@ -1164,6 +1160,9 @@ export default {
   align-items: center;
   font-weight: 600;
   cursor: pointer;
+}
+.el-table-column--selection .cell{
+  padding: 0 !important;
 }
 </style>
 

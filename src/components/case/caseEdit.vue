@@ -236,7 +236,7 @@
                     <el-button type="success" @click.stop="toAdd(4)" v-show="Customer_contract_4==2">判决书</el-button>
                      <el-button type="primary" @click.stop="toAdd(5)" v-show="Customer_contract_5==2">发票</el-button>
                      <el-button  @click.stop="toAdd(6)" type="info" v-show="Customer_contract_6==2">业务档案</el-button>   
-                     <el-button  @click.stop="toAdd(7)">其他合同</el-button>   
+                     <el-button  @click.stop="toAdd(7)">其他</el-button>   
  
                 </div>    
                     <el-dialog  :visible.sync="word" :modal-append-to-body='false' :modal='false' width="1000px">
