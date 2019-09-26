@@ -112,21 +112,7 @@
                         <div class="flex"><p class="title f-f">案情简介</p> 
                         <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填" maxlength="300"></textarea>
                         </div>
-                        <!-- <div class="flex" style=" justify-content: flex-start;align-items: center;">
-                             
-                                <p class="title">对方当事人</p>
-                                <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty[0].name"/>
-                                 <span @click="addOppositeParty()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" ></i> </span>
-    
-                        </div>
-                         
-                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in oppositePartyArr" :key="i">
-                             
-                                <p class="title">对方当事人</p>
-                                <input type="text" class="common-input" placeholder="请输入" v-model="oppositeParty[i+1].name"/>
-                                 <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
-                             
-                        </div> -->
+                  
                     <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
                     <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>                   
                 
@@ -206,47 +192,12 @@
                     </div>
                     </div>
 
-              
-                <!-- <div class="add-lawyer  lex">
-                <div class="add-lawyer-title flex"> 
-                     <p class="add-userinfo-p">当事人信息</p>
-                     <span @click="pushPartyInfo()"><i class="el-icon-circle-plus"></i> 其他当事人</span>
-                 </div>  
-                <div class="flex  add-lawyer-index">
-                  <div class="flex">
-                        <p class="title">姓名</p>
-                         <p class="title">类型</p>
-                           <p class="input-icon"></p>
-                    </div>
-                    <div class="flex">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[0].partyName"/>
-                    
-                         <el-select v-model="input1Arr[0].partyJob"  placeholder="*请选择" style="height:30px;width:100px;margin-top: 10px;">
-                         <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
-                        </el-select>  
-                        <div class="input-icon"></div>
-                    </div>
-                      <div class="flex" v-for="(v,i) in PartyInfo" :key="i">
-                        <input type="text" class="common-input lawyer-input" placeholder="请输入" v-model="input1Arr[i+1].partyName"/>
-                         <el-select v-model="input1Arr[i+1].partyJob"  placeholder="*请选择" style="height:30px;width:100px;margin-top: 10px;">
-                         <el-option v-for="item in partyJobSelectArr" :key="item.Id" :label="item.Value" :value="item.Id"></el-option>
-                        </el-select>  
-                    
-                        <div class="input-icon" @click="deleteLine(i,PartyInfo)"><i class="el-icon-remove"></i></div>
-                    </div>
-                    </div>
-                    </div>
-                 </div> -->
+            
                       <div class="add-lawyer  lex">
                         <div class="add-lawyer-title flex"> 
                             <p class="add-userinfo-p">服务内容</p>
                         </div>  
                      <div class="flex  add-lawyer-index" style="width:90%;margin-top:10px;">
-                
-                        <!-- <textarea name="" id="" cols="40" rows="8"  class="serve_content" @click="openEditor()" v-model="Service_Content"></textarea> -->
-                        <!-- <div class="serve_content" @click="openEditor()" v-html="Service_Content">
-
-                        </div> -->
                     <quill-editor v-model="Service_Content" ref="myQuillEditor" :options="editorOption" style="width:428px;"></quill-editor>
 
                     </div>

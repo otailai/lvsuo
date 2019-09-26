@@ -238,7 +238,7 @@ export default {
         },
         // 获取案件列表
         getCaseList(){ 
-        var statusValue;
+          var statusValue;
           if(this.value === '' || this.value === null){
                 statusValue = -3;
           }else{

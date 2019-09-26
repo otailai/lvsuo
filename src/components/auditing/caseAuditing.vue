@@ -267,6 +267,12 @@ export default {
             if(partyname == ''){
                 partyname = '无'
             }
+            if(partyname.indexOf('/')){
+                partyname = partyname.replace('/','、')
+            }
+            if(Customer_Name_Zh.indexOf('/')){
+                Customer_Name_Zh = Customer_Name_Zh.replace('/','、')
+            }
             this.$router.push({path:`/index/search1/${partyname}/${Id}/${Customer_Name_Zh}/${type}`})
           },
           openDialog:function(id,Charging_Method){

@@ -702,7 +702,6 @@ export default {
           initChart(){
               var _self =this
               this.$http.get('/yongxu/Statistics/weekNumber',{params:{MinTime:this.MinTime,MaxTime:this.MaxTime,User_Id:localStorage.getItem('userId')}}).then((res)=>{
-                 
                   this.arr = res.data
                   console.log(res)
                 for(var i = 0;i<this.arr.length;i++){
