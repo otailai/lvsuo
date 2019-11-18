@@ -684,6 +684,9 @@ export default {
             if(this.customValue == 3){
                 this.suoshuValue = 0
             }
+            if(this.customValue == 14){
+                this.suoshuValue = 0
+            }
              if(this.value2===''){
                     this.value2='无'
               }
@@ -864,6 +867,9 @@ export default {
             if(this.customValue == 3){
                 this.suoshuValue = 0
             }
+              if(this.customValue == 14){
+                this.suoshuValue = 0
+            }
             if(this.value2===''){
                     this.value2='无'
               }
@@ -1029,7 +1035,7 @@ export default {
                
             }).catch((err)=>{
                 this.$message({
-                    message:'服务器异常',
+                    message:'提交信息有误',
                     type:'warning'
                 });
                 return false
@@ -1062,7 +1068,7 @@ export default {
                 });
                 return false
             }
-            if(this.customValue ==3 ){
+            if(this.customValue ==3 || this.customValue ==14){
                 // var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
                 if(this.cardNo == '' || this.cardNo==null) 
                 { 
@@ -1077,7 +1083,7 @@ export default {
                        return false  
                 }
             }  
-            if(this.customValue ==4 ){
+            if(this.customValue !=3 && this.customValue !=14){
                 if(this.cardNo === '' || this.cardNo == null) 
                 { 
                      this.$message({

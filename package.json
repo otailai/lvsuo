@@ -14,6 +14,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "@xkeshi/vue-barcode": "^1.0.0",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "clipboard": "^2.0.4",
@@ -29,7 +30,9 @@
     "jspdf": "^1.5.3",
     "pdfjs-dist": "^2.1.266",
     "vue": "^2.5.2",
+    "vue-img-inputer": "^2.1.6",
     "vue-print-nb": "^1.2.0",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "xlsx": "^0.14.2"
   },

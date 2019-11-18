@@ -826,6 +826,7 @@ export default {
                     fileName:this.fileName1,
                     size:this.size,
                     Suffix_Name:this.Suffix_Name,
+                    Customer_contract:2
                     }).then((res)=>{
                        // console.log(res)
                          if(res.data == true){
@@ -833,7 +834,7 @@ export default {
                         message:'更新成功',
                         type:'success'
                     });
-                     this.dialogFormVisible = false
+                     this.dialogFormVisibleUpdate = false
                     this.getTableData()
                     }
                     else{

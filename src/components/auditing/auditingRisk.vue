@@ -143,7 +143,7 @@
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addRemarkButton">确 定</el-button>
+    <el-button type="primary" @click="addRemarkButton" :disabled="isDisabled">确 定</el-button>
   </span>
 </el-dialog>
 
@@ -154,7 +154,7 @@
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible1 = false">取 消</el-button>
-    <el-button type="primary" @click="addRemarOk()">确 定</el-button>
+    <el-button type="primary" @click="addRemarOk()" :disabled="isDisabled1">确 定</el-button>
   </span>
 </el-dialog>
     </div>
@@ -163,6 +163,8 @@
 export default {
     data(){
         return{
+                isDisabled:false,
+                 isDisabled1:false,
                 cur:0,
                 riskArr:[],
                 //当前页
@@ -375,8 +377,9 @@ export default {
          
       },
       addRemarkButton(){
+         this.isDisabled = true
         this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:this.caseReMarkId,state:4}}).then((res)=>{
-          console.log(res)
+             console.log(res)
              if(res.data == true){
                 this.$message({
                   type: 'success',
@@ -429,10 +432,11 @@ export default {
                           done();
                         return false
                 }
-        this.caseReMarkId = id
-        this.remark = ''
-        this.dialogVisible = true
-        return false
+            this.caseReMarkId = id
+            this.remark = ''
+            this.dialogVisible = true
+            this.isDisabled = false
+            return false
         //   this.$prompt('此操作将不通过风控审核, 是否继续?', '备注', {
         //   confirmButtonText: '确定',
         //   cancelButtonText: '取消',
@@ -464,13 +468,11 @@ export default {
         // });
                  }
           })
-
-     
       },
       addRemarOk(){
+            this.isDisabled1 = true
             this.$http.get('/yongxu/Toexamine/Submit_Action_Risk',{params:{Id:this.caseReMarkId,state:3}}).then((res)=>{
-            //console.log(res)
-              if(res.data == true){
+            if(res.data == true){
                  this.$message({
                 type: 'success',
                 message: '操作成功!'
@@ -487,7 +489,6 @@ export default {
               }
             })
       },
-
          // 对话框,审核通过
        open1:function(id) {
          this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
@@ -526,6 +527,7 @@ export default {
          this.caseReMarkId = id
           this.remark = ''
           this.dialogVisible1 = true
+           this.isDisabled1 = false
       // this.$prompt('此操作将通过风控审核, 是否继续?', '备注', {
       // confirmButtonText: '确定',
       // cancelButtonText: '取消',

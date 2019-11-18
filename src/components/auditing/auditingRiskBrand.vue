@@ -136,7 +136,7 @@
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false">取 消</el-button>
-    <el-button type="primary" @click="addRemarkButton">确 定</el-button>
+    <el-button type="primary" @click="addRemarkButton" :disabled="isDisabled">确 定</el-button>
   </span>
 </el-dialog>
 
@@ -147,7 +147,7 @@
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible1 = false">取 消</el-button>
-    <el-button type="primary" @click="addRemarOk()">确 定</el-button>
+    <el-button type="primary" @click="addRemarOk()" :disabled="isDisabled1">确 定</el-button>
   </span>
 </el-dialog>
     </div>
@@ -156,7 +156,9 @@
 import { constants } from 'fs';
 export default {
     data(){
-        return{
+        return{ 
+                isDisabled1:false,
+                isDisabled:false,
                 allData:[],
                 cur:0,
                 riskBrandArr:[],
@@ -420,6 +422,7 @@ export default {
 
       },
       addRemarkButton(){
+         this.isDisabled = true
           this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:this.caseReMarkId,state:4}}).then((res)=>{
              if(res.data == true){
                 this.$message({
@@ -438,6 +441,7 @@ export default {
           })
       },
       addRemarOk(){
+      this.isDisabled1 = true
       this.$http.get('/yongxu/Toexamine/Submit_Two_Risk',{params:{Id:this.caseReMarkId,state:3}}).then((res)=>{
              if(res.data == true){
                 this.$message({
@@ -493,6 +497,7 @@ export default {
         this.caseReMarkId = id
         this.remark = ''
         this.dialogVisible = true
+        this.isDisabled = false
         return false
       //  this.$prompt('此操作将不通过二级风控审核, 是否继续?', '备注', {
       //     confirmButtonText: '确定',
@@ -560,8 +565,9 @@ export default {
                         return false
                 }
           this.caseReMarkId = id
-              this.remark = ''
+          this.remark = ''
           this.dialogVisible1 = true
+          this.isDisabled1 = false
         //  this.$prompt('此操作将通过二级风控审核, 是否继续?', '备注', {
         //   confirmButtonText: '确定',
         //   cancelButtonText: '取消',

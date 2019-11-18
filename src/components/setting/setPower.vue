@@ -74,7 +74,7 @@
                    
                         <div slot="footer" class="dialog-footer">
                           <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-                          <el-button type="primary" @click="tijiao()">确 定</el-button>
+                          <el-button type="primary" @click="tijiao()" :disabled="isDisabled">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
                      <div class="dialogFormVisivleHeader_left flex">添加角色权限</div>
@@ -111,7 +111,7 @@
                    
                         <div slot="footer" class="dialog-footer">
                           <el-button @click="dialogFormVisible2 = false">取 消</el-button>
-                          <el-button type="primary" @click="editRole()">确 定</el-button>
+                          <el-button type="primary" @click="editRole()" :disabled="isDisabled1">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
                      <div class="dialogFormVisivleHeader_left flex">修改角色权限</div>
@@ -130,6 +130,8 @@ import store from '../../vuex/store'
   export default {
     data() {
       return {
+        isDisabled:false,
+        isDisabled1:false,
         activeName:'name0',
         selectOneId:1,
         numPage:20,
@@ -175,6 +177,7 @@ import store from '../../vuex/store'
                     })
                     return false
             }
+           
             var arr = []
             var arr1 =[]
             var arr2 = []
@@ -203,7 +206,7 @@ import store from '../../vuex/store'
                     })
                     return false
             }
-           
+            this.isDisabled=true
             this.$http.post('/yongxu/Install/Add_Role',{User_Id:localStorage.getItem('userId'),Rule_Name:this.role_update_name,Items:arr1,Item:arr4}).then((res)=>{
                         //console.log(res)
                         if(res.data == true){
@@ -221,6 +224,7 @@ import store from '../../vuex/store'
                                         type:'warning',
                                         message:'添加失败'
                                     })
+                                    this.isDisabled = false
                         }
             }).catch((res)=>{
                   this.$message({
@@ -403,6 +407,7 @@ import store from '../../vuex/store'
                     })
                     return false
             }
+            this.isDisabled1 = true
             this.$http.post('/yongxu/Install/Upd_Role',{
               Rule_Name:this.role_name,
               Items:arr1,
@@ -423,6 +428,7 @@ import store from '../../vuex/store'
                       type:'success',
                       message:'修改失败'
                   })
+                    this.isDisabled1 = false
               }
           })
        

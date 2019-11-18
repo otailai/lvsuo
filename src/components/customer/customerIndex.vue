@@ -73,6 +73,7 @@ import componycustomer from './componycustomer'
           Menu_Id:3,
           User_Id:localStorage.getItem('userId')
         }}).then((res)=>{
+          console.log(res)
           this.arr = res.data
           console.log(this.arr)
            var menuArr = []

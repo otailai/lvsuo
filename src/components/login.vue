@@ -28,8 +28,8 @@
                         <div class="r-psw flex">
                              <input name="remember" type="checkbox" value="" :checked="checkedState" class="login-box" ref="remember" @change="changeCheck()"/><span>记住密码</span> 
                         </div>
-                        <button class="login-btn" @click="denglu()" @keyup.enter="denglu()">登陆</button> 
-                        <div class="weixin1 weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>微信扫码登陆</p></div>
+                        <button class="login-btn" @click="denglu()" @keyup.enter="denglu()">登录</button> 
+                        <div class="weixin1 weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>微信扫码登录</p></div>
                  </div>     
                  
                   <div class="login-right-form flex" v-show="cur===1">
@@ -40,7 +40,7 @@
                                 <img src="../assets/img/wx.png" alt="">
                             </div> -->
                             
-                                  <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登陆</p></div>
+                                  <div class="weixin flex" @click="changeLogin()"><i class="iconfont icon-kehu"></i><p>账号密码登录</p></div>
                             </div>
                       
                  </div>      
@@ -168,6 +168,7 @@ export default {
         //}
       },
         denglu:function(){
+         
             //this.checckIsHas()
             // if(loginInit == false){
             //      this.$message({

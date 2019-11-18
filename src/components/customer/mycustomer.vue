@@ -9,7 +9,7 @@
             </div>
               <div class="selectMenu flex">
                <el-table :data="tableData" border style="width: 100%"  @row-click="lineCilck">
-                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width="" :show-overflow-tooltip="true"></el-table-column>
+                    <el-table-column prop="Customer_Name_Zh" label="客户名称" width="150" :show-overflow-tooltip="true"></el-table-column>
                     <el-table-column prop="Customer_Number" label="客户编号" width="100" :show-overflow-tooltip="true" sortable>
                       <template slot-scope="scope">
                           {{scope.row.Customer_Number|hideMiddle}} 
@@ -33,7 +33,7 @@
                       </el-table-column>
                 
                      
-                       <el-table-column  label="分所" width="170" :show-overflow-tooltip="true">
+                       <el-table-column  label="分所" width="100" :show-overflow-tooltip="true">
                                  <template slot-scope="scope">
                                 <el-popover trigger="hover" placement="top" popper-class="back_color1">
                                   <p  v-for="(v,i) in branchNameArr" :key="i">{{v}}&nbsp;</p>

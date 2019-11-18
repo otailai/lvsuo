@@ -283,7 +283,7 @@ export default {
            this.makeCollectionsArr= res.data
           })    
           }
-            if(Charging_Method  == 8){
+          if(Charging_Method  == 8){
           this.dialogFormVisible8 = true
           this.$http.get('/yongxu/Toexamine/Get_Make_Collections',{params:{Id:id,Charging_Method:Charging_Method}}).then((res)=>{
             console.log(res)
@@ -369,6 +369,7 @@ export default {
           User_Id:localStorage.getItem('userId'),
           Category_Id:this.Category_Id,
         }}).then((res)=>{
+          console.log(res)
             this.caseArr = res.data.Case_Audit
             this.total = res.data.PageCount
              

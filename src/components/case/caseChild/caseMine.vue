@@ -157,7 +157,7 @@
 export default {
     data(){
         return{
-        
+        statusIndex:1,
             Casevalue:[],
             currentPage:1,
             total:0,
@@ -742,6 +742,14 @@ export default {
             },
    //下载excel
      downExcel1:function() {
+         if(this.statusIndex == 2){
+          this.$message({
+                         message:'程序正在执行，请耐心等待',
+                         type:'warning'
+                     })
+                     return 
+       }
+      this.statusIndex = 2
      this.$http.get('/yongxu/Login/Sel_Login_Status',{params:{sessionId:localStorage.getItem('sessionId'),User_Id:localStorage.getItem('userId')}}).then((res)=>{
                  if(res.data == 1){
                      this.$message({
@@ -790,11 +798,17 @@ export default {
                         console.log(res)
                         this.allData = res.data
                     }).then(()=>{
-                      const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式']
-                      const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party']
+                      const th = ['合同编号', '案件名称', '客户名称','客户类型','行业类型','一级案件类别','二级案件类别','主办律师','承办律师','合同金额','标的额','地址','联系方式','立案日期']
+                      const filterVal = ['Contract_No', 'Case_Name','Customer_Type','Trade_Type','Customer_Name_Zh','One_Case_Type','Two_Case_Type','Staff_Name','Undertake_Name','Amount','Target','Detailed_Address','Contact_Party','Filing_Date']
                       const data = this.allData.map(v => filterVal.map(k => v[k]))
                       const [fileName, fileType, sheetName] = ['个人案件', 'xlsx', '个人案件']
                       this.$toExcel({th, data, fileName, fileType, sheetName})
+                       this.$message({
+                         message:'下载完成~',
+                         type:'success'
+                     })
+                      
+                      this.statusIndex = 1
                     })
                  }
           })

@@ -26,7 +26,7 @@
                         <input type="text" placeholder="用户名" class="user-input" onfocus="this.placeholder=''" onblur="this.placeholder='用户名'" v-model="username">
                         <input type="password" placeholder="密码" class="user-input" onfocus="this.placeholder=''" onblur="this.placeholder='密码'" v-model="password">
                         <button class="login-btn" @click="bindUser()">账号绑定</button> 
-                        <div class="weixin1 weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>账号密码登陆</p></div>
+                        <div class="weixin1 weixin flex" @click="changeLogin()"><i class="iconfont icon-changyonglogo28"></i><p>账号密码登录</p></div>
                  </div>     
              </div>
            

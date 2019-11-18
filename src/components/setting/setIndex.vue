@@ -119,7 +119,7 @@
                   </el-form>
           <div slot="footer" class="dialog-footer">
            <div class="flex dialogFormVisivleFooter">
-              <el-button type="primary" @click="addMember()">保存</el-button>
+              <el-button type="primary" @click="addMember()" :disabled="isDisabled">保存</el-button>
            </div>
           </div>
              <el-dialog
@@ -200,7 +200,7 @@
                   </el-form>
           <div slot="footer" class="dialog-footer">
            <div class="flex dialogFormVisivleFooter">
-              <el-button type="primary" @click="update_Member()">保存</el-button>
+              <el-button type="primary" @click="update_Member()" :disabled="isDisabled1">保存</el-button>
            </div>
           </div>
              <el-dialog
@@ -240,7 +240,7 @@
                    
                         <div slot="footer" class="dialog-footer">
                           <el-button @click="dialogFormVisible1 = false">取 消</el-button>
-                          <el-button type="primary" @click="addpartyName()">确 定</el-button>
+                          <el-button type="primary" @click="addpartyName()" :disabled="isDisabled2">确 定</el-button>
                         </div>
                          <div slot="title" class="dialog-title">
                      <div class="dialogFormVisivleHeader_left flex">添加部门</div>
@@ -257,6 +257,9 @@ import { fail } from 'assert';
   export default {
     data() {
       return {
+        isDisabled:false,
+        isDisabled1:false,
+        isDisabled2:false,
         url:'http://192.168.0.110:8081/index/setIndex', 
         SearchInput:'',
         innerVisible:false,
@@ -435,6 +438,7 @@ import { fail } from 'assert';
          })
       },
       addpartyName(){
+          this.isDisabled2 = true
           this.$http.get('/yongxu/Install/Add_Law_Aepartment',{params:{
             User_Id:localStorage.getItem('userId'),
             Parent_Id:this.value,
@@ -453,6 +457,7 @@ import { fail } from 'assert';
                     message:res.data.str,
                     type:'warning'
                   })
+                    this.isDisabled2 = false
               }
           }).catch((res)=>{
                 this.$message({
@@ -554,6 +559,7 @@ import { fail } from 'assert';
             })
             return false
         }
+        this.isDisabled = true
         this.$http.post('/yongxu/Install/Add_User_Information',{
           User_Id:localStorage.getItem('userId'),
           Department:this.form.party,
@@ -587,6 +593,8 @@ import { fail } from 'assert';
               message:'添加失败',
               type:'warning'
             })
+            this.isDisabled = false
+
             }
         }).catch((err)=>{
              this.$message({
@@ -686,7 +694,7 @@ import { fail } from 'assert';
             })
             return false
         }
-     
+        this.isDisabled1 = true
         this.$http.post('/yongxu/Install/Upd_Member',{
             userid:localStorage.getItem('userId'),
             user_auth_Id:this.form.user_auth_Id,
@@ -714,6 +722,7 @@ import { fail } from 'assert';
               message:'更新失败',
               type:'warning'
             })
+            this.isDisabled1 = false
             return false
           }
         }).catch((err)=>{

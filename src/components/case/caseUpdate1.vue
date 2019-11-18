@@ -888,7 +888,7 @@ export default {
                 });
                 return false
             }
-            if(this.customValue ==3 ){
+            if(this.customValue ==3 || this.customValue ==14){
               
                 if(this.cardNo == '' || this.cardNo == null) 
                 { 
@@ -902,7 +902,7 @@ export default {
                      this.suoshuValue = 0
                  }
             }
-            if(this.customValue ==4 ){
+            if(this.customValue !=3 && this.customValue !=14 ){
                if(this.cardNo == '' || this.cardNo == null) 
                 { 
                      this.$message({
@@ -1397,17 +1397,26 @@ export default {
         getCustomInfo(){
             //console.log(this.custom_Id)
              this.$http.get('/yongxu/Index/Get_DetailsCustomer',{params:{Id:this.custom_Id}}).then((res)=>{ 
-                 //console.log(res)
+                  console.log(res)
                   this.userNameE=res.data.Customer_Name_En
                   this.province=res.data.City
                   if(res.data.City ==undefined || res.data.City=="" || res.data.City=="无"){
                             res.data.City == ""
                             this.selectedOptions = []
                   }else{
-                  var a = TextToCode[res.data.City.split('-')[0]].code
-                  var b = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]].code
-                  var c = TextToCode[res.data.City.split('-')[0]][res.data.City.split('-')[1]][res.data.City.split('-')[2]].code
-                  this.selectedOptions = [a,b,c]
+                  var length = arr.City.split('-').length
+                      console.log(length)
+                        if(length == 2){
+                            var a = TextToCode[arr.City.split('-')[0]].code
+                            var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                             this.selectedOptions = [a,b]
+                        }
+                        else if(length==3){
+                            var a = TextToCode[arr.City.split('-')[0]].code
+                            var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                            var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
+                            this.selectedOptions = [a,b,c]
+                        }
                   }
 
                
@@ -1555,14 +1564,33 @@ export default {
                 this.search = arr.Customer_Name_Zh
                 this.industry= arr.industry
                 this.Customer_Name_Zh=arr.Customer_Name_Zh
+
+                  this.address = arr.Detailed_Address
+                  this.tel=arr.Contact_Party
+                  this.suoshuValue = arr.industry_Id
+                  this.value2 = arr.Position
+                  this.customValue = arr.Customer_Type_Id
+                  this.cardNo =arr.Customer_Number
+                  this.isValue=arr.Identification
+
                 this.City=arr.City
+
                     if(this.City == "" ||this.City==null || this.City=='无'){
                             this.selectedOptions = []
                   }else{
-                        var a = TextToCode[arr.City.split('-')[0]].code
-                        var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
-                        var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
-                        this.selectedOptions = [a,b,c]
+                      var length = arr.City.split('-').length
+                      console.log(length)
+                        if(length == 2){
+                            var a = TextToCode[arr.City.split('-')[0]].code
+                            var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                             this.selectedOptions = [a,b]
+                        }
+                        else if(length==3){
+                            var a = TextToCode[arr.City.split('-')[0]].code
+                            var b = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]].code
+                            var c = TextToCode[arr.City.split('-')[0]][arr.City.split('-')[1]][arr.City.split('-')[2]].code
+                            this.selectedOptions = [a,b,c]
+                        }
                   }
                   //console.log(arr.City.split('-')[0])
                   
@@ -1818,14 +1846,14 @@ export default {
         this.customValue=3
     },
     mounted(){
-           this.getCustomerList()
+       this.getCustomerList()
        this.getCustomSelect()
 
        this.getCustomType()
  
        this.getJobList()
        this.getSelectMenu()
-
+      //  this.getCustomInfo()
        this.getUpdateInfo()
        
     },
