@@ -301,6 +301,9 @@ export default {
          document.getElementById('text').innerText = this.dataWordArr.caseName
          document.getElementById('toName').innerText = this.dataWordArr.oppositePart
         document.getElementById('tocaseWhy').innerText = this.dataWordArr.caseWhy
+        if(this.dataWordArr.compony == '无'){
+            this.dataWordArr.compony = ''
+        }
             document.getElementById('tocaseCompony').innerText = this.dataWordArr.compony
             document.getElementById('shejibiaode').innerText = this.dataWordArr.Target
 

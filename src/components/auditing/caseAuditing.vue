@@ -193,22 +193,27 @@
   </div>
 </el-dialog>
   <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
+   
                         <div v-if="Category_Id == 4">
                             <caseWord :dataWord='dataWord'></caseWord>
                         </div>
                         <div v-if="Category_Id == 1">
                             <caseWord4 :dataWord='dataWord'></caseWord4>
                         </div>
-                        <div v-if="Category_Id == 8">
-                            <caseWord4 :dataWord='dataWord'></caseWord4>
+                        <div v-if="Category_Id == 10">
+                            <caseWord1 :dataWord='dataWord'></caseWord1>
                         </div>
-                      
+                       <div v-if="Category_Id == 3">
+                            <caseWord2 :dataWord='dataWord'></caseWord2>
+                        </div>
                 </el-dialog>
     </div>
 </template>
 <script>
 import caseWord from '../case/caseWord'
 import caseWord4 from '../case/caseWord4'
+import caseWord2 from '../case/caseWord2'
+import caseWord1 from '../case/caseWord1'
 export default {
     data(){
         return{
@@ -400,6 +405,7 @@ export default {
       open3:function(id,type,Category_Id){
         console.log(Category_Id)
         this.$http.get('/yongxu/Index/Case_Details',{params:{Id:id,Type_Id:type}}).then((res)=>{
+            console.log(res)
              this.dataWord = res.data
              this.Category_Id = Category_Id
              this.dialogFormVisibleWord1 = true
@@ -458,6 +464,7 @@ export default {
         })
       },
         clear:function(){
+          this.currentPage = 1
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
@@ -668,6 +675,8 @@ export default {
        components:{
         'caseWord':caseWord,
          'caseWord4':caseWord4,
+         'caseWord1':caseWord1,
+         'caseWord2':caseWord2
     },
     
 }

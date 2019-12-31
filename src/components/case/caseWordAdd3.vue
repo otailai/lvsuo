@@ -4,7 +4,6 @@
       <button @click="getDoc()">doc</button>
       <button @click="pdfDom()">打印</button>
     <div style="width:794px;margin:auto;padding-bottom:20px" ref="div" id="pdfDom">
-        <div class="flex first" style="text-align: right;color:#000000;">{{dataWord.Get_Case_Information.Case_No}}</div>
         <p class="title11" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">聘 请 专 项 法 律 顾 问</strong></p>
         <p class="height" ></p>
         <p class="height" style="text-align: center;"><strong style="font-size: 24pt;font-family:仿宋_GB2312;color:#000000;">合</strong></p>
@@ -16,7 +15,7 @@
         <div class="height"></div>
         <div class="height"></div>
         <!-- <div class="input1 flex" style="text-align: center;"> -->
-        <p style="width: 80%;margin: auto;"><strong style="font-size: 14.0pt;font-family: 仿宋_GB2312;letter-spacing: .1pt;width:110px;text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{dataWord.Get_Customer_Information.Customer_Name_Zh}}</span></p>
+        <p style="width: 80%;margin: auto;"><strong style="font-size: 14.0pt;font-family: 仿宋_GB2312;letter-spacing: .1pt;width:110px;text-align: left;display:inline-block;color:#000000;">聘请方:</strong><span style="font-size: 14pt;font-family:仿宋_GB2312;padding-bottom: 0px;border-bottom: 2px solid #000000;width:525px;display:inline-block;text-align:center;font-weight:600;color:#000000">{{Customer_Name_Zh}}</span></p>
         <!-- </div> -->
          <div class="height"></div>
                  <p style="width: 80%;
@@ -75,7 +74,7 @@ exactly'><span style='font-size:14.0pt;font-family:仿宋_GB2312'>一、乙方�
 lang=EN-US id="text1"><span
 style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></u>律师担任甲方与<u><span lang=EN-US><span
-style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+style='mso-spacerun:yes'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></u>事务的专项法律顾问，甲方同意上述律师指派其他律师助理配合完成前述法律事务工作。<span>在合同履行期间，若前述委派律师因故不能履行委托人职责的（包括但不限于停止执业、转换执业机构等），乙方应另行委派其他律师完成委托事项或由双方协商解决处理。<span
 lang=EN-US></span></span></span></p>
 
@@ -293,14 +292,15 @@ export default {
             //聘请方
             htmlTitle: '合同模板PDF',
             name:'',
+            Customer_Name_Zh:'',
             //受聘
             laywerName:'广州金鹏律师事务所',
             div:'',
             //甲方
-            Aname:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
-            Aleader:this.dataWord.Get_Customer_Information.Customer_Name_Zh,
-            Aaddress:this.dataWord.Get_Customer_Information.Detailed_Address,
-            Atel:this.dataWord.Get_Customer_Information.Contact_Party,
+            Aname:'',
+            Aleader:'',
+            Aaddress:'',
+            Atel:'',
             Afax:'',
             Acode:'',
             //乙方
@@ -310,9 +310,9 @@ export default {
             Bfax:'(020)38390218',
             Bcode:'510623',
             //
-            text:this.dataWord.Get_Case_Information.Case_Name,
+            text:'',
             text1:'',
-            text2:this.dataWord.Get_Case_Information.Party_Name,
+            text2:'',
             // 第五条
             text3:'',
             text4:'',
@@ -346,6 +346,7 @@ export default {
             tocaseCompony:'',
             shejibiaode:'',
             Case_No:'',
+            dataWordArr:[]
         }
     },
        props:['dataWord'],
@@ -376,19 +377,22 @@ export default {
                     //     document.getElementById('text7').innerText =  year
                     //     document.getElementById('text8').innerText = month 
                     //     document.getElementById('text9').innerText = day   
-                     this.Case_No = this.dataWord.Get_Case_Information.Case_No 
-                         var arr1 = []; 
-                        for(var i =0;i< this.dataWord.Get_Lawyer_Information.length;i++){
-                            arr1.push(this.dataWord.Get_Lawyer_Information[i].Rule_Name)
+                        this.dataWordArr = JSON.parse(this.dataWord)
+                        this.Customer_Name_Zh = this.dataWordArr.userNameC
+                        var arr1 = []; 
+                        for(var i =0;i< this.dataWordArr.laywerArr.length;i++){
+                            arr1.push(this.dataWordArr.laywerArr[i].laywerJob) 
                         }
-                        var index=arr1.indexOf('主办律师')
-                        var text1 = this.dataWord.Get_Lawyer_Information[index].Staff_Name
+                        var index=arr1.indexOf(18)
+                        var text1 = this.dataWordArr.laywerArr[index].laywerName
                         document.getElementById('text1').innerText = text1
-                         document.getElementById('Aname').innerText = this.dataWord.Get_Customer_Information.Customer_Name_Zh
+                        // document.getElementById('text1').innerText = text1
+                        document.getElementById('Aname').innerText = this.dataWordArr.userNameC
+                      
                         //  document.getElementById('text').innerText = this.dataWord.Get_Case_Information.Case_Name
-                         document.getElementById('Aleader').innerText = this.dataWord.Get_Customer_Information.Customer_Name_Zh
-                         document.getElementById('Aaddress').innerText = this.dataWord.Get_Customer_Information.Detailed_Address
-                         document.getElementById('Atel').innerText = this.dataWord.Get_Customer_Information.Contact_Party
+                         document.getElementById('Aleader').innerText = this.dataWordArr.userNameC
+                         document.getElementById('Aaddress').innerText = this.dataWordArr.address
+                         document.getElementById('Atel').innerText = this.dataWordArr.tel
                          document.getElementById('Afax').innerText = ''
                          document.getElementById('Acode').innerText = '' 
                            
@@ -398,7 +402,11 @@ export default {
                          document.getElementById('Btel').innerText = '(020)38390333'
                          document.getElementById('Bfax').innerText = '(020)38390218'
                          document.getElementById('Bcode').innerText = '510623' 
-                         document.getElementById('caseName').innerText = this.dataWord.Get_Case_Information.Case_Name
+
+                          document.getElementById('caseName').innerText = this.dataWordArr.caseName
+                          console.log(this.dataWordArr.caseName)
+                              
+  return
 
                     //     document.getElementById('toName').innerText = this.dataWord.Get_Case_Information.Party_Name
                     //     document.getElementById('tocasWhy').innerText = this.dataWord.Get_Case_Information.Cause_Action

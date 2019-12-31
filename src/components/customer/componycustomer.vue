@@ -112,6 +112,7 @@ var _this = this
          * 清空
          */
          clear:function(){
+           this.currentPage = 1
           this.Customer_Name1 = ''
           this.industryValue = ''
           this.customValue = ''

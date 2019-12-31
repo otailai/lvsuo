@@ -358,6 +358,7 @@
                      <el-select v-model="fileType" placeholder="*请选择" @change="changeCostWay(costValue)" :disabled="disabled">
                          <el-option v-for="item in fileTypeArr" :key="item.Id" :label="item.value" :value="item.Id"></el-option>
                     </el-select>                           
+                       
                      </div>
                       <button class="shangchuan_btn" v-show="fileType == 2" @click="picUpload()">上传</button> 
                      </div>
@@ -370,7 +371,7 @@
 
 
                 <div class="end-btn flex">
-                    <button class="btn btn1" @click="lookContract()" v-show="fileType == 1">预览合同</button> 
+                    <button class="btn btn1" @click="lookContract()" v-show="fileType == 1">预览合同</button>     
                     <button class="btn btn2" @click="addAll()" v-if="addTime">提交审核</button>
                     <button class="btn btn2" v-else disabled>已提交审核</button>
                     
@@ -382,6 +383,8 @@
       <el-dialog  :visible.sync="dialogFormVisibleWord" :modal-append-to-body='false' :modal='false' width="1000px">
           <div  v-if="this.caseValue==4"> <caseWordAdd :dataWord='dataWord'></caseWordAdd></div>
           <div  v-if="this.caseValue==1"> <caseWordAdd1 :dataWord='dataWord'></caseWordAdd1></div>
+          <div  v-if="this.caseValue==10"> <caseWordAdd2 :dataWord='dataWord'></caseWordAdd2></div>
+              <div  v-if="this.caseValue==3"> <caseWordAdd3 :dataWord='dataWord'></caseWordAdd3></div>
      </el-dialog>
       <el-dialog  :visible.sync="dialogFormVisibleWord1" :modal-append-to-body='false' :modal='false' width="1000px">
                         <caseWordAdd1 :dataWord='dataWord'></caseWordAdd1>
@@ -441,12 +444,20 @@
 </template>
 <script>
 import qs from 'qs';
+import caseWordAdd2 from './caseWordAdd2'
+import caseWordAdd3 from './caseWordAdd3'
 import caseWordAdd from './caseWordAdd'
 import caseWordAdd1 from './caseWordAdd1'
 import { constants } from 'zlib';
 import { provinceAndCityData, regionData, provinceAndCityDataPlus, regionDataPlus, CodeToText, TextToCode } from 'element-china-area-data'
 import { connect } from 'net';
 export default {
+    components:{
+        'caseWordAdd':caseWordAdd,
+          'caseWordAdd1':caseWordAdd1,
+          'caseWordAdd2':caseWordAdd2,
+           'caseWordAdd3':caseWordAdd3
+    },
     data(){
         return{
             /**客户类型 */
@@ -873,40 +884,40 @@ export default {
             if(this.value2===''){
                     this.value2='无'
               }
-            if(this.oppositeParty ===''){
+            if(this.oppositeParty.trim() ===''){
                 this.oppositeParty='无'
               }
             if(this.province === ''){
                  this.province = '无'
             }
-            if(this.compony === ''){
+            if(this.compony.trim() === ''){
                 this.compony = '无'
             }
             if(this.costValue == 8){
             addJson = {
               'userId':localStorage.getItem('userId'),
               'costId':this.customId,
-              'userNameC':this.search,
+              'userNameC':this.search.trim(),
             // 'userNameE':this.userNameE,
               'province':this.province,
-              'address':this.address,
-              'tel':this.tel,
+              'address':this.address.trim(),
+              'tel':this.tel.trim(),
               'type':this.customValue,
               'suoshuhangye':this.suoshuValue, 
               'job':this.value2,
               'is':this.isValue,
-              'cardNo':this.cardNo,
-              'compony':this.compony,
-              'oppositePart':this.oppositeParty,
+              'cardNo':this.cardNo.trim(),
+              'compony':this.compony.trim(),
+              'oppositePart':this.oppositeParty.trim(),
               'caseWhy':this.caseWhy1,
                     //服务内容
               'Service_Content':this.Service_Content,
                //标的额
-                'Target':this.biaodie,
+                'Target':this.biaodie.trim(),
 
               'caseValue':this.caseValue,
               'caseValue2':this.caseValue2,
-              'caseName':this.caseName,
+              'caseName':this.caseName.trim(),
               'caseWay':this.caseWay,
               'textarea':this.textarea,
               'laywerArr':this.inputArr,
@@ -929,30 +940,30 @@ export default {
               'userId':localStorage.getItem('userId'),
               'costId':this.customId,
              
-             'userNameC':this.search,
+             'userNameC':this.search.trim(),
             //   'userNameE':this.userNameE,
               'province':this.province,
-              'address':this.address,
+              'address':this.address.trim(),
                'suoshuhangye':this.suoshuValue,
                 'type':this.customValue,
-                'tel':this.tel,
+                'tel':this.tel.trim(),
                'job':this.value2,
              
              //服务内容
                 'Service_Content':this.Service_Content,
                  //标的额
-                'Target':this.biaodie,
+                'Target':this.biaodie.trim(),
              
                 'is':this.isValue,
-                'cardNo':this.cardNo,
-                'compony':this.compony,
-                'oppositePart':this.oppositeParty,
+                'cardNo':this.cardNo.trim(),
+                'compony':this.compony.trim(),
+                'oppositePart':this.oppositeParty.trim(),
                 'caseWhy':this.caseWhy1,
 
 
                 'caseValue':this.caseValue,
                 'caseValue2':this.caseValue2,
-                'caseName':this.caseName,
+                'caseName':this.caseName.trim(),
                 'caseWay':this.caseWay,
                 'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
 
@@ -972,11 +983,11 @@ export default {
     addJson = {
               'userId':localStorage.getItem('userId'),
               'costId':this.customId,
-              'userNameC':this.search,
+              'userNameC':this.search.trim(),
             //   'userNameE':this.userNameE,
               'province':this.province,
-              'address':this.address,
-              'tel':this.tel,
+              'address':this.address.trim(),
+              'tel':this.tel.trim(),
               'type':this.customValue,
               'suoshuhangye':this.suoshuValue,
               'job':this.value2,
@@ -985,16 +996,16 @@ export default {
                     //服务内容
                 'Service_Content':this.Service_Content,
                  //标的额
-                'Target':this.biaodie,
+                'Target':this.biaodie.trim(),
               'is':this.isValue,
-                'cardNo':this.cardNo,
-                'compony':this.compony,
-                'oppositePart':this.oppositeParty,
+                'cardNo':this.cardNo.trim(),
+                'compony':this.compony.trim(),
+                'oppositePart':this.oppositeParty.trim(),
                 'caseWhy':this.caseWhy1,
                 'Source_Contract':this.fileType,
                 'caseValue':this.caseValue,
                 'caseValue2':this.caseValue2,
-                'caseName':this.caseName,
+                'caseName':this.caseName.trim(),
                 'caseWay':this.caseWay,
                 'textarea':this.textarea.replace(/\r\n/g, '<br/>').replace(/\n/g, '<br/>').replace(/\s/g, '&nbsp;'),
               'laywerArr':this.inputArr,
@@ -1023,7 +1034,8 @@ export default {
                     type:'success'
                 });
                 this.addTime = false;
-                this.$router.push('/index/caseIndex')
+                // this.$router.push('/index/caseIndex')
+                this.$router.go(-1);
                 return false
                 }else{
                     this.$message({
@@ -1045,7 +1057,7 @@ export default {
         },
         /**验证提交表单 */
         checkData(){
-              if(this.search===""||this.search==null){
+              if(this.search.trim()===""||this.search==null){
                
                 this.$message({
                     message:'客户名称不能为空',
@@ -1070,7 +1082,7 @@ export default {
             }
             if(this.customValue ==3 || this.customValue ==14){
                 // var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/; 
-                if(this.cardNo == '' || this.cardNo==null) 
+                if(this.cardNo.trim() == '' || this.cardNo==null) 
                 { 
                      this.$message({
                         message:'身份证信息不能为空',
@@ -1084,7 +1096,7 @@ export default {
                 }
             }  
             if(this.customValue !=3 && this.customValue !=14){
-                if(this.cardNo === '' || this.cardNo == null) 
+                if(this.cardNo.trim() === '' || this.cardNo == null) 
                 { 
                      this.$message({
                         message:'纳税人编号不能为空',
@@ -1123,7 +1135,7 @@ export default {
             //     });
             //     return false
             // }
-             if(this.address===""||this.address==null){
+             if(this.address.trim()===""||this.address==null){ 
                 this.$message({
                     message:'详细地址不能为空',
                     type:'warning'
@@ -1135,7 +1147,7 @@ export default {
                 return false
             }
           
-             if(this.tel===""||this.tel==null){
+             if(this.tel.trim()===""||this.tel==null){
                 this.$message({
                     message:'联系电话不能为空',
                     type:'warning'
@@ -1181,7 +1193,7 @@ export default {
                         });
                 return false
             }
-            if(this.caseName===""||this.caseName==null){
+            if(this.caseName.trim()===""||this.caseName==null){
                 this.$message({
                     message:'案件名称不能为空',
                     type:'warning'
@@ -1218,7 +1230,7 @@ export default {
             //     return false
             // }
               if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
-                   if(this.oppositeParty==""||this.oppositeParty==null){
+                   if(this.oppositeParty.trim()==""||this.oppositeParty==null){
                         this.$message({
                             message:'对方当事人不能为空',
                             type:'warning'
@@ -1445,7 +1457,7 @@ export default {
 
              var arrJobJobRate8=[]
             for(var i in this.nameJobArr){
-                arrJobJobRate8.push(this.nameJobArr[i].nameJobRate)
+                arrJobJobRate8.push(this.nameJobArr[i].nameJobRate.trim())
             }
             if (arrJobJobRate8.indexOf('') != -1){
                  this.$message({
@@ -1481,7 +1493,7 @@ export default {
             var reg1 = /^\d+$|^\d*\.\d+$/g;
             var re=/^\d*\.{0,2}\d{0,2}$/;
             for(var i in this.timeArr){
-                arrMoney.push(this.timeArr[i].payCount)
+                arrMoney.push(this.timeArr[i].payCount.trim())
             }
             if (arrMoney.indexOf('') != -1){
                  this.$message({
@@ -1520,7 +1532,7 @@ export default {
 
              var arrdescribe=[]
             for(var i in this.timeArr){
-                arrdescribe.push(this.timeArr[i].describe)
+                arrdescribe.push(this.timeArr[i].describe.trim())
             }
             if (arrdescribe.indexOf('') != -1){
                  this.$message({
@@ -1538,7 +1550,7 @@ export default {
     if(this.costValue==10){
             var arr10=[]
             for(var i in this.riskArr){
-                arr10.push(this.riskArr[i].riskCondition)
+                arr10.push(this.riskArr[i].riskCondition.trim())
             }
             if (arr10.indexOf('') != -1){
                  this.$message({
@@ -1967,6 +1979,10 @@ export default {
        this.getSelectMenu()
        this.getInitName()
     },
+     beforeRouteLeave(to, from, next) {
+      to.meta.keepAlive = false;
+      next();
+    },
     computed:{
         //数据检索
          items: function() {
@@ -1989,21 +2005,17 @@ export default {
         },
 
     },
-    components:{
-        'caseWordAdd':caseWordAdd,
-          'caseWordAdd1':caseWordAdd1,
-    },
     watch:{
         search(newData){
             this.getCustomFilter()
         },
         caseValue(newData){
-            if(newData==1||newData==4){
+            if(newData==1||newData==4||newData==3||newData==10){
                 this.fileType = 1
                 this.disabled = false
             }else{
                 this.fileType = 2
-                 this.disabled =true
+                this.disabled =true
             }
         }
     }

@@ -288,6 +288,7 @@ export default {
          })
       },
        clear(){
+         this.currentPage = 1
         this.Casevalue = ''
          this.Casevalue2 = 0
         this.value = ''

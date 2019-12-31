@@ -853,19 +853,23 @@ export default {
                 })
             },
             lookWord(id){
+                //11行政2仲裁
                // console.log(this.One_Type_Id)
+               //民事
                 if(this.One_Type_Id == 4){
                         this.dialogFormVisibleWord = true
                         return
                 }
+                //顾问
                   if(this.One_Type_Id == 10){
                         this.dialogFormVisibleWord1 = true
                          return
                 }
+                //专项
                   if(this.One_Type_Id == 3){
                         this.dialogFormVisibleWord2 = true
                          return
-                }
+                }//刑事
                   if(this.One_Type_Id == 1){
                         this.dialogFormVisibleWord4 = true
                          return
@@ -901,6 +905,14 @@ export default {
     beforeDestroy(){
         // clearTimeout(this.time)
     },
+    //  beforeRouteLeave(to, from, next) {
+    //     if (to.name == "caseAllList" || to.name == "caseBranch" || to.name == "caseMine" || to.name == "casePart"||to.name == "caseAuditing" || to.name == "auditingCloseCase") {
+    //          from.meta.keepAlive = true;
+    //          } else {
+    //          from.meta.keepAlive = false;
+    // } 
+    //   next();
+    // },
     components:{
         'caseWord':caseWord,
         'caseWord1':caseWord1,

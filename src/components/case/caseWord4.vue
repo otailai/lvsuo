@@ -665,6 +665,9 @@ export default {
         getData(){
             console.log(this.dataWord)
                     this.Case_No = this.dataWord.Get_Case_Information.Case_No
+                    if(this.dataWord.Get_Case_Information.Party_Name == '无'){
+                        this.dataWord.Get_Case_Information.Party_Name = ''
+                    }
                     document.getElementById('beigaoren').innerText = this.dataWord.Get_Case_Information.Party_Name
                     document.getElementById('beigaoren1').innerText = this.dataWord.Get_Case_Information.Party_Name
                     document.getElementById('beigaoren2').innerText = this.dataWord.Get_Case_Information.Party_Name

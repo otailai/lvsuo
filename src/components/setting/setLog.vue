@@ -261,6 +261,7 @@ export default {
         this.sortRule.prop = column.prop
       },
         clear(){
+          this.currentPage = 1
         this.end=''
         this.start=''
         this.SearchInput=''

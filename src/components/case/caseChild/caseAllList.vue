@@ -456,6 +456,7 @@ export default {
       },
       //清空
         clear:function(){
+        this.currentPage = 1
         this.Casevalue = ''
         this.Casevalue2 = 0
         this.value = ''
@@ -719,6 +720,7 @@ export default {
       //获取一级下拉
         getSelectMenu:function(){
          this.$http.get('/yongxu/Index/GetBoxOne').then((res)=>{
+           console.log(res)
            this.optionMenu = res.data
         })
       },

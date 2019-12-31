@@ -31,6 +31,21 @@
                    <img src="../../assets/img/shuaxin.png" alt="" @click="updateData()" class="shuaxin_btn" style="cursor: pointer;">
 
               </div>
+                 <div class="selectMenu flex">
+                  <div class="case-time flex">
+                  <p>起止时间：</p>
+                    <el-date-picker
+                    @change="changeTime"
+                    v-model="dateValue"
+                    type="daterange"
+                    :picker-options="pickerOptions2"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    align="right">
+                    </el-date-picker>
+                    </div>
+            </div>
             <div class="flex case-child" ></div>
             <div class="showTab">
             <ul class="showTab-ul">
@@ -157,6 +172,8 @@ import { constants } from 'fs';
 export default {
     data(){
         return{ 
+                end:'',
+                start:'',
                 isDisabled1:false,
                 isDisabled:false,
                 allData:[],
@@ -192,12 +209,59 @@ export default {
             info:'',
             caseReMarkId:'',
             Category_Id:0, 
+                       //日期
+         pickerOptions2: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        dateValue:''
         }
     },
     inject:["reload"],
     methods:{
+       //时间查询
+         changeTime:function(value){
+             if(value==null){
+               this.start = '',
+               this.end = '',
+                this.getRiskBrandArr()
+                return 
+             }
+              let value1= value[0]
+              let value2= value[1]
+              var start = new Date(value1);  
+              var youWant1=start.getFullYear() + '-' + (start.getMonth() + 1) + '-' + start.getDate() + ' ' + start.getHours() + ':' + start.getMinutes() + ':' + start.getSeconds(); 
+              var end = new Date(value2);  
+              var youWant2=end.getFullYear() + '-' + (end.getMonth() + 1) + '-' + end.getDate() + ' ' + end.getHours() + ':' + end.getMinutes() + ':' + end.getSeconds(); 
+              this.start = youWant1
+              this.end = youWant2
+             this.getRiskBrandArr()
+      },
          updateData(){
-        this.getRiskBrandArr()
+            this.getRiskBrandArr()
       },
          //下载excel
      downExcel1:function() { 
@@ -229,7 +293,14 @@ export default {
                      return false
                  }
                  else{
-                      this.$http.post('/yongxu/Toexamine/Two_Export_Risk').then((res)=>{
+                      this.$http.get('/yongxu/Toexamine/Two_Export_Risk',{params:{
+                        Dic_Id:this.Casevalue2,
+                        VagueName:this.SearchInput,
+                        Category_Id:this.Category_Id,
+                        MinTime:this.start,
+                        MaxTime:this.end
+                      }}).then((res)=>{
+                        console.log(res)
                           this.allData = res.data
                           for(var i =0;i<this.allData.length;i++){
                               if(this.allData[i].Two_Staff_Name==undefined || this.allData[i].Two_Findings_Audit==undefined){
@@ -255,6 +326,8 @@ export default {
           Dic_Id:this.Casevalue2,
           VagueName:this.SearchInput,
            Category_Id:this.Category_Id,
+            MaxTime:this.end,
+          MinTime:this.start,
         }}).then((res)=>{
             console.log(res)
             this.riskBrandArr = res.data.Two_Risk
@@ -328,12 +401,16 @@ export default {
         })
       },
         clear:function(){
+        this.end=''
+        this.start=''
+        this.dateValue=''
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
         this.Casevalue = ''
         this.Casevalue1 = ''
         this.Category_Id=0
+        this.currentPage = 1
         this.getRiskBrandArr()
         
       },
@@ -657,6 +734,11 @@ export default {
     //  }
 }
 </script>
+<style  scoped>
+  .el-date-editor--daterange{
+  width: 300px !important;
+}
+</style>
 <style>
 @import '../../assets/sass/main.css';
 .input{

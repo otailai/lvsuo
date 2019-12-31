@@ -703,6 +703,9 @@ export default {
 //         document.getElementById('tocaseWhy').innerText = this.dataWordArr.caseWhy
 //             document.getElementById('tocaseCompony').innerText = this.dataWordArr.compony
 //             document.getElementById('shejibiaode').innerText = this.dataWordArr.Target
+            if(this.dataWordArr.oppositePart == '无'){
+                    this.dataWordArr.oppositePart = ''
+            }
             document.getElementById('beigaoren').innerHTML = this.dataWordArr.oppositePart
              document.getElementById('beigaoren1').innerHTML = this.dataWordArr.oppositePart
                 document.getElementById('beigaoren2').innerHTML = this.dataWordArr.oppositePart

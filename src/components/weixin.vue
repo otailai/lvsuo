@@ -46,15 +46,14 @@ export default {
             openId:'',
             unionid:'',
         }
-
     },
-    mounted(){
-      
+    mounted(){ 
        this.getparams()
-       
-
     },
     methods:{
+        denglu(){
+            
+        },
         getparams(){
             var url = location.search; //获取url中"?"符后的字串  
                 var theRequest = new Object();  
@@ -123,8 +122,8 @@ export default {
                             this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
                             var path = res.data[0].Item_Path
                             this.$router.push('/index/'+path) 
+                            })
                         })
-                         })
                      }).catch(()=>{
                               this.$router.push({path:'/'})
                         })
@@ -201,13 +200,30 @@ export default {
                 return false
             }
                var str = this.username+'&&'+md5(this.password)
+                var data = qs.stringify({
+                str:str
+                 });
                this.$http.get('/yongxu/Login/Wechat_Binding',{params:{str:str,unionid:this.unionid}}).then((res)=>{
                    if(res.data == 2){
+                       
                      this.$message({
-                    message:'绑定成功',
-                    type:'success'
+                        message:'绑定成功',
+                        type:'success'
                     });
-                    this.$router.push({path:'/'})
+                     this.$http.post('/yongxu/Login/Rsa_Land',data).then((res1)=>{
+                             localStorage.setItem('userId',res1.data.User_Id)
+                            localStorage.setItem('sessionId',res1.data.sessionId)
+                            localStorage.setItem('Rule_Id',res1.data.Rule_Id)
+                            localStorage.setItem('Expiration_Date',res1.data.Expiration_Date)
+                            localStorage.setItem('Username',res1.data.Username)
+                     }).then(()=>{
+                        this.$http.get('/yongxu/Base/User_One_Menu',{params:{userid:localStorage.getItem('userId')}}).then((res)=>{
+                        //console.log(res)
+                        var path = res.data[0].Item_Path
+                        this.$router.push('/index/'+path) 
+                    })
+                     })
+                    //this.$router.push({path:'/'})
                    }
                    if(res.data == 1){
                  this.$message({

@@ -740,6 +740,7 @@ import { fail } from 'assert';
         this.getList()
       },
       clear(){
+        this.currentPage = 1
         this.SearchInput = ''
         this.getList()
         

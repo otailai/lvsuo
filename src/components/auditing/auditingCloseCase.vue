@@ -195,6 +195,7 @@ export default {
         })
       },
         clear:function(){
+          this.currentPage = 1
         this.SearchInput = ''
         this.Casevalue2 = 0
         this.value = ''
