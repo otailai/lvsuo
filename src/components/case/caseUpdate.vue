@@ -117,23 +117,39 @@
                         <div class="flex"><p class="title f-f">案情简介</p> 
                         <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填" maxlength="300"></textarea>
                         </div>
-                        <!-- <div class="flex" style=" justify-content: flex-start;align-items: center;">
+                    <!-- 判断当v-if="caseValue==4||caseValue==8||caseValue==11"时必填 -->
+                        <div v-if="caseValue==4||caseValue==8||caseValue==11">
+                             <div class="flex" style=" justify-content: flex-start;align-items: center;">
                              
                                 <p class="title">对方当事人</p>
-                                <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty[0].name"/>
-                                 <span @click="addOppositeParty()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" ></i> </span>
+                                <input type="text" class="common-input" placeholder="*必填" v-model="input1Arr[0].partyName" maxlength="50"/>
+                                 <span @click="pushPartyInfo()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" style="color:#7E2C2E"></i> </span>
     
                         </div>
                          
-                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in oppositePartyArr" :key="i">
+                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in PartyInfo" :key="i">
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="*必填" v-model="input1Arr[i+1].partyName" maxlength="50"/>
+                                 <div class="input-icon" @click="deleteLine(i,PartyInfo,input1Arr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove" style="color:#7E2C2E"></i></div>
+                        </div>
+                        </div>
+                        <!-- else -->
+                        <div v-else>
+                             <div class="flex" style=" justify-content: flex-start;align-items: center;">
                              
                                 <p class="title">对方当事人</p>
-                                <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty[i+1].name"/>
-                                 <div class="input-icon" @click="deleteLine(i,oppositePartyArr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove"></i></div>
-                             
-                        </div> -->
-                    <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
-                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>
+                                <input type="text" class="common-input" placeholder="选填" v-model="input1Arr[0].partyName" maxlength="50"/>
+                                 <span @click="pushPartyInfo()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" style="color:#7E2C2E"></i> </span>
+    
+                        </div>
+                         
+                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in PartyInfo" :key="i">
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="选填" v-model="input1Arr[i+1].partyName" maxlength="50"/>
+                                 <div class="input-icon" @click="deleteLine(i,PartyInfo,input1Arr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove" style="color:#7E2C2E"></i></div>
+                        </div>
+                        </div>
+                  
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie"/></div>
                     </div>
                     </div>
@@ -690,7 +706,7 @@ export default {
         },
         pushPartyInfo(){
             this.PartyInfo.push(1)
-            this.input1Arr.push({partyName:'',Party_Name:'',visible:false,partyJob:'',Party_Category:''})
+            this.input1Arr.push({partyName:''})
 
         },
         addPayDate(){
@@ -750,7 +766,8 @@ export default {
               'Customer_Number':this.cardNo,//客户编号
 
               'Receiving_Organ':this.compony,//案件受理机关
-              'Party_Name':this.oppositeParty,//对方当事人
+            //   'Party_Name':this.oppositeParty,//对方当事人
+              'oppositePart':this.input1Arr,//对方当事人
               'Cause_Id':this.caseWhy1,//案由Id
 
             // 'caseValue':this.caseValue,
@@ -796,7 +813,8 @@ export default {
               'Customer_Number':this.cardNo,//客户编号
 
               'Receiving_Organ':this.compony,//案件受理机关
-              'Party_Name':this.oppositeParty,//对方当事人
+            //   'Party_Name':this.oppositeParty,//对方当事人
+              'oppositePart':this.input1Arr,//对方当事人
               'Cause_Id':this.caseWhy1,//案由Id
 
     //服务内容
@@ -840,7 +858,8 @@ export default {
               'Customer_Number':this.cardNo,//客户编号
 
               'Receiving_Organ':this.compony,//案件受理机关
-              'Party_Name':this.oppositeParty,//对方当事人
+            //   'Party_Name':this.oppositeParty,//对方当事人
+              'oppositePart':this.input1Arr,//对方当事人
               'Cause_Id':this.caseWhy1,//案由Id
                 //服务内容
                 'Service_Content':this.Service_Content,
@@ -870,6 +889,7 @@ export default {
         //console.log(addJson)
         //console.log(JSON.stringify(addJson))
         //return false
+        this.isdisabled = true
         this.$http.post('/yongxu/Index/Upd_Cases',{
                 map:addJson
             }).then((res)=>{ 
@@ -879,7 +899,7 @@ export default {
                     message:'更新成功',
                     type:'success'
                 });
-                this.isdisabled = true
+                this.isdisabled = false
                 this.$router.push('/index/caseIndex')
                 return false
                 }else{
@@ -887,6 +907,7 @@ export default {
                     message:'更新失败',
                     type:'warning'
                 });
+                   this.isdisabled = false
                 return false
                 }
                
@@ -1039,19 +1060,39 @@ export default {
             //     });
             //     return false
             // }
-           if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
-                   if(this.oppositeParty==""||this.oppositeParty==null){
+        //    if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
+        //            if(this.oppositeParty==""||this.oppositeParty==null){
+        //                 this.$message({
+        //                     message:'对方当事人不能为空',
+        //                     type:'warning'
+        //                 });
+        //                 this.$notify.error({
+        //                 title: '错误',
+        //                 message: '按键类型为民事、仲裁、行政时，对方当事人必填'
+        //                 });
+        //                 return false
+        //             }
+        //       }  
+          if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11 ||this.input1Arr.length>1){
+                     var arrParty=[]
+                    for(var i in this.input1Arr){
+                        arrParty.push(this.input1Arr[i].partyName)
+                          
+                    }
+                    console.log(this.input1Arr)
+                  console.log(arrParty)
+                    if (arrParty.indexOf('') != -1){
                         this.$message({
                             message:'对方当事人不能为空',
                             type:'warning'
                         });
-                        this.$notify.error({
+                         this.$notify.error({
                         title: '错误',
                         message: '按键类型为民事、仲裁、行政时，对方当事人必填'
                         });
                         return false
                     }
-              }  
+              }
             var arr=[]
             
             for(var i in this.inputArr){
@@ -1566,8 +1607,23 @@ export default {
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
                 console.log(res) 
+                  let arr=res.data.Get_Customer_Information
+                 this.caseValue = arr.One_Type_Id
+                if(res.data.getOppositeparty.length == 0){
+                    this.input1Arr.push({partyName:''})
+                }else{
+                    for(var i in res.data.getOppositeparty){
+                    console.log(res.data.getOppositeparty[i].Party_Name)
+                     this.input1Arr.push({partyName:res.data.getOppositeparty[i].Party_Name})
+                    }
+                }
+               
+                let newInput1Arr =  this.input1Arr
+                this.PartyInfo = newInput1Arr.slice(1)
+                console.log(this.PartyInfo)
+                console.log(this.input1Arr)
                 // 客户信息
-                let arr=res.data.Get_Customer_Information
+              
                 this.custom_Id = arr.Id
                 //this.Customer_Name_Zh = arr.Customer_Name_Zh
                 this.Customer_Type= arr.Customer_Type

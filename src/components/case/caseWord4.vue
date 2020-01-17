@@ -668,9 +668,16 @@ export default {
                     if(this.dataWord.Get_Case_Information.Party_Name == '无'){
                         this.dataWord.Get_Case_Information.Party_Name = ''
                     }
-                    document.getElementById('beigaoren').innerText = this.dataWord.Get_Case_Information.Party_Name
-                    document.getElementById('beigaoren1').innerText = this.dataWord.Get_Case_Information.Party_Name
-                    document.getElementById('beigaoren2').innerText = this.dataWord.Get_Case_Information.Party_Name
+                        var  opname = []
+                    console.log(this.dataWord.getOppositeparty) 
+                    for(var i in this.dataWord.getOppositeparty){
+                            opname[i] = this.dataWord.getOppositeparty[i].Party_Name
+                        }
+                    var Party_Name = opname.join(',')
+                    
+                    document.getElementById('beigaoren').innerText = Party_Name
+                    document.getElementById('beigaoren1').innerText = Party_Name
+                    document.getElementById('beigaoren2').innerText = Party_Name
 
                     document.getElementById('fanzui').innerText=this.dataWord.Get_Case_Information.Case_type.split('-')[1]
                     

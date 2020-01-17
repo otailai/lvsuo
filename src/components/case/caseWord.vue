@@ -315,7 +315,7 @@ export default {
                         var text1 = this.dataWord.Get_Lawyer_Information[index].Staff_Name
                         document.getElementById('text1').innerText = text1
                         
-                         document.getElementById('text2').innerText = this.dataWord.Get_Case_Information.Party_Name
+                         document.getElementById('text2').innerText = this.dataWord.Get_Customer_Information.Customer_Name_Zh
                          if(this.dataWord.Get_Case_Information.Service_Content==''||this.dataWord.Get_Case_Information.Service_Content==null){
                                 document.getElementById('fuwuneirong').innerText=''
                          }else{

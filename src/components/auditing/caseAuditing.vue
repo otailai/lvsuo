@@ -59,7 +59,7 @@
     <el-table-column prop="Charge_Amount" label="已收金额" width="" :show-overflow-tooltip="true"> </el-table-column>
                              <el-table-column  label="状态" width=""> 
                                     <template slot-scope="scope"> 
-                                    <span v-if="scope.row.type == '0'" style="color:red;" @click.stop="jiansuo(scope.row.Party_Name,scope.row.Id,scope.row.Customer_Name_Zh,scope.row.type)">
+                                    <span v-if="scope.row.type == '0'" style="color:red;" @click.stop="jiansuo(scope.row.Id,scope.row.type)">
                                         <!-- {{scope.row.Status}} -->
                                         利益检索
                                   </span>
@@ -267,18 +267,19 @@ export default {
       updateData:function(){
         this.getCaseArr()
       },
-          jiansuo:function(partyname,Id,Customer_Name_Zh,type){
+          jiansuo:function(Id,type){
             console.log(Id)
-            if(partyname == ''){
-                partyname = '无'
-            }
-            if(partyname.indexOf('/')){
-                partyname = partyname.replace('/','、')
-            }
-            if(Customer_Name_Zh.indexOf('/')){
-                Customer_Name_Zh = Customer_Name_Zh.replace('/','、')
-            }
-            this.$router.push({path:`/index/search1/${partyname}/${Id}/${Customer_Name_Zh}/${type}`})
+            // if(partyname == ''){
+            //     partyname = '无'
+            // }
+            // if(partyname.indexOf('/')){
+            //     partyname = partyname.replace('/','、')
+            // }
+            // if(Customer_Name_Zh.indexOf('/')){
+            //     Customer_Name_Zh = Customer_Name_Zh.replace('/','、')
+            // }
+            // this.$router.push({path:`/index/search1/${partyname}/${Id}/${Customer_Name_Zh}/${type}`})
+            this.$router.push({path:`/index/search1/${Id}/${type}`})
           },
           openDialog:function(id,Charging_Method){
           if(Charging_Method  == 9){

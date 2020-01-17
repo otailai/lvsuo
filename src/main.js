@@ -36,7 +36,6 @@ Vue.prototype.$toExcel = toExcel
 Vue.use(VueParticles)  
 Vue.prototype.$jsEncrypt = JsEncrypt
 Vue.prototype.$http = axios
-
 Vue.use(VueRouter)
 Vue.use(ElementUI)
 Vue.config.productionTip = false

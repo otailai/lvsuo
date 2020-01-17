@@ -80,7 +80,7 @@ export default[
 {path:'/index/customerEdit/:id',component:customerEdit,name:'customerEdit',meta:{requireAuth:true}},
 {path:'/index/customerUpdate/:id',component:customerUpdate,name:'customerUpdate',meta:{requireAuth:true}},
 {path:'/index/search',component:caseSearch,name:'caseSearch',meta:{requireAuth:true,keepAlive:true}},
-{path:'/index/search1/:partyname/:Id/:Customer_Name_Zh/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
+{path:'/index/search1/:Id/:type',component:caseSearch1,name:'caseSearch1',meta:{requireAuth:true,keepAlive:false}},
 {path:'/index/documentIndex',component:documentIndex,name:'documentIndex',meta:{requireAuth:true,keepAlive:true}},
 {path:'/index/auditingIndex',component:auditingIndex,name:'auditingIndex',meta:{requireAuth:true,keepAlive:false}, 
 children:[{path:'/index/auditingIndex/caseAuditing',meta:{requireAuth:true,keepAlive:true},component:caseAuditing,name:'caseAuditing'},

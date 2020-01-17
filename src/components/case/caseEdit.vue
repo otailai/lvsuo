@@ -529,6 +529,22 @@ export default {
                 Id:this.$route.params.id,
                 Type_Id:this.$route.params.typeId
             }}).then((res)=>{
+                    var  opname = []
+                console.log(res.data.getOppositeparty)
+                if(res.data.getOppositeparty.length == 0){
+                    console.log('1111111')
+                    this.Party_Name = ''
+                }else{
+                    this.partyInfoArr = res.data.getOppositeparty
+                    console.log('22222')
+                     for(var i in this.partyInfoArr){
+                            opname[i] = this.partyInfoArr[i].Party_Name
+                    }
+                    this.Party_Name = opname.join(',')
+                }
+                console.log(this.Party_Name)
+                   
+                
                 // 客户信息
                 console.log(res)
                 let arr=res.data.Get_Customer_Information
@@ -558,7 +574,7 @@ export default {
                 }else{
                     this.Receiving_Organ=caseInfo.Receiving_Organ
                 }
-                this.Party_Name = caseInfo.Party_Name
+                // this.Party_Name = caseInfo.Party_Name
                 this.Type_Id = caseInfo.Type_Id
                 this.contact_status = caseInfo.Status
                 this.biaodie = caseInfo.Target
@@ -577,7 +593,7 @@ export default {
                
                 this.layWerInfoArr = res.data.Get_Lawyer_Information
                 //当事人信息
-                this.partyInfoArr = res.data.Get_Party
+                // this.partyInfoArr = res.data.Get_Party
                 //收费方式
                 this.way = res.data.Value
                 this.cur = res.data.Id

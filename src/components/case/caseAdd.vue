@@ -112,9 +112,41 @@
                         <div class="flex"><p class="title f-f">案情简介</p> 
                         <textarea name="" id="" cols="40" rows="8" class="textarea" v-model="textarea" placeholder="选填" maxlength="300"></textarea>
                         </div>
-                  
-                    <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
-                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>                   
+                     <!-- 判断当v-if="caseValue==4||caseValue==8||caseValue==11"时必填 -->
+                        <div v-if="caseValue==4||caseValue==8||caseValue==11">
+                             <div class="flex" style=" justify-content: flex-start;align-items: center;">
+                             
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="*必填" v-model="input1Arr[0].partyName" maxlength="50"/>
+                                 <span @click="pushPartyInfo()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" style="color:#7E2C2E"></i> </span>
+    
+                        </div>
+                         
+                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in PartyInfo" :key="i">
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="*必填" v-model="input1Arr[i+1].partyName" maxlength="50"/>
+                                 <div class="input-icon" @click="deleteLine(i,PartyInfo,input1Arr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove" style="color:#7E2C2E"></i></div>
+                        </div>
+                        </div>
+                        <!-- else -->
+                        <div v-else>
+                             <div class="flex" style=" justify-content: flex-start;align-items: center;">
+                             
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="选填" v-model="input1Arr[0].partyName" maxlength="50"/>
+                                 <span @click="pushPartyInfo()" style="margin-left:20px;cursor: pointer;"><i class="el-icon-circle-plus" style="color:#7E2C2E"></i> </span>
+    
+                        </div>
+                         
+                         <div class="flex" style=" justify-content: flex-start;align-items: center;" v-for="(v,i) in PartyInfo" :key="i">
+                                <p class="title">对方当事人</p>
+                                <input type="text" class="common-input" placeholder="选填" v-model="input1Arr[i+1].partyName" maxlength="50"/>
+                                 <div class="input-icon" @click="deleteLine(i,PartyInfo,input1Arr)" style="margin-left:20px;cursor: pointer;"><i class="el-icon-remove" style="color:#7E2C2E"></i></div>
+                        </div>
+                        </div>
+                    <!--  -->
+                    <!-- <div class="flex" v-if="caseValue==4||caseValue==8||caseValue==11"><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="*必填" v-model="oppositeParty" maxlength="50"/></div>
+                    <div class="flex" v-else><p class="title">对方当事人</p> <input type="text" class="common-input" placeholder="选填" v-model="oppositeParty" maxlength="50"/></div>                    -->
                 
                     <div class="flex"><p class="title">标的额</p> <input type="text" class="common-input" placeholder="选填" v-model="biaodie" maxlength="20"/></div>
 
@@ -232,7 +264,7 @@
                          value-format="yyyy-MM-dd"
                         placeholder="选择日期时间">
                         </el-date-picker> 
-                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[0].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[0].payCount" @keyup="inputChange(timeArr[0].payCount)"/>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[0].describe"/>
                        <div class="input-icon"></div>
                     </div>
@@ -245,7 +277,7 @@
                             type="date"
                             placeholder="选择日期时间">
                         </el-date-picker>
-                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[i+1].payCount"/>
+                    <input type="text" class="common-input lawyer-input" placeholder="*必填(金额为数字)" v-model="timeArr[i+1].payCount"  @keyup="inputChange(timeArr[i+1].payCount)"/>
                     <input type="text" class="common-input lawyer-input" placeholder="*必填" v-model="timeArr[i+1].describe"/>
                        <div class="input-icon" @click="deleteLine(i,payDate,timeArr)"><i class="el-icon-remove"></i></div>
                     </div>
@@ -372,7 +404,7 @@
 
                 <div class="end-btn flex">
                     <button class="btn btn1" @click="lookContract()" v-show="fileType == 1">预览合同</button>     
-                    <button class="btn btn2" @click="addAll()" v-if="addTime">提交审核</button>
+                    <button class="btn btn2" @click="addAll()" v-if="addTime" :disabled='disabled1'>提交审核</button>
                     <button class="btn btn2" v-else disabled>已提交审核</button>
                     
                 </div>
@@ -460,6 +492,7 @@ export default {
     },
     data(){
         return{
+            disabled1:false,
             /**客户类型 */
             customTypeArr:[
                 {Id:3,Value:'个人'}, 
@@ -638,6 +671,9 @@ export default {
     },
           
     methods:{
+        inputChange(target){
+              target = target.replace(/[^\d]/g, '')
+        },
         getCustomerList(){
             this.$http.get('/yongxu/Customer/Set_Dropdown').then((res)=>{
                 console.log(res)
@@ -701,9 +737,16 @@ export default {
              if(this.value2===''){
                     this.value2='无'
               }
-            if(this.oppositeParty===''){
-                this.oppositeParty='无'
-              }
+            // if(this.oppositeParty===''){
+            //     this.oppositeParty='无'
+            //   }
+            var  opname = []
+            console.log(this.input1Arr)
+             for(var i in this.input1Arr){
+                    opname[i] = this.input1Arr[i].partyName
+                }
+            var Party_Name = opname.join(',')
+            console.log(Party_Name)
          if(this.province === ''){
                  this.province = '无'
             }
@@ -725,7 +768,10 @@ export default {
               'is':this.isValue,
               'cardNo':this.cardNo,
               'compony':this.compony,
-              'oppositePart':this.oppositeParty,
+                //'oppositePart':this.oppositeParty,
+               
+                 
+               'oppositePart' : Party_Name,
               'caseWhy':this.caseWhy22,
                     //服务内容
               'Service_Content':this.Service_Content,
@@ -772,7 +818,8 @@ export default {
                 'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
-                'oppositePart':this.oppositeParty,
+                // 'oppositePart':this.oppositeParty,
+                   'oppositePart':Party_Name,
                 'caseWhy':this.caseWhy22,
 
 
@@ -815,7 +862,8 @@ export default {
                 'is':this.isValue,
                 'cardNo':this.cardNo,
                 'compony':this.compony,
-                'oppositePart':this.oppositeParty,
+                // 'oppositePart':this.oppositeParty,
+                   'oppositePart':Party_Name,
                 'caseWhy':this.caseWhy22,
                 'Source_Contract':this.fileType,
                 'caseValue':this.caseValue,
@@ -884,9 +932,7 @@ export default {
             if(this.value2===''){
                     this.value2='无'
               }
-            if(this.oppositeParty.trim() ===''){
-                this.oppositeParty='无'
-              }
+           
             if(this.province === ''){
                  this.province = '无'
             }
@@ -908,7 +954,8 @@ export default {
               'is':this.isValue,
               'cardNo':this.cardNo.trim(),
               'compony':this.compony.trim(),
-              'oppositePart':this.oppositeParty.trim(),
+            //   'oppositePart':this.oppositeParty.trim(),
+              'oppositePart':this.input1Arr,
               'caseWhy':this.caseWhy1,
                     //服务内容
               'Service_Content':this.Service_Content,
@@ -957,7 +1004,8 @@ export default {
                 'is':this.isValue,
                 'cardNo':this.cardNo.trim(),
                 'compony':this.compony.trim(),
-                'oppositePart':this.oppositeParty.trim(),
+                // 'oppositePart':this.oppositeParty.trim(),
+                  'oppositePart':this.input1Arr,
                 'caseWhy':this.caseWhy1,
 
 
@@ -1000,7 +1048,8 @@ export default {
               'is':this.isValue,
                 'cardNo':this.cardNo.trim(),
                 'compony':this.compony.trim(),
-                'oppositePart':this.oppositeParty.trim(),
+                // 'oppositePart':this.oppositeParty.trim(),
+                  'oppositePart':this.input1Arr,
                 'caseWhy':this.caseWhy1,
                 'Source_Contract':this.fileType,
                 'caseValue':this.caseValue,
@@ -1024,6 +1073,7 @@ export default {
       
         //console.log(JSON.stringify(addJson))
        // return false
+       this.disabled1 = true
         this.$http.post('/yongxu/Index/AddCases',{
                 map:addJson
             }).then((res)=>{
@@ -1035,6 +1085,7 @@ export default {
                 });
                 this.addTime = false;
                 // this.$router.push('/index/caseIndex')
+                 this.disabled1 = false
                 this.$router.go(-1);
                 return false
                 }else{
@@ -1042,6 +1093,7 @@ export default {
                     message:'添加失败',
                     type:'warning'
                 });
+                 this.disabled1 = false
                 return false
                 }
                
@@ -1050,6 +1102,7 @@ export default {
                     message:'提交信息有误',
                     type:'warning'
                 });
+                 this.disabled1 = false
                 return false
             })
          // }
@@ -1229,8 +1282,29 @@ export default {
             //     });
             //     return false
             // }
-              if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
-                   if(this.oppositeParty.trim()==""||this.oppositeParty==null){
+
+            //   if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11){
+            //        if(this.oppositeParty.trim()==""||this.oppositeParty==null){
+            //             this.$message({
+            //                 message:'对方当事人不能为空',
+            //                 type:'warning'
+            //             });
+            //              this.$notify.error({
+            //             title: '错误',
+            //             message: '按键类型为民事、仲裁、行政时，对方当事人必填'
+            //             });
+            //             return false
+            //         }
+            //   }  
+             if(this.caseValue == 4 || this.caseValue == 8 || this.caseValue == 11 ||this.input1Arr.length>1){
+                     var arrParty=[]
+                    for(var i in this.input1Arr){
+                        arrParty.push(this.input1Arr[i].partyName)
+                          
+                    }
+                    console.log(this.input1Arr)
+                  console.log(arrParty)
+                    if (arrParty.indexOf('') != -1){
                         this.$message({
                             message:'对方当事人不能为空',
                             type:'warning'
@@ -1241,7 +1315,7 @@ export default {
                         });
                         return false
                     }
-              }  
+              }
             var arr=[]
             for(var i in this.inputArr){
                 arr.push(this.inputArr[i].Id)
